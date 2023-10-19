@@ -23,7 +23,7 @@ import java.util.List;
 import com.runwaysdk.query.OIterator;
 import com.runwaysdk.query.QueryFactory;
 
-import net.geoprism.graph.lpg.LabeledVersion;
+import net.geoprism.registry.lpg.LabeledVersion;
 
 public class LabeledPropertyGraphTypeVersion extends LabeledPropertyGraphTypeVersionBase implements LabeledVersion
 {

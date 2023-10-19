@@ -29,7 +29,7 @@ import com.google.gson.JsonObject;
 import com.runwaysdk.system.gis.geo.Universal;
 
 import net.geoprism.ontology.GeoEntityUtil;
-import net.geoprism.registry.service.ServiceFactory;
+import net.geoprism.registry.service.request.ServiceFactory;
 
 public abstract class AbstractServerGeoObject implements ServerGeoObjectIF
 {

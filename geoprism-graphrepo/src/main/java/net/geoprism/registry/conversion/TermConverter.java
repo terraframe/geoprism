@@ -33,15 +33,15 @@ import com.runwaysdk.system.metadata.MdAttributeTerm;
 import com.runwaysdk.system.metadata.MdBusiness;
 import com.runwaysdk.system.metadata.MdClass;
 
-import net.geoprism.graphrepo.permission.GeoObjectTypePermissionServiceIF;
-import net.geoprism.graphrepo.permission.RepoPermissionActionIF;
-import net.geoprism.graphrepo.permission.UserPermissionService.RepoPermissionAction;
 import net.geoprism.ontology.Classifier;
 import net.geoprism.ontology.ClassifierIsARelationship;
 import net.geoprism.registry.Organization;
 import net.geoprism.registry.RegistryConstants;
 import net.geoprism.registry.model.ServerGeoObjectType;
-import net.geoprism.registry.service.ServiceFactory;
+import net.geoprism.registry.service.permission.GeoObjectTypePermissionServiceIF;
+import net.geoprism.registry.service.permission.RepoPermissionActionIF;
+import net.geoprism.registry.service.permission.UserPermissionService.RepoPermissionAction;
+import net.geoprism.registry.service.request.ServiceFactory;
 
 /**
  * Responsible for building {@link Term} objects from Runway {@link Classifier}

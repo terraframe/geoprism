@@ -72,14 +72,7 @@ import net.geoprism.ontology.Classifier;
 import net.geoprism.registry.Organization;
 import net.geoprism.registry.conversion.RegistryLocalizedValueConverter;
 import net.geoprism.registry.conversion.TermConverter;
-import net.geoprism.registry.service.ServiceFactory;
-//import net.geoprism.registry.service.ChangeRequestService;
-//import net.geoprism.registry.service.SearchService;
-//import net.geoprism.registry.service.SerializedListTypeCache;
-//import net.geoprism.registry.service.ServiceFactory;
-//import net.geoprism.registry.ws.GlobalNotificationMessage;
-//import net.geoprism.registry.ws.MessageType;
-//import net.geoprism.registry.ws.NotificationFacade;
+import net.geoprism.registry.service.request.ServiceFactory;
 
 public class ServerGeoObjectType implements ServerElement
 {

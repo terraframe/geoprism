@@ -28,11 +28,11 @@ import org.commongeoregistry.adapter.dataaccess.ChildTreeNode;
 import org.commongeoregistry.adapter.dataaccess.GeoObject;
 import org.commongeoregistry.adapter.metadata.HierarchyType;
 
-import net.geoprism.graphrepo.permission.GeoObjectPermissionServiceIF;
-import net.geoprism.graphrepo.permission.GeoObjectRelationshipPermissionServiceIF;
-import net.geoprism.registry.business.GeoObjectBusinessServiceIF;
-import net.geoprism.registry.business.HierarchyTypeBusinessServiceIF;
-import net.geoprism.registry.service.ServiceFactory;
+import net.geoprism.registry.service.business.GeoObjectBusinessServiceIF;
+import net.geoprism.registry.service.business.HierarchyTypeBusinessServiceIF;
+import net.geoprism.registry.service.permission.GeoObjectPermissionServiceIF;
+import net.geoprism.registry.service.permission.GeoObjectRelationshipPermissionServiceIF;
+import net.geoprism.registry.service.request.ServiceFactory;
 
 public class ServerChildTreeNode extends ServerTreeNode
 {

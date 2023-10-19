@@ -32,9 +32,9 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
 import net.geoprism.registry.DateFormatter;
-import net.geoprism.registry.business.GeoObjectBusinessService;
 import net.geoprism.registry.conversion.ServerGeoObjectStrategyIF;
-import net.geoprism.registry.service.ServiceFactory;
+import net.geoprism.registry.service.business.GeoObjectBusinessService;
+import net.geoprism.registry.service.request.ServiceFactory;
 
 public class ServerChildGraphNode extends ServerGraphNode
 {

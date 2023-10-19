@@ -34,11 +34,11 @@ import com.runwaysdk.Pair;
 import com.runwaysdk.session.Session;
 
 import net.geoprism.configuration.GeoprismProperties;
-import net.geoprism.graph.lpg.LabeledVersion;
-import net.geoprism.graph.lpg.StrategyConfiguration;
-import net.geoprism.graph.lpg.TreeStrategyConfiguration;
-import net.geoprism.graph.lpg.service.LocaleSerializer;
 import net.geoprism.registry.conversion.LocalizedValueConverter;
+import net.geoprism.registry.lpg.LabeledVersion;
+import net.geoprism.registry.lpg.LocaleSerializer;
+import net.geoprism.registry.lpg.StrategyConfiguration;
+import net.geoprism.registry.lpg.TreeStrategyConfiguration;
 
 public abstract class LabeledPropertyGraphType extends LabeledPropertyGraphTypeBase
 {
