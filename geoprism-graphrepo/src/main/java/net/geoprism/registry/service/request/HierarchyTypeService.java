@@ -148,7 +148,9 @@ public class HierarchyTypeService implements HierarchyTypeServiceIF
 
     ServerHierarchyType sType = service.createHierarchyType(hierarchyType);
 
-    return ServiceFactory.getAdapter().getMetadataCache().getHierachyType(sType.getCode()).get();
+//    return ServiceFactory.getAdapter().getMetadataCache().getHierachyType(sType.getCode()).get();
+    
+    return service.toHierarchyType(sType);
   }
 
   /**
