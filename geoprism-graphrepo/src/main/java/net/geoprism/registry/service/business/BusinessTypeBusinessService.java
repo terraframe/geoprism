@@ -61,6 +61,7 @@ import net.geoprism.registry.model.ServerGeoObjectType;
 import net.geoprism.registry.model.ServerOrganization;
 import net.geoprism.registry.query.graph.BusinessObjectPageQuery;
 import net.geoprism.registry.service.ClassificationObjectServiceIF;
+import net.geoprism.registry.service.permission.PermissionServiceIF;
 import net.geoprism.registry.service.request.ServiceFactory;
 import net.geoprism.registry.view.JsonSerializable;
 import net.geoprism.registry.view.Page;
@@ -70,7 +71,10 @@ public class BusinessTypeBusinessService implements BusinessTypeBusinessServiceI
 {
   @Autowired
   private ClassificationObjectServiceIF service;
-  
+
+  @Autowired
+  private PermissionServiceIF           permissions;
+
   @Override
   @Transaction
   public void delete(BusinessType type)
@@ -285,7 +289,6 @@ public class BusinessTypeBusinessService implements BusinessTypeBusinessServiceI
       throw ex;
     }
 
-
     LocalizedValue localizedValue = LocalizedValue.fromJSON(object.get(BusinessType.DISPLAYLABEL).getAsJsonObject());
 
     BusinessType businessType = ( object.has(BusinessType.OID) && !object.get(BusinessType.OID).isJsonNull() ) ? BusinessType.get(object.get(BusinessType.OID).getAsString()) : new BusinessType();
@@ -430,8 +433,6 @@ public class BusinessTypeBusinessService implements BusinessTypeBusinessServiceI
 
     for (ServerOrganization org : organizations)
     {
-      final boolean isMember = ServerOrganization.isMember(org);
-
       BusinessTypeQuery query = new BusinessTypeQuery(new QueryFactory());
       query.WHERE(query.getOrganization().EQ(org.getOrganization()));
       query.ORDER_BY_DESC(query.getDisplayLabel().localize());
@@ -444,7 +445,7 @@ public class BusinessTypeBusinessService implements BusinessTypeBusinessServiceI
         {
           BusinessType type = it.next();
 
-          if (isMember)
+          if (this.permissions.canRead(type))
           {
             types.add(this.toJSON(type));
           }
@@ -455,7 +456,7 @@ public class BusinessTypeBusinessService implements BusinessTypeBusinessServiceI
       object.addProperty("oid", org.getOid());
       object.addProperty("code", org.getCode());
       object.addProperty("label", org.getDisplayLabel().getValue());
-      object.addProperty("write", ServerOrganization.isMember(org));
+      object.addProperty("write", this.permissions.isAdmin(org));
       object.add("types", types);
 
       response.add(object);
@@ -469,7 +470,7 @@ public class BusinessTypeBusinessService implements BusinessTypeBusinessServiceI
   {
     List<BusinessType> response = new LinkedList<>();
 
-    ServerOrganization.getSortedOrganizations().stream().filter(o -> ServerOrganization.isMember(o)).forEach(org -> {
+    ServerOrganization.getSortedOrganizations().stream().filter(o -> this.permissions.isMember(o)).forEach(org -> {
 
       BusinessTypeQuery query = new BusinessTypeQuery(new QueryFactory());
       query.WHERE(query.getOrganization().EQ(org.getOrganization()));
