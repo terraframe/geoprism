@@ -35,21 +35,23 @@ public class OrganizationUtil
   {
     List<OrganizationDTO> orgs = map.get(code);
 
-    orgs.sort((a, b) -> {
-      return a.getLabel().getValue().compareTo(b.getLabel().getValue());
-    });
+    if (orgs != null)
+    {
+      orgs.sort((a, b) -> {
+        return a.getLabel().getValue().compareTo(b.getLabel().getValue());
+      });
 
-    orgs.forEach(org -> {
-      results.add(org);
+      orgs.forEach(org -> {
+        results.add(org);
 
-      if (map.containsKey(org.getCode()))
-      {
-        sortDTOs(map, results, org.getCode());
-      }
-    });
+        if (map.containsKey(org.getCode()))
+        {
+          sortDTOs(map, results, org.getCode());
+        }
+      });
+    }
   }
 
-  
   public static List<ServerOrganization> sort(List<ServerOrganization> orgs)
   {
     // Group by depth first parent
@@ -74,11 +76,11 @@ public class OrganizationUtil
   private static void sort(Map<String, List<ServerOrganization>> map, List<ServerOrganization> results, String code)
   {
     List<ServerOrganization> orgs = map.get(code);
-    
+
     orgs.sort((a, b) -> {
       return a.getDisplayLabel().getValue().compareTo(b.getDisplayLabel().getValue());
     });
-    
+
     orgs.forEach(org -> {
       results.add(org);
 
