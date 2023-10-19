@@ -1,0 +1,15 @@
+<version xsi:noNamespaceSchemaLocation="classpath:com/runwaysdk/resources/xsd/version.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <doIt>
+    <create></create>
+    <update>
+      <mdBusiness name="net.geoprism.graph.LabeledPropertyGraphType" publish="true"></mdBusiness>
+      <mdBusiness name="net.geoprism.graph.HierarchyTypeSnapshot" publish="true"></mdBusiness>
+      <mdBusiness name="net.geoprism.graph.GeoObjectTypeSnapshot" publish="true"></mdBusiness>
+      <mdRelationship name="net.geoprism.graph.SnapshotHierarchy" publish="true"></mdRelationship>
+      <mdBusiness name="net.geoprism.graph.LabeledPropertyGraphSynchronization" publish="true"></mdBusiness>
+    </update>
+  </doIt>
+  <undoIt>
+    <delete></delete>
+  </undoIt>
+</version>
