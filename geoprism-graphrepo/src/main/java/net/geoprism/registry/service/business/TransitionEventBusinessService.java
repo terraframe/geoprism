@@ -4,17 +4,17 @@
  * This file is part of Geoprism Registry(tm).
  *
  * Geoprism Registry(tm) is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or (at your
+ * option) any later version.
  *
  * Geoprism Registry(tm) is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
+ * WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License
+ * for more details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with Geoprism Registry(tm).  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with Geoprism Registry(tm). If not, see <http://www.gnu.org/licenses/>.
  */
 package net.geoprism.registry.service.business;
 
@@ -62,12 +62,15 @@ import net.geoprism.registry.view.Page;
 @Service
 public class TransitionEventBusinessService implements TransitionEventBusinessServiceIF
 {
-  @Autowired protected GeoObjectTypeBusinessServiceIF gotServ;
-  
-  @Autowired protected TransitionBusinessServiceIF tranServ;
-  
-  @Autowired protected TransitionPermissionServiceIF permServ;
-  
+  @Autowired
+  protected GeoObjectTypeBusinessServiceIF gotServ;
+
+  @Autowired
+  protected TransitionBusinessServiceIF    tranServ;
+
+  @Autowired
+  protected TransitionPermissionServiceIF  permServ;
+
   @Override
   @Transaction
   public void delete(TransitionEvent tran)
@@ -81,7 +84,8 @@ public class TransitionEventBusinessService implements TransitionEventBusinessSe
   {
     MdVertexDAOIF mdVertex = MdVertexDAO.getMdVertexDAO(Transition.CLASS);
     MdAttributeDAOIF mdAttribute = mdVertex.definesAttribute(Transition.EVENT);
-//    MdAttributeDAOIF sourceAttribute = mdVertex.definesAttribute(Transition.SOURCE);
+    // MdAttributeDAOIF sourceAttribute =
+    // mdVertex.definesAttribute(Transition.SOURCE);
     MdAttributeDAOIF targetAttribute = mdVertex.definesAttribute(Transition.TARGET);
     MdAttributeDAOIF orderAttribute = mdVertex.definesAttribute(Transition.ORDER);
 
@@ -168,7 +172,7 @@ public class TransitionEventBusinessService implements TransitionEventBusinessSe
       String afterTypeCode = json.get(TransitionEvent.AFTERTYPECODE).getAsString();
       ServerGeoObjectType beforeType = ServerGeoObjectType.get(beforeTypeCode);
       ServerGeoObjectType afterType = ServerGeoObjectType.get(afterTypeCode);
-      
+
       ServiceFactory.getGeoObjectPermissionService().enforceCanWrite(beforeType.getOrganization().getCode(), beforeType);
       // ServiceFactory.getGeoObjectPermissionService().enforceCanWrite(afterType.getOrganization().getCode(),
       // afterType);
@@ -184,7 +188,8 @@ public class TransitionEventBusinessService implements TransitionEventBusinessSe
       event.setAfterTypeCode(afterTypeCode);
       event.setBeforeTypeOrgCode(beforeType.getOrganization().getCode());
       event.setAfterTypeOrgCode(afterType.getOrganization().getCode());
-      event.apply();
+
+      this.apply(event);
 
       JsonArray transitions = json.get("transitions").getAsJsonArray();
 
@@ -318,7 +323,7 @@ public class TransitionEventBusinessService implements TransitionEventBusinessSe
       statement.append(" WHERE " + StringUtils.join(whereConditions, " AND "));
     }
   }
-  
+
   @Transaction
   public void removeAll(ServerGeoObjectType type)
   {
