@@ -53,7 +53,6 @@ import org.locationtech.jts.geom.Geometry;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 import com.google.gson.JsonArray;
@@ -120,22 +119,28 @@ import net.geoprism.registry.view.ServerParentTreeNodeOverTime;
 @Service
 public class GeoObjectBusinessService extends RegistryLocalizedValueConverter implements GeoObjectBusinessServiceIF
 {
-  private static final Logger               logger = LoggerFactory.getLogger(GeoObjectBusinessService.class);
+  private static final Logger                   logger = LoggerFactory.getLogger(GeoObjectBusinessService.class);
 
   @Autowired
-  protected GeoObjectPermissionServiceIF    permissionService;
+  protected GeoObjectPermissionServiceIF        permissionService;
 
   @Autowired
-  protected GeoObjectTypeBusinessServiceIF  gotService;
+  protected GeoObjectTypeBusinessServiceIF      gotService;
 
   @Autowired
-  protected HierarchyTypeBusinessServiceIF  htService;
+  protected HierarchyTypeBusinessServiceIF      htService;
 
   @Autowired
-  protected BusinessTypeBusinessServiceIF   businessTypeService;
+  protected BusinessTypeBusinessServiceIF       businessTypeService;
 
   @Autowired
-  protected BusinessObjectBusinessServiceIF businessObjectService;
+  protected BusinessObjectBusinessServiceIF     businessObjectService;
+
+  @Autowired
+  protected ClassificationTypeBusinessServiceIF cTypeService;
+
+  @Autowired
+  protected ClassificationBusinessServiceIF     cService;
 
   public GeoObjectBusinessService()
   {
@@ -412,7 +417,7 @@ public class GeoObjectBusinessService extends RegistryLocalizedValueConverter im
 
           if (value != null)
           {
-            Classification classification = Classification.get((AttributeClassificationType) attribute, value);
+            Classification classification = this.cService.get((AttributeClassificationType) attribute, value);
 
             sgo.getVertex().setValue(attributeName, classification.getVertex(), startDate, endDate);
           }
@@ -513,7 +518,7 @@ public class GeoObjectBusinessService extends RegistryLocalizedValueConverter im
 
             if (value != null)
             {
-              Classification classification = Classification.get((AttributeClassificationType) attribute, value);
+              Classification classification = this.cService.get((AttributeClassificationType) attribute, value);
 
               sgo.getVertex().setValue(attributeName, classification.getVertex(), votDTO.getStartDate(), votDTO.getEndDate());
             }
@@ -953,8 +958,8 @@ public class GeoObjectBusinessService extends RegistryLocalizedValueConverter im
           else if (attribute instanceof AttributeClassificationType)
           {
             String classificationTypeCode = ( (AttributeClassificationType) attribute ).getClassificationType();
-            ClassificationType classificationType = ClassificationType.getByCode(classificationTypeCode);
-            Classification classification = Classification.getByOid(classificationType, (String) value);
+            ClassificationType classificationType = this.cTypeService.getByCode(classificationTypeCode);
+            Classification classification = this.cService.getByOid(classificationType, (String) value);
 
             try
             {
@@ -1171,7 +1176,7 @@ public class GeoObjectBusinessService extends RegistryLocalizedValueConverter im
               else if (attribute instanceof AttributeClassificationType)
               {
                 String classificationTypeCode = ( (AttributeClassificationType) attribute ).getClassificationType();
-                ClassificationType classificationType = ClassificationType.getByCode(classificationTypeCode);
+                ClassificationType classificationType = this.cTypeService.getByCode(classificationTypeCode);
                 MdClassificationDAOIF mdClassificationDAO = classificationType.getMdClassification();
 
                 VertexObject classifier = null;
@@ -1245,7 +1250,7 @@ public class GeoObjectBusinessService extends RegistryLocalizedValueConverter im
             else if (attribute instanceof AttributeClassificationType)
             {
               String classificationTypeCode = ( (AttributeClassificationType) attribute ).getClassificationType();
-              ClassificationType classificationType = ClassificationType.getByCode(classificationTypeCode);
+              ClassificationType classificationType = this.cTypeService.getByCode(classificationTypeCode);
               MdClassificationDAOIF mdClassificationDAO = classificationType.getMdClassification();
 
               VertexObject classifier = null;
@@ -2086,6 +2091,5 @@ public class GeoObjectBusinessService extends RegistryLocalizedValueConverter im
 
     return objects.stream().map(o -> new BusinessObject(o, type)).collect(Collectors.toList());
   }
-
 
 }

@@ -3,18 +3,18 @@
  *
  * This file is part of Geoprism(tm).
  *
- * Geoprism(tm) is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
+ * Geoprism(tm) is free software: you can redistribute it and/or modify it under
+ * the terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation, either version 3 of the License, or (at your option) any
+ * later version.
  *
- * Geoprism(tm) is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
+ * Geoprism(tm) is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with Geoprism(tm).  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with Geoprism(tm). If not, see <http://www.gnu.org/licenses/>.
  */
 package net.geoprism.registry.service.business;
 
@@ -58,7 +58,6 @@ import net.geoprism.graph.LabeledPropertyGraphTypeVersionQuery;
 import net.geoprism.graph.LabeledPropertyGraphUtil;
 import net.geoprism.registry.DateUtil;
 import net.geoprism.registry.RegistryConstants;
-import net.geoprism.registry.model.Classification;
 import net.geoprism.registry.model.ClassificationType;
 
 @Service
@@ -69,6 +68,12 @@ public class LabeledPropertyGraphTypeVersionBusinessService implements LabeledPr
 
   @Autowired
   private HierarchyTypeSnapshotBusinessServiceIF hierarchyService;
+
+  @Autowired
+  private ClassificationBusinessServiceIF        classificationService;
+
+  @Autowired
+  private ClassificationTypeBusinessServiceIF    typeService;
 
   @Override
   @Transaction
@@ -296,8 +301,8 @@ public class LabeledPropertyGraphTypeVersionBusinessService implements LabeledPr
             if (!processed.contains(classificationType))
             {
               JsonObject typeObject = new JsonObject();
-              typeObject.add("type", ClassificationType.getByCode(classificationType).toJSON());
-              typeObject.add("tree", Classification.exportToJson(classificationType, rootTerm.getCode()));
+              typeObject.add("type", this.typeService.getByCode(classificationType).toJSON());
+              typeObject.add("tree", this.classificationService.exportToJson(classificationType, rootTerm.getCode()));
 
               classifications.add(typeObject);
 
@@ -345,11 +350,11 @@ public class LabeledPropertyGraphTypeVersionBusinessService implements LabeledPr
       String code = classificationType.get(DefaultAttribute.CODE.getName()).getAsString();
 
       // If a type doesn't exist create it
-      if (ClassificationType.getByCode(code, false) == null)
+      if (this.typeService.getByCode(code, false) == null)
       {
         classificationType.remove(LabeledPropertyGraphTypeVersion.OID);
 
-        ClassificationType type = ClassificationType.apply(classificationType);
+        ClassificationType type = this.typeService.apply(classificationType);
 
         // Refresh permissions in case new definitions were defined during the
         // synchronization process
@@ -360,7 +365,7 @@ public class LabeledPropertyGraphTypeVersionBusinessService implements LabeledPr
           session.reloadPermissions();
         }
 
-        Classification.importJsonTree(type, null, classificationObject.get("tree").getAsJsonObject());
+        this.classificationService.importJsonTree(type, null, classificationObject.get("tree").getAsJsonObject());
       }
 
     }
@@ -415,7 +420,7 @@ public class LabeledPropertyGraphTypeVersionBusinessService implements LabeledPr
   {
     new LabeledPropertyGraphUtil(this).publishVersion(version);
   }
-  
+
   @Override
   public void publishNoAuth(LabeledPropertyGraphTypeVersion version)
   {

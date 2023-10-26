@@ -22,7 +22,7 @@ import org.springframework.context.ApplicationContext;
 
 import com.runwaysdk.business.rbac.Authenticate;
 
-import net.geoprism.userinvite.business.UserInviteBusinessServiceIF;
+import net.geoprism.registry.service.business.UserInviteBusinessServiceIF;
 
 public class UserInviteAuthenticator extends UserInviteAuthenticatorBase
 {

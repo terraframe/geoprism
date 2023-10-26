@@ -22,7 +22,7 @@ import org.springframework.context.ApplicationContext;
 
 import com.runwaysdk.business.rbac.Authenticate;
 
-import net.geoprism.externalprofile.business.ExternalProfileBusinessServiceIF;
+import net.geoprism.registry.service.business.ExternalProfileBusinessServiceIF;
 
 public class ExternalProfileAuthenticator extends ExternalProfileAuthenticatorBase
 {

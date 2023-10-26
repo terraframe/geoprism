@@ -22,7 +22,7 @@ import org.springframework.context.ApplicationContext;
 
 import com.runwaysdk.business.rbac.Authenticate;
 
-import net.geoprism.forgotpassword.business.ForgotPasswordBusinessServiceIF;
+import net.geoprism.registry.service.business.ForgotPasswordBusinessServiceIF;
 
 public class ForgotPasswordAuthenticator extends ForgotPasswordAuthenticatorBase
 {

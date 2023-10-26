@@ -7,10 +7,13 @@ import org.commongeoregistry.adapter.metadata.AttributeType;
 import org.commongeoregistry.adapter.metadata.GeoObjectType;
 import org.springframework.stereotype.Component;
 
+import com.runwaysdk.dataaccess.MdAttributeConcreteDAOIF;
 import com.runwaysdk.dataaccess.MdGraphClassDAOIF;
 import com.runwaysdk.dataaccess.transaction.Transaction;
 import com.runwaysdk.system.gis.geo.Universal;
+import com.runwaysdk.system.metadata.MdAttributeConcrete;
 import com.runwaysdk.system.metadata.MdBusiness;
+import com.runwaysdk.system.metadata.MdClass;
 
 import net.geoprism.registry.HierarchicalRelationshipType;
 import net.geoprism.registry.InheritedHierarchyAnnotation;
@@ -113,5 +116,24 @@ public interface GeoObjectTypeBusinessServiceIF
   public GeoObjectType createGeoObjectType(String gtJSON);
 
   public List<GeoObjectType> getGeoObjectTypes(String[] codes, PermissionContext context);
+
+  MdAttributeConcrete updateMdAttributeFromAttributeType(MdClass mdClass, AttributeType attributeType);
+
+  MdAttributeConcrete createMdAttributeFromAttributeType(MdClass mdClass, AttributeType attributeType);
+
+  AttributeType updateAttributeType(ServerGeoObjectType serverType, String attributeTypeJSON);
+
+  void deleteMdAttributeFromAttributeType(ServerGeoObjectType serverType, String attributeName);
+
+  /**
+   * Returns the {link MdAttributeConcreteDAOIF} for the given
+   * {@link AttributeType} defined on the given {@link MdBusiness} or null no
+   * such attribute is defined.
+   * 
+   * @param attributeName
+   * 
+   * @return
+   */
+  MdAttributeConcreteDAOIF getMdAttribute(MdClass mdClass, String attributeName);
 
 }

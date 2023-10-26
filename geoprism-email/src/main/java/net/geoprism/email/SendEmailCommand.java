@@ -24,7 +24,7 @@ import org.slf4j.LoggerFactory;
 import com.runwaysdk.dataaccess.Command;
 import com.runwaysdk.session.Session;
 
-import net.geoprism.email.business.EmailBusinessServiceIF;
+import net.geoprism.registry.service.business.EmailBusinessServiceIF;
 
 /**
  * @author rrowlands

@@ -58,6 +58,8 @@ import com.runwaysdk.session.Session;
 
 import net.geoprism.registry.model.Classification;
 import net.geoprism.registry.model.ClassificationType;
+import net.geoprism.registry.service.business.ClassificationBusinessServiceIF;
+import net.geoprism.registry.service.request.ServiceFactory;
 
 public class RegistryAttributeTypeConverter extends RegistryLocalizedValueConverter
 {
@@ -119,9 +121,11 @@ public class RegistryAttributeTypeConverter extends RegistryLocalizedValueConver
 
       if (rootOid != null && rootOid.length() > 0)
       {
+        ClassificationBusinessServiceIF service = ServiceFactory.getBean(ClassificationBusinessServiceIF.class);
+        
         ClassificationType type = new ClassificationType(mdClassification);
 
-        Classification classification = Classification.getByOid(type, rootOid);
+        Classification classification = service.getByOid(type, rootOid);
 
         attributeType.setRootTerm(classification.toTerm());
       }

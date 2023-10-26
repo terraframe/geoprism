@@ -3,18 +3,18 @@
  *
  * This file is part of Geoprism(tm).
  *
- * Geoprism(tm) is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
+ * Geoprism(tm) is free software: you can redistribute it and/or modify it under
+ * the terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation, either version 3 of the License, or (at your option) any
+ * later version.
  *
- * Geoprism(tm) is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
+ * Geoprism(tm) is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with Geoprism(tm).  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with Geoprism(tm). If not, see <http://www.gnu.org/licenses/>.
  */
 package net.geoprism.registry.conversion;
 
@@ -57,6 +57,8 @@ import com.runwaysdk.session.Session;
 
 import net.geoprism.registry.model.Classification;
 import net.geoprism.registry.model.ClassificationType;
+import net.geoprism.registry.service.business.ClassificationBusinessServiceIF;
+import net.geoprism.spring.ApplicationContextHolder;
 
 public class AttributeTypeConverter extends LocalizedValueConverter
 {
@@ -120,7 +122,9 @@ public class AttributeTypeConverter extends LocalizedValueConverter
       {
         ClassificationType type = new ClassificationType(mdClassification);
 
-        Classification classification = Classification.getByOid(type, rootOid);
+        ClassificationBusinessServiceIF service = ApplicationContextHolder.getBean(ClassificationBusinessServiceIF.class);
+
+        Classification classification = service.getByOid(type, rootOid);
 
         attributeType.setRootTerm(classification.toTerm());
       }
@@ -141,10 +145,10 @@ public class AttributeTypeConverter extends LocalizedValueConverter
 
           BusinessDAO classy = (BusinessDAO) rel.getChild();
 
-//          TermConverter termBuilder = new TermConverter(classy.getKey());
-//          Term adapterTerm = termBuilder.build();
-//
-//          attributeType.setRootTerm(adapterTerm);
+          // TermConverter termBuilder = new TermConverter(classy.getKey());
+          // Term adapterTerm = termBuilder.build();
+          //
+          // attributeType.setRootTerm(adapterTerm);
         }
         else
         {

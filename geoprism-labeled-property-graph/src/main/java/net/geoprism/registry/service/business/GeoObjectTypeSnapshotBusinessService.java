@@ -3,18 +3,18 @@
  *
  * This file is part of Geoprism(tm).
  *
- * Geoprism(tm) is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
+ * Geoprism(tm) is free software: you can redistribute it and/or modify it under
+ * the terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation, either version 3 of the License, or (at your option) any
+ * later version.
  *
- * Geoprism(tm) is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
+ * Geoprism(tm) is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with Geoprism(tm).  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with Geoprism(tm). If not, see <http://www.gnu.org/licenses/>.
  */
 package net.geoprism.registry.service.business;
 
@@ -38,6 +38,7 @@ import org.commongeoregistry.adapter.metadata.AttributeLocalType;
 import org.commongeoregistry.adapter.metadata.AttributeTermType;
 import org.commongeoregistry.adapter.metadata.AttributeType;
 import org.commongeoregistry.adapter.metadata.GeoObjectType;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.google.gson.JsonArray;
@@ -97,13 +98,19 @@ import net.geoprism.registry.model.ClassificationType;
 @Service
 public class GeoObjectTypeSnapshotBusinessService implements GeoObjectTypeSnapshotBusinessServiceIF
 {
-  public final String TABLE_PACKAGE = "net.geoprism.lpg";
+  public final String                         TABLE_PACKAGE = "net.geoprism.lpg";
 
-  public final String PREFIX        = "g_";
+  public final String                         PREFIX        = "g_";
 
-  public final String SPLIT         = "__";
+  public final String                         SPLIT         = "__";
 
-  public final String ROOT          = "__ROOT__";
+  public final String                         ROOT          = "__ROOT__";
+
+  @Autowired
+  private ClassificationBusinessServiceIF     classificationService;
+
+  @Autowired
+  private ClassificationTypeBusinessServiceIF typeService;
 
   @Override
   @Transaction
@@ -455,7 +462,7 @@ public class GeoObjectTypeSnapshotBusinessService implements GeoObjectTypeSnapsh
       AttributeClassificationType attributeClassificationType = (AttributeClassificationType) attributeType;
       String classificationTypeCode = attributeClassificationType.getClassificationType();
 
-      ClassificationType classificationType = ClassificationType.getByCode(classificationTypeCode);
+      ClassificationType classificationType = this.typeService.getByCode(classificationTypeCode);
 
       mdAttribute = new MdAttributeClassification();
       MdAttributeClassification mdAttributeTerm = (MdAttributeClassification) mdAttribute;
@@ -465,7 +472,7 @@ public class GeoObjectTypeSnapshotBusinessService implements GeoObjectTypeSnapsh
 
       if (root != null)
       {
-        Classification classification = Classification.get(classificationType, root.getCode());
+        Classification classification = this.classificationService.get(classificationType, root.getCode());
 
         if (classification == null)
         {
@@ -594,8 +601,8 @@ public class GeoObjectTypeSnapshotBusinessService implements GeoObjectTypeSnapsh
           else if (attribute instanceof AttributeClassificationType)
           {
             String classificationTypeCode = ( (AttributeClassificationType) attribute ).getClassificationType();
-            ClassificationType classificationType = ClassificationType.getByCode(classificationTypeCode);
-            Classification classification = Classification.getByOid(classificationType, (String) value);
+            ClassificationType classificationType = this.typeService.getByCode(classificationTypeCode);
+            Classification classification = this.classificationService.getByOid(classificationType, (String) value);
 
             try
             {

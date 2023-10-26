@@ -57,10 +57,8 @@ import net.geoprism.registry.conversion.RegistryAttributeTypeConverter;
 import net.geoprism.registry.conversion.RegistryLocalizedValueConverter;
 import net.geoprism.registry.conversion.TermConverter;
 import net.geoprism.registry.graph.GeoVertex;
-import net.geoprism.registry.model.ServerGeoObjectType;
 import net.geoprism.registry.model.ServerOrganization;
 import net.geoprism.registry.query.graph.BusinessObjectPageQuery;
-import net.geoprism.registry.service.ClassificationObjectServiceIF;
 import net.geoprism.registry.service.permission.PermissionServiceIF;
 import net.geoprism.registry.service.request.ServiceFactory;
 import net.geoprism.registry.view.JsonSerializable;
@@ -70,10 +68,13 @@ import net.geoprism.registry.view.Page;
 public class BusinessTypeBusinessService implements BusinessTypeBusinessServiceIF
 {
   @Autowired
-  private ClassificationObjectServiceIF service;
+  private ClassificationTypeBusinessServiceIF cTypeService;
 
   @Autowired
-  private PermissionServiceIF           permissions;
+  private GeoObjectTypeBusinessServiceIF      typeService;
+
+  @Autowired
+  private PermissionServiceIF                 permissions;
 
   @Override
   @Transaction
@@ -95,7 +96,7 @@ public class BusinessTypeBusinessService implements BusinessTypeBusinessServiceI
   @Override
   public AttributeType createAttributeType(BusinessType type, AttributeType attributeType)
   {
-    MdAttributeConcrete mdAttribute = ServerGeoObjectType.createMdAttributeFromAttributeType(type.getMdVertex(), attributeType);
+    MdAttributeConcrete mdAttribute = this.typeService.createMdAttributeFromAttributeType(type.getMdVertex(), attributeType);
 
     // Refresh the users session
     if (Session.getCurrentSession() != null)
@@ -135,7 +136,7 @@ public class BusinessTypeBusinessService implements BusinessTypeBusinessServiceI
   @Override
   public AttributeType updateAttributeType(BusinessType type, AttributeType attrType)
   {
-    MdAttributeConcrete mdAttribute = ServerGeoObjectType.updateMdAttributeFromAttributeType(type.getMdVertex(), attrType);
+    MdAttributeConcrete mdAttribute = this.typeService.updateMdAttributeFromAttributeType(type.getMdVertex(), attrType);
     return new RegistryAttributeTypeConverter().build(MdAttributeConcreteDAO.get(mdAttribute.getOid()));
   }
 
@@ -164,7 +165,7 @@ public class BusinessTypeBusinessService implements BusinessTypeBusinessServiceI
   @Transaction
   public void deleteMdAttributeFromAttributeType(BusinessType type, String attributeName)
   {
-    MdAttributeConcreteDAOIF mdAttributeConcreteDAOIF = ServerGeoObjectType.getMdAttribute(type.getMdVertex(), attributeName);
+    MdAttributeConcreteDAOIF mdAttributeConcreteDAOIF = this.typeService.getMdAttribute(type.getMdVertex(), attributeName);
 
     if (mdAttributeConcreteDAOIF != null)
     {
@@ -279,7 +280,7 @@ public class BusinessTypeBusinessService implements BusinessTypeBusinessServiceI
 
     ServiceFactory.getGeoObjectTypePermissionService().enforceCanCreate(organization.getCode(), false);
 
-    service.validateName(code);
+    cTypeService.validateName(code);
 
     if (code.length() > 64)
     {
