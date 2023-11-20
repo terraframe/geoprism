@@ -20,7 +20,6 @@ package net.geoprism.registry.service.business;
 
 import java.text.SimpleDateFormat;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.stream.Collectors;
@@ -50,7 +49,6 @@ import net.geoprism.graph.GeoObjectTypeSnapshot;
 import net.geoprism.graph.GeoObjectTypeSnapshotQuery;
 import net.geoprism.graph.HierarchyTypeSnapshot;
 import net.geoprism.graph.HierarchyTypeSnapshotQuery;
-import net.geoprism.graph.LabeledPropertyGraphSynchronization;
 import net.geoprism.graph.LabeledPropertyGraphType;
 import net.geoprism.graph.LabeledPropertyGraphTypeEntry;
 import net.geoprism.graph.LabeledPropertyGraphTypeVersion;
@@ -423,12 +421,6 @@ public class LabeledPropertyGraphTypeVersionBusinessService implements LabeledPr
 
   @Override
   public void publishNoAuth(LabeledPropertyGraphTypeVersion version)
-  {
-    // Do nothing
-  }
-
-  @Override
-  public void postSynchronization(LabeledPropertyGraphSynchronization synchronization, VertexObject node, Map<String, Object> cache)
   {
     // Do nothing
   }

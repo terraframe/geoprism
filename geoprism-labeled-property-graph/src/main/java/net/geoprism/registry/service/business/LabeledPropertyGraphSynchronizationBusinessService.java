@@ -3,18 +3,18 @@
  *
  * This file is part of Geoprism(tm).
  *
- * Geoprism(tm) is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
+ * Geoprism(tm) is free software: you can redistribute it and/or modify it under
+ * the terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation, either version 3 of the License, or (at your option) any
+ * later version.
  *
- * Geoprism(tm) is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
+ * Geoprism(tm) is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with Geoprism(tm).  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with Geoprism(tm). If not, see <http://www.gnu.org/licenses/>.
  */
 package net.geoprism.registry.service.business;
 
@@ -46,8 +46,8 @@ import net.geoprism.graph.LabeledPropertyGraphUtil;
 import net.geoprism.registry.lpg.adapter.RegistryBridge;
 import net.geoprism.registry.lpg.adapter.RegistryConnectorFactory;
 import net.geoprism.registry.lpg.adapter.RegistryConnectorIF;
-import net.geoprism.registry.service.request.JsonGraphVersionPublisherService;
 import net.geoprism.registry.service.request.AbstractGraphVersionPublisherService.State;
+import net.geoprism.registry.service.request.JsonGraphVersionPublisherServiceIF;
 import net.geoprism.registry.view.Page;
 
 @Service
@@ -63,7 +63,7 @@ public class LabeledPropertyGraphSynchronizationBusinessService implements Label
   private LabeledPropertyGraphTypeVersionBusinessServiceIF versionService;
 
   @Autowired
-  private JsonGraphVersionPublisherService                 publisherService;
+  private JsonGraphVersionPublisherServiceIF               publisherService;
 
   @Override
   @Transaction

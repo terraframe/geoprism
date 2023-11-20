@@ -19,7 +19,6 @@
 package net.geoprism.registry.service.business;
 
 import java.util.List;
-import java.util.Map;
 
 import org.springframework.stereotype.Component;
 
@@ -28,7 +27,6 @@ import com.runwaysdk.business.graph.VertexObject;
 
 import net.geoprism.graph.GeoObjectTypeSnapshot;
 import net.geoprism.graph.HierarchyTypeSnapshot;
-import net.geoprism.graph.LabeledPropertyGraphSynchronization;
 import net.geoprism.graph.LabeledPropertyGraphTypeEntry;
 import net.geoprism.graph.LabeledPropertyGraphTypeVersion;
 import net.geoprism.spring.ApplicationContextHolder;
@@ -77,8 +75,6 @@ public interface LabeledPropertyGraphTypeVersionBusinessServiceIF
   public void publish(LabeledPropertyGraphTypeVersion version);
 
   public void publishNoAuth(LabeledPropertyGraphTypeVersion version);
-
-  public void postSynchronization(LabeledPropertyGraphSynchronization synchronization, VertexObject node, Map<String, Object> cache);
 
   public void createPublishJob(LabeledPropertyGraphTypeVersion version);
 

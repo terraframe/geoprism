@@ -3,9 +3,11 @@ package net.geoprism.registry.service.request;
 import org.commongeoregistry.adapter.RegistryAdapter;
 import org.commongeoregistry.adapter.RegistryAdapterServer;
 import org.commongeoregistry.adapter.metadata.MetadataCache;
+import org.springframework.stereotype.Service;
 
 import net.geoprism.registry.cache.ServerOrganizationCache;
 
+@Service
 public class CacheProvider implements CacheProviderIF
 {
   private RegistryIdService       idService;

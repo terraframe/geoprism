@@ -164,8 +164,6 @@ public abstract class AbstractGraphVersionPublisherService
 
     node.apply();
 
-    this.service.postSynchronization(state.synchronization, node, state.cache);
-
     return node;
   }
 

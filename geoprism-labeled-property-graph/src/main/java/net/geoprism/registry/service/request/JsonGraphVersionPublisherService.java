@@ -38,7 +38,7 @@ import net.geoprism.registry.service.business.GeoObjectTypeSnapshotBusinessServi
 import net.geoprism.registry.service.business.HierarchyTypeSnapshotBusinessServiceIF;
 
 @Service
-public class JsonGraphVersionPublisherService extends AbstractGraphVersionPublisherService
+public class JsonGraphVersionPublisherService extends AbstractGraphVersionPublisherService implements JsonGraphVersionPublisherServiceIF
 {
   private static class TypeSnapshotCacheObject
   {
