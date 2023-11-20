@@ -23,10 +23,8 @@ import java.util.LinkedList;
 import java.util.List;
 
 import org.commongeoregistry.adapter.Optional;
-import org.commongeoregistry.adapter.constants.DefaultAttribute;
 import org.commongeoregistry.adapter.metadata.OrganizationDTO;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 import com.google.gson.JsonObject;
@@ -34,15 +32,16 @@ import com.runwaysdk.session.Request;
 import com.runwaysdk.session.RequestType;
 
 import net.geoprism.registry.OrganizationUtil;
-import net.geoprism.registry.model.OrganizationMetadata;
 import net.geoprism.registry.model.ServerOrganization;
 import net.geoprism.registry.service.business.OrganizationBusinessServiceIF;
 import net.geoprism.registry.service.permission.OrganizationPermissionServiceIF;
-import net.geoprism.registry.view.Page;
 
 @Service
 public class OrganizationService implements OrganizationServiceIF
 {
+  @Autowired
+  private CacheProviderIF                 provider;
+
   @Autowired
   private OrganizationBusinessServiceIF   service;
 
@@ -66,7 +65,7 @@ public class OrganizationService implements OrganizationServiceIF
 
     if (codes == null || codes.length == 0)
     {
-      List<OrganizationDTO> cachedOrgs = ServiceFactory.getAdapter().getMetadataCache().getAllOrganizations();
+      List<OrganizationDTO> cachedOrgs = provider.getAdapterCache().getAllOrganizations();
 
       for (OrganizationDTO cachedOrg : cachedOrgs)
       {
@@ -77,7 +76,7 @@ public class OrganizationService implements OrganizationServiceIF
     {
       for (int i = 0; i < codes.length; ++i)
       {
-        Optional<OrganizationDTO> optional = ServiceFactory.getAdapter().getMetadataCache().getOrganization(codes[i]);
+        Optional<OrganizationDTO> optional = provider.getAdapterCache().getOrganization(codes[i]);
 
         if (optional.isPresent())
         {
@@ -85,11 +84,12 @@ public class OrganizationService implements OrganizationServiceIF
         }
         else
         {
-          net.geoprism.registry.DataNotFoundException ex = new net.geoprism.registry.DataNotFoundException();
-          ex.setTypeLabel(OrganizationMetadata.get().getClassDisplayLabel());
-          ex.setDataIdentifier(codes[i]);
-          ex.setAttributeLabel(OrganizationMetadata.get().getAttributeDisplayLabel(DefaultAttribute.CODE.getName()));
-          throw ex;
+          // TODO Fix exception
+//          net.geoprism.registry.DataNotFoundException ex = new net.geoprism.registry.DataNotFoundException();
+//          ex.setTypeLabel(OrganizationMetadata.get().getClassDisplayLabel());
+//          ex.setDataIdentifier(codes[i]);
+//          ex.setAttributeLabel(OrganizationMetadata.get().getAttributeDisplayLabel(DefaultAttribute.CODE.getName()));
+//          throw ex;
         }
       }
     }
@@ -127,9 +127,9 @@ public class OrganizationService implements OrganizationServiceIF
     final ServerOrganization org = this.service.create(organizationDTO);
 
     // If this did not error out then add to the cache
-    ServiceFactory.getMetadataCache().addOrganization(org);
+    provider.getServerCache().addOrganization(org);
 
-    return ServiceFactory.getAdapter().getMetadataCache().getOrganization(org.getCode()).get();
+    return provider.getAdapterCache().getOrganization(org.getCode()).get();
   }
 
   /**
@@ -150,9 +150,9 @@ public class OrganizationService implements OrganizationServiceIF
     final ServerOrganization org = this.service.update(organizationDTO);
 
     // If this did not error out then add to the cache
-    ServiceFactory.getMetadataCache().addOrganization(org);
+    provider.getServerCache().addOrganization(org);
 
-    return ServiceFactory.getAdapter().getMetadataCache().getOrganization(org.getCode()).get();
+    return provider.getAdapterCache().getOrganization(org.getCode()).get();
   }
 
   /**
@@ -170,7 +170,7 @@ public class OrganizationService implements OrganizationServiceIF
     this.service.delete(organization);
 
     // If this did not error out then remove from the cache
-    ServiceFactory.getMetadataCache().removeOrganization(code);
+    provider.getServerCache().removeOrganization(code);
   }
 
   @Request(RequestType.SESSION)
@@ -181,7 +181,7 @@ public class OrganizationService implements OrganizationServiceIF
 
     this.service.addChild(parent, child);
 
-    ServiceFactory.getMetadataCache().addOrganization(child);
+    provider.getServerCache().addOrganization(child);
   }
 
   @Request(RequestType.SESSION)
@@ -192,7 +192,7 @@ public class OrganizationService implements OrganizationServiceIF
 
     this.service.removeChild(parent, child);
 
-    ServiceFactory.getMetadataCache().addOrganization(child);
+    provider.getServerCache().addOrganization(child);
   }
 
   @Request(RequestType.SESSION)
@@ -220,7 +220,7 @@ public class OrganizationService implements OrganizationServiceIF
     this.service.move(organization, newParent);
 
     // Rebuild the entire organization cache
-    ServiceFactory.getMetadataCache().addOrganization(organization);
+    provider.getServerCache().addOrganization(organization);
   }
 
   @Request(RequestType.SESSION)
@@ -231,7 +231,7 @@ public class OrganizationService implements OrganizationServiceIF
     this.service.removeAllParents(organization);
 
     // Rebuild the entire organization cache
-    ServiceFactory.getMetadataCache().addOrganization(organization);
+    provider.getServerCache().addOrganization(organization);
   }
 
 }

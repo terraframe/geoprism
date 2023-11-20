@@ -20,11 +20,11 @@ package net.geoprism.registry.service.request;
 
 import org.commongeoregistry.adapter.RegistryAdapter;
 import org.commongeoregistry.adapter.RegistryAdapterServer;
+import org.commongeoregistry.adapter.metadata.MetadataCache;
+import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 
 import net.geoprism.registry.cache.ServerMetadataCache;
-import net.geoprism.registry.service.business.GeoObjectBusinessServiceIF;
-import net.geoprism.registry.service.business.HierarchyTypeBusinessServiceIF;
 import net.geoprism.registry.service.permission.GeoObjectPermissionServiceIF;
 import net.geoprism.registry.service.permission.GeoObjectRelationshipPermissionServiceIF;
 import net.geoprism.registry.service.permission.GeoObjectTypePermissionServiceIF;
@@ -34,7 +34,8 @@ import net.geoprism.registry.service.permission.OrganizationPermissionServiceIF;
 import net.geoprism.spring.ApplicationContextHolder;
 
 @Service
-public class ServiceFactory
+@Primary
+public class ServiceFactory implements CacheProviderIF
 {
   private RegistryIdService   idService;
 
@@ -50,6 +51,18 @@ public class ServiceFactory
 
     this.metadataCache = new ServerMetadataCache(this.adapter);
     this.metadataCache.rebuild();
+  }
+
+  @Override
+  public MetadataCache getAdapterCache()
+  {
+    return this.adapter.getMetadataCache();
+  }
+
+  @Override
+  public ServerMetadataCache getServerCache()
+  {
+    return this.metadataCache;
   }
 
   public static <T> T getBean(Class<T> clazz)

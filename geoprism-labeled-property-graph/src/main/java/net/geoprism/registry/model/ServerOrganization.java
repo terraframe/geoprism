@@ -18,14 +18,11 @@
  */
 package net.geoprism.registry.model;
 
-import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 import org.commongeoregistry.adapter.dataaccess.LocalizedValue;
-import org.commongeoregistry.adapter.metadata.GeoObjectType;
 import org.commongeoregistry.adapter.metadata.OrganizationDTO;
 import org.commongeoregistry.adapter.metadata.RegistryRole;
 
@@ -42,7 +39,6 @@ import com.runwaysdk.session.SessionIF;
 import com.runwaysdk.system.Actor;
 import com.runwaysdk.system.Roles;
 import com.runwaysdk.system.SingleActor;
-import com.runwaysdk.system.gis.geo.Universal;
 
 import net.geoprism.GeoprismUser;
 import net.geoprism.registry.Organization;
@@ -52,7 +48,6 @@ import net.geoprism.registry.OrganizationQuery;
 import net.geoprism.registry.OrganizationUser;
 import net.geoprism.registry.OrganizationUtil;
 import net.geoprism.registry.conversion.LocalizedValueConverter;
-import net.geoprism.registry.conversion.RegistryLocalizedValueConverter;
 import net.geoprism.registry.graph.GraphOrganization;
 import net.geoprism.registry.view.JsonSerializable;
 import net.geoprism.registry.view.Page;
@@ -149,8 +144,6 @@ public class ServerOrganization implements JsonSerializable
     this.graphOrganization.apply();
   }
 
-
-
   /**
    * Removes the {@link RoleDAO}s for this {@link Organization} and Registry
    * Administrator for this {@link Organization}.
@@ -234,38 +227,6 @@ public class ServerOrganization implements JsonSerializable
     return Roles.findRoleByName(RegistryRole.Type.getRA_RoleName(organizationCode));
   }
 
-  /**
-   * Return a map of {@link GeoObjectType} codes and labels for this
-   * {@link Organization}.
-   * 
-   * @return a map of {@link GeoObjectType} codes and labels for this
-   *         {@link Organization}.
-   */
-  public Map<String, ServerGeoObjectType> getGeoObjectTypes()
-  {
-    // For performance, get all of the universals defined
-    List<? extends EntityDAOIF> universalList = ObjectCache.getCachedEntityDAOs(Universal.CLASS);
-
-    Map<String, ServerGeoObjectType> typeCodeMap = new HashMap<String, ServerGeoObjectType>();
-
-    for (EntityDAOIF entityDAOIF : universalList)
-    {
-      Universal universal = (Universal) BusinessFacade.get(entityDAOIF);
-
-      // Check to see if the universal is owned by the organization role.
-      String ownerId = universal.getOwnerOid();
-      Roles organizationRole = this.getRole();
-      if (ownerId.equals(organizationRole.getOid()))
-      {
-        ServerGeoObjectType type = ServerGeoObjectType.get(universal);
-
-        typeCodeMap.put(type.getCode(), type);
-      }
-    }
-
-    return typeCodeMap;
-  }
-
   public void addChild(ServerOrganization child)
   {
     this.graphOrganization.addChild(child.graphOrganization);
@@ -306,7 +267,7 @@ public class ServerOrganization implements JsonSerializable
     {
       return new ServerOrganization(parent.getOrganization(), parent);
     }
-    
+
     return null;
   }
 
@@ -388,15 +349,15 @@ public class ServerOrganization implements JsonSerializable
 
   public OrganizationDTO toDTO()
   {
-    LocalizedValue label = RegistryLocalizedValueConverter.convertNoAutoCoalesce(this.getDisplayLabel());
-    LocalizedValue info = RegistryLocalizedValueConverter.convertNoAutoCoalesce(this.getContactInfo());
+    LocalizedValue label = LocalizedValueConverter.convertNoAutoCoalesce(this.getDisplayLabel());
+    LocalizedValue info = LocalizedValueConverter.convertNoAutoCoalesce(this.getContactInfo());
 
     ServerOrganization parent = this.getParent();
 
     if (parent != null)
     {
       String parentCode = parent.getCode();
-      LocalizedValue parentLabel = RegistryLocalizedValueConverter.convertNoAutoCoalesce(parent.getDisplayLabel());
+      LocalizedValue parentLabel = LocalizedValueConverter.convertNoAutoCoalesce(parent.getDisplayLabel());
 
       return new OrganizationDTO(this.getCode(), label, info, parentCode, parentLabel);
     }
@@ -539,7 +500,7 @@ public class ServerOrganization implements JsonSerializable
   {
     return Organization.getUserOrganizations().stream().map(org -> ServerOrganization.get(org)).collect(Collectors.toList());
   }
-  
+
   /**
    * @param org
    * @return If the current user is a member of the given organization

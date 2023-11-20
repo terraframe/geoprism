@@ -4,29 +4,24 @@
  * This file is part of Geoprism Registry(tm).
  *
  * Geoprism Registry(tm) is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or (at your
+ * option) any later version.
  *
  * Geoprism Registry(tm) is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
+ * WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License
+ * for more details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with Geoprism Registry(tm).  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with Geoprism Registry(tm). If not, see <http://www.gnu.org/licenses/>.
  */
 package net.geoprism.registry;
 
-import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Set;
 import java.util.stream.Collectors;
 
-import org.commongeoregistry.adapter.metadata.GeoObjectType;
 import org.commongeoregistry.adapter.metadata.OrganizationDTO;
 import org.commongeoregistry.adapter.metadata.RegistryRole;
 
@@ -42,14 +37,9 @@ import com.runwaysdk.session.SessionIF;
 import com.runwaysdk.system.Actor;
 import com.runwaysdk.system.Roles;
 import com.runwaysdk.system.SingleActor;
-import com.runwaysdk.system.gis.geo.Universal;
 
 import net.geoprism.GeoprismUser;
-import net.geoprism.registry.conversion.RegistryLocalizedValueConverter;
-import net.geoprism.registry.model.ServerGeoObjectType;
-import net.geoprism.registry.model.ServerHierarchyType;
-import net.geoprism.registry.model.ServerOrganization;
-import net.geoprism.registry.service.request.ServiceFactory;
+import net.geoprism.registry.conversion.LocalizedValueConverter;
 
 public class Organization extends OrganizationBase
 {
@@ -134,38 +124,6 @@ public class Organization extends OrganizationBase
   public static RoleDAOIF getRole(String organizationCode)
   {
     return RoleDAO.findRole(RegistryRole.Type.getRootOrgRoleName(organizationCode));
-  }
-
-  /**
-   * Return a map of {@link GeoObjectType} codes and labels for this
-   * {@link Organization}.
-   * 
-   * @return a map of {@link GeoObjectType} codes and labels for this
-   *         {@link Organization}.
-   */
-  public Map<String, ServerGeoObjectType> getGeoObjectTypes()
-  {
-    // For performance, get all of the universals defined
-    List<? extends EntityDAOIF> universalList = ObjectCache.getCachedEntityDAOs(Universal.CLASS);
-
-    Map<String, ServerGeoObjectType> typeCodeMap = new HashMap<String, ServerGeoObjectType>();
-
-    for (EntityDAOIF entityDAOIF : universalList)
-    {
-      Universal universal = (Universal) BusinessFacade.get(entityDAOIF);
-
-      // Check to see if the universal is owned by the organization role.
-      String ownerId = universal.getOwnerOid();
-      Roles organizationRole = this.getRole();
-      if (ownerId.equals(organizationRole.getOid()))
-      {
-        ServerGeoObjectType type = ServerGeoObjectType.get(universal);
-
-        typeCodeMap.put(type.getCode(), type);
-      }
-    }
-
-    return typeCodeMap;
   }
 
   /**
@@ -302,26 +260,26 @@ public class Organization extends OrganizationBase
 
   public OrganizationDTO toDTO()
   {
-    return new OrganizationDTO(this.getCode(), RegistryLocalizedValueConverter.convert(this.getDisplayLabel()), RegistryLocalizedValueConverter.convert(this.getContactInfo()));
+    return new OrganizationDTO(this.getCode(), LocalizedValueConverter.convert(this.getDisplayLabel()), LocalizedValueConverter.convert(this.getContactInfo()));
   }
 
   public static List<Organization> getUserOrganizations()
   {
     OrganizationQuery query = new OrganizationQuery(new QueryFactory());
     query.ORDER_BY_ASC(query.getDisplayLabel().localize());
-    
+
     try (final OIterator<? extends Organization> iterator = query.getIterator())
     {
       final List<? extends Organization> orgs = iterator.getAll();
-      
+
       List<Organization> result = orgs.stream().filter(o -> {
         return Organization.isMember(o);
       }).collect(Collectors.toList());
-      
+
       return result;
     }
   }
-  
+
   public static boolean isMember(Organization org)
   {
     final SessionIF session = Session.getCurrentSession();
@@ -336,94 +294,99 @@ public class Organization extends OrganizationBase
     return false;
   }
 
-//  public void removeChild(Organization child)
-//  {
-//    // TODO Auto-generated method stub
-//    
-//  }
-//
-//  public OrganizationDTO getChildren(Integer pageSize, Integer pageNumber)
-//  {
-//    // TODO Auto-generated method stub
-//    return null;
-//  }
-//
-//  public static List<Organization> getRoots()
-//  {
-//    // TODO Auto-generated method stub
-//    return null;
-//  }
-//  
-//  public List<Organization> getAncestors(String rootCode)
-//  {
-//    GraphQuery<VertexObject> query = null;
-//
-//    if (rootCode != null && rootCode.length() > 0)
-//    {
-//      StringBuilder statement = new StringBuilder();
-//      statement.append("SELECT expand($res)");
-//      statement.append(" LET $a = (TRAVERSE in(\"" + this.type.getMdEdge().getDBClassName() + "\") FROM :rid WHILE (code != :code))");
-//      statement.append(", $b = (SELECT FROM " + this.type.getMdVertex().getDBClassName() + " WHERE code = :code)");
-//      statement.append(", $res = (UNIONALL($a,$b))");
-//
-//      query = new GraphQuery<VertexObject>(statement.toString());
-//      query.setParameter("rid", this.vertex.getRID());
-//      query.setParameter("code", rootCode);
-//    }
-//    else
-//    {
-//      StringBuilder statement = new StringBuilder();
-//      statement.append("TRAVERSE in(\"" + this.type.getMdEdge().getDBClassName() + "\") FROM :rid");
-//
-//      query = new GraphQuery<VertexObject>(statement.toString());
-//      query.setParameter("rid", this.vertex.getRID());
-//    }
-//
-//    List<Classification> results = query.getResults().stream().map(vertex -> {
-//      return new Classification(this.type, vertex);
-//    }).collect(Collectors.toList());
-//
-//    return results;
-//  }
-//
-//
-//
-//  public ClassificationNode getAncestorTree(String code, Integer pageSize)
-//  {
-//    List<Classification> ancestors = this.getAncestors(rootCode);
-//
-//    ClassificationNode prev = null;
-//
-//    for (Classification ancestor : ancestors)
-//    {
-//      Page<Classification> page = ancestor.getChildren(pageSize, 1);
-//
-//      List<ClassificationNode> transform = page.getResults().stream().map(r -> {
-//        return new ClassificationNode(r);
-//      }).collect(Collectors.toList());
-//
-//      if (prev != null)
-//      {
-//        int index = transform.indexOf(prev);
-//
-//        if (index != -1)
-//        {
-//          transform.set(index, prev);
-//        }
-//        else
-//        {
-//          transform.add(prev);
-//        }
-//      }
-//
-//      ClassificationNode node = new ClassificationNode();
-//      node.setClassification(ancestor);
-//      node.setChildren(new Page<ClassificationNode>(page.getCount(), page.getPageNumber(), page.getPageSize(), transform));
-//
-//      prev = node;
-//    }
-//
-//    return prev;
-//  }
-//
+  // public void removeChild(Organization child)
+  // {
+  // // TODO Auto-generated method stub
+  //
+  // }
+  //
+  // public OrganizationDTO getChildren(Integer pageSize, Integer pageNumber)
+  // {
+  // // TODO Auto-generated method stub
+  // return null;
+  // }
+  //
+  // public static List<Organization> getRoots()
+  // {
+  // // TODO Auto-generated method stub
+  // return null;
+  // }
+  //
+  // public List<Organization> getAncestors(String rootCode)
+  // {
+  // GraphQuery<VertexObject> query = null;
+  //
+  // if (rootCode != null && rootCode.length() > 0)
+  // {
+  // StringBuilder statement = new StringBuilder();
+  // statement.append("SELECT expand($res)");
+  // statement.append(" LET $a = (TRAVERSE in(\"" +
+  // this.type.getMdEdge().getDBClassName() + "\") FROM :rid WHILE (code !=
+  // :code))");
+  // statement.append(", $b = (SELECT FROM " +
+  // this.type.getMdVertex().getDBClassName() + " WHERE code = :code)");
+  // statement.append(", $res = (UNIONALL($a,$b))");
+  //
+  // query = new GraphQuery<VertexObject>(statement.toString());
+  // query.setParameter("rid", this.vertex.getRID());
+  // query.setParameter("code", rootCode);
+  // }
+  // else
+  // {
+  // StringBuilder statement = new StringBuilder();
+  // statement.append("TRAVERSE in(\"" + this.type.getMdEdge().getDBClassName()
+  // + "\") FROM :rid");
+  //
+  // query = new GraphQuery<VertexObject>(statement.toString());
+  // query.setParameter("rid", this.vertex.getRID());
+  // }
+  //
+  // List<Classification> results = query.getResults().stream().map(vertex -> {
+  // return new Classification(this.type, vertex);
+  // }).collect(Collectors.toList());
+  //
+  // return results;
+  // }
+  //
+  //
+  //
+  // public ClassificationNode getAncestorTree(String code, Integer pageSize)
+  // {
+  // List<Classification> ancestors = this.getAncestors(rootCode);
+  //
+  // ClassificationNode prev = null;
+  //
+  // for (Classification ancestor : ancestors)
+  // {
+  // Page<Classification> page = ancestor.getChildren(pageSize, 1);
+  //
+  // List<ClassificationNode> transform = page.getResults().stream().map(r -> {
+  // return new ClassificationNode(r);
+  // }).collect(Collectors.toList());
+  //
+  // if (prev != null)
+  // {
+  // int index = transform.indexOf(prev);
+  //
+  // if (index != -1)
+  // {
+  // transform.set(index, prev);
+  // }
+  // else
+  // {
+  // transform.add(prev);
+  // }
+  // }
+  //
+  // ClassificationNode node = new ClassificationNode();
+  // node.setClassification(ancestor);
+  // node.setChildren(new Page<ClassificationNode>(page.getCount(),
+  // page.getPageNumber(), page.getPageSize(), transform));
+  //
+  // prev = node;
+  // }
+  //
+  // return prev;
+  // }
+  //
 }

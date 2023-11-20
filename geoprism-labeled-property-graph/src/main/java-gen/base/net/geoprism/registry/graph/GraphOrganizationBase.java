@@ -1,5 +1,7 @@
 package net.geoprism.registry.graph;
 
+import net.geoprism.registry.graph.GraphOrganization;
+
 @com.runwaysdk.business.ClassSignature(hash = 122089023)
 /**
  * This class is generated automatically.

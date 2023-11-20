@@ -9,20 +9,17 @@ import org.springframework.stereotype.Service;
 import com.runwaysdk.dataaccess.transaction.Transaction;
 import com.runwaysdk.system.Roles;
 
-import net.geoprism.registry.ObjectHasDataException;
 import net.geoprism.registry.conversion.OrganizationConverter;
 import net.geoprism.registry.model.GraphNode;
-import net.geoprism.registry.model.ServerHierarchyType;
 import net.geoprism.registry.model.ServerOrganization;
 import net.geoprism.registry.service.permission.OrganizationPermissionServiceIF;
-import net.geoprism.registry.service.request.ServiceFactory;
 import net.geoprism.registry.view.Page;
 
 @Service
 public class OrganizationBusinessService implements OrganizationBusinessServiceIF
 {
   @Autowired
-  private OrganizationPermissionServiceIF permissionService;
+  protected OrganizationPermissionServiceIF permissionService;
   
   @Override
   @Transaction
@@ -79,16 +76,16 @@ public class OrganizationBusinessService implements OrganizationBusinessServiceI
   {
     this.permissionService.enforceActorCanDelete();
 
-    // Can't delete if there's existing data
-    List<ServerHierarchyType> hierarchyTypes = ServiceFactory.getMetadataCache().getAllHierarchyTypes();
-
-    for (ServerHierarchyType ht : hierarchyTypes)
-    {
-      if (ht.getOrganizationCode().equals(sorg.getCode()))
-      {
-        throw new ObjectHasDataException();
-      }
-    }
+//    // Can't delete if there's existing data
+//    List<ServerHierarchyType> hierarchyTypes = ServiceFactory.getMetadataCache().getAllHierarchyTypes();
+//
+//    for (ServerHierarchyType ht : hierarchyTypes)
+//    {
+//      if (ht.getOrganizationCode().equals(sorg.getCode()))
+//      {
+//        throw new ObjectHasDataException();
+//      }
+//    }
 
     this.deleteRoles(sorg);
 
