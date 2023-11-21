@@ -45,6 +45,7 @@ public abstract class LabeledPropertyGraphTypeBase extends com.runwaysdk.busines
   public final static java.lang.String LASTUPDATEDBY = "lastUpdatedBy";
   public final static java.lang.String LOCKEDBY = "lockedBy";
   public final static java.lang.String OID = "oid";
+  public static final java.lang.String ORGANIZATION = "organization";
   public final static java.lang.String OWNER = "owner";
   public final static java.lang.String SEQ = "seq";
   public final static java.lang.String SITEMASTER = "siteMaster";
@@ -52,6 +53,7 @@ public abstract class LabeledPropertyGraphTypeBase extends com.runwaysdk.busines
   public final static java.lang.String STRATEGYTYPE = "strategyType";
   public final static java.lang.String TYPE = "type";
   public final static java.lang.String VALID = "valid";
+  
   @SuppressWarnings("unused")
   private static final long serialVersionUID = 2015432371;
   
@@ -361,6 +363,60 @@ public abstract class LabeledPropertyGraphTypeBase extends com.runwaysdk.busines
     com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(net.geoprism.graph.LabeledPropertyGraphType.CLASS);
     return (com.runwaysdk.dataaccess.MdAttributeUUIDDAOIF)mdClassIF.definesAttribute(OID);
   }
+  
+  public net.geoprism.registry.Organization getOrganization()
+  {
+    if (getValue(ORGANIZATION).trim().equals(""))
+    {
+      return null;
+    }
+    else
+    {
+      return net.geoprism.registry.Organization.get(getValue(ORGANIZATION));
+    }
+  }
+  
+  public String getOrganizationOid()
+  {
+    return getValue(ORGANIZATION);
+  }
+  
+  public void validateOrganization()
+  {
+    this.validateAttribute(ORGANIZATION);
+  }
+  
+  public static com.runwaysdk.dataaccess.MdAttributeReferenceDAOIF getOrganizationMd()
+  {
+    com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(net.geoprism.graph.LabeledPropertyGraphType.CLASS);
+    return (com.runwaysdk.dataaccess.MdAttributeReferenceDAOIF)mdClassIF.definesAttribute(ORGANIZATION);
+  }
+  
+  public void setOrganization(net.geoprism.registry.Organization value)
+  {
+    if(value == null)
+    {
+      setValue(ORGANIZATION, "");
+    }
+    else
+    {
+      setValue(ORGANIZATION, value.getOid());
+    }
+  }
+  
+  public void setOrganizationId(java.lang.String oid)
+  {
+    if(oid == null)
+    {
+      setValue(ORGANIZATION, "");
+    }
+    else
+    {
+      setValue(ORGANIZATION, oid);
+    }
+  }
+  
+
   
   public com.runwaysdk.system.Actor getOwner()
   {

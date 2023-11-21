@@ -3,6 +3,7 @@ package net.geoprism.registry.service.request;
 import org.commongeoregistry.adapter.metadata.OrganizationDTO;
 import org.springframework.stereotype.Component;
 
+import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.runwaysdk.session.Request;
 import com.runwaysdk.session.RequestType;
@@ -66,4 +67,9 @@ public interface OrganizationServiceIF
   public void move(String sessionId, String code, String parentCode);
 
   public void removeAllParents(String sessionId, String code);
+
+  public JsonArray exportToJson(String sessionId);
+
+  public void importJsonTree(String sessionId, String json);
+
 }

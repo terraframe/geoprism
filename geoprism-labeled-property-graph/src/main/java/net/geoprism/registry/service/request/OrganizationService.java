@@ -23,15 +23,19 @@ import java.util.LinkedList;
 import java.util.List;
 
 import org.commongeoregistry.adapter.Optional;
+import org.commongeoregistry.adapter.constants.DefaultAttribute;
 import org.commongeoregistry.adapter.metadata.OrganizationDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import com.runwaysdk.session.Request;
 import com.runwaysdk.session.RequestType;
 
 import net.geoprism.registry.OrganizationUtil;
+import net.geoprism.registry.model.OrganizationMetadata;
 import net.geoprism.registry.model.ServerOrganization;
 import net.geoprism.registry.service.business.OrganizationBusinessServiceIF;
 import net.geoprism.registry.service.permission.OrganizationPermissionServiceIF;
@@ -84,12 +88,11 @@ public class OrganizationService implements OrganizationServiceIF
         }
         else
         {
-          // TODO Fix exception
-//          net.geoprism.registry.DataNotFoundException ex = new net.geoprism.registry.DataNotFoundException();
-//          ex.setTypeLabel(OrganizationMetadata.get().getClassDisplayLabel());
-//          ex.setDataIdentifier(codes[i]);
-//          ex.setAttributeLabel(OrganizationMetadata.get().getAttributeDisplayLabel(DefaultAttribute.CODE.getName()));
-//          throw ex;
+          net.geoprism.registry.DataNotFoundException ex = new net.geoprism.registry.DataNotFoundException();
+          ex.setTypeLabel(OrganizationMetadata.get().getClassDisplayLabel());
+          ex.setDataIdentifier(codes[i]);
+          ex.setAttributeLabel(OrganizationMetadata.get().getAttributeDisplayLabel(DefaultAttribute.CODE.getName()));
+          throw ex;
         }
       }
     }
@@ -232,6 +235,20 @@ public class OrganizationService implements OrganizationServiceIF
 
     // Rebuild the entire organization cache
     provider.getServerCache().addOrganization(organization);
+  }
+
+  @Override
+  @Request(RequestType.SESSION)
+  public JsonArray exportToJson(String sessionId)
+  {
+    return this.service.exportToJson();
+  }
+
+  @Override
+  @Request(RequestType.SESSION)
+  public void importJsonTree(String sessionId, String json)
+  {
+    this.service.importJsonTree(JsonParser.parseString(json).getAsJsonArray());
   }
 
 }

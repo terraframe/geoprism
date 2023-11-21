@@ -476,17 +476,13 @@ public class GeoObjectTypeSnapshotBusinessService implements GeoObjectTypeSnapsh
 
         if (classification == null)
         {
-          // net.geoprism.registry.DataNotFoundException ex = new
-          // net.geoprism.registry.DataNotFoundException();
-          // ex.setTypeLabel(classificationType.getDisplayLabel().getValue());
-          // ex.setDataIdentifier(root.getCode());
-          // ex.setAttributeLabel(GeoObjectMetadata.get().getAttributeDisplayLabel(DefaultAttribute.CODE.getName()));
-          //
-          // throw ex;
+          net.geoprism.registry.DataNotFoundException ex = new net.geoprism.registry.DataNotFoundException();
+          ex.setTypeLabel(classificationType.getDisplayLabel().getValue());
+          ex.setDataIdentifier(root.getCode());
+          ex.setAttributeLabel("geoObjectType.attr.code");
 
-          // TODO Change exception type
+          throw ex;
 
-          throw new RuntimeException("Unable to find a classification with the code [" + root.getCode() + "]");
         }
 
         mdAttributeTerm.setValue(MdAttributeClassification.ROOT, classification.getOid());

@@ -3,6 +3,9 @@ package net.geoprism.registry.service.business;
 import org.commongeoregistry.adapter.metadata.OrganizationDTO;
 import org.springframework.stereotype.Component;
 
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
+
 import net.geoprism.registry.model.GraphNode;
 import net.geoprism.registry.model.ServerOrganization;
 import net.geoprism.registry.view.Page;
@@ -31,4 +34,9 @@ public interface OrganizationBusinessServiceIF
 
   void apply(ServerOrganization organization, ServerOrganization parent);
 
+  JsonArray exportToJson();
+
+  public void importJsonTree(JsonArray array);
+
+  public void importJsonTree(ServerOrganization parent, JsonObject object);
 }

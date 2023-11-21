@@ -452,11 +452,16 @@ public class ServerOrganization implements JsonSerializable
     }
   }
 
-  public static ServerOrganization get(Organization orginzation)
+  public static ServerOrganization get(Organization organization)
   {
-    GraphOrganization graphOrganization = GraphOrganization.get(orginzation);
+    if (organization != null)
+    {
+      GraphOrganization graphOrganization = GraphOrganization.get(organization);
 
-    return new ServerOrganization(orginzation, graphOrganization);
+      return new ServerOrganization(organization, graphOrganization);
+    }
+
+    return null;
   }
 
   public static List<ServerOrganization> getSortedOrganizations()
@@ -526,7 +531,12 @@ public class ServerOrganization implements JsonSerializable
    */
   public static ServerOrganization getByCode(String code)
   {
-    return ServerOrganization.get(Organization.getByCode(code));
+    return getByCode(code, true);
+  }
+
+  public static ServerOrganization getByCode(String code, boolean throwException)
+  {
+    return ServerOrganization.get(Organization.getByCode(code, throwException));
   }
 
   public static List<ServerOrganization> getRoots()

@@ -45,6 +45,7 @@ import net.geoprism.graph.LabeledPropertyGraphTypeQuery;
 import net.geoprism.graph.LabeledPropertyGraphTypeVersion;
 import net.geoprism.graph.LabeledPropertyGraphTypeVersionQuery;
 import net.geoprism.graph.SingleLabeledPropertyGraphType;
+import net.geoprism.registry.Organization;
 
 @Service
 public class LabeledPropertyGraphTypeBusinessService implements LabeledPropertyGraphTypeBusinessServiceIF
@@ -53,7 +54,7 @@ public class LabeledPropertyGraphTypeBusinessService implements LabeledPropertyG
   private LabeledPropertyGraphTypeEntryBusinessServiceIF entryService;
 
   @Autowired
-  private ClassificationTypeBusinessServiceIF            objectService;
+  private ClassificationTypeBusinessServiceIF            cTypeService;
 
   @Override
   public JsonArray list()
@@ -121,7 +122,7 @@ public class LabeledPropertyGraphTypeBusinessService implements LabeledPropertyG
   @Transaction
   public void apply(LabeledPropertyGraphType type)
   {
-    this.objectService.validateName(type.getCode());
+    this.cTypeService.validateName(type.getCode());
 
     type.apply();
   }
@@ -203,6 +204,8 @@ public class LabeledPropertyGraphTypeBusinessService implements LabeledPropertyG
     }
 
     list.parse(object);
+
+    list.setOrganization(Organization.getByCode(object.get(LabeledPropertyGraphType.ORGANIZATION).getAsString()));
 
     return list;
   }

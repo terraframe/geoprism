@@ -66,7 +66,24 @@ public class Organization extends OrganizationBase
    */
   public static Organization getByCode(String code)
   {
-    return getByKey(code);
+    return getByCode(code, true);
+  }
+
+  public static Organization getByCode(String code, boolean throwException)
+  {
+    try
+    {
+      return getByKey(code);
+    }
+    catch (RuntimeException e)
+    {
+      if (throwException)
+      {
+        throw e;
+      }
+    }
+    
+    return null;
   }
 
   /**
@@ -293,100 +310,4 @@ public class Organization extends OrganizationBase
 
     return false;
   }
-
-  // public void removeChild(Organization child)
-  // {
-  // // TODO Auto-generated method stub
-  //
-  // }
-  //
-  // public OrganizationDTO getChildren(Integer pageSize, Integer pageNumber)
-  // {
-  // // TODO Auto-generated method stub
-  // return null;
-  // }
-  //
-  // public static List<Organization> getRoots()
-  // {
-  // // TODO Auto-generated method stub
-  // return null;
-  // }
-  //
-  // public List<Organization> getAncestors(String rootCode)
-  // {
-  // GraphQuery<VertexObject> query = null;
-  //
-  // if (rootCode != null && rootCode.length() > 0)
-  // {
-  // StringBuilder statement = new StringBuilder();
-  // statement.append("SELECT expand($res)");
-  // statement.append(" LET $a = (TRAVERSE in(\"" +
-  // this.type.getMdEdge().getDBClassName() + "\") FROM :rid WHILE (code !=
-  // :code))");
-  // statement.append(", $b = (SELECT FROM " +
-  // this.type.getMdVertex().getDBClassName() + " WHERE code = :code)");
-  // statement.append(", $res = (UNIONALL($a,$b))");
-  //
-  // query = new GraphQuery<VertexObject>(statement.toString());
-  // query.setParameter("rid", this.vertex.getRID());
-  // query.setParameter("code", rootCode);
-  // }
-  // else
-  // {
-  // StringBuilder statement = new StringBuilder();
-  // statement.append("TRAVERSE in(\"" + this.type.getMdEdge().getDBClassName()
-  // + "\") FROM :rid");
-  //
-  // query = new GraphQuery<VertexObject>(statement.toString());
-  // query.setParameter("rid", this.vertex.getRID());
-  // }
-  //
-  // List<Classification> results = query.getResults().stream().map(vertex -> {
-  // return new Classification(this.type, vertex);
-  // }).collect(Collectors.toList());
-  //
-  // return results;
-  // }
-  //
-  //
-  //
-  // public ClassificationNode getAncestorTree(String code, Integer pageSize)
-  // {
-  // List<Classification> ancestors = this.getAncestors(rootCode);
-  //
-  // ClassificationNode prev = null;
-  //
-  // for (Classification ancestor : ancestors)
-  // {
-  // Page<Classification> page = ancestor.getChildren(pageSize, 1);
-  //
-  // List<ClassificationNode> transform = page.getResults().stream().map(r -> {
-  // return new ClassificationNode(r);
-  // }).collect(Collectors.toList());
-  //
-  // if (prev != null)
-  // {
-  // int index = transform.indexOf(prev);
-  //
-  // if (index != -1)
-  // {
-  // transform.set(index, prev);
-  // }
-  // else
-  // {
-  // transform.add(prev);
-  // }
-  // }
-  //
-  // ClassificationNode node = new ClassificationNode();
-  // node.setClassification(ancestor);
-  // node.setChildren(new Page<ClassificationNode>(page.getCount(),
-  // page.getPageNumber(), page.getPageSize(), transform));
-  //
-  // prev = node;
-  // }
-  //
-  // return prev;
-  // }
-  //
 }

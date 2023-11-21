@@ -6,6 +6,8 @@ import org.commongeoregistry.adapter.metadata.OrganizationDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
 import com.runwaysdk.dataaccess.transaction.Transaction;
 import com.runwaysdk.system.Roles;
 
@@ -20,7 +22,7 @@ public class OrganizationBusinessService implements OrganizationBusinessServiceI
 {
   @Autowired
   protected OrganizationPermissionServiceIF permissionService;
-  
+
   @Override
   @Transaction
   public void apply(ServerOrganization organization, ServerOrganization parent)
@@ -75,17 +77,6 @@ public class OrganizationBusinessService implements OrganizationBusinessServiceI
   public void delete(ServerOrganization sorg)
   {
     this.permissionService.enforceActorCanDelete();
-
-//    // Can't delete if there's existing data
-//    List<ServerHierarchyType> hierarchyTypes = ServiceFactory.getMetadataCache().getAllHierarchyTypes();
-//
-//    for (ServerHierarchyType ht : hierarchyTypes)
-//    {
-//      if (ht.getOrganizationCode().equals(sorg.getCode()))
-//      {
-//        throw new ObjectHasDataException();
-//      }
-//    }
 
     this.deleteRoles(sorg);
 
@@ -158,6 +149,89 @@ public class OrganizationBusinessService implements OrganizationBusinessServiceI
     this.permissionService.enforceActorCanUpdate();
 
     organization.removeAllParents();
+  }
+
+  @Override
+  public JsonArray exportToJson()
+  {
+    JsonArray children = new JsonArray();
+
+    List<ServerOrganization> roots = ServerOrganization.getRoots();
+
+    for (ServerOrganization root : roots)
+    {
+      children.add(exportToJson(root));
+    }
+
+    return children;
+  }
+
+  private JsonObject exportToJson(ServerOrganization organization)
+  {
+    JsonArray children = new JsonArray();
+
+    Page<ServerOrganization> page = organization.getChildren();
+
+    for (ServerOrganization child : page)
+    {
+      children.add(exportToJson(child));
+    }
+
+    JsonObject json = organization.toJSON();
+    json.remove("parentCode");
+    json.remove("parentLabel");
+    json.add("children", children);
+
+    return json;
+  }
+
+  @Override
+  @Transaction
+  public void importJsonTree(JsonArray array)
+  {
+    for (int i = 0; i < array.size(); i++)
+    {
+      importJsonTree(null, array.get(i).getAsJsonObject());
+    }
+  }
+
+  @Override
+  @Transaction
+  public void importJsonTree(ServerOrganization parent, JsonObject object)
+  {
+    OrganizationDTO dto = OrganizationDTO.fromJSON(object.toString());
+
+    // Get and update OR create a new organization
+    ServerOrganization organization = ServerOrganization.getByCode(dto.getCode(), false);
+
+    if (organization == null)
+    {
+      organization = new OrganizationConverter().fromDTO(dto);
+    }
+    else
+    {
+      // If the organization already exists we need to remove the current parent
+      // assignment in order to prevent duplicate edges. This makes the
+      // assumption that an organization can only have a single parent
+      ServerOrganization currentParent = organization.getParent();
+
+      if (currentParent != null)
+      {
+        organization.removeParent(currentParent);
+      }
+    }
+
+    this.apply(organization, parent);
+
+    // Create/assign the child organizations
+    JsonArray children = object.get("children").getAsJsonArray();
+
+    for (int i = 0; i < children.size(); i++)
+    {
+      JsonObject child = children.get(i).getAsJsonObject();
+
+      importJsonTree(organization, child);
+    }
   }
 
 }

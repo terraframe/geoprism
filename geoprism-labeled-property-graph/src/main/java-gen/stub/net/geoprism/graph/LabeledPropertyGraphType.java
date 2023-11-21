@@ -144,6 +144,7 @@ public abstract class LabeledPropertyGraphType extends LabeledPropertyGraphTypeB
     object.addProperty(LabeledPropertyGraphType.HIERARCHY, this.getHierarchy());
     object.addProperty(LabeledPropertyGraphType.STRATEGYTYPE, this.getStrategyType());
     object.add(LabeledPropertyGraphType.STRATEGYCONFIGURATION, this.getStrategyConfigurationAsJson());
+    object.addProperty(LabeledPropertyGraphType.ORGANIZATION, this.getOrganization().getCode());
 
     return object;
   }
