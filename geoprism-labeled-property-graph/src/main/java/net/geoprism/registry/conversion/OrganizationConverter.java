@@ -36,7 +36,9 @@ public class OrganizationConverter extends LocalizedValueConverter
 
     LocalizedValue contactInfo = convertNoAutoCoalesce(organization.getContactInfo());
 
-    return new OrganizationDTO(code, label, contactInfo);
+    OrganizationDTO dto = new OrganizationDTO(code, label, contactInfo);
+    dto.setEnabled(organization.getEnabled());
+    return dto;
   }
 
   public ServerOrganization fromDTO(OrganizationDTO organizationDTO)
@@ -46,6 +48,7 @@ public class OrganizationConverter extends LocalizedValueConverter
     organization.setCode(organizationDTO.getCode());
     organization.setDisplayLabel(organizationDTO.getLabel());
     organization.setContactInfo(organizationDTO.getContactInfo());
+    organization.setEnabled(organizationDTO.getEnabled());
 
     return organization;
   }

@@ -62,6 +62,7 @@ public class OrganizationBusinessService implements OrganizationBusinessServiceI
       organization.setCode(organizationDTO.getCode());
       organization.setDisplayLabel(organizationDTO.getLabel());
       organization.setContactInfo(organizationDTO.getContactInfo());
+      organization.setEnabled(organizationDTO.getEnabled());
       organization.apply();
     }
     finally

@@ -22,16 +22,36 @@
   <doIt>
     <update>
       <mdBusiness name="net.geoprism.graph.LabeledPropertyGraphType">
-      <create>
-        <attributes>
+        <create>
+          <attributes>
             <reference
             name="organization"
             label="Organization"
             required="false"
             type="net.geoprism.registry.Organization" />
-      </attributes>
-      </create>
+          </attributes>
+        </create>
       </mdBusiness>
+      <mdBusiness name="net.geoprism.registry.Organization">
+        <create>
+          <attributes>
+            <boolean
+              name="enabled"
+              label="Enabled"
+              required="false" />          
+          </attributes>
+        </create>
+      </mdBusiness>      
+      <mdVertex name="net.geoprism.registry.graph.GraphOrganization">
+        <create>
+          <attributes>
+            <boolean
+              name="enabled"
+              label="Enabled"
+              required="false" />          
+          </attributes>
+        </create>
+      </mdVertex>      
     </update>
   </doIt>
   <undoIt>

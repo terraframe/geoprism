@@ -1,7 +1,5 @@
 package net.geoprism.registry.graph;
 
-import net.geoprism.registry.graph.GraphOrganization;
-
 @com.runwaysdk.business.ClassSignature(hash = 122089023)
 /**
  * This class is generated automatically.
@@ -16,6 +14,7 @@ public abstract class GraphOrganizationBase extends com.runwaysdk.business.graph
   public final static java.lang.String CODE = "code";
   public final static java.lang.String CONTACTINFO = "contactInfo";
   public final static java.lang.String DISPLAYLABEL = "displayLabel";
+  public final static java.lang.String ENABLED = "enabled";
   public final static java.lang.String OID = "oid";
   public final static java.lang.String ORGANIZATION = "organization";
   public final static java.lang.String SEQ = "seq";
@@ -73,6 +72,22 @@ public abstract class GraphOrganizationBase extends com.runwaysdk.business.graph
   public void setDisplayLabel(com.runwaysdk.ComponentIF value)
   {
     this.setValue(DISPLAYLABEL, value);
+  }
+  
+  public Boolean getEnabled()
+  {
+    return (Boolean) this.getObjectValue(ENABLED);
+  }
+
+  public static com.runwaysdk.dataaccess.MdAttributeBooleanDAOIF getEnabledMd()
+  {
+    com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(net.geoprism.registry.graph.GraphOrganization.CLASS);
+    return (com.runwaysdk.dataaccess.MdAttributeBooleanDAOIF) mdClassIF.definesAttribute(ENABLED);
+  }
+
+  public void setEnabled(Boolean value)
+  {
+    this.setValue(ENABLED, value);
   }
   
   public String getOid()

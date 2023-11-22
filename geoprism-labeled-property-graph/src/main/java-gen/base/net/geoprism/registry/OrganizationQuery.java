@@ -182,6 +182,24 @@ public  class OrganizationQuery extends com.runwaysdk.query.GeneratedBusinessQue
     return (com.runwaysdk.system.metadata.MdDomainQuery.MdDomainQueryReferenceIF)this.getComponentQuery().internalAttributeFactory(net.geoprism.registry.Organization.ENTITYDOMAIN, mdAttributeIF, this, alias, displayLabel);
 
   }
+
+  public com.runwaysdk.query.SelectableBoolean getEnabled()
+  {
+    return getEnabled(null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableBoolean getEnabled(String alias)
+  {
+    return (com.runwaysdk.query.SelectableBoolean)this.getComponentQuery().get(net.geoprism.registry.Organization.ENABLED, alias, null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableBoolean getEnabled(String alias, String displayLabel)
+  {
+    return (com.runwaysdk.query.SelectableBoolean)this.getComponentQuery().get(net.geoprism.registry.Organization.ENABLED, alias, displayLabel);
+
+  }
   public com.runwaysdk.query.SelectableChar getKeyName()
   {
     return getKeyName(null);
@@ -566,6 +584,9 @@ public  class OrganizationQuery extends com.runwaysdk.query.GeneratedBusinessQue
     public net.geoprism.registry.OrganizationDisplayLabelQuery.OrganizationDisplayLabelQueryStructIF getDisplayLabel();
     public net.geoprism.registry.OrganizationDisplayLabelQuery.OrganizationDisplayLabelQueryStructIF getDisplayLabel(String alias);
     public net.geoprism.registry.OrganizationDisplayLabelQuery.OrganizationDisplayLabelQueryStructIF getDisplayLabel(String alias, String displayLabel);
+    public com.runwaysdk.query.SelectableBoolean getEnabled();
+    public com.runwaysdk.query.SelectableBoolean getEnabled(String alias);
+    public com.runwaysdk.query.SelectableBoolean getEnabled(String alias, String displayLabel);    
     public com.runwaysdk.system.metadata.MdDomainQuery.MdDomainQueryReferenceIF getEntityDomain();
     public com.runwaysdk.system.metadata.MdDomainQuery.MdDomainQueryReferenceIF getEntityDomain(String alias);
     public com.runwaysdk.system.metadata.MdDomainQuery.MdDomainQueryReferenceIF getEntityDomain(String alias, String displayLabel);
@@ -761,6 +782,24 @@ public  class OrganizationQuery extends com.runwaysdk.query.GeneratedBusinessQue
     return (com.runwaysdk.system.metadata.MdDomainQuery.MdDomainQueryReferenceIF)this.get(net.geoprism.registry.Organization.ENTITYDOMAIN,  alias, displayLabel);
 
   }
+  public com.runwaysdk.query.SelectableBoolean getEnabled()
+  {
+    return getEnabled(null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableBoolean getEnabled(String alias)
+  {
+    return (com.runwaysdk.query.SelectableBoolean)this.get(net.geoprism.registry.Organization.ENABLED, alias, null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableBoolean getEnabled(String alias, String displayLabel)
+  {
+    return (com.runwaysdk.query.SelectableBoolean)this.get(net.geoprism.registry.Organization.ENABLED, alias, displayLabel);
+
+  }
+
   public com.runwaysdk.query.SelectableChar getKeyName()
   {
     return getKeyName(null);

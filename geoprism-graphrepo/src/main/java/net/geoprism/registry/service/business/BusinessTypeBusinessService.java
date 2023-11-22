@@ -430,7 +430,7 @@ public class BusinessTypeBusinessService implements BusinessTypeBusinessServiceI
   {
     JsonArray response = new JsonArray();
 
-    List<ServerOrganization> organizations = ServerOrganization.getSortedOrganizations();
+    List<ServerOrganization> organizations = ServerOrganization.getSortedOrganizations().stream().filter(org -> org.getEnabled()).collect(Collectors.toList());
 
     for (ServerOrganization org : organizations)
     {

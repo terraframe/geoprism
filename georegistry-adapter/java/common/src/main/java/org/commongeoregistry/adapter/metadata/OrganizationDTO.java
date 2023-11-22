@@ -3,18 +3,19 @@
  *
  * This file is part of Common Geo Registry Adapter(tm).
  *
- * Common Geo Registry Adapter(tm) is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
+ * Common Geo Registry Adapter(tm) is free software: you can redistribute it
+ * and/or modify it under the terms of the GNU Lesser General Public License as
+ * published by the Free Software Foundation, either version 3 of the License,
+ * or (at your option) any later version.
  *
- * Common Geo Registry Adapter(tm) is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
+ * Common Geo Registry Adapter(tm) is distributed in the hope that it will be
+ * useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser
+ * General Public License for more details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with Common Geo Registry Adapter(tm).  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with Common Geo Registry Adapter(tm). If not, see
+ * <http://www.gnu.org/licenses/>.
  */
 package org.commongeoregistry.adapter.metadata;
 
@@ -41,6 +42,8 @@ public class OrganizationDTO implements Serializable
   public static final String JSON_PARENT_CODE            = "parentCode";
 
   public static final String JSON_PARENT_LABEL           = "parentLabel";
+
+  public static final String JSON_ENABLED                = "enabled";
 
   /**
    * Unique but human readable identifier. For example, "MOH" for the Ministry
@@ -69,6 +72,11 @@ public class OrganizationDTO implements Serializable
   private LocalizedValue     parentLabel;
 
   /**
+   * Flag indicating if the organization is enabled
+   */
+  private Boolean            enabled;
+
+  /**
    * Precondition: code cannot be null Precondition: label cannot be null and
    * its default value must contain a value. Precondition: contactInfo cannot be
    * null.
@@ -85,10 +93,11 @@ public class OrganizationDTO implements Serializable
     this.init(code, label, contactInfo);
   }
 
-  public OrganizationDTO(String code, LocalizedValue label, LocalizedValue contactInfo, String parentCode, LocalizedValue parentLabel)
+  public OrganizationDTO(String code, LocalizedValue label, LocalizedValue contactInfo, Boolean enabled, String parentCode, LocalizedValue parentLabel)
   {
     this.init(code, label, contactInfo);
 
+    this.enabled = enabled;
     this.parentCode = parentCode;
     this.parentLabel = parentLabel;
   }
@@ -206,15 +215,25 @@ public class OrganizationDTO implements Serializable
   {
     this.parentCode = parentCode;
   }
-  
+
   public LocalizedValue getParentLabel()
   {
     return parentLabel;
   }
-  
+
   public void setParentLabel(LocalizedValue parentLabel)
   {
     this.parentLabel = parentLabel;
+  }
+
+  public Boolean getEnabled()
+  {
+    return enabled;
+  }
+
+  public void setEnabled(Boolean enabled)
+  {
+    this.enabled = enabled;
   }
 
   /**
@@ -244,7 +263,12 @@ public class OrganizationDTO implements Serializable
     {
       organization.setParentLabel(LocalizedValue.fromJSON(oJson.get(JSON_PARENT_LABEL).getAsJsonObject()));
     }
-    
+
+    if (oJson.has(JSON_ENABLED))
+    {
+      organization.setEnabled(oJson.get(JSON_ENABLED).getAsBoolean());
+    }
+
     return organization;
   }
 
@@ -286,7 +310,9 @@ public class OrganizationDTO implements Serializable
     {
       json.add(JSON_PARENT_LABEL, this.getParentLabel().toJSON(serializer));
     }
-    
+
+    json.addProperty(JSON_ENABLED, this.enabled != null ? this.getEnabled() : true);
+
     return json;
   }
 

@@ -94,6 +94,11 @@ public class ServerOrganization implements JsonSerializable
     return this.organization.getCode();
   }
 
+  public Boolean getEnabled()
+  {
+    return this.organization.getEnabled() == null || this.organization.getEnabled();
+  }
+  
   public OrganizationContactInfo getContactInfo()
   {
     return this.organization.getContactInfo();
@@ -105,6 +110,12 @@ public class ServerOrganization implements JsonSerializable
     this.graphOrganization.setCode(code);
   }
 
+  public void setEnabled(Boolean enabled)
+  {
+    this.organization.setEnabled(enabled);
+    this.graphOrganization.setEnabled(enabled);
+  }
+  
   public void setDisplayLabel(LocalizedValue label)
   {
     LocalizedValueConverter.populate(this.organization.getDisplayLabel(), label);
@@ -351,18 +362,21 @@ public class ServerOrganization implements JsonSerializable
   {
     LocalizedValue label = LocalizedValueConverter.convertNoAutoCoalesce(this.getDisplayLabel());
     LocalizedValue info = LocalizedValueConverter.convertNoAutoCoalesce(this.getContactInfo());
-
     ServerOrganization parent = this.getParent();
+
+    OrganizationDTO dto = new OrganizationDTO(this.getCode(), label, info);
+    dto.setEnabled(this.getEnabled());
 
     if (parent != null)
     {
       String parentCode = parent.getCode();
       LocalizedValue parentLabel = LocalizedValueConverter.convertNoAutoCoalesce(parent.getDisplayLabel());
-
-      return new OrganizationDTO(this.getCode(), label, info, parentCode, parentLabel);
+      
+      dto.setParentCode(parentCode);
+      dto.setParentLabel(parentLabel);
     }
 
-    return new OrganizationDTO(this.getCode(), label, info);
+    return dto;
   }
 
   @Override
