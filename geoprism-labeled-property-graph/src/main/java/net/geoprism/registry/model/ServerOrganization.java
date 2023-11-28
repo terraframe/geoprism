@@ -22,6 +22,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.apache.commons.lang3.StringUtils;
 import org.commongeoregistry.adapter.dataaccess.LocalizedValue;
 import org.commongeoregistry.adapter.metadata.OrganizationDTO;
 import org.commongeoregistry.adapter.metadata.RegistryRole;
@@ -98,7 +99,7 @@ public class ServerOrganization implements JsonSerializable
   {
     return this.organization.getEnabled() == null || this.organization.getEnabled();
   }
-  
+
   public OrganizationContactInfo getContactInfo()
   {
     return this.organization.getContactInfo();
@@ -115,7 +116,7 @@ public class ServerOrganization implements JsonSerializable
     this.organization.setEnabled(enabled);
     this.graphOrganization.setEnabled(enabled);
   }
-  
+
   public void setDisplayLabel(LocalizedValue label)
   {
     LocalizedValueConverter.populate(this.organization.getDisplayLabel(), label);
@@ -371,7 +372,7 @@ public class ServerOrganization implements JsonSerializable
     {
       String parentCode = parent.getCode();
       LocalizedValue parentLabel = LocalizedValueConverter.convertNoAutoCoalesce(parent.getDisplayLabel());
-      
+
       dto.setParentCode(parentCode);
       dto.setParentLabel(parentLabel);
     }
@@ -471,6 +472,19 @@ public class ServerOrganization implements JsonSerializable
     if (organization != null)
     {
       GraphOrganization graphOrganization = GraphOrganization.get(organization);
+
+      return new ServerOrganization(organization, graphOrganization);
+    }
+
+    return null;
+  }
+
+  public static ServerOrganization getByGraphId(String graphId)
+  {
+    if (!StringUtils.isBlank(graphId))
+    {
+      GraphOrganization graphOrganization = GraphOrganization.get(graphId);
+      Organization organization = Organization.getByCode(graphOrganization.getCode());
 
       return new ServerOrganization(organization, graphOrganization);
     }
