@@ -21,6 +21,7 @@ package net.geoprism.registry.controller;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.hibernate.validator.constraints.NotEmpty;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.runwaysdk.constants.ClientConstants;
@@ -28,6 +29,22 @@ import com.runwaysdk.constants.ClientRequestIF;
 
 public abstract class RunwaySpringController
 {
+  public static class OidBody
+  {
+    @NotEmpty
+    private String oid;
+
+    public String getOid()
+    {
+      return oid;
+    }
+
+    public void setOid(String oid)
+    {
+      this.oid = oid;
+    }
+  }
+  
   @Autowired
   private HttpServletRequest  request;
 
