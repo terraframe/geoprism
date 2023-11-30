@@ -40,7 +40,6 @@ import com.runwaysdk.query.OIterator;
 import com.runwaysdk.query.QueryFactory;
 
 import net.geoprism.GeoprismUser;
-import net.geoprism.account.AccountBusinessServiceIF;
 import net.geoprism.account.InvalidUserInviteToken;
 import net.geoprism.account.UserInvite;
 import net.geoprism.account.UserInviteQuery;

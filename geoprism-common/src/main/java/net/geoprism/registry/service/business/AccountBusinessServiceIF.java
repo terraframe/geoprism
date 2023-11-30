@@ -16,25 +16,23 @@
  * You should have received a copy of the GNU Lesser General Public
  * License along with Geoprism(tm).  If not, see <http://www.gnu.org/licenses/>.
  */
-package net.geoprism.rbac;
+package net.geoprism.registry.service.business;
 
-import java.util.List;
 import java.util.Set;
 
-import com.runwaysdk.system.Roles;
-import com.runwaysdk.system.SingleActor;
+import org.springframework.stereotype.Component;
 
-public interface RoleBusinessServiceIF
+import net.geoprism.GeoprismUser;
+
+@Component
+public interface AccountBusinessServiceIF
 {
-  public Set<Roles> getUserRoles(String oid, boolean includeInherited);
-  
-  public String getCurrentRoleNames(boolean includeInherited);
-  
-  public String getCurrentRoleDisplayLabels(boolean includeInherited);
-  
-  public List<Roles> getAllAssignableRoles();
-  
-  public void assignRoles(SingleActor user, Set<String> roleIds);
-  
-  public void addDefaultRole(Set<String> roleIds);
+  /**
+   * Applys the user, and then (if roleIds is not null) assigns all provided roles to the user.
+   * All roles that the user has which are not part of the roleIds set will be removed.
+   * 
+   * @param user
+   * @param roleIds
+   */
+  public void applyUserWithRoles(GeoprismUser user, Set<String> roleIds);
 }

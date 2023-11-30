@@ -16,31 +16,28 @@
  * You should have received a copy of the GNU Lesser General Public
  * License along with Geoprism(tm).  If not, see <http://www.gnu.org/licenses/>.
  */
-package net.geoprism.account;
+package net.geoprism.registry.service.business;
 
+import java.util.List;
 import java.util.Set;
 
 import org.springframework.stereotype.Component;
 
-import com.runwaysdk.dataaccess.transaction.Transaction;
-
-import net.geoprism.GeoprismUser;
-import net.geoprism.rbac.RoleBusinessService;
-import net.geoprism.rbac.RoleBusinessServiceIF;
+import com.runwaysdk.system.Roles;
+import com.runwaysdk.system.SingleActor;
 
 @Component
-public class AccountBusinessService implements AccountBusinessServiceIF
+public interface RoleBusinessServiceIF
 {
-  // TODO : Do not autowire components here. This service is directly instantiated in IDM
+  public Set<Roles> getUserRoles(String oid, boolean includeInherited);
   
-  public RoleBusinessServiceIF roleService = new RoleBusinessService();
+  public String getCurrentRoleNames(boolean includeInherited);
   
-  @Override
-  @Transaction
-  public void applyUserWithRoles(GeoprismUser user, Set<String> roleIds)
-  {
-    user.apply();
-
-    roleService.assignRoles(user, roleIds);
-  }
+  public String getCurrentRoleDisplayLabels(boolean includeInherited);
+  
+  public List<Roles> getAllAssignableRoles();
+  
+  public void assignRoles(SingleActor user, Set<String> roleIds);
+  
+  public void addDefaultRole(Set<String> roleIds);
 }

@@ -17,7 +17,7 @@
  * License along with Geoprism(tm).  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package net.geoprism.rbac;
+package net.geoprism.registry.service.request;
 
 import java.util.List;
 import java.util.Set;
@@ -26,12 +26,16 @@ import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import com.runwaysdk.session.Request;
 import com.runwaysdk.session.RequestType;
 import com.runwaysdk.session.Session;
 
-@Component
+import net.geoprism.rbac.RoleView;
+import net.geoprism.registry.service.business.RoleBusinessServiceIF;
+
+@Service
 public class RoleService implements RoleServiceIF
 {
   @Autowired

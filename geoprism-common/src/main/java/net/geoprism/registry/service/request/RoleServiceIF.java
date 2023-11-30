@@ -16,13 +16,18 @@
  * You should have received a copy of the GNU Lesser General Public
  * License along with Geoprism(tm).  If not, see <http://www.gnu.org/licenses/>.
  */
-package net.geoprism.rbac;
+package net.geoprism.registry.service.request;
 
 import java.util.List;
 import java.util.Set;
 
+import org.springframework.stereotype.Component;
+
 import com.runwaysdk.system.Roles;
 
+import net.geoprism.rbac.RoleView;
+
+@Component
 public interface RoleServiceIF
 {
   /**

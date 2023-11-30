@@ -44,11 +44,11 @@ import com.runwaysdk.web.WebClientSession;
 
 import net.geoprism.account.LocaleSerializer;
 import net.geoprism.account.OauthServerIF;
-import net.geoprism.rbac.RoleServiceIF;
 import net.geoprism.rbac.RoleView;
 import net.geoprism.registry.controller.RunwaySpringController;
 import net.geoprism.registry.controller.SessionController;
 import net.geoprism.registry.service.request.ExternalProfileServiceIF;
+import net.geoprism.registry.service.request.RoleServiceIF;
 import net.geoprism.registry.service.request.SessionServiceIF;
 
 @Controller

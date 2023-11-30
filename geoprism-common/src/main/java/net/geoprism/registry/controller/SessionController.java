@@ -53,9 +53,9 @@ import com.runwaysdk.session.InvalidLoginException;
 import com.runwaysdk.session.InvalidLoginExceptionDTO;
 import com.runwaysdk.web.WebClientSession;
 
-import net.geoprism.rbac.RoleServiceIF;
 import net.geoprism.rbac.RoleView;
 import net.geoprism.registry.service.LoginBruteForceGuardService;
+import net.geoprism.registry.service.request.RoleServiceIF;
 import net.geoprism.registry.service.request.SessionServiceIF;
 
 @Controller

@@ -205,7 +205,10 @@ public class LabeledPropertyGraphTypeBusinessService implements LabeledPropertyG
 
     list.parse(object);
 
-    list.setOrganization(Organization.getByCode(object.get(LabeledPropertyGraphType.ORGANIZATION).getAsString()));
+    if (object.has(LabeledPropertyGraphType.ORGANIZATION))
+    {
+      list.setOrganization(Organization.getByCode(object.get(LabeledPropertyGraphType.ORGANIZATION).getAsString()));
+    }
 
     return list;
   }

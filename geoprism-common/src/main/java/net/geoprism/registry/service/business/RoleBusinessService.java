@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU Lesser General Public
  * License along with Geoprism(tm).  If not, see <http://www.gnu.org/licenses/>.
  */
-package net.geoprism.rbac;
+package net.geoprism.registry.service.business;
 
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -25,14 +25,12 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.json.JSONArray;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import com.runwaysdk.business.rbac.RoleDAO;
 import com.runwaysdk.business.rbac.RoleDAOIF;
 import com.runwaysdk.business.rbac.SingleActorDAO;
 import com.runwaysdk.business.rbac.SingleActorDAOIF;
-import com.runwaysdk.business.rbac.UserDAO;
-import com.runwaysdk.business.rbac.UserDAOIF;
 import com.runwaysdk.query.OIterator;
 import com.runwaysdk.query.QueryFactory;
 import com.runwaysdk.session.Request;
@@ -43,9 +41,9 @@ import com.runwaysdk.system.Roles;
 import com.runwaysdk.system.RolesQuery;
 import com.runwaysdk.system.SingleActor;
 
-import net.geoprism.GeoprismUser;
+import net.geoprism.rbac.RoleConstants;
 
-@Component
+@Service
 public class RoleBusinessService implements RoleBusinessServiceIF
 {
   // TODO: Don't autowire components here without removing direct instantiation

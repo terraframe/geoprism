@@ -578,4 +578,15 @@ public class ServerOrganization implements JsonSerializable
     return results;
   }
 
+  @Override
+  public boolean equals(Object obj)
+  {
+    if (obj instanceof ServerOrganization)
+    {
+      return ( (ServerOrganization) obj ).getCode().equals(this.getCode());
+    }
+
+    return super.equals(obj);
+  }
+
 }
