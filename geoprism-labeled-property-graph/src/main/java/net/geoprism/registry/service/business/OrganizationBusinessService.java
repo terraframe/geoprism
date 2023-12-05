@@ -1,18 +1,26 @@
 package net.geoprism.registry.service.business;
 
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
+import org.commongeoregistry.adapter.dataaccess.LocalizedValue;
 import org.commongeoregistry.adapter.metadata.OrganizationDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+import com.runwaysdk.business.graph.GraphQuery;
+import com.runwaysdk.dataaccess.metadata.graph.MdVertexDAO;
 import com.runwaysdk.dataaccess.transaction.Transaction;
 import com.runwaysdk.system.Roles;
 
+import net.geoprism.registry.conversion.LocalizedValueConverter;
 import net.geoprism.registry.conversion.OrganizationConverter;
+import net.geoprism.registry.graph.GraphOrganization;
 import net.geoprism.registry.model.GraphNode;
+import net.geoprism.registry.model.OrganizationView;
 import net.geoprism.registry.model.ServerOrganization;
 import net.geoprism.registry.service.permission.OrganizationPermissionServiceIF;
 import net.geoprism.registry.view.Page;
@@ -233,6 +241,64 @@ public class OrganizationBusinessService implements OrganizationBusinessServiceI
 
       importJsonTree(organization, child);
     }
+  }
+
+  @Override
+  @SuppressWarnings("unchecked")
+  public Page<OrganizationView> getPage(Integer pageSize, Integer pageNumber)
+  {
+    pageNumber = pageNumber != null ? pageNumber : Integer.valueOf(1);
+    pageSize = pageSize != null ? pageSize : Integer.valueOf(20);
+
+    String edgeName = "organization_hierarchy";
+    String tableName = MdVertexDAO.getMdVertexDAO(GraphOrganization.CLASS).getDBClassName();
+
+    StringBuilder statement = new StringBuilder();
+    statement.append("SELECT oid AS oid");
+    statement.append(", code as code");
+    statement.append(", displayLabel AS label");
+    statement.append(", contactInfo AS info");
+    statement.append(", enabled AS enabled");
+    statement.append(", in('" + edgeName + "').code AS parentCodes");
+    statement.append(", in('" + edgeName + "').displayLabel AS parentLabels" + "\n");
+    statement.append("FROM (" + "\n");
+    statement.append(" TRAVERSE out('" + edgeName + "') FROM (" + "\n");
+    statement.append("   SELECT FROM " + tableName + " WHERE in('" + edgeName + "').size() = 0" + "\n");
+    statement.append(" ) STRATEGY depth_first" + "\n");
+    statement.append(")" + "\n");
+    statement.append("OFFSET " + ( ( pageNumber - 1 ) * pageSize ) + "\n");
+    statement.append("LIMIT " + pageSize + "\n");
+
+    GraphQuery<Map<String, Object>> query = new GraphQuery<Map<String, Object>>(statement.toString());
+    List<Map<String, Object>> results = query.getResults();
+    List<OrganizationView> dtos = results.stream().map(m -> {
+      String code = (String) m.get("code");
+      LocalizedValue displayLabel = LocalizedValueConverter.convert((Map<String, ?>) m.get("label"));
+      LocalizedValue info = LocalizedValueConverter.convert((Map<String, ?>) m.get("info"));
+      Boolean enabled = (Boolean) m.get("enabled");
+      List<String> parentCodes = (List<String>) m.get("parentCodes");
+      List<Map<String, ?>> parentLabels = (List<Map<String, ?>>) m.get("parentLabels");
+
+      OrganizationDTO dto = new OrganizationDTO(code, displayLabel, info);
+      dto.setEnabled(enabled);
+
+      if (parentCodes.size() > 0)
+      {
+        dto.setParentCode(parentCodes.get(0));
+      }
+
+      if (parentLabels.size() > 0)
+      {
+        dto.setParentLabel(LocalizedValueConverter.convert(parentLabels.get(0)));
+      }
+
+      return new OrganizationView(dto);
+    }).collect(Collectors.toList());
+
+    GraphQuery<Long> cQuery = new GraphQuery<Long>("SELECT count(*) FROM graph_organization");
+    Long count = cQuery.getSingleResult();
+
+    return new Page<OrganizationView>(count, pageNumber, pageSize, dtos);
   }
 
 }

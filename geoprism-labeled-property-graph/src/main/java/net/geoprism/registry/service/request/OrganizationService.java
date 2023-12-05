@@ -36,9 +36,11 @@ import com.runwaysdk.session.RequestType;
 
 import net.geoprism.registry.OrganizationUtil;
 import net.geoprism.registry.model.OrganizationMetadata;
+import net.geoprism.registry.model.OrganizationView;
 import net.geoprism.registry.model.ServerOrganization;
 import net.geoprism.registry.service.business.OrganizationBusinessServiceIF;
 import net.geoprism.registry.service.permission.OrganizationPermissionServiceIF;
+import net.geoprism.registry.view.Page;
 
 @Service
 public class OrganizationService implements OrganizationServiceIF
@@ -251,4 +253,10 @@ public class OrganizationService implements OrganizationServiceIF
     this.service.importJsonTree(JsonParser.parseString(json).getAsJsonArray());
   }
 
+  @Override
+  @Request(RequestType.SESSION)
+  public Page<OrganizationView> getPage(String sessionId, Integer pageSize, Integer pageNumber)
+  {
+    return this.service.getPage(pageSize, pageNumber);
+  }
 }

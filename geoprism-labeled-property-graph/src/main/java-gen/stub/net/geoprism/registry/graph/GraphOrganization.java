@@ -2,6 +2,9 @@ package net.geoprism.registry.graph;
 
 import java.util.List;
 
+import org.commongeoregistry.adapter.metadata.OrganizationDTO;
+
+import com.google.gson.JsonElement;
 import com.runwaysdk.business.graph.EdgeObject;
 import com.runwaysdk.business.graph.GraphQuery;
 import com.runwaysdk.dataaccess.MdAttributeDAOIF;
@@ -12,8 +15,10 @@ import com.runwaysdk.dataaccess.metadata.graph.MdVertexDAO;
 import com.runwaysdk.dataaccess.transaction.Transaction;
 
 import net.geoprism.registry.Organization;
+import net.geoprism.registry.conversion.LocalizedValueConverter;
+import net.geoprism.registry.view.JsonSerializable;
 
-public class GraphOrganization extends GraphOrganizationBase
+public class GraphOrganization extends GraphOrganizationBase implements JsonSerializable
 {
   public static String      EDGE_CLASS       = "net.geoprism.registry.graph.OrganizationHierarchy";
 
@@ -207,5 +212,16 @@ public class GraphOrganization extends GraphOrganizationBase
     query.setParameter("organization", org.getOid());
 
     return query.getSingleResult();
+  }
+
+  public OrganizationDTO toDTO()
+  {
+    return new OrganizationDTO(this.getCode(), LocalizedValueConverter.convert(this.getEmbeddedComponent(DISPLAYLABEL)), LocalizedValueConverter.convert(this.getEmbeddedComponent(CONTACTINFO)));
+  }
+
+  @Override
+  public JsonElement toJSON()
+  {
+    return this.toDTO().toJSON();
   }
 }

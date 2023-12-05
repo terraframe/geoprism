@@ -5,8 +5,9 @@ import org.springframework.stereotype.Component;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
-import com.runwaysdk.session.Request;
-import com.runwaysdk.session.RequestType;
+
+import net.geoprism.registry.model.OrganizationView;
+import net.geoprism.registry.view.Page;
 
 @Component
 public interface OrganizationServiceIF
@@ -23,6 +24,8 @@ public interface OrganizationServiceIF
    */
   public OrganizationDTO[] getOrganizations(String sessionId, String[] codes);
 
+  public Page<OrganizationView> getPage(String sessionId, Integer pageSize, Integer pageNumber);
+
   /**
    * Creates a {@link OrganizationDTO} from the given JSON.
    * 
@@ -31,7 +34,6 @@ public interface OrganizationServiceIF
    *          JSON of the {@link OrganizationDTO} to be created.
    * @return newly created {@link OrganizationDTO}
    */
-  @Request(RequestType.SESSION)
   public OrganizationDTO createOrganization(String sessionId, String json);
 
   /**
@@ -44,7 +46,6 @@ public interface OrganizationServiceIF
    *          JSON of the {@link OrganizationDTO} to be updated.
    * @return updated {@link OrganizationDTO}
    */
-  @Request(RequestType.SESSION)
   public OrganizationDTO updateOrganization(String sessionId, String json);
 
   /**

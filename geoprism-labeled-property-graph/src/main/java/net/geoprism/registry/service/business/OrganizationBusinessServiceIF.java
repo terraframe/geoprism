@@ -7,6 +7,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
 import net.geoprism.registry.model.GraphNode;
+import net.geoprism.registry.model.OrganizationView;
 import net.geoprism.registry.model.ServerOrganization;
 import net.geoprism.registry.view.Page;
 
@@ -39,4 +40,6 @@ public interface OrganizationBusinessServiceIF
   public void importJsonTree(JsonArray array);
 
   public void importJsonTree(ServerOrganization parent, JsonObject object);
+
+  public Page<OrganizationView> getPage(Integer pageSize, Integer pageNumber);
 }
