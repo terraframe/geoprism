@@ -139,6 +139,21 @@ public class ServerOrganization implements JsonSerializable
     this.organization.unlock();
   }
 
+  public boolean isNew()
+  {
+    return this.organization.isNew();
+  }
+  
+  public void appLock()
+  {
+    this.organization.appLock();
+  }
+  
+  public void releaseAppLock()
+  {
+    this.organization.releaseAppLock();
+  }
+  
   /**
    * Creates a {@link RoleDAO} for this {@link Organization} and a Registry
    * Administrator {@link RoleDAO} for this {@link Organization}.

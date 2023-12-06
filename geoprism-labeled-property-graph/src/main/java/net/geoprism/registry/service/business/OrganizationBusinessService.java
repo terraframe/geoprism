@@ -230,7 +230,23 @@ public class OrganizationBusinessService implements OrganizationBusinessServiceI
       }
     }
 
-    this.apply(organization, parent);
+    if (!organization.isNew())
+    {
+      organization.appLock();
+
+      try
+      {
+        this.apply(organization, parent);
+      }
+      finally
+      {
+        organization.releaseAppLock();
+      }
+    }
+    else
+    {
+      this.apply(organization, parent);
+    }
 
     // Create/assign the child organizations
     JsonArray children = object.get("children").getAsJsonArray();
