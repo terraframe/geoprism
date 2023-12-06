@@ -1,24 +1,6 @@
-/**
- * Copyright (c) 2023 TerraFrame, Inc. All rights reserved.
- *
- * This file is part of Geoprism(tm).
- *
- * Geoprism(tm) is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
- *
- * Geoprism(tm) is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with Geoprism(tm).  If not, see <http://www.gnu.org/licenses/>.
- */
 package net.geoprism.account;
 
-@com.runwaysdk.business.ClassSignature(hash = -874531214)
+@com.runwaysdk.business.ClassSignature(hash = -1960793200)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -29,15 +11,17 @@ package net.geoprism.account;
 public abstract class ExternalProfileBase extends com.runwaysdk.system.SingleActor
 {
   public final static String CLASS = "net.geoprism.account.ExternalProfile";
-  public static java.lang.String DISPLAYNAME = "displayName";
-  public static java.lang.String EMAIL = "email";
-  public static java.lang.String FIRSTNAME = "firstName";
-  public static java.lang.String LASTNAME = "lastName";
-  public static java.lang.String PHONENUMBER = "phoneNumber";
-  public static java.lang.String REMOTEID = "remoteId";
-  public static java.lang.String SERVER = "server";
-  public static java.lang.String USERNAME = "username";
-  private static final long serialVersionUID = -874531214;
+  public final static java.lang.String DISPLAYNAME = "displayName";
+  public final static java.lang.String EMAIL = "email";
+  public final static java.lang.String FIRSTNAME = "firstName";
+  public final static java.lang.String INACTIVE = "inactive";
+  public final static java.lang.String LASTNAME = "lastName";
+  public final static java.lang.String PHONENUMBER = "phoneNumber";
+  public final static java.lang.String REMOTEID = "remoteId";
+  public final static java.lang.String SERVER = "server";
+  public final static java.lang.String USERNAME = "username";
+  @SuppressWarnings("unused")
+  private static final long serialVersionUID = -1960793200;
   
   public ExternalProfileBase()
   {
@@ -125,6 +109,34 @@ public abstract class ExternalProfileBase extends com.runwaysdk.system.SingleAct
     else
     {
       setValue(FIRSTNAME, value);
+    }
+  }
+  
+  public Boolean getInactive()
+  {
+    return com.runwaysdk.constants.MdAttributeBooleanUtil.getTypeSafeValue(getValue(INACTIVE));
+  }
+  
+  public void validateInactive()
+  {
+    this.validateAttribute(INACTIVE);
+  }
+  
+  public static com.runwaysdk.dataaccess.MdAttributeBooleanDAOIF getInactiveMd()
+  {
+    com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(net.geoprism.account.ExternalProfile.CLASS);
+    return (com.runwaysdk.dataaccess.MdAttributeBooleanDAOIF)mdClassIF.definesAttribute(INACTIVE);
+  }
+  
+  public void setInactive(Boolean value)
+  {
+    if(value == null)
+    {
+      setValue(INACTIVE, "");
+    }
+    else
+    {
+      setValue(INACTIVE, java.lang.Boolean.toString(value));
     }
   }
   
@@ -312,12 +324,6 @@ public abstract class ExternalProfileBase extends com.runwaysdk.system.SingleAct
   public static ExternalProfile getByKey(String key)
   {
     return (ExternalProfile) com.runwaysdk.business.Business.get(CLASS, key);
-  }
-  
-  public static java.lang.String login(java.lang.String serverId, java.lang.String code, java.lang.String locales, java.lang.String redirectBase)
-  {
-    String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.account.ExternalProfile.java";
-    throw new com.runwaysdk.dataaccess.metadata.ForbiddenMethodException(msg);
   }
   
   public static ExternalProfile lock(java.lang.String oid)

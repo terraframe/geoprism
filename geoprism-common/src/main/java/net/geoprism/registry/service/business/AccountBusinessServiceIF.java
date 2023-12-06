@@ -22,7 +22,7 @@ import java.util.Set;
 
 import org.springframework.stereotype.Component;
 
-import net.geoprism.GeoprismUser;
+import net.geoprism.account.GeoprismActorIF;
 
 @Component
 public interface AccountBusinessServiceIF
@@ -34,5 +34,5 @@ public interface AccountBusinessServiceIF
    * @param user
    * @param roleIds
    */
-  public void applyUserWithRoles(GeoprismUser user, Set<String> roleIds);
+  public void applyUserWithRoles(GeoprismActorIF user, Set<String> roleIds);
 }

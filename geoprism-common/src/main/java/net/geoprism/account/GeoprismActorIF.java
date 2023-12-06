@@ -45,5 +45,9 @@ public interface GeoprismActorIF extends MutableWithStructs
   public String getPhoneNumber();
   
   public void setPhoneNumber(String phoneNumber);
+  
+  public void setInactive(Boolean inactive);
+  
+  public Boolean getInactive();
 
 }

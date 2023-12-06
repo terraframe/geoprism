@@ -1,0 +1,19 @@
+<version xsi:noNamespaceSchemaLocation="classpath:com/runwaysdk/resources/xsd/version.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <doIt>
+    <create></create>
+    <update>
+   	  <mdBusiness name="net.geoprism.account.ExternalProfile" label="External profile" extends="com.runwaysdk.system.SingleActor">
+   	    <create>
+	   	    <attributes>
+	          <boolean name="inactive"/>
+	        </attributes>
+   	    </create>
+      </mdBusiness>
+    </update>
+  </doIt>
+  <undoIt>
+    <delete>
+      <object key="net.geoprism.account.ExternalProfile.inactive" type="com.runwaysdk.system.metadata.MdAttributeBoolean"/>
+    </delete>
+  </undoIt>
+</version>

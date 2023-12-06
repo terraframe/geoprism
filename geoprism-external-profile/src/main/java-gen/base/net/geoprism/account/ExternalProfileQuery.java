@@ -1,24 +1,6 @@
-/**
- * Copyright (c) 2023 TerraFrame, Inc. All rights reserved.
- *
- * This file is part of Geoprism(tm).
- *
- * Geoprism(tm) is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
- *
- * Geoprism(tm) is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with Geoprism(tm).  If not, see <http://www.gnu.org/licenses/>.
- */
 package net.geoprism.account;
 
-@com.runwaysdk.business.ClassSignature(hash = -1163212773)
+@com.runwaysdk.business.ClassSignature(hash = 1353689721)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -105,6 +87,23 @@ public  class ExternalProfileQuery extends com.runwaysdk.system.SingleActorQuery
   public com.runwaysdk.query.SelectableChar getFirstName(String alias, String displayLabel)
   {
     return (com.runwaysdk.query.SelectableChar)this.getComponentQuery().get(net.geoprism.account.ExternalProfile.FIRSTNAME, alias, displayLabel);
+
+  }
+  public com.runwaysdk.query.SelectableBoolean getInactive()
+  {
+    return getInactive(null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableBoolean getInactive(String alias)
+  {
+    return (com.runwaysdk.query.SelectableBoolean)this.getComponentQuery().get(net.geoprism.account.ExternalProfile.INACTIVE, alias, null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableBoolean getInactive(String alias, String displayLabel)
+  {
+    return (com.runwaysdk.query.SelectableBoolean)this.getComponentQuery().get(net.geoprism.account.ExternalProfile.INACTIVE, alias, displayLabel);
 
   }
   public com.runwaysdk.query.SelectableChar getLastName()
@@ -253,6 +252,9 @@ public  class ExternalProfileQuery extends com.runwaysdk.system.SingleActorQuery
     public com.runwaysdk.query.SelectableChar getFirstName();
     public com.runwaysdk.query.SelectableChar getFirstName(String alias);
     public com.runwaysdk.query.SelectableChar getFirstName(String alias, String displayLabel);
+    public com.runwaysdk.query.SelectableBoolean getInactive();
+    public com.runwaysdk.query.SelectableBoolean getInactive(String alias);
+    public com.runwaysdk.query.SelectableBoolean getInactive(String alias, String displayLabel);
     public com.runwaysdk.query.SelectableChar getLastName();
     public com.runwaysdk.query.SelectableChar getLastName(String alias);
     public com.runwaysdk.query.SelectableChar getLastName(String alias, String displayLabel);
@@ -352,6 +354,23 @@ public  class ExternalProfileQuery extends com.runwaysdk.system.SingleActorQuery
   public com.runwaysdk.query.SelectableChar getFirstName(String alias, String displayLabel)
   {
     return (com.runwaysdk.query.SelectableChar)this.get(net.geoprism.account.ExternalProfile.FIRSTNAME, alias, displayLabel);
+
+  }
+  public com.runwaysdk.query.SelectableBoolean getInactive()
+  {
+    return getInactive(null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableBoolean getInactive(String alias)
+  {
+    return (com.runwaysdk.query.SelectableBoolean)this.get(net.geoprism.account.ExternalProfile.INACTIVE, alias, null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableBoolean getInactive(String alias, String displayLabel)
+  {
+    return (com.runwaysdk.query.SelectableBoolean)this.get(net.geoprism.account.ExternalProfile.INACTIVE, alias, displayLabel);
 
   }
   public com.runwaysdk.query.SelectableChar getLastName()
@@ -471,6 +490,9 @@ public  class ExternalProfileQuery extends com.runwaysdk.system.SingleActorQuery
     public com.runwaysdk.query.SelectableChar getFirstName();
     public com.runwaysdk.query.SelectableChar getFirstName(String alias);
     public com.runwaysdk.query.SelectableChar getFirstName(String alias, String displayLabel);
+    public com.runwaysdk.query.SelectableBoolean getInactive();
+    public com.runwaysdk.query.SelectableBoolean getInactive(String alias);
+    public com.runwaysdk.query.SelectableBoolean getInactive(String alias, String displayLabel);
     public com.runwaysdk.query.SelectableChar getLastName();
     public com.runwaysdk.query.SelectableChar getLastName(String alias);
     public com.runwaysdk.query.SelectableChar getLastName(String alias, String displayLabel);
@@ -619,6 +641,23 @@ public  class ExternalProfileQuery extends com.runwaysdk.system.SingleActorQuery
   public com.runwaysdk.query.SelectableChar getFirstName(String alias, String displayLabel)
   {
     return (com.runwaysdk.query.SelectableChar)this.get(net.geoprism.account.ExternalProfile.FIRSTNAME, alias, displayLabel);
+
+  }
+  public com.runwaysdk.query.SelectableBoolean getInactive()
+  {
+    return getInactive(null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableBoolean getInactive(String alias)
+  {
+    return (com.runwaysdk.query.SelectableBoolean)this.get(net.geoprism.account.ExternalProfile.INACTIVE, alias, null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableBoolean getInactive(String alias, String displayLabel)
+  {
+    return (com.runwaysdk.query.SelectableBoolean)this.get(net.geoprism.account.ExternalProfile.INACTIVE, alias, displayLabel);
 
   }
   public com.runwaysdk.query.SelectableChar getLastName()

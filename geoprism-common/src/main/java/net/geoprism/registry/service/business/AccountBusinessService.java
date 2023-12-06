@@ -20,12 +20,11 @@ package net.geoprism.registry.service.business;
 
 import java.util.Set;
 
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 import com.runwaysdk.dataaccess.transaction.Transaction;
 
-import net.geoprism.GeoprismUser;
+import net.geoprism.account.GeoprismActorIF;
 
 @Service
 public class AccountBusinessService implements AccountBusinessServiceIF
@@ -36,7 +35,7 @@ public class AccountBusinessService implements AccountBusinessServiceIF
   
   @Override
   @Transaction
-  public void applyUserWithRoles(GeoprismUser user, Set<String> roleIds)
+  public void applyUserWithRoles(GeoprismActorIF user, Set<String> roleIds)
   {
     user.apply();
 

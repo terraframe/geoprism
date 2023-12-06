@@ -1,28 +1,11 @@
-/**
- * Copyright (c) 2023 TerraFrame, Inc. All rights reserved.
- *
- * This file is part of Geoprism(tm).
- *
- * Geoprism(tm) is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
- *
- * Geoprism(tm) is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with Geoprism(tm).  If not, see <http://www.gnu.org/licenses/>.
- */
 package net.geoprism.account;
 
-@com.runwaysdk.business.ClassSignature(hash = 1438090482)
+@com.runwaysdk.business.ClassSignature(hash = 199989776)
 public abstract class ExternalProfileDTOBase extends com.runwaysdk.system.SingleActorDTO
 {
   public final static String CLASS = "net.geoprism.account.ExternalProfile";
-  private static final long serialVersionUID = 1438090482;
+  @SuppressWarnings("unused")
+  private static final long serialVersionUID = 199989776;
   
   protected ExternalProfileDTOBase(com.runwaysdk.constants.ClientRequestIF clientRequest)
   {
@@ -48,6 +31,7 @@ public abstract class ExternalProfileDTOBase extends com.runwaysdk.system.Single
   public static java.lang.String DISPLAYNAME = "displayName";
   public static java.lang.String EMAIL = "email";
   public static java.lang.String FIRSTNAME = "firstName";
+  public static java.lang.String INACTIVE = "inactive";
   public static java.lang.String LASTNAME = "lastName";
   public static java.lang.String PHONENUMBER = "phoneNumber";
   public static java.lang.String REMOTEID = "remoteId";
@@ -162,6 +146,43 @@ public abstract class ExternalProfileDTOBase extends com.runwaysdk.system.Single
   public final com.runwaysdk.transport.metadata.AttributeTextMdDTO getFirstNameMd()
   {
     return (com.runwaysdk.transport.metadata.AttributeTextMdDTO) getAttributeDTO(FIRSTNAME).getAttributeMdDTO();
+  }
+  
+  public Boolean getInactive()
+  {
+    return com.runwaysdk.constants.MdAttributeBooleanUtil.getTypeSafeValue(getValue(INACTIVE));
+  }
+  
+  public void setInactive(Boolean value)
+  {
+    if(value == null)
+    {
+      setValue(INACTIVE, "");
+    }
+    else
+    {
+      setValue(INACTIVE, java.lang.Boolean.toString(value));
+    }
+  }
+  
+  public boolean isInactiveWritable()
+  {
+    return isWritable(INACTIVE);
+  }
+  
+  public boolean isInactiveReadable()
+  {
+    return isReadable(INACTIVE);
+  }
+  
+  public boolean isInactiveModified()
+  {
+    return isModified(INACTIVE);
+  }
+  
+  public final com.runwaysdk.transport.metadata.AttributeBooleanMdDTO getInactiveMd()
+  {
+    return (com.runwaysdk.transport.metadata.AttributeBooleanMdDTO) getAttributeDTO(INACTIVE).getAttributeMdDTO();
   }
   
   public String getLastName()
@@ -359,14 +380,6 @@ public abstract class ExternalProfileDTOBase extends com.runwaysdk.system.Single
   public final com.runwaysdk.transport.metadata.AttributeCharacterMdDTO getUsernameMd()
   {
     return (com.runwaysdk.transport.metadata.AttributeCharacterMdDTO) getAttributeDTO(USERNAME).getAttributeMdDTO();
-  }
-  
-  public static final java.lang.String login(com.runwaysdk.constants.ClientRequestIF clientRequest, java.lang.String serverId, java.lang.String code, java.lang.String locales, java.lang.String redirectBase)
-  {
-    String[] _declaredTypes = new String[]{"java.lang.String", "java.lang.String", "java.lang.String", "java.lang.String"};
-    Object[] _parameters = new Object[]{serverId, code, locales, redirectBase};
-    com.runwaysdk.business.MethodMetaData _metadata = new com.runwaysdk.business.MethodMetaData(net.geoprism.account.ExternalProfileDTO.CLASS, "login", _declaredTypes);
-    return (java.lang.String) clientRequest.invokeMethod(_metadata, null, _parameters);
   }
   
   public static net.geoprism.account.ExternalProfileDTO get(com.runwaysdk.constants.ClientRequestIF clientRequest, String oid)

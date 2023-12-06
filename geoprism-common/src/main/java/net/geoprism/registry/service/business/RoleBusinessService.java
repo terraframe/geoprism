@@ -41,6 +41,7 @@ import com.runwaysdk.system.Roles;
 import com.runwaysdk.system.RolesQuery;
 import com.runwaysdk.system.SingleActor;
 
+import net.geoprism.account.GeoprismActorIF;
 import net.geoprism.rbac.RoleConstants;
 
 @Service
@@ -193,7 +194,7 @@ public class RoleBusinessService implements RoleBusinessServiceIF
   }
   
   @Override
-  public void assignRoles(SingleActor user, Set<String> roleIds)
+  public void assignRoles(GeoprismActorIF user, Set<String> roleIds)
   {
     if (roleIds != null)
     {

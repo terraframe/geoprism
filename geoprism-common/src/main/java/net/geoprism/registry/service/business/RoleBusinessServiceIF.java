@@ -24,7 +24,8 @@ import java.util.Set;
 import org.springframework.stereotype.Component;
 
 import com.runwaysdk.system.Roles;
-import com.runwaysdk.system.SingleActor;
+
+import net.geoprism.account.GeoprismActorIF;
 
 @Component
 public interface RoleBusinessServiceIF
@@ -37,7 +38,7 @@ public interface RoleBusinessServiceIF
   
   public List<Roles> getAllAssignableRoles();
   
-  public void assignRoles(SingleActor user, Set<String> roleIds);
+  public void assignRoles(GeoprismActorIF user, Set<String> roleIds);
   
   public void addDefaultRole(Set<String> roleIds);
 }
