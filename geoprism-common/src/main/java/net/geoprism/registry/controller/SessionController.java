@@ -54,7 +54,7 @@ import com.runwaysdk.session.InvalidLoginExceptionDTO;
 import com.runwaysdk.web.WebClientSession;
 
 import net.geoprism.rbac.RoleView;
-import net.geoprism.registry.service.LoginBruteForceGuardService;
+import net.geoprism.registry.service.LoginGuardServiceIF;
 import net.geoprism.registry.service.request.RoleServiceIF;
 import net.geoprism.registry.service.request.SessionServiceIF;
 
@@ -102,7 +102,7 @@ public class SessionController extends RunwaySpringController
   protected RoleServiceIF roleService;
   
   @Autowired
-  protected LoginBruteForceGuardService loginGuard;
+  protected LoginGuardServiceIF loginGuard;
 
   @PostMapping(API_PATH + "/login")
   public ResponseEntity<String> login(@Valid @RequestBody LoginBody body) throws UnsupportedEncodingException
