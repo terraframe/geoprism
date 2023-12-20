@@ -42,6 +42,8 @@ public class ServiceFactory implements CacheProviderIF
   private RegistryAdapter     adapter;
 
   private ServerMetadataCache metadataCache;
+  
+  private boolean cacheInitialized = false;
 
   public ServiceFactory()
   {
@@ -124,9 +126,17 @@ public class ServiceFactory implements CacheProviderIF
   {
     return getBean(OrganizationServiceIF.class);
   }
-
-  public static ServerMetadataCache getMetadataCache()
+  
+  public static synchronized ServerMetadataCache getMetadataCache()
   {
-    return ServiceFactory.getInstance().metadataCache;
+    ServiceFactory fac = ServiceFactory.getInstance();
+
+    if (!fac.cacheInitialized)
+    {
+      fac.cacheInitialized = true;
+      getGraphRepoService().initialize();
+    }
+
+    return fac.metadataCache;
   }
 }

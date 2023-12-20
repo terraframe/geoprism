@@ -49,7 +49,7 @@ import net.geoprism.registry.service.business.HierarchyTypeBusinessServiceIF;
 import net.geoprism.registry.service.business.UndirectedGraphTypeBusinessServiceIF;
 
 @Service
-public class GraphRepoService implements GraphRepoServiceIF, ApplicationListener<ContextRefreshedEvent>
+public class GraphRepoService implements GraphRepoServiceIF
 {
   @Autowired
   private HierarchyTypeBusinessServiceIF hierarchyService;
@@ -159,12 +159,6 @@ public class GraphRepoService implements GraphRepoServiceIF, ApplicationListener
     {
       // skip for now
     }
-  }
-
-  @Override
-  public void onApplicationEvent(ContextRefreshedEvent event)
-  {
-    this.initialize();
   }
   
   @Override
