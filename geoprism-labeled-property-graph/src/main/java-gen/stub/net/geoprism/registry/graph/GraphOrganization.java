@@ -2,6 +2,7 @@ package net.geoprism.registry.graph;
 
 import java.util.List;
 
+import org.commongeoregistry.adapter.dataaccess.LocalizedValue;
 import org.commongeoregistry.adapter.metadata.OrganizationDTO;
 
 import com.google.gson.JsonElement;
@@ -16,6 +17,7 @@ import com.runwaysdk.dataaccess.transaction.Transaction;
 
 import net.geoprism.registry.Organization;
 import net.geoprism.registry.conversion.LocalizedValueConverter;
+import net.geoprism.registry.query.graph.AbstractVertexRestriction;
 import net.geoprism.registry.view.JsonSerializable;
 
 public class GraphOrganization extends GraphOrganizationBase implements JsonSerializable
@@ -117,12 +119,15 @@ public class GraphOrganization extends GraphOrganizationBase implements JsonSeri
 
   public List<GraphOrganization> getChildren(Integer pageSize, Integer pageNumber)
   {
+    MdVertexDAOIF mdVertex = MdVertexDAO.getMdVertexDAO(GraphOrganization.CLASS);
+    MdAttributeDAOIF mdAttribute = mdVertex.definesAttribute(GraphOrganization.DISPLAYLABEL);
+
     MdEdgeDAOIF mdEdge = MdEdgeDAO.getMdEdgeDAO(EDGE_CLASS);
 
     StringBuilder statement = new StringBuilder();
     statement.append("SELECT EXPAND(out('" + mdEdge.getDBClassName() + "')");
     statement.append(") FROM :rid");
-    statement.append(" ORDER BY code");
+    statement.append(" ORDER BY " + mdAttribute.getColumnName() + "." + LocalizedValue.DEFAULT_LOCALE);
 
     if (pageSize != null && pageNumber != null)
     {
