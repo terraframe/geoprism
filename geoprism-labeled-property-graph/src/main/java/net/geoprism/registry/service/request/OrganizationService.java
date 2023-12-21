@@ -251,6 +251,8 @@ public class OrganizationService implements OrganizationServiceIF
   public void importJsonTree(String sessionId, String json)
   {
     this.service.importJsonTree(JsonParser.parseString(json).getAsJsonArray());
+    
+    provider.getServerCache().refresh();
   }
 
   @Override
