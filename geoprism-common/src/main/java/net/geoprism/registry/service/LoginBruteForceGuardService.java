@@ -34,7 +34,7 @@ import com.runwaysdk.session.Request;
 import net.geoprism.session.LoginBlockedException;
 
 @Service
-public class LoginBruteForceGuardService
+public class LoginBruteForceGuardService implements LoginGuardServiceIF
 {
   public static final int MAX_ATTEMPT = 10;
   private LoadingCache<String, Integer> attemptsCache;
@@ -52,6 +52,7 @@ public class LoginBruteForceGuardService
       });
   }
 
+  @Override
   public void loginFailed(final String key) {
       int attempts;
       try {
@@ -72,6 +73,7 @@ public class LoginBruteForceGuardService
   }
   
   @Request
+  @Override
   public void guardLogin()
   {
     if (isBlocked())
