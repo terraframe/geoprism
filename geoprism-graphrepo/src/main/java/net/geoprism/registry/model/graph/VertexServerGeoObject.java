@@ -867,6 +867,18 @@ public class VertexServerGeoObject extends AbstractServerGeoObject implements Se
 
   public LocalizedValue getDisplayLabel(Date date)
   {
+    if (date == null)
+    {
+      GraphObjectDAO embeddedObjectDAO = (GraphObjectDAO) this.getMostRecentValue(DefaultAttribute.DISPLAY_LABEL.getName());
+
+      if (embeddedObjectDAO == null)
+      {
+        return new LocalizedValue(null, new HashMap<String, String>());
+      }
+
+      return RegistryLocalizedValueConverter.convert(embeddedObjectDAO);
+    }
+    
     return this.getValueLocalized(DefaultAttribute.DISPLAY_LABEL.getName(), date);
   }
 
