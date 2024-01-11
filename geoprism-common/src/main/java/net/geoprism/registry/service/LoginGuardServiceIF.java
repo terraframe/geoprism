@@ -18,9 +18,11 @@
  */
 package net.geoprism.registry.service;
 
+import javax.servlet.http.HttpServletRequest;
+
 public interface LoginGuardServiceIF
 {
-  public void guardLogin();
+  public void guardLogin(HttpServletRequest servletReq);
   
   public void loginFailed(final String key);
 }

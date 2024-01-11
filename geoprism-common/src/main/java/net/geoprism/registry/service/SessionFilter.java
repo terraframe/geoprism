@@ -167,7 +167,7 @@ public class SessionFilter implements Filter
     }
     else if (request.getHeader("Authorization") != null && request.getHeader("Authorization").length() > 0 && request.getHeader("Authorization").toLowerCase().startsWith("basic "))
     {
-      loginGuard.guardLogin();
+      loginGuard.guardLogin(request);
       
       try
       {

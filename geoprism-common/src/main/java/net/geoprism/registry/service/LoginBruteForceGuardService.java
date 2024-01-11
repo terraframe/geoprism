@@ -39,9 +39,6 @@ public class LoginBruteForceGuardService implements LoginGuardServiceIF
   public static final int MAX_ATTEMPT = 10;
   private LoadingCache<String, Integer> attemptsCache;
 
-  @Autowired
-  private HttpServletRequest servletReq;
-
   public LoginBruteForceGuardService() {
       super();
       attemptsCache = CacheBuilder.newBuilder().expireAfterWrite(1, TimeUnit.DAYS).build(new CacheLoader<String, Integer>() {
@@ -64,9 +61,9 @@ public class LoginBruteForceGuardService implements LoginGuardServiceIF
       attemptsCache.put(key, attempts);
   }
 
-  public boolean isBlocked() {
+  public boolean isBlocked(HttpServletRequest servletReq) {
       try {
-          return attemptsCache.get(getClientIP()) >= MAX_ATTEMPT;
+          return attemptsCache.get(getClientIP(servletReq)) >= MAX_ATTEMPT;
       } catch (final ExecutionException e) {
           return false;
       }
@@ -74,15 +71,15 @@ public class LoginBruteForceGuardService implements LoginGuardServiceIF
   
   @Request
   @Override
-  public void guardLogin()
+  public void guardLogin(HttpServletRequest servletReq)
   {
-    if (isBlocked())
+    if (isBlocked(servletReq))
     {
       throw new LoginBlockedException();
     }
   }
 
-  private String getClientIP() {
+  private String getClientIP(HttpServletRequest servletReq) {
       final String xfHeader = servletReq.getHeader("X-Forwarded-For");
       if (xfHeader != null) {
           return xfHeader.split(",")[0];

@@ -28,6 +28,7 @@ import java.util.Locale;
 import java.util.Set;
 
 import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 import org.hibernate.validator.constraints.NotEmpty;
@@ -105,9 +106,9 @@ public class SessionController extends RunwaySpringController
   protected LoginGuardServiceIF loginGuard;
 
   @PostMapping(API_PATH + "/login")
-  public ResponseEntity<String> login(@Valid @RequestBody LoginBody body) throws UnsupportedEncodingException
+  public ResponseEntity<String> login(HttpServletRequest servletReq, @Valid @RequestBody LoginBody body) throws UnsupportedEncodingException
   {
-    loginGuard.guardLogin();
+    loginGuard.guardLogin(servletReq);
     
     String username = body.username;
     String password = body.password;
