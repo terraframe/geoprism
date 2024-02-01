@@ -87,7 +87,7 @@ public class ServerChildTreeNode extends ServerTreeNode
 
     String orgCode = go.getType().getOrganizationCode();
 
-    ServerGeoObjectType type = ServerGeoObjectType.get(go.getType());
+    ServerGeoObjectType type = ServerGeoObjectType.get(go.getType().getCode());
 
     for (ServerChildTreeNode child : this.children)
     {

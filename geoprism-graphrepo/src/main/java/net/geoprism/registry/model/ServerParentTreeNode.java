@@ -111,7 +111,7 @@ public class ServerParentTreeNode extends ServerTreeNode
     ParentTreeNode node = new ParentTreeNode(geoObject, ht);
 
     String orgCode = geoObject.getType().getOrganizationCode();
-    ServerGeoObjectType type = ServerGeoObjectType.get(geoObject.getType());
+    ServerGeoObjectType type = ServerGeoObjectType.get(geoObject.getType().getCode());
 
     for (ServerParentTreeNode parent : this.parents)
     {

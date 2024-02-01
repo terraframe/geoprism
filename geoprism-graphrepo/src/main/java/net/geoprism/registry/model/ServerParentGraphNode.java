@@ -193,7 +193,7 @@ public class ServerParentGraphNode extends ServerGraphNode
     {
       GeoObject go = GeoObject.fromJSON(ServiceFactory.getAdapter(), jo.get(TreeNode.JSON_GEO_OBJECT).toString());
       
-      ServerGeoObjectType type = ServerGeoObjectType.get(go.getType());
+      ServerGeoObjectType type = ServerGeoObjectType.get(go.getType().getCode());
       ServerGeoObjectStrategyIF strategy = new GeoObjectBusinessService().getStrategy(type);
       goif = strategy.constructFromGeoObject(go, false);
     }

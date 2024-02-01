@@ -20,8 +20,8 @@ package net.geoprism.registry.model;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Optional;
 
-import org.commongeoregistry.adapter.Optional;
 import org.commongeoregistry.adapter.constants.DefaultAttribute;
 import org.commongeoregistry.adapter.dataaccess.LocalizedValue;
 import org.commongeoregistry.adapter.metadata.HierarchyType;

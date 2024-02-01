@@ -1,0 +1,178 @@
+<version xsi:noNamespaceSchemaLocation="classpath:com/runwaysdk/resources/xsd/version.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <doIt>
+    <create>
+      <mdVertex name="net.geoprism.registry.graph.AttributeValue" isAbstract="true" label="AttributeValue">
+        <attributes>
+          <char name="attributeName" label="Attribute Name" required="true" size="255" />
+          <dateTime name="startDate" label="Start Date" required="true"  />
+          <dateTime name="endDate" label="End Date" required="true"  />          
+        </attributes>
+      </mdVertex>    
+      
+      <mdVertex name="net.geoprism.registry.graph.AttributeBasicValue" isAbstract="true" extends="net.geoprism.registry.graph.AttributeValue" label="Attribute Basic Value">
+      </mdVertex>    
+      <mdVertex name="net.geoprism.registry.graph.AttributeBooleanValue" extends="net.geoprism.registry.graph.AttributeBasicValue" label="Attribute Boolean Value">
+        <attributes>
+          <boolean name="value" label="Value" required="true"  />          
+        </attributes>
+      </mdVertex>    
+      <mdVertex name="net.geoprism.registry.graph.AttributeCharacterValue" extends="net.geoprism.registry.graph.AttributeBasicValue" label="Attribute Character Value">
+        <attributes>
+          <text name="value" label="Value" required="true"  />          
+        </attributes>
+      </mdVertex>    
+      <mdVertex name="net.geoprism.registry.graph.AttributeDateValue" extends="net.geoprism.registry.graph.AttributeBasicValue" label="Attribute Date Value">
+        <attributes>
+          <dateTime name="value" label="Value" required="true"  />          
+        </attributes>
+      </mdVertex>    
+      <mdVertex name="net.geoprism.registry.graph.AttributeLongValue" extends="net.geoprism.registry.graph.AttributeBasicValue" label="Attribute Long Value">
+        <attributes>
+          <long name="value" label="Value" required="true"  />          
+        </attributes>
+      </mdVertex>    
+      <mdVertex name="net.geoprism.registry.graph.AttributeDoubleValue" extends="net.geoprism.registry.graph.AttributeBasicValue" label="Attribute Double Value">
+        <attributes>
+          <double name="value" label="Value" required="true" length="32" decimal="8"  />          
+        </attributes>
+      </mdVertex>    
+      <mdVertex name="net.geoprism.registry.graph.AttributeLocalValue" extends="net.geoprism.registry.graph.AttributeBasicValue" label="Attribute Local Value">
+        <attributes>
+          <text name="defaultLocale" label="Default Locale" required="true"  />          
+        </attributes>
+      </mdVertex>    
+<!--       
+      <mdVertex name="net.geoprism.registry.graph.AttributeTermValue" extends="net.geoprism.registry.graph.AttributeValue" label="Attribute Term Value">
+        <attributes>
+          <reference name="value" label="Value" required="true"  />          
+        </attributes>
+      </mdVertex>    
+      <mdVertex name="net.geoprism.registry.graph.AttributeClassificationValue" isAbstract="true" label="AttributeValue">
+        <attributes>
+          <graphReference name="value" type="net.geoprism.registry.graph.ClassificationNode" label="Value" required="true"/>          
+        </attributes>
+      </mdVertex>    
+ -->      
+      
+      
+      <mdVertex name="net.geoprism.registry.graph.AttributeGeometryValue"  extends="net.geoprism.registry.graph.AttributeBasicValue" isAbstract="true" label="Attribute Geometry Value">
+        <attributes>
+        </attributes>
+      </mdVertex>    
+      <mdVertex name="net.geoprism.registry.graph.AttributePointValue" extends="net.geoprism.registry.graph.AttributeGeometryValue" label="Attribute Point Value">
+        <attributes>
+          <multipoint name="value" label="Value" required="true" dimension="2" srid="4326"  />          
+        </attributes>
+      </mdVertex>    
+      <mdVertex name="net.geoprism.registry.graph.AttributePolygonValue" extends="net.geoprism.registry.graph.AttributeGeometryValue" label="Attribute Polygon Value">
+        <attributes>
+          <multipolygon name="value" label="Value" required="true" dimension="2" srid="4326" />          
+        </attributes>
+      </mdVertex>    
+      <mdVertex name="net.geoprism.registry.graph.AttributeLineValue" extends="net.geoprism.registry.graph.AttributeGeometryValue" label="Attribute Line Value">
+        <attributes>
+          <multilinestring name="value" label="Value" required="true" dimension="2" srid="4326"  />          
+        </attributes>
+      </mdVertex>    
+      <mdVertex name="net.geoprism.registry.graph.AttributeShapeValue" extends="net.geoprism.registry.graph.AttributeGeometryValue" label="Attribute Shape Value">
+        <attributes>
+          <shape name="value" label="Value" required="true" dimension="2" srid="4326"  />          
+        </attributes>
+      </mdVertex>    
+      
+      
+      <mdVertex name="net.geoprism.registry.graph.AttributeType" isAbstract="true" label="AttributeType">
+        <attributes>
+          <char name="code" label="Code" required="true" size="255" />
+          <localCharEmbedded name="label" label="Label" required="true" />        
+          <localCharEmbedded name="description" label="Description" />        
+          <boolean name="required" label="Required" />
+          <boolean name="isDefault" label="Is Default" />
+          <boolean name="isChangeOverTime" label="Is Change Over Time" />
+        </attributes>
+      </mdVertex>    
+      <mdVertex name="net.geoprism.registry.graph.AttributeBooleanType" extends="net.geoprism.registry.graph.AttributeType" label="Attribute Boolean Type">
+        <attributes>
+        </attributes>
+      </mdVertex>    
+      <mdVertex name="net.geoprism.registry.graph.AttributeCharacterType" extends="net.geoprism.registry.graph.AttributeType" label="Attribute Character Type">
+        <attributes>
+        </attributes>
+      </mdVertex>    
+      <mdVertex name="net.geoprism.registry.graph.AttributeDateType" extends="net.geoprism.registry.graph.AttributeType" label="Attribute Date Type">
+        <attributes>
+        </attributes>
+      </mdVertex>    
+      <mdVertex name="net.geoprism.registry.graph.AttributeLongType" extends="net.geoprism.registry.graph.AttributeType" label="Attribute Long Type">
+        <attributes>
+        </attributes>
+      </mdVertex>    
+      <mdVertex name="net.geoprism.registry.graph.AttributeDoubleType" extends="net.geoprism.registry.graph.AttributeType" label="Attribute Double Type">
+        <attributes>
+          <int name="precision" label="Precision" required="true"  />          
+          <int name="scale" label="Scale" required="true"  />          
+        </attributes>
+      </mdVertex>    
+      <mdVertex name="net.geoprism.registry.graph.AttributeLocalType" extends="net.geoprism.registry.graph.AttributeType" label="Attribute Local Type">
+        <attributes>
+        </attributes>
+      </mdVertex>    
+      <mdVertex name="net.geoprism.registry.graph.AttributeTermType" extends="net.geoprism.registry.graph.AttributeType" label="Attribute Term Type">
+        <attributes>
+          <reference name="rootTerm" label="Root Term" required="false" type="net.geoprism.ontology.Classifier"  />          
+        </attributes>
+      </mdVertex>    
+      <mdVertex name="net.geoprism.registry.graph.AttributeClassificationType" isAbstract="true" label="AttributeValue">
+        <attributes>
+          <reference name="mdClassification" type="com.runwaysdk.system.metadata.MdClassification" label="MdClassification" required="true"/>          
+          <text name="rootTerm" label="Root Term" required="false"/>          
+        </attributes>
+      </mdVertex>    
+      
+      
+      <mdVertex name="net.geoprism.registry.graph.AttributeGeometryType" extends="net.geoprism.registry.graph.AttributeType" label="Attribute Geometry Type">
+        <attributes>
+          <char name="geometryType" label="Geometry Type" required="true" size="255"  />          
+        </attributes>
+      </mdVertex>    
+      
+      <mdVertex name="net.geoprism.registry.graph.GeoObjectType" label="GeoObjectType">
+        <attributes>
+          <char name="code" label="Code" required="true" size="255"  />          
+          <char name="geometryType" label="Geometry Type" required="true" size="255"  />          
+          <localCharEmbedded name="label" label="Label" required="true" />        
+          <localCharEmbedded name="description" label="Description" />        
+          <boolean name="isGeometryEditable" label="Is Geometry Editable" />
+          <boolean name="isAbstract" label="Is Abstract" />
+          <graphReference name="superType" label="Super Type" type="net.geoprism.registry.graph.GeoObjectType" />
+          <graphReference name="organization" label="Organization" type="net.geoprism.registry.graph.GraphOrganization" />
+          <boolean name="isPrivate" label="Is Private" />          
+        </attributes>
+      </mdVertex>    
+      
+      <mdVertex name="net.geoprism.registry.graph.HierarchicalRelationshipType" label="Hierarchical Relationship" generateController="false">
+        <attributes>
+          <char name="code" size="255" required="true" indexType="unique index" label="Code" />
+          <localCharEmbedded name="label" label="Label" required="true" />        
+          <localCharEmbedded name="description" label="Description" />        
+          <graphReference name="organization" label="Organization" type="net.geoprism.registry.graph.GraphOrganization" />
+          <reference name="definitionEdge" type="com.runwaysdk.system.metadata.MdEdge" required="true" label="DefinitionEdge" />          
+          <reference name="objectEdge" type="com.runwaysdk.system.metadata.MdEdge" required="true" label="ObjectEdge" />          
+          <text name="abstractDescription" required="false" label="Abstract" />
+          <text name="progress" required="false" label="Progress" />
+          <text name="acknowledgement" required="false" label="Acknowledgement and disclaimer" />
+          <text name="contact" required="false" label="Contact information" />
+          <text name="accessConstraints" label="Access Constraints" />
+          <text name="useConstraints" label="Use Constraints" />         
+          <text name="disclaimer" label="Disclaimer" />
+          <text name="phoneNumber" label="Telephone number" />
+          <text name="email" label="Email address" />             
+        </attributes>
+      </mdVertex>    
+      
+    </create>
+  </doIt>
+  <undoIt>
+    <delete></delete>
+  </undoIt>
+</version>

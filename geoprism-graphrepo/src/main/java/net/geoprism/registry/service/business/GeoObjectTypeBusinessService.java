@@ -3,35 +3,33 @@
  *
  * This file is part of Geoprism(tm).
  *
- * Geoprism(tm) is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
+ * Geoprism(tm) is free software: you can redistribute it and/or modify it under
+ * the terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation, either version 3 of the License, or (at your option) any
+ * later version.
  *
- * Geoprism(tm) is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
+ * Geoprism(tm) is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with Geoprism(tm).  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with Geoprism(tm). If not, see <http://www.gnu.org/licenses/>.
  */
 package net.geoprism.registry.service.business;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Comparator;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.stream.Collectors;
 
-import org.commongeoregistry.adapter.Optional;
 import org.commongeoregistry.adapter.Term;
 import org.commongeoregistry.adapter.constants.DefaultAttribute;
-import org.commongeoregistry.adapter.dataaccess.GeoObject;
 import org.commongeoregistry.adapter.dataaccess.LocalizedValue;
 import org.commongeoregistry.adapter.metadata.AttributeBooleanType;
 import org.commongeoregistry.adapter.metadata.AttributeCharacterType;
@@ -53,51 +51,23 @@ import com.runwaysdk.ComponentIF;
 import com.runwaysdk.business.BusinessFacade;
 import com.runwaysdk.business.rbac.Operation;
 import com.runwaysdk.business.rbac.RoleDAO;
-import com.runwaysdk.constants.ComponentInfo;
-import com.runwaysdk.constants.IndexTypes;
-import com.runwaysdk.constants.MdAttributeBooleanInfo;
 import com.runwaysdk.constants.MdAttributeCharacterInfo;
 import com.runwaysdk.constants.MdAttributeConcreteInfo;
 import com.runwaysdk.constants.MdAttributeDoubleInfo;
-import com.runwaysdk.constants.MdAttributeLocalCharacterEmbeddedInfo;
-import com.runwaysdk.constants.MdAttributeLocalInfo;
-import com.runwaysdk.constants.MdAttributeReferenceInfo;
-import com.runwaysdk.dataaccess.AttributeDoesNotExistException;
 import com.runwaysdk.dataaccess.DuplicateDataException;
-import com.runwaysdk.dataaccess.MdAttributeBlobDAOIF;
 import com.runwaysdk.dataaccess.MdAttributeConcreteDAOIF;
-import com.runwaysdk.dataaccess.MdAttributeDAOIF;
-import com.runwaysdk.dataaccess.MdAttributeEncryptionDAOIF;
-import com.runwaysdk.dataaccess.MdAttributeFileDAOIF;
-import com.runwaysdk.dataaccess.MdAttributeIndicatorDAOIF;
-import com.runwaysdk.dataaccess.MdAttributeLocalDAOIF;
-import com.runwaysdk.dataaccess.MdAttributeMultiTermDAOIF;
-import com.runwaysdk.dataaccess.MdAttributeStructDAOIF;
-import com.runwaysdk.dataaccess.MdAttributeTermDAOIF;
-import com.runwaysdk.dataaccess.MdAttributeTimeDAOIF;
-import com.runwaysdk.dataaccess.MdAttributeUUIDDAOIF;
-import com.runwaysdk.dataaccess.MdBusinessDAOIF;
 import com.runwaysdk.dataaccess.MdClassDAOIF;
-import com.runwaysdk.dataaccess.MdGraphClassDAOIF;
-import com.runwaysdk.dataaccess.MdVertexDAOIF;
 import com.runwaysdk.dataaccess.attributes.AttributeValueException;
-import com.runwaysdk.dataaccess.cache.DataNotFoundException;
-import com.runwaysdk.dataaccess.metadata.MdAttributeBooleanDAO;
-import com.runwaysdk.dataaccess.metadata.MdAttributeCharacterDAO;
 import com.runwaysdk.dataaccess.metadata.MdAttributeConcreteDAO;
-import com.runwaysdk.dataaccess.metadata.MdAttributeDAO;
-import com.runwaysdk.dataaccess.metadata.MdAttributeLocalCharacterEmbeddedDAO;
-import com.runwaysdk.dataaccess.metadata.MdAttributeUUIDDAO;
-import com.runwaysdk.dataaccess.metadata.MdBusinessDAO;
 import com.runwaysdk.dataaccess.metadata.graph.MdVertexDAO;
 import com.runwaysdk.dataaccess.transaction.Transaction;
-import com.runwaysdk.gis.dataaccess.MdAttributeGeometryDAOIF;
 import com.runwaysdk.gis.dataaccess.metadata.graph.MdGeoVertexDAO;
 import com.runwaysdk.query.OIterator;
 import com.runwaysdk.query.QueryFactory;
 import com.runwaysdk.session.Session;
 import com.runwaysdk.system.Actor;
 import com.runwaysdk.system.Roles;
+import com.runwaysdk.system.gis.geo.GeometryType;
 import com.runwaysdk.system.gis.geo.Universal;
 import com.runwaysdk.system.gis.metadata.graph.MdGeoVertex;
 import com.runwaysdk.system.gis.metadata.graph.MdGeoVertexQuery;
@@ -112,13 +82,11 @@ import com.runwaysdk.system.metadata.MdAttributeLocalCharacterEmbedded;
 import com.runwaysdk.system.metadata.MdAttributeLocalText;
 import com.runwaysdk.system.metadata.MdAttributeLong;
 import com.runwaysdk.system.metadata.MdAttributeTerm;
-import com.runwaysdk.system.metadata.MdAttributeUUID;
 import com.runwaysdk.system.metadata.MdBusiness;
 import com.runwaysdk.system.metadata.MdClass;
 import com.runwaysdk.system.metadata.MdGraphClass;
 
 import net.geoprism.ontology.Classifier;
-import net.geoprism.ontology.GeoEntityUtil;
 import net.geoprism.registry.ChainInheritanceException;
 import net.geoprism.registry.CodeLengthException;
 import net.geoprism.registry.DuplicateGeoObjectTypeException;
@@ -126,15 +94,12 @@ import net.geoprism.registry.GeoObjectTypeAssignmentException;
 import net.geoprism.registry.HierarchicalRelationshipType;
 import net.geoprism.registry.HierarchyRootException;
 import net.geoprism.registry.InheritedHierarchyAnnotation;
-import net.geoprism.registry.Organization;
-import net.geoprism.registry.RegistryConstants;
 import net.geoprism.registry.TypeInUseException;
 import net.geoprism.registry.conversion.GeometryTypeFactory;
 import net.geoprism.registry.conversion.LocalizedValueConverter;
 import net.geoprism.registry.conversion.RegistryAttributeTypeConverter;
 import net.geoprism.registry.conversion.RegistryLocalizedValueConverter;
 import net.geoprism.registry.conversion.TermConverter;
-import net.geoprism.registry.graph.GeoVertex;
 import net.geoprism.registry.graph.GeoVertexType;
 import net.geoprism.registry.model.Classification;
 import net.geoprism.registry.model.ClassificationType;
@@ -142,6 +107,7 @@ import net.geoprism.registry.model.GeoObjectMetadata;
 import net.geoprism.registry.model.GeoObjectTypeMetadata;
 import net.geoprism.registry.model.ServerGeoObjectType;
 import net.geoprism.registry.model.ServerHierarchyType;
+import net.geoprism.registry.model.ServerOrganization;
 import net.geoprism.registry.permission.PermissionContext;
 import net.geoprism.registry.service.request.ServiceFactory;
 
@@ -256,13 +222,17 @@ public class GeoObjectTypeBusinessService implements GeoObjectTypeBusinessServic
       throw new UnsupportedOperationException("A root node in a hierarchy cannot be inherited");
     }
 
-    InheritedHierarchyAnnotation annotation = new InheritedHierarchyAnnotation();
-    annotation.setUniversal(sgot.getUniversal());
-    annotation.setInheritedHierarchicalRelationshipType(ihrt);
-    annotation.setForHierarchicalRelationshipType(fhrt);
-    annotation.apply();
-
-    return annotation;
+    // TODO: HEADS UP
+    // InheritedHierarchyAnnotation annotation = new
+    // InheritedHierarchyAnnotation();
+    // annotation.setUniversal(sgot.getUniversal());
+    // annotation.setInheritedHierarchicalRelationshipType(ihrt);
+    // annotation.setForHierarchicalRelationshipType(fhrt);
+    // annotation.apply();
+    //
+    // return annotation;
+    
+    return null;
   }
 
   @Transaction
@@ -283,44 +253,49 @@ public class GeoObjectTypeBusinessService implements GeoObjectTypeBusinessServic
 
   public List<ServerHierarchyType> getHierarchies(ServerGeoObjectType sgot, boolean includeFromSuperType)
   {
+    // TODO: HEADS UP
+
     List<ServerHierarchyType> hierarchies = new LinkedList<ServerHierarchyType>();
 
-    List<ServerHierarchyType> hierarchyTypes = ServiceFactory.getMetadataCache().getAllHierarchyTypes();
-    Universal root = Universal.getRoot();
-
-    for (ServerHierarchyType hierarchyType : hierarchyTypes)
-    {
-      Organization org = hierarchyType.getOrganization();
-
-      if (ServiceFactory.getHierarchyPermissionService().canRead(org.getCode()))
-      {
-        if (isRoot(sgot, hierarchyType))
-        {
-          hierarchies.add(hierarchyType);
-        }
-        else
-        {
-          // Note: Ordered ancestors always includes self
-          Collection<?> parents = GeoEntityUtil.getOrderedAncestors(root, sgot.getUniversal(), hierarchyType.getUniversalType());
-
-          if (parents.size() > 1)
-          {
-            hierarchies.add(hierarchyType);
-          }
-        }
-
-      }
-    }
-
-    if (includeFromSuperType)
-    {
-      ServerGeoObjectType superType = sgot.getSuperType();
-
-      if (superType != null)
-      {
-        hierarchies.addAll(getHierarchies(superType, includeFromSuperType));
-      }
-    }
+    // List<ServerHierarchyType> hierarchyTypes =
+    // ServiceFactory.getMetadataCache().getAllHierarchyTypes();
+    // Universal root = Universal.getRoot();
+    //
+    // for (ServerHierarchyType hierarchyType : hierarchyTypes)
+    // {
+    // Organization org = hierarchyType.getOrganization();
+    //
+    // if
+    // (ServiceFactory.getHierarchyPermissionService().canRead(org.getCode()))
+    // {
+    // if (isRoot(sgot, hierarchyType))
+    // {
+    // hierarchies.add(hierarchyType);
+    // }
+    // else
+    // {
+    // // Note: Ordered ancestors always includes self
+    // Collection<?> parents = GeoEntityUtil.getOrderedAncestors(root,
+    // sgot.getUniversal(), hierarchyType.getUniversalType());
+    //
+    // if (parents.size() > 1)
+    // {
+    // hierarchies.add(hierarchyType);
+    // }
+    // }
+    //
+    // }
+    // }
+    //
+    // if (includeFromSuperType)
+    // {
+    // ServerGeoObjectType superType = sgot.getSuperType();
+    //
+    // if (superType != null)
+    // {
+    // hierarchies.addAll(getHierarchies(superType, includeFromSuperType));
+    // }
+    // }
 
     return hierarchies;
   }
@@ -332,14 +307,18 @@ public class GeoObjectTypeBusinessService implements GeoObjectTypeBusinessServic
 
   public ServerHierarchyType getInheritedHierarchy(ServerGeoObjectType sgot, HierarchicalRelationshipType hierarchicalRelationship)
   {
-    InheritedHierarchyAnnotation annotation = InheritedHierarchyAnnotation.get(sgot.getUniversal(), hierarchicalRelationship);
-
-    if (annotation != null)
-    {
-      HierarchicalRelationshipType inheritedHierarchicalRelationshipType = annotation.getInheritedHierarchicalRelationshipType();
-
-      return ServerHierarchyType.get(inheritedHierarchicalRelationshipType);
-    }
+    // TODO: HEADS UP
+    // InheritedHierarchyAnnotation annotation =
+    // InheritedHierarchyAnnotation.get(sgot.getUniversal(),
+    // hierarchicalRelationship);
+    //
+    // if (annotation != null)
+    // {
+    // HierarchicalRelationshipType inheritedHierarchicalRelationshipType =
+    // annotation.getInheritedHierarchicalRelationshipType();
+    //
+    // return ServerHierarchyType.get(inheritedHierarchicalRelationshipType);
+    // }
 
     return null;
   }
@@ -360,38 +339,44 @@ public class GeoObjectTypeBusinessService implements GeoObjectTypeBusinessServic
   {
     List<ServerGeoObjectType> ancestors = new LinkedList<ServerGeoObjectType>();
 
-    Collection<com.runwaysdk.business.ontology.Term> list = GeoEntityUtil.getOrderedAncestors(Universal.getRoot(), sgot.getUniversal(), hierarchyType.getUniversalType());
-
-    list.forEach(term -> {
-      Universal parent = (Universal) term;
-
-      if (!parent.getKeyName().equals(Universal.ROOT) && !parent.getOid().equals(sgot.getUniversal().getOid()))
-      {
-        ServerGeoObjectType sParent = ServerGeoObjectType.get(parent);
-
-        ancestors.add(sParent);
-
-        if (includeInheritedTypes && isRoot(sParent, hierarchyType))
-        {
-          ServerHierarchyType inheritedHierarchy = getInheritedHierarchy(sParent, hierarchyType);
-
-          if (inheritedHierarchy != null)
-          {
-            ancestors.addAll(0, getTypeAncestors(sParent, inheritedHierarchy, includeInheritedTypes));
-          }
-        }
-      }
-    });
-
-    if (ancestors.size() == 0)
-    {
-      ServerGeoObjectType superType = sgot.getSuperType();
-
-      if (superType != null)
-      {
-        return getTypeAncestors(superType, hierarchyType, includeInheritedTypes);
-      }
-    }
+    // TODO: HEADS UP
+    // Collection<com.runwaysdk.business.ontology.Term> list =
+    // GeoEntityUtil.getOrderedAncestors(Universal.getRoot(),
+    // sgot.getUniversal(), hierarchyType.getUniversalType());
+    //
+    // list.forEach(term -> {
+    // Universal parent = (Universal) term;
+    //
+    // if (!parent.getKeyName().equals(Universal.ROOT) &&
+    // !parent.getOid().equals(sgot.getUniversal().getOid()))
+    // {
+    // ServerGeoObjectType sParent = ServerGeoObjectType.get(parent);
+    //
+    // ancestors.add(sParent);
+    //
+    // if (includeInheritedTypes && isRoot(sParent, hierarchyType))
+    // {
+    // ServerHierarchyType inheritedHierarchy = getInheritedHierarchy(sParent,
+    // hierarchyType);
+    //
+    // if (inheritedHierarchy != null)
+    // {
+    // ancestors.addAll(0, getTypeAncestors(sParent, inheritedHierarchy,
+    // includeInheritedTypes));
+    // }
+    // }
+    // }
+    // });
+    //
+    // if (ancestors.size() == 0)
+    // {
+    // ServerGeoObjectType superType = sgot.getSuperType();
+    //
+    // if (superType != null)
+    // {
+    // return getTypeAncestors(superType, hierarchyType, includeInheritedTypes);
+    // }
+    // }
 
     return ancestors;
   }
@@ -406,110 +391,42 @@ public class GeoObjectTypeBusinessService implements GeoObjectTypeBusinessServic
    */
   public ServerHierarchyType findHierarchy(ServerGeoObjectType sgot, ServerHierarchyType hierarchyType, ServerGeoObjectType parent)
   {
-    Collection<com.runwaysdk.business.ontology.Term> list = GeoEntityUtil.getOrderedAncestors(Universal.getRoot(), sgot.getUniversal(), hierarchyType.getUniversalType());
-
-    for (Object term : list)
-    {
-      Universal universal = (Universal) term;
-
-      if (parent.getUniversal().getOid().equals(universal.getOid()))
-      {
-        return hierarchyType;
-      }
-
-      ServerGeoObjectType sParent = ServerGeoObjectType.get(universal);
-
-      if (isRoot(sParent, hierarchyType))
-      {
-        ServerHierarchyType inheritedHierarchy = getInheritedHierarchy(sParent, hierarchyType);
-
-        if (inheritedHierarchy != null)
-        {
-          return findHierarchy(sParent, inheritedHierarchy, parent);
-        }
-      }
-    }
-
-    return hierarchyType;
+    // TODO: HEADS UP
+    //
+    // Collection<com.runwaysdk.business.ontology.Term> list =
+    // GeoEntityUtil.getOrderedAncestors(Universal.getRoot(),
+    // sgot.getUniversal(), hierarchyType.getUniversalType());
+    //
+    // for (Object term : list)
+    // {
+    // Universal universal = (Universal) term;
+    //
+    // if (parent.getUniversal().getOid().equals(universal.getOid()))
+    // {
+    // return hierarchyType;
+    // }
+    //
+    // ServerGeoObjectType sParent = ServerGeoObjectType.get(universal);
+    //
+    // if (isRoot(sParent, hierarchyType))
+    // {
+    // ServerHierarchyType inheritedHierarchy = getInheritedHierarchy(sParent,
+    // hierarchyType);
+    //
+    // if (inheritedHierarchy != null)
+    // {
+    // return findHierarchy(sParent, inheritedHierarchy, parent);
+    // }
+    // }
+    // }
+    //
+    // return hierarchyType;
+    return null;
   }
 
   public List<ServerGeoObjectType> getChildren(ServerGeoObjectType sgot, ServerHierarchyType hierarchy)
   {
     return htServ.getChildren(hierarchy, sgot);
-  }
-
-  /**
-   * Adds default attributes to the given {@link MdBusinessDAO} according to the
-   * Common Geo-Registry specification for {@link GeoObject}.
-   * 
-   * @param mdBusinessDAO
-   *          {@link MdBusinessDAO} that will define the default attributes.
-   */
-  @Transaction
-  public void createDefaultAttributes(Universal universal, MdBusiness definingMdBusiness)
-  {
-    // DefaultAttribute.UID - Defined on the MdBusiness and the values are from
-    // the {@code GeoObject#OID};
-    MdAttributeUUID uuidMdAttr = new MdAttributeUUID();
-    uuidMdAttr.setAttributeName(RegistryConstants.UUID);
-    uuidMdAttr.getDisplayLabel().setValue(RegistryConstants.UUID_LABEL);
-    uuidMdAttr.getDescription().setValue("The universal unique identifier of the feature.");
-    uuidMdAttr.setDefiningMdClass(definingMdBusiness);
-    uuidMdAttr.setRequired(true);
-    uuidMdAttr.addIndexType(MdAttributeIndices.UNIQUE_INDEX);
-    uuidMdAttr.apply();
-
-    MdAttributeBooleanDAO invalidMdAttr = MdAttributeBooleanDAO.newInstance();
-    invalidMdAttr.setValue(MdAttributeConcreteInfo.NAME, DefaultAttribute.INVALID.getName());
-    invalidMdAttr.setStructValue(MdAttributeConcreteInfo.DISPLAY_LABEL, MdAttributeLocalInfo.DEFAULT_LOCALE, DefaultAttribute.INVALID.getDefaultLocalizedName());
-    invalidMdAttr.setStructValue(MdAttributeConcreteInfo.DESCRIPTION, MdAttributeLocalInfo.DEFAULT_LOCALE, DefaultAttribute.INVALID.getDefaultDescription());
-    invalidMdAttr.setValue(MdAttributeConcreteInfo.DEFINING_MD_CLASS, definingMdBusiness.getOid());
-    invalidMdAttr.setValue(MdAttributeConcreteInfo.REQUIRED, MdAttributeBooleanInfo.TRUE);
-    invalidMdAttr.setValue(MdAttributeConcreteInfo.DEFAULT_VALUE, MdAttributeBooleanInfo.FALSE);
-    invalidMdAttr.addItem(MdAttributeConcreteInfo.INDEX_TYPE, IndexTypes.NON_UNIQUE_INDEX.getOid());
-    invalidMdAttr.apply();
-  }
-
-  @Transaction
-  public void createDefaultAttributes(Universal universal, MdGraphClassDAOIF mdClass)
-  {
-    MdAttributeUUIDDAO uuidMdAttr = MdAttributeUUIDDAO.newInstance();
-    uuidMdAttr.setValue(MdAttributeConcreteInfo.NAME, RegistryConstants.UUID);
-    uuidMdAttr.setStructValue(MdAttributeConcreteInfo.DISPLAY_LABEL, MdAttributeLocalInfo.DEFAULT_LOCALE, RegistryConstants.UUID_LABEL);
-    uuidMdAttr.setStructValue(MdAttributeConcreteInfo.DESCRIPTION, MdAttributeLocalInfo.DEFAULT_LOCALE, RegistryConstants.UUID_LABEL);
-    uuidMdAttr.setValue(MdAttributeConcreteInfo.DEFINING_MD_CLASS, mdClass.getOid());
-    uuidMdAttr.setValue(MdAttributeConcreteInfo.REQUIRED, MdAttributeBooleanInfo.TRUE);
-    uuidMdAttr.addItem(MdAttributeConcreteInfo.INDEX_TYPE, IndexTypes.UNIQUE_INDEX.getOid());
-    uuidMdAttr.apply();
-
-    MdAttributeBooleanDAO existsMdAttr = MdAttributeBooleanDAO.newInstance();
-    existsMdAttr.setValue(MdAttributeConcreteInfo.NAME, DefaultAttribute.EXISTS.getName());
-    existsMdAttr.setStructValue(MdAttributeConcreteInfo.DISPLAY_LABEL, MdAttributeLocalInfo.DEFAULT_LOCALE, DefaultAttribute.EXISTS.getDefaultLocalizedName());
-    existsMdAttr.setStructValue(MdAttributeConcreteInfo.DESCRIPTION, MdAttributeLocalInfo.DEFAULT_LOCALE, DefaultAttribute.EXISTS.getDefaultDescription());
-    existsMdAttr.setValue(MdAttributeConcreteInfo.DEFINING_MD_CLASS, mdClass.getOid());
-    existsMdAttr.setValue(MdAttributeConcreteInfo.REQUIRED, MdAttributeBooleanInfo.FALSE);
-    existsMdAttr.setValue(MdAttributeConcreteInfo.DEFAULT_VALUE, MdAttributeBooleanInfo.FALSE);
-    existsMdAttr.addItem(MdAttributeConcreteInfo.INDEX_TYPE, IndexTypes.NON_UNIQUE_INDEX.getOid());
-    existsMdAttr.apply();
-
-    MdAttributeBooleanDAO invalidMdAttr = MdAttributeBooleanDAO.newInstance();
-    invalidMdAttr.setValue(MdAttributeConcreteInfo.NAME, DefaultAttribute.INVALID.getName());
-    invalidMdAttr.setStructValue(MdAttributeConcreteInfo.DISPLAY_LABEL, MdAttributeLocalInfo.DEFAULT_LOCALE, DefaultAttribute.INVALID.getDefaultLocalizedName());
-    invalidMdAttr.setStructValue(MdAttributeConcreteInfo.DESCRIPTION, MdAttributeLocalInfo.DEFAULT_LOCALE, DefaultAttribute.INVALID.getDefaultDescription());
-    invalidMdAttr.setValue(MdAttributeConcreteInfo.DEFINING_MD_CLASS, mdClass.getOid());
-    invalidMdAttr.setValue(MdAttributeConcreteInfo.REQUIRED, MdAttributeBooleanInfo.TRUE);
-    invalidMdAttr.setValue(MdAttributeConcreteInfo.DEFAULT_VALUE, MdAttributeBooleanInfo.FALSE);
-    invalidMdAttr.addItem(MdAttributeConcreteInfo.INDEX_TYPE, IndexTypes.NON_UNIQUE_INDEX.getOid());
-    invalidMdAttr.apply();
-
-    // DefaultAttribute.DISPLAY_LABEL
-    MdAttributeLocalCharacterEmbeddedDAO labelMdAttr = MdAttributeLocalCharacterEmbeddedDAO.newInstance();
-    labelMdAttr.setValue(MdAttributeLocalCharacterEmbeddedInfo.NAME, DefaultAttribute.DISPLAY_LABEL.getName());
-    labelMdAttr.setStructValue(MdAttributeLocalCharacterEmbeddedInfo.DISPLAY_LABEL, MdAttributeLocalInfo.DEFAULT_LOCALE, DefaultAttribute.DISPLAY_LABEL.getDefaultLocalizedName());
-    labelMdAttr.setStructValue(MdAttributeLocalCharacterEmbeddedInfo.DESCRIPTION, MdAttributeLocalInfo.DEFAULT_LOCALE, DefaultAttribute.DISPLAY_LABEL.getDefaultDescription());
-    labelMdAttr.setValue(MdAttributeLocalCharacterEmbeddedInfo.DEFINING_MD_CLASS, mdClass.getOid());
-    labelMdAttr.setValue(MdAttributeLocalCharacterEmbeddedInfo.REQUIRED, MdAttributeBooleanInfo.TRUE);
-    labelMdAttr.apply();
   }
 
   @Transaction
@@ -521,14 +438,14 @@ public class GeoObjectTypeBusinessService implements GeoObjectTypeBusinessServic
   }
 
   @Transaction
-  public ServerGeoObjectType create(GeoObjectType geoObjectType)
+  public ServerGeoObjectType create(GeoObjectType dto)
   {
-    if (!isValidName(geoObjectType.getCode()))
+    if (!isValidName(dto.getCode()))
     {
-      throw new AttributeValueException("The geo object type code has an invalid character", geoObjectType.getCode());
+      throw new AttributeValueException("The geo object type code has an invalid character", dto.getCode());
     }
 
-    if (geoObjectType.getCode().length() > 64)
+    if (dto.getCode().length() > 64)
     {
       // Setting the typename on the MdBusiness creates this limitation.
       CodeLengthException ex = new CodeLengthException();
@@ -536,17 +453,17 @@ public class GeoObjectTypeBusinessService implements GeoObjectTypeBusinessServic
       throw ex;
     }
 
-    ServiceFactory.getGeoObjectTypePermissionService().enforceCanCreate(geoObjectType.getOrganizationCode(), geoObjectType.getIsPrivate());
+    ServiceFactory.getGeoObjectTypePermissionService().enforceCanCreate(dto.getOrganizationCode(), dto.getIsPrivate());
 
-    String superTypeCode = geoObjectType.getSuperTypeCode();
-    Boolean isAbstract = geoObjectType.getIsAbstract();
+    String superTypeCode = dto.getSuperTypeCode();
+    Boolean isAbstract = dto.getIsAbstract();
 
     ServerGeoObjectType superType = null;
 
     if (superTypeCode != null && superTypeCode.length() > 0)
     {
       superType = ServerGeoObjectType.get(superTypeCode);
-      geoObjectType.setGeometryType(superType.getGeometryType());
+      dto.setGeometryType(superType.getGeometryType());
     }
 
     if (isAbstract && superType != null)
@@ -559,111 +476,47 @@ public class GeoObjectTypeBusinessService implements GeoObjectTypeBusinessServic
       throw new GeoObjectTypeAssignmentException();
     }
 
-    Universal universal = new Universal();
-    universal.setUniversalId(geoObjectType.getCode());
-    universal.setIsLeafType(false);
-    universal.setIsGeometryEditable(geoObjectType.isGeometryEditable());
+    // 1st create the MdVertex
+    MdVertexDAO mdVertex = GeoVertexType.create(dto.getCode(), isAbstract, superType);
 
-    // Set the owner of the universal to the id of the corresponding role of the
-    // responsible organization.
-    String organizationCode = geoObjectType.getOrganizationCode();
-    RegistryLocalizedValueConverter.setOwner(universal, organizationCode);
+    GeometryType geometryType = GeometryTypeFactory.get(dto.getGeometryType());
 
-    LocalizedValueConverter.populate(universal.getDisplayLabel(), geoObjectType.getLabel());
-    LocalizedValueConverter.populate(universal.getDescription(), geoObjectType.getDescription());
-
-    com.runwaysdk.system.gis.geo.GeometryType geometryType = GeometryTypeFactory.get(geoObjectType.getGeometryType());
-
-    // Clear the default value
-    universal.clearGeometryType();
-    universal.addGeometryType(geometryType);
-
-    MdBusiness mdBusiness = new MdBusiness();
-    mdBusiness.setPackageName(RegistryConstants.UNIVERSAL_MDBUSINESS_PACKAGE);
-
-    // The CODE name becomes the class name
-    mdBusiness.setTypeName(universal.getUniversalId());
-    mdBusiness.setGenerateSource(false);
-    mdBusiness.setIsAbstract(isAbstract);
-    mdBusiness.setStructValue(MdAttributeConcreteInfo.DISPLAY_LABEL, MdAttributeLocalInfo.DEFAULT_LOCALE, universal.getDisplayLabel().getValue());
-    mdBusiness.setStructValue(MdAttributeConcreteInfo.DESCRIPTION, MdAttributeLocalInfo.DEFAULT_LOCALE, universal.getDescription().getValue());
+    net.geoprism.registry.graph.GeoObjectType type = new net.geoprism.registry.graph.GeoObjectType();
+    type.setGeometryType(geometryType.getEnumName());
+    type.setIsAbstract(dto.getIsAbstract());
+    type.setIsPrivate(dto.getIsPrivate());
+    type.setIsGeometryEditable(dto.isGeometryEditable());
+    LocalizedValueConverter.populate(type, net.geoprism.registry.graph.GeoObjectType.LABEL, dto.getLabel());
+    LocalizedValueConverter.populate(type, net.geoprism.registry.graph.GeoObjectType.DESCRIPTION, dto.getDescription());
+    type.setOrganization(ServerOrganization.getByCode(dto.getOrganizationCode(), true).getGraphOrganization());
+    type.setValue(net.geoprism.registry.graph.GeoObjectType.MDVERTEX, mdVertex.getOid());
 
     if (superType != null)
     {
-      mdBusiness.setSuperMdBusiness(superType.getMdBusiness());
-    }
-    else
-    {
-      mdBusiness.setPublish(false);
+      type.setSuperType(superType.getType());
     }
 
     try
     {
       // The DuplicateDataException on code was found to be thrown here.
       // I've created a larger try/catch here just in case.
-      mdBusiness.apply();
+      type.apply();
 
-      // Add the default attributes.
-      if (superType == null)
-      {
-        this.createDefaultAttributes(universal, mdBusiness);
-      }
+      type.createDefaultAttributes();
 
-      universal.setMdBusiness(mdBusiness);
-
-      universal.apply();
-
-      GeoObjectTypeMetadata metadata = new GeoObjectTypeMetadata();
-      metadata.setIsPrivate(geoObjectType.getIsPrivate());
-      metadata.setUniversal(universal);
-      metadata.apply();
     }
     catch (DuplicateDataException ex)
     {
       DuplicateGeoObjectTypeException ex2 = new DuplicateGeoObjectTypeException();
-      ex2.setDuplicateValue(geoObjectType.getCode());
+      ex2.setDuplicateValue(dto.getCode());
       throw ex2;
     }
 
-    // Create the MdGeoVertexClass
-    MdGeoVertexDAO mdVertex = GeoVertexType.create(universal.getUniversalId(), universal.getOwnerOid(), isAbstract, superType);
+    // HEADS UP:
+//    // Build the parent class term root if it does not exist.
+//    TermConverter.buildIfNotExistdMdBusinessClassifier(mdBusiness);
 
-    if (superType == null)
-    {
-      this.createDefaultAttributes(universal, mdVertex);
-    }
-
-    if (!isAbstract)
-    {
-      // DefaultAttribute.CODE
-      MdAttributeCharacter businessCodeMdAttr = new MdAttributeCharacter();
-      businessCodeMdAttr.setAttributeName(DefaultAttribute.CODE.getName());
-      businessCodeMdAttr.getDisplayLabel().setValue(DefaultAttribute.CODE.getDefaultLocalizedName());
-      businessCodeMdAttr.getDescription().setValue(DefaultAttribute.CODE.getDefaultDescription());
-      businessCodeMdAttr.setDatabaseSize(MdAttributeCharacterInfo.MAX_CHARACTER_SIZE);
-      businessCodeMdAttr.setDefiningMdClass(mdBusiness);
-      businessCodeMdAttr.setRequired(true);
-      businessCodeMdAttr.addIndexType(MdAttributeIndices.UNIQUE_INDEX);
-      businessCodeMdAttr.apply();
-
-      // DefaultAttribute.CODE
-      MdAttributeCharacterDAO vertexCodeMdAttr = MdAttributeCharacterDAO.newInstance();
-      vertexCodeMdAttr.setValue(MdAttributeConcreteInfo.NAME, DefaultAttribute.CODE.getName());
-      vertexCodeMdAttr.setStructValue(MdAttributeConcreteInfo.DISPLAY_LABEL, MdAttributeLocalInfo.DEFAULT_LOCALE, DefaultAttribute.CODE.getDefaultLocalizedName());
-      vertexCodeMdAttr.setStructValue(MdAttributeConcreteInfo.DESCRIPTION, MdAttributeLocalInfo.DEFAULT_LOCALE, DefaultAttribute.CODE.getDefaultDescription());
-      vertexCodeMdAttr.setValue(MdAttributeCharacterInfo.SIZE, MdAttributeCharacterInfo.MAX_CHARACTER_SIZE);
-      vertexCodeMdAttr.setValue(MdAttributeConcreteInfo.DEFINING_MD_CLASS, mdVertex.getOid());
-      vertexCodeMdAttr.setValue(MdAttributeConcreteInfo.REQUIRED, MdAttributeBooleanInfo.TRUE);
-      vertexCodeMdAttr.addItem(MdAttributeConcreteInfo.INDEX_TYPE, IndexTypes.UNIQUE_INDEX.getOid());
-      vertexCodeMdAttr.apply();
-    }
-
-    // Build the parent class term root if it does not exist.
-    TermConverter.buildIfNotExistdMdBusinessClassifier(mdBusiness);
-
-    ServerGeoObjectType serverGeoObjectType = this.build(universal);
-
-    return serverGeoObjectType;
+    return this.build(type);
   }
 
   /**
@@ -684,84 +537,10 @@ public class GeoObjectTypeBusinessService implements GeoObjectTypeBusinessServic
     roleDAO.grantPermission(Operation.WRITE_ALL, component.getOid());
   }
 
-  /**
-   * The GeoObjectType is a DTO type, which means it contains data which has
-   * been localized to a particular user's session. We need to rebuild this
-   * object such that it includes relevant request information (like the correct
-   * locale).
-   */
-  public GeoObjectType buildType(ServerGeoObjectType serverType)
-  {
-    com.runwaysdk.system.gis.geo.GeometryType geoPrismgeometryType = serverType.getUniversal().getGeometryType().get(0);
-
-    org.commongeoregistry.adapter.constants.GeometryType cgrGeometryType = GeometryTypeFactory.get(geoPrismgeometryType);
-
-    LocalizedValue label = RegistryLocalizedValueConverter.convert(serverType.getUniversal().getDisplayLabel());
-    LocalizedValue description = RegistryLocalizedValueConverter.convert(serverType.getUniversal().getDescription());
-
-    String ownerActerOid = serverType.getUniversal().getOwnerOid();
-
-    String organizationCode = Organization.getRootOrganizationCode(ownerActerOid);
-
-    MdVertexDAOIF superType = serverType.getMdVertex().getSuperClass();
-
-    GeoObjectType type = new GeoObjectType(serverType.getUniversal().getUniversalId(), cgrGeometryType, label, description, serverType.getUniversal().getIsGeometryEditable(), organizationCode, ServiceFactory.getAdapter());
-    type.setIsAbstract(serverType.getMdBusiness().getIsAbstract());
-
-    type = convertAttributeTypes(serverType.getUniversal(), type, serverType.getMdBusiness());
-
-    try
-    {
-      GeoObjectTypeMetadata metadata = GeoObjectTypeMetadata.getByKey(serverType.getUniversal().getKey());
-      type.setIsPrivate(metadata.getIsPrivate());
-      metadata.injectDisplayLabels(type);
-    }
-    catch (DataNotFoundException | AttributeDoesNotExistException e)
-    {
-      type.setIsPrivate(false);
-    }
-
-    if (superType != null && !superType.definesType().equals(GeoVertex.CLASS))
-    {
-      String parentCode = superType.getTypeName();
-
-      type.setSuperTypeCode(parentCode);
-    }
-
-    serverType.setType(type);
-
-    return type;
-  }
-
-  /**
-   * Creates an {@link MdAttributeConcrete} for the given {@link MdBusiness}
-   * from the given {@link AttributeType}
-   * 
-   * @pre assumes no attribute has been defined on the type with the given name.
-   * @param geoObjectType
-   *          TODO
-   * @param mdBusiness
-   *          Type to receive attribute definition
-   * @param attributeType
-   *          newly defined attribute
-   * 
-   * @return {@link AttributeType}
-   */
-  @Transaction
-  public MdAttributeConcrete createMdAttributeFromAttributeType(ServerGeoObjectType serverType, AttributeType attributeType)
-  {
-    MdAttributeConcrete mdAttribute = this.createMdAttributeFromAttributeType(serverType.getMdBusiness(), attributeType);
-
-    ( (MdVertexDAO) serverType.getMdVertex() ).copyAttribute(MdAttributeDAO.get(mdAttribute.getOid()));
-
-    return mdAttribute;
-  }
 
   public void removeAttribute(ServerGeoObjectType serverType, String attributeName)
   {
-    deleteMdAttributeFromAttributeType(serverType, attributeName);
-
-    serverType.getType().removeAttribute(attributeName);
+    serverType.removeAttribute(attributeName);
 
     // If this did not error out then add to the cache
     refreshCache(serverType);
@@ -770,46 +549,6 @@ public class GeoObjectTypeBusinessService implements GeoObjectTypeBusinessServic
     ( (Session) Session.getCurrentSession() ).reloadPermissions();
   }
 
-  /**
-   * Delete the {@link MdAttributeConcreteDAOIF} from the given {
-   * 
-   * @param type
-   *          TODO
-   * @param mdBusiness
-   * @param attributeName
-   */
-  @Override
-  @Transaction
-  public void deleteMdAttributeFromAttributeType(ServerGeoObjectType serverType, String attributeName)
-  {
-    MdAttributeConcreteDAOIF mdAttributeConcreteDAOIF = this.getMdAttribute(serverType.getMdBusiness(), attributeName);
-
-    if (mdAttributeConcreteDAOIF != null)
-    {
-      if (mdAttributeConcreteDAOIF instanceof MdAttributeTermDAOIF || mdAttributeConcreteDAOIF instanceof MdAttributeMultiTermDAOIF)
-      {
-        String attributeTermKey = TermConverter.buildtAtttributeKey(serverType.getMdBusiness().getTypeName(), mdAttributeConcreteDAOIF.definesAttribute());
-
-        try
-        {
-          Classifier attributeTerm = Classifier.getByKey(attributeTermKey);
-          attributeTerm.delete();
-        }
-        catch (DataNotFoundException e)
-        {
-        }
-      }
-
-      mdAttributeConcreteDAOIF.getBusinessDAO().delete();
-    }
-
-    MdAttributeDAOIF mdAttributeDAO = serverType.getMdVertex().definesAttribute(attributeName);
-
-    if (mdAttributeDAO != null)
-    {
-      mdAttributeDAO.getBusinessDAO().delete();
-    }
-  }
 
   @Override
   public AttributeType updateAttributeType(ServerGeoObjectType serverType, String attributeTypeJSON)
@@ -817,7 +556,7 @@ public class GeoObjectTypeBusinessService implements GeoObjectTypeBusinessServic
     JsonObject attrObj = JsonParser.parseString(attributeTypeJSON).getAsJsonObject();
     AttributeType attrType = AttributeType.parse(attrObj);
 
-    MdAttributeConcrete mdAttribute = this.updateMdAttributeFromAttributeType(serverType.getMdBusiness(), attrType);
+    MdAttributeConcrete mdAttribute = this.updateAttributeTypeFromDTO(serverType.getMdBusiness(), attrType);
     attrType = new RegistryAttributeTypeConverter().build(MdAttributeConcreteDAO.get(mdAttribute.getOid()));
 
     serverType.getType().addAttribute(attrType);
@@ -831,7 +570,7 @@ public class GeoObjectTypeBusinessService implements GeoObjectTypeBusinessServic
   @Override
   public AttributeType createAttributeType(ServerGeoObjectType serverType, AttributeType attributeType)
   {
-    MdAttributeConcrete mdAttribute = createMdAttributeFromAttributeType(serverType, attributeType);
+    MdAttributeConcrete mdAttribute = createAttributeTypeFromDTO(serverType, attributeType);
 
     attributeType = new RegistryAttributeTypeConverter().build(MdAttributeConcreteDAO.get(mdAttribute.getOid()));
 
@@ -873,85 +612,30 @@ public class GeoObjectTypeBusinessService implements GeoObjectTypeBusinessServic
     }
   }
 
-  public ServerGeoObjectType build(Universal universal)
+  public ServerGeoObjectType build(net.geoprism.registry.graph.GeoObjectType type)
   {
-    MdBusiness mdBusiness = universal.getMdBusiness();
-    MdGeoVertexDAO mdVertex = GeoVertexType.getMdGeoVertex(universal.getUniversalId());
-
-    ServerGeoObjectType server = new ServerGeoObjectType(null, universal, mdBusiness, mdVertex);
+    ServerGeoObjectType server = new ServerGeoObjectType(type);
     buildType(server);
 
     return server;
   }
 
-  public GeoObjectType convertAttributeTypes(Universal uni, GeoObjectType gt, MdBusiness mdBusiness)
-  {
-    if (mdBusiness != null)
-    {
-      MdBusinessDAOIF mdBusinessDAOIF = (MdBusinessDAOIF) BusinessFacade.getEntityDAO(mdBusiness);
-
-      // Standard attributes are defined by default on the GeoObjectType
-
-      RegistryAttributeTypeConverter builder = new RegistryAttributeTypeConverter();
-
-      List<? extends MdAttributeConcreteDAOIF> definedMdAttributeList = mdBusinessDAOIF.getAllDefinedMdAttributes();
-
-      for (MdAttributeConcreteDAOIF mdAttribute : definedMdAttributeList)
-      {
-        if (this.convertMdAttributeToAttributeType(mdAttribute))
-        {
-          AttributeType attributeType = builder.build(mdAttribute);
-
-          if (attributeType != null)
-          {
-            gt.addAttribute(attributeType);
-          }
-        }
-      }
-    }
-
-    return gt;
-  }
-
-  /**
-   * True if the given {@link MdAttributeConcreteDAOIF} should be converted to
-   * an {@link AttributeType}, false otherwise. Standard attributes such as
-   * {@link DefaultAttribute} are already defined on a {@link GeoObjectType} and
-   * do not need to be converted. This method also returns true if the attribute
-   * is not a system attribute.
-   * 
-   * @return True if the given {@link MdAttributeConcreteDAOIF} should be
-   *         converted to an {@link AttributeType}, false otherwise.
-   */
-  protected boolean convertMdAttributeToAttributeType(MdAttributeConcreteDAOIF mdAttribute)
-  {
-    if (mdAttribute.isSystem() || ( mdAttribute instanceof MdAttributeStructDAOIF && ! ( mdAttribute instanceof MdAttributeLocalDAOIF ) ) || mdAttribute instanceof MdAttributeEncryptionDAOIF || mdAttribute instanceof MdAttributeIndicatorDAOIF || mdAttribute instanceof MdAttributeBlobDAOIF || mdAttribute instanceof MdAttributeGeometryDAOIF || mdAttribute instanceof MdAttributeFileDAOIF || mdAttribute instanceof MdAttributeTimeDAOIF || mdAttribute instanceof MdAttributeUUIDDAOIF || mdAttribute.getType().equals(MdAttributeReferenceInfo.CLASS))
-    {
-      return false;
-    }
-    else if (mdAttribute.definesAttribute().equals(ComponentInfo.KEY) || mdAttribute.definesAttribute().equals(ComponentInfo.TYPE))
-    {
-      return false;
-    }
-    else
-    {
-      return true;
-    }
-  }
-
   public List<GeoObjectType> getAncestors(String code, String hierarchyCode, Boolean includeInheritedTypes, Boolean includeChild)
   {
-    ServerGeoObjectType child = ServerGeoObjectType.get(code);
-    ServerHierarchyType hierarchyType = ServerHierarchyType.get(hierarchyCode);
-
-    List<ServerGeoObjectType> ancestors = getTypeAncestors(child, hierarchyType, includeInheritedTypes);
-
-    if (includeChild)
-    {
-      ancestors.add(child);
-    }
-
-    return ancestors.stream().map(stype -> stype.getType()).collect(Collectors.toList());
+    // TODO: HEADS UP
+//    ServerGeoObjectType child = ServerGeoObjectType.get(code);
+//    ServerHierarchyType hierarchyType = ServerHierarchyType.get(hierarchyCode);
+//
+//    List<ServerGeoObjectType> ancestors = getTypeAncestors(child, hierarchyType, includeInheritedTypes);
+//
+//    if (includeChild)
+//    {
+//      ancestors.add(child);
+//    }
+//
+//    return ancestors.stream().map(stype -> stype.getType()).collect(Collectors.toList());
+    
+    return null;
   }
 
   /**
@@ -1156,7 +840,7 @@ public class GeoObjectTypeBusinessService implements GeoObjectTypeBusinessServic
 
   @Override
   @Transaction
-  public MdAttributeConcrete createMdAttributeFromAttributeType(MdClass mdClass, AttributeType attributeType)
+  public MdAttributeConcrete createAttributeTypeFromDTO(MdClass mdClass, AttributeType attributeType)
   {
     MdAttributeConcrete mdAttribute = null;
 
@@ -1317,71 +1001,19 @@ public class GeoObjectTypeBusinessService implements GeoObjectTypeBusinessServic
    */
   @Override
   @Transaction
-  public MdAttributeConcrete updateMdAttributeFromAttributeType(MdClass mdClass, AttributeType attributeType)
+  public net.geoprism.registry.graph.AttributeType updateAttributeTypeFromDTO(ServerGeoObjectType type, AttributeType dto)
   {
-    MdAttributeConcreteDAOIF mdAttributeConcreteDAOIF = getMdAttribute(mdClass, attributeType.getName());
-
-    if (mdAttributeConcreteDAOIF != null)
+    Optional<net.geoprism.registry.graph.AttributeType> optional = type.getAttribute(dto.getName());    
+    
+    if (optional.isPresent())
     {
-      // Get the type safe version
-      MdAttributeConcrete mdAttribute = (MdAttributeConcrete) BusinessFacade.get(mdAttributeConcreteDAOIF);
-      mdAttribute.lock();
-
-      try
-      {
-        // The name cannot be updated
-        // mdAttribute.setAttributeName(attributeType.getName());
-        RegistryLocalizedValueConverter.populate(mdAttribute.getDisplayLabel(), attributeType.getLabel());
-        RegistryLocalizedValueConverter.populate(mdAttribute.getDescription(), attributeType.getDescription());
-
-        if (attributeType instanceof AttributeFloatType)
-        {
-          // Refresh the terms
-          AttributeFloatType attributeFloatType = (AttributeFloatType) attributeType;
-
-          mdAttribute.setValue(MdAttributeDoubleInfo.LENGTH, Integer.toString(attributeFloatType.getPrecision()));
-          mdAttribute.setValue(MdAttributeDoubleInfo.DECIMAL, Integer.toString(attributeFloatType.getScale()));
-        }
-        else if (attributeType instanceof AttributeClassificationType)
-        {
-          MdAttributeClassification mdAttributeTerm = (MdAttributeClassification) mdAttribute;
-
-          AttributeClassificationType attributeClassificationType = (AttributeClassificationType) attributeType;
-          String classificationTypeCode = attributeClassificationType.getClassificationType();
-
-          ClassificationType classificationType = this.cTypeService.getByCode(classificationTypeCode);
-
-          Term root = attributeClassificationType.getRootTerm();
-
-          if (root != null)
-          {
-            Classification classification = this.cService.get(classificationType, root.getCode());
-
-            mdAttributeTerm.setValue(MdAttributeClassification.ROOT, classification.getOid());
-          }
-        }
-
-        mdAttribute.apply();
-      }
-      finally
-      {
-        mdAttribute.unlock();
-      }
-
-      if (attributeType instanceof AttributeTermType)
-      {
-        // Refresh the terms
-        AttributeTermType attributeTermType = (AttributeTermType) attributeType;
-
-        org.commongeoregistry.adapter.Term getRootTerm = attributeTermType.getRootTerm();
-        String classifierKey = TermConverter.buildClassifierKeyFromTermCode(getRootTerm.getCode());
-
-        TermConverter termBuilder = new TermConverter(classifierKey);
-        attributeTermType.setRootTerm(termBuilder.build());
-      }
-
-      return mdAttribute;
+      net.geoprism.registry.graph.AttributeType attribute = optional.get();
+      attribute.fromDTO(dto);
+      attribute.apply();
+      
+      return attribute;
     }
+      
 
     return null;
   }

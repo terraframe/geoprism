@@ -3,18 +3,18 @@
  *
  * This file is part of Geoprism(tm).
  *
- * Geoprism(tm) is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
+ * Geoprism(tm) is free software: you can redistribute it and/or modify it under
+ * the terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation, either version 3 of the License, or (at your option) any
+ * later version.
  *
- * Geoprism(tm) is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
+ * Geoprism(tm) is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with Geoprism(tm).  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with Geoprism(tm). If not, see <http://www.gnu.org/licenses/>.
  */
 package net.geoprism.registry.model.graph;
 
@@ -28,16 +28,13 @@ import java.util.Collection;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.SortedSet;
 import java.util.TreeSet;
-import java.util.stream.Collectors;
 
-import org.apache.commons.collections4.map.HashedMap;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.commongeoregistry.adapter.constants.DefaultAttribute;
@@ -45,9 +42,6 @@ import org.commongeoregistry.adapter.constants.GeometryType;
 import org.commongeoregistry.adapter.dataaccess.GeoObject;
 import org.commongeoregistry.adapter.dataaccess.LocalizedValue;
 import org.commongeoregistry.adapter.dataaccess.ValueOverTimeDTO;
-import org.commongeoregistry.adapter.metadata.AttributeLocalType;
-import org.commongeoregistry.adapter.metadata.AttributeTermType;
-import org.commongeoregistry.adapter.metadata.AttributeType;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.locationtech.jts.geom.Envelope;
@@ -73,7 +67,6 @@ import com.runwaysdk.constants.ElementInfo;
 import com.runwaysdk.constants.MdAttributeLocalInfo;
 import com.runwaysdk.dataaccess.MdAttributeConcreteDAOIF;
 import com.runwaysdk.dataaccess.MdAttributeDAOIF;
-import com.runwaysdk.dataaccess.MdEdgeDAOIF;
 import com.runwaysdk.dataaccess.MdVertexDAOIF;
 import com.runwaysdk.dataaccess.ProgrammingErrorException;
 import com.runwaysdk.dataaccess.graph.GraphDBService;
@@ -93,17 +86,18 @@ import com.runwaysdk.system.metadata.MdVertexQuery;
 
 import net.geoprism.configuration.GeoprismProperties;
 import net.geoprism.ontology.Classifier;
-import net.geoprism.registry.BusinessType;
 import net.geoprism.registry.DateFormatter;
 import net.geoprism.registry.GeometrySizeException;
 import net.geoprism.registry.GeometryTypeException;
 import net.geoprism.registry.RegistryConstants;
 import net.geoprism.registry.conversion.RegistryLocalizedValueConverter;
 import net.geoprism.registry.geoobject.ValueOutOfRangeException;
+import net.geoprism.registry.graph.AttributeLocalType;
+import net.geoprism.registry.graph.AttributeTermType;
+import net.geoprism.registry.graph.AttributeType;
 import net.geoprism.registry.graph.GeoVertex;
 import net.geoprism.registry.graph.GeoVertexSynonym;
 import net.geoprism.registry.model.AbstractServerGeoObject;
-import net.geoprism.registry.model.BusinessObject;
 import net.geoprism.registry.model.GeoObjectMetadata;
 import net.geoprism.registry.model.GraphType;
 import net.geoprism.registry.model.LocationInfo;
@@ -112,7 +106,6 @@ import net.geoprism.registry.model.ServerGeoObjectType;
 import net.geoprism.registry.model.ServerGraphNode;
 import net.geoprism.registry.model.ServerHierarchyType;
 import net.geoprism.registry.query.graph.AbstractVertexRestriction;
-import net.geoprism.registry.service.business.GeoObjectBusinessServiceIF;
 import net.geoprism.registry.service.request.ServiceFactory;
 
 public class VertexServerGeoObject extends AbstractServerGeoObject implements ServerGeoObjectIF, LocationInfo, VertexComponent
@@ -152,6 +145,11 @@ public class VertexServerGeoObject extends AbstractServerGeoObject implements Se
     this.type = actualType;
     this.vertex = vertex;
     this.date = date;
+  }
+
+  public String getDBClassName()
+  {
+    return ( (MdVertexDAOIF) this.vertex.getMdClass() ).getDBClassName();
   }
 
   public ServerGeoObjectType getType()
@@ -217,7 +215,7 @@ public class VertexServerGeoObject extends AbstractServerGeoObject implements Se
     {
       throw new GeometrySizeException();
     }
-    
+
     if (!this.isValidGeometry(geometry))
     {
       GeometryTypeException ex = new GeometryTypeException();
@@ -240,7 +238,7 @@ public class VertexServerGeoObject extends AbstractServerGeoObject implements Se
     {
       throw new GeometrySizeException();
     }
-    
+
     if (!this.isValidGeometry(geometry))
     {
       GeometryTypeException ex = new GeometryTypeException();
@@ -375,7 +373,7 @@ public class VertexServerGeoObject extends AbstractServerGeoObject implements Se
 
     return lv.getValue(MdAttributeLocalInfo.DEFAULT_LOCALE);
   }
-  
+
   @SuppressWarnings("unchecked")
   @Override
   public void setValue(String attributeName, Object value)
@@ -588,7 +586,7 @@ public class VertexServerGeoObject extends AbstractServerGeoObject implements Se
       return this.getValueLocalized(attributeName);
     }
 
-    if (at != null && !at.isChangeOverTime())
+    if (at != null && !at.getIsChangeOverTime())
     {
       return this.vertex.getObjectValue(attributeName);
     }
@@ -637,7 +635,7 @@ public class VertexServerGeoObject extends AbstractServerGeoObject implements Se
       return this.getValueLocalized(attributeName, date);
     }
 
-    if (at != null && !at.isChangeOverTime())
+    if (at != null && !at.getIsChangeOverTime())
     {
       return this.vertex.getObjectValue(attributeName);
     }
@@ -745,11 +743,11 @@ public class VertexServerGeoObject extends AbstractServerGeoObject implements Se
 
     for (AttributeType attribute : attributes)
     {
-      boolean shouldProcess = !ArrayUtils.contains(shouldNotProcessArray, attribute.getName());
+      boolean shouldProcess = !ArrayUtils.contains(shouldNotProcessArray, attribute.getCode());
 
-      if (shouldProcess && attribute.isChangeOverTime())
+      if (shouldProcess && attribute.getIsChangeOverTime())
       {
-        ValueOverTimeCollection votc = this.getValuesOverTime(attribute.getName());
+        ValueOverTimeCollection votc = this.getValuesOverTime(attribute.getCode());
 
         for (ValueOverTime vot : votc)
         {
@@ -878,7 +876,7 @@ public class VertexServerGeoObject extends AbstractServerGeoObject implements Se
 
       return RegistryLocalizedValueConverter.convert(embeddedObjectDAO);
     }
-    
+
     return this.getValueLocalized(DefaultAttribute.DISPLAY_LABEL.getName(), date);
   }
 
@@ -985,7 +983,7 @@ public class VertexServerGeoObject extends AbstractServerGeoObject implements Se
 
   public static VertexObject getVertex(ServerGeoObjectType type, String uuid)
   {
-    String statement = "SELECT FROM " + type.getMdVertex().getDBClassName();
+    String statement = "SELECT FROM " + type.getDBClassName();
     statement += " WHERE uuid = :uuid";
 
     GraphQuery<GeoVertex> query = new GraphQuery<GeoVertex>(statement);
@@ -1129,12 +1127,12 @@ public class VertexServerGeoObject extends AbstractServerGeoObject implements Se
   {
     if (isCodeAttribute(attr))
     {
-      return type.getAttribute(DefaultAttribute.CODE.getName()).get().getLabel().getValue();
+      return type.getAttribute(DefaultAttribute.CODE.getName()).get().getLocalizedLabel().getValue();
     }
 
     if (type.getAttribute(attr.definesAttribute()).isPresent())
     {
-      return type.getAttribute(attr.definesAttribute()).get().getLabel().getValue();
+      return type.getAttribute(attr.definesAttribute()).get().getLocalizedLabel().getValue();
     }
 
     return attr.getDisplayLabel(Session.getCurrentLocale());
@@ -1342,7 +1340,8 @@ public class VertexServerGeoObject extends AbstractServerGeoObject implements Se
       query.setParameter("text", null);
     }
 
-    @SuppressWarnings("unchecked") List<HashMap<String, Object>> results = (List<HashMap<String, Object>>) ( (Object) query.getResults() );
+    @SuppressWarnings("unchecked")
+    List<HashMap<String, Object>> results = (List<HashMap<String, Object>>) ( (Object) query.getResults() );
 
     JsonArray array = new JsonArray();
 

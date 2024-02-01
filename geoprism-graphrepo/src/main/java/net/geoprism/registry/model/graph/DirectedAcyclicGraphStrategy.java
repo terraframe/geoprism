@@ -271,7 +271,7 @@ public class DirectedAcyclicGraphStrategy extends AbstractGraphStrategy implemen
 
     StringBuffer statement = new StringBuffer();
     statement.append("SELECT count(*) FROM (");
-    statement.append("MATCH {class: " + geoObject.getType().getMdVertex().getDBClassName() + ", where: (@rid = :rid)}.(outE('" + this.type.getMdEdgeDAO().getDBClassName() + "')");
+    statement.append("MATCH {class: " + geoObject.getDBClassName() + ", where: (@rid = :rid)}.(outE('" + this.type.getMdEdgeDAO().getDBClassName() + "')");
     statement.append(" {where: (:startDate BETWEEN startDate AND endDate OR :endDate BETWEEN startDate AND endDate)}.inV())");
     statement.append(" {as: friend, while: ($depth < 10000)} RETURN friend.code AS code");
     statement.append(")");

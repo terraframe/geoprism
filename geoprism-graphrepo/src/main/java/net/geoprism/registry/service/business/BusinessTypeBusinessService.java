@@ -114,7 +114,7 @@ public class BusinessTypeBusinessService implements BusinessTypeBusinessServiceI
   @Override
   public AttributeType createAttributeType(BusinessType type, AttributeType attributeType)
   {
-    MdAttributeConcrete mdAttribute = this.typeService.createMdAttributeFromAttributeType(type.getMdVertex(), attributeType);
+    MdAttributeConcrete mdAttribute = this.typeService.createAttributeTypeFromDTO(type.getMdVertex(), attributeType);
 
     // Refresh the users session
     if (Session.getCurrentSession() != null)
@@ -154,7 +154,7 @@ public class BusinessTypeBusinessService implements BusinessTypeBusinessServiceI
   @Override
   public AttributeType updateAttributeType(BusinessType type, AttributeType attrType)
   {
-    MdAttributeConcrete mdAttribute = this.typeService.updateMdAttributeFromAttributeType(type.getMdVertex(), attrType);
+    MdAttributeConcrete mdAttribute = this.typeService.updateAttributeTypeFromDTO(type.getMdVertex(), attrType);
     return new RegistryAttributeTypeConverter().build(MdAttributeConcreteDAO.get(mdAttribute.getOid()));
   }
 

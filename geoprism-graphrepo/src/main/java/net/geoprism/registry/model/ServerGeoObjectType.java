@@ -3,140 +3,90 @@
  *
  * This file is part of Geoprism(tm).
  *
- * Geoprism(tm) is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
+ * Geoprism(tm) is free software: you can redistribute it and/or modify it under
+ * the terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation, either version 3 of the License, or (at your option) any
+ * later version.
  *
- * Geoprism(tm) is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
+ * Geoprism(tm) is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with Geoprism(tm).  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with Geoprism(tm). If not, see <http://www.gnu.org/licenses/>.
  */
 package net.geoprism.registry.model;
 
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
-import org.commongeoregistry.adapter.Optional;
-import org.commongeoregistry.adapter.Term;
+import org.apache.commons.lang.StringUtils;
 import org.commongeoregistry.adapter.constants.DefaultAttribute;
 import org.commongeoregistry.adapter.constants.GeometryType;
 import org.commongeoregistry.adapter.dataaccess.LocalizedValue;
-import org.commongeoregistry.adapter.metadata.AttributeBooleanType;
-import org.commongeoregistry.adapter.metadata.AttributeCharacterType;
-import org.commongeoregistry.adapter.metadata.AttributeClassificationType;
-import org.commongeoregistry.adapter.metadata.AttributeDateType;
-import org.commongeoregistry.adapter.metadata.AttributeFloatType;
-import org.commongeoregistry.adapter.metadata.AttributeIntegerType;
-import org.commongeoregistry.adapter.metadata.AttributeLocalType;
-import org.commongeoregistry.adapter.metadata.AttributeTermType;
-import org.commongeoregistry.adapter.metadata.AttributeType;
 import org.commongeoregistry.adapter.metadata.CustomSerializer;
-import org.commongeoregistry.adapter.metadata.GeoObjectType;
-import org.commongeoregistry.adapter.metadata.RegistryRole;
 
 import com.google.gson.JsonObject;
-import com.runwaysdk.business.BusinessFacade;
-import com.runwaysdk.constants.MdAttributeCharacterInfo;
-import com.runwaysdk.constants.MdAttributeConcreteInfo;
-import com.runwaysdk.constants.MdAttributeDoubleInfo;
+import com.runwaysdk.business.graph.GraphQuery;
 import com.runwaysdk.dataaccess.MdAttributeConcreteDAOIF;
-import com.runwaysdk.dataaccess.MdBusinessDAOIF;
-import com.runwaysdk.dataaccess.MdClassDAOIF;
+import com.runwaysdk.dataaccess.MdAttributeDAOIF;
+import com.runwaysdk.dataaccess.MdAttributeMultiTermDAOIF;
+import com.runwaysdk.dataaccess.MdAttributeTermDAOIF;
 import com.runwaysdk.dataaccess.MdVertexDAOIF;
+import com.runwaysdk.dataaccess.ProgrammingErrorException;
+import com.runwaysdk.dataaccess.cache.DataNotFoundException;
+import com.runwaysdk.dataaccess.metadata.graph.MdVertexDAO;
 import com.runwaysdk.dataaccess.transaction.Transaction;
 import com.runwaysdk.dataaccess.transaction.TransactionState;
-import com.runwaysdk.system.Actor;
-import com.runwaysdk.system.Roles;
 import com.runwaysdk.system.gis.geo.Universal;
-import com.runwaysdk.system.metadata.MdAttributeBoolean;
-import com.runwaysdk.system.metadata.MdAttributeCharacter;
-import com.runwaysdk.system.metadata.MdAttributeClassification;
-import com.runwaysdk.system.metadata.MdAttributeConcrete;
-import com.runwaysdk.system.metadata.MdAttributeDateTime;
-import com.runwaysdk.system.metadata.MdAttributeDouble;
-import com.runwaysdk.system.metadata.MdAttributeIndices;
-import com.runwaysdk.system.metadata.MdAttributeLocalCharacterEmbedded;
-import com.runwaysdk.system.metadata.MdAttributeLocalText;
-import com.runwaysdk.system.metadata.MdAttributeLong;
-import com.runwaysdk.system.metadata.MdAttributeTerm;
-import com.runwaysdk.system.metadata.MdBusiness;
-import com.runwaysdk.system.metadata.MdClass;
-import com.runwaysdk.system.metadata.MdGraphClass;
 
 import net.geoprism.ontology.Classifier;
-import net.geoprism.registry.Organization;
-import net.geoprism.registry.conversion.RegistryLocalizedValueConverter;
+import net.geoprism.registry.conversion.LocalizedValueConverter;
 import net.geoprism.registry.conversion.TermConverter;
+import net.geoprism.registry.graph.AttributeType;
+import net.geoprism.registry.graph.GeoObjectType;
 import net.geoprism.registry.service.request.ServiceFactory;
 
 public class ServerGeoObjectType implements ServerElement
 {
   // private Logger logger = LoggerFactory.getLogger(ServerLeafGeoObject.class);
 
-  GeoObjectType type;
+  private GeoObjectType              type;
 
-  private Universal     universal;
+  private Map<String, AttributeType> attributes;
 
-  private MdBusiness    mdBusiness;
-
-  private MdVertexDAOIF mdVertex;
-
-  public ServerGeoObjectType(GeoObjectType go, Universal universal, MdBusiness mdBusiness, MdVertexDAOIF mdVertex)
+  public ServerGeoObjectType()
   {
-    this.type = go;
-    this.universal = universal;
-    this.mdBusiness = mdBusiness;
-    this.mdVertex = mdVertex;
+  }
+
+  public ServerGeoObjectType(GeoObjectType type)
+  {
+    this.type = type;
+    this.attributes = type.getAttributes();
+  }
+
+  public ServerGeoObjectType(GeoObjectType type, Map<String, AttributeType> attributes)
+  {
+    this.type = type;
+    this.attributes = attributes;
+  }
+
+  public String getOid()
+  {
+    return this.type.getOid();
   }
 
   public GeoObjectType getType()
   {
     return type;
   }
-  
+
   public void setType(GeoObjectType type)
   {
     this.type = type;
-  }
-
-  public Universal getUniversal()
-  {
-    return universal;
-  }
-
-  public void setUniversal(Universal universal)
-  {
-    this.universal = universal;
-  }
-
-  public MdBusiness getMdBusiness()
-  {
-    return mdBusiness;
-  }
-
-  public MdBusinessDAOIF getMdBusinessDAO()
-  {
-    return (MdBusinessDAOIF) BusinessFacade.getEntityDAO(this.mdBusiness);
-  }
-
-  public void setMdBusiness(MdBusiness mdBusiness)
-  {
-    this.mdBusiness = mdBusiness;
-  }
-
-  public MdVertexDAOIF getMdVertex()
-  {
-    return mdVertex;
-  }
-
-  public void setMdVertex(MdVertexDAOIF mdVertex)
-  {
-    this.mdVertex = mdVertex;
   }
 
   public String getCode()
@@ -144,85 +94,102 @@ public class ServerGeoObjectType implements ServerElement
     return this.type.getCode();
   }
 
+  public String getDBClassName()
+  {
+    return getMdVertex().getDBClassName();
+  }
+
+  public MdVertexDAOIF getMdVertex()
+  {
+    return MdVertexDAO.get(this.type.getObjectValue(GeoObjectType.MDVERTEX));
+  }
+
   public GeometryType getGeometryType()
   {
-    return this.type.getGeometryType();
+    return GeometryType.valueOf(this.type.getGeometryType());
   }
 
   public boolean isGeometryEditable()
   {
-    return this.type.isGeometryEditable();
+    return this.type.getIsGeometryEditable();
   }
 
   public LocalizedValue getLabel()
   {
-    return this.type.getLabel();
+    return LocalizedValueConverter.convert(this.type.getEmbeddedComponent(GeoObjectType.LABEL));
   }
 
   public LocalizedValue getDescription()
   {
-    return this.type.getDescription();
+    return LocalizedValueConverter.convert(this.type.getEmbeddedComponent(GeoObjectType.DESCRIPTION));
   }
-  
+
   public boolean getIsAbstract()
   {
     return this.type.getIsAbstract();
   }
 
+  public org.commongeoregistry.adapter.metadata.GeoObjectType toDTO()
+  {
+    GeometryType cgrGeometryType = this.getGeometryType();
+
+    ServerOrganization organization = this.getOrganization();
+
+    ServerGeoObjectType superType = this.getSuperType();
+
+    org.commongeoregistry.adapter.metadata.GeoObjectType type = new org.commongeoregistry.adapter.metadata.GeoObjectType(this.getCode(), cgrGeometryType, this.getLabel(), this.getDescription(), this.type.getIsGeometryEditable(), organization.getCode(), ServiceFactory.getAdapter());
+    type.setIsAbstract(this.type.getIsAbstract());
+    type.setIsPrivate(this.type.getIsPrivate());
+
+    if (superType != null)
+    {
+      type.setSuperTypeCode(superType.getCode());
+    }
+
+    this.attributes.values().stream().forEach(attributeType -> {
+      type.addAttribute(attributeType.toDTO());
+    });
+
+    // TODO: HEADS UP
+    // try
+    // {
+    // GeoObjectTypeMetadata metadata =
+    // GeoObjectTypeMetadata.getByKey(serverType.getUniversal().getKey());
+    // metadata.injectDisplayLabels(type);
+    // }
+    // catch (DataNotFoundException | AttributeDoesNotExistException e)
+    // {
+    // }
+
+    return type;
+  }
+
   public JsonObject toJSON(CustomSerializer serializer)
   {
-    return this.type.toJSON(serializer);
+    return this.toDTO().toJSON(serializer);
   }
 
   public Map<String, AttributeType> getAttributeMap()
   {
-    return this.type.getAttributeMap();
+    return this.attributes;
   }
 
   public Optional<AttributeType> getAttribute(String name)
   {
-    return this.type.getAttribute(name);
+    return Optional.ofNullable(this.attributes.get(name));
   }
 
-  public String definesType()
+  public List<AttributeType> definesAttributes()
   {
-    return this.mdBusiness.definesType();
-  }
-
-  public List<? extends MdAttributeConcreteDAOIF> definesAttributes()
-  {
-    return this.getMdBusinessDAO().definesAttributes();
-  }
-
-  public void deleteAllRecords()
-  {
-    this.getMdBusinessDAO().getBusinessDAO().deleteAllRecords();
-  }
-
-  public GeoObjectTypeMetadata getMetadata()
-  {
-    return GeoObjectTypeMetadata.getByKey(this.universal.getKey());
+    return new LinkedList<AttributeType>(this.attributes.values());
   }
 
   /**
    * @return The organization associated with this GeoObjectType.
    */
-  public Organization getOrganization()
+  public ServerOrganization getOrganization()
   {
-    Actor owner = this.universal.getOwner();
-
-    if (! ( owner instanceof Roles ))
-    {
-      return null; // If we get here, then the GeoObjectType was not created
-                   // correctly.
-    }
-    else
-    {
-      Roles uniRole = (Roles) owner;
-      String myOrgCode = RegistryRole.Type.parseOrgCode(uniRole.getRoleName());
-
-      return Organization.getByCode(myOrgCode);
-    }
+    return ServerOrganization.getByGraphId(this.type.getObjectValue(GeoObjectType.ORGANIZATION));
   }
 
   public String getOrganizationCode()
@@ -232,9 +199,11 @@ public class ServerGeoObjectType implements ServerElement
 
   public ServerGeoObjectType getSuperType()
   {
-    if (this.type.getSuperTypeCode() != null && this.type.getSuperTypeCode().length() > 0)
+    String oid = this.type.getObjectValue(GeoObjectType.SUPERTYPE);
+
+    if (!StringUtils.isBlank(oid))
     {
-      return ServerGeoObjectType.get(this.type.getSuperTypeCode());
+      return ServerGeoObjectType.getByOid(oid);
     }
 
     return null;
@@ -277,17 +246,25 @@ public class ServerGeoObjectType implements ServerElement
     return GeoObjectTypeMetadata.sGetClassDisplayLabel() + " : " + this.getCode();
   }
 
-  /**
-   * Returns a {@link Universal} from the code value on the given
-   * {@link GeoObjectType}.
-   * 
-   * @param got
-   * @return a {@link Universal} from the code value on the given
-   *         {@link GeoObjectType}.
-   */
-  public static Universal geoObjectTypeToUniversal(GeoObjectType got)
+  public static ServerGeoObjectType get(MdVertexDAOIF mdVertex)
   {
-    return Universal.getByKey(got.getCode());
+    MdVertexDAOIF metadata = MdVertexDAO.getMdVertexDAO(GeoObjectType.CLASS);
+
+    StringBuilder statement = new StringBuilder();
+    statement.append("SELECT FROM " + metadata.getDBClassName());
+    statement.append(" WHERE " + metadata.definesAttribute(GeoObjectType.MDVERTEX).getColumnName() + " = :oid");
+
+    GraphQuery<GeoObjectType> query = new GraphQuery<GeoObjectType>(statement.toString());
+    query.setParameter("oid", mdVertex.getOid());
+
+    GeoObjectType result = query.getSingleResult();
+
+    if (result != null)
+    {
+      return ServerGeoObjectType.getByOid(result.getOid());
+    }
+
+    return null;
   }
 
   public static ServerGeoObjectType get(String code)
@@ -339,13 +316,6 @@ public class ServerGeoObjectType implements ServerElement
     return null;
   }
 
-  public static ServerGeoObjectType get(Universal universal)
-  {
-    String code = universal.getKey();
-
-    return getFromCache(code);
-  }
-
   public static ServerGeoObjectType get(GeoObjectType geoObjectType)
   {
     String code = geoObjectType.getCode();
@@ -353,11 +323,29 @@ public class ServerGeoObjectType implements ServerElement
     return getFromCache(code);
   }
 
-  public static ServerGeoObjectType get(MdVertexDAOIF mdVertex)
+  @SuppressWarnings("unchecked")
+  public static ServerGeoObjectType getByOid(String oid)
   {
-    String code = mdVertex.getTypeName();
+    TransactionState state = TransactionState.getCurrentTransactionState();
 
-    return getFromCache(code);
+    if (state != null)
+    {
+      Object transactionCache = state.getTransactionObject("transaction-state");
+
+      if (transactionCache != null)
+      {
+        Map<String, ServerElement> cache = (Map<String, ServerElement>) transactionCache;
+
+        Optional<ServerGeoObjectType> optional = cache.values().stream().filter(e -> e instanceof ServerGeoObjectType).map(e -> (ServerGeoObjectType) e).filter(e -> e.getOid().equals(oid)).findFirst();
+
+        if (optional.isPresent())
+        {
+          return optional.get();
+        }
+      }
+    }
+
+    return ServiceFactory.getMetadataCache().getGeoObjectTypeByOid(oid).orElseThrow(() -> new ProgrammingErrorException("Unknown Geo Object Type with oid [" + oid + "]"));
   }
 
   @SuppressWarnings("unchecked")
@@ -384,10 +372,17 @@ public class ServerGeoObjectType implements ServerElement
     return ServiceFactory.getMetadataCache().getGeoObjectType(code).get();
   }
 
-  // public String buildRMRoleName()
-  // {
-  // String ownerActorOid = this.universal.getOwnerOid();
-  // Organization.getRootOrganization(ownerActorOid)
-  // }
+  public synchronized void removeAttribute(String attributeName)
+  {
+    AttributeType attributeType = this.attributes.get(attributeName);
+
+    if (attributeType != null)
+    {
+      attributeType.delete();
+
+      this.attributes.remove(attributeName);
+    }
+
+  }
 
 }

@@ -21,6 +21,7 @@ package net.geoprism.registry.graph;
 import com.runwaysdk.business.rbac.ActorDAOIF;
 import com.runwaysdk.constants.MdAttributeBooleanInfo;
 import com.runwaysdk.dataaccess.MdVertexDAOIF;
+import com.runwaysdk.dataaccess.metadata.graph.MdVertexDAO;
 import com.runwaysdk.gis.constants.MdGeoVertexInfo;
 import com.runwaysdk.gis.dataaccess.MdGeoVertexDAOIF;
 import com.runwaysdk.gis.dataaccess.metadata.graph.MdGeoVertexDAO;
@@ -51,7 +52,7 @@ public class GeoVertexType extends GeoVertexTypeBase
    *          TODO
    * @return
    */
-  public static MdGeoVertexDAO create(String code, String ownerActorId, Boolean isAbstract, ServerGeoObjectType parentType)
+  public static MdVertexDAO create(String code, Boolean isAbstract, ServerGeoObjectType parentType)
   {
     MdVertexDAOIF parentVertexDAO = null;
 
@@ -64,13 +65,12 @@ public class GeoVertexType extends GeoVertexTypeBase
       parentVertexDAO = parentType.getMdVertex();
     }
 
-    MdGeoVertexDAO child = MdGeoVertexDAO.newInstance();
+    MdVertexDAO child = MdVertexDAO.newInstance();
     child.setValue(MdGeoVertexInfo.PACKAGE, RegistryConstants.UNIVERSAL_GRAPH_PACKAGE);
     child.setValue(MdGeoVertexInfo.NAME, code);
     child.setValue(MdGeoVertexInfo.SUPER_MD_VERTEX, parentVertexDAO.getOid());
     child.setValue(MdGeoVertexInfo.ENABLE_CHANGE_OVER_TIME, MdAttributeBooleanInfo.TRUE);
     child.setValue(MdGeoVertexInfo.GENERATE_SOURCE, MdAttributeBooleanInfo.FALSE);
-    child.setValue(MdGeoVertexInfo.OWNER, ownerActorId);
     child.setValue(MdGeoVertexInfo.ABSTRACT, isAbstract.toString());
     child.apply();
 

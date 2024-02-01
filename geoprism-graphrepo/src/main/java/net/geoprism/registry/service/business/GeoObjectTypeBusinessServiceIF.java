@@ -26,9 +26,7 @@ import org.commongeoregistry.adapter.metadata.GeoObjectType;
 import org.springframework.stereotype.Component;
 
 import com.runwaysdk.dataaccess.MdAttributeConcreteDAOIF;
-import com.runwaysdk.dataaccess.MdGraphClassDAOIF;
 import com.runwaysdk.dataaccess.transaction.Transaction;
-import com.runwaysdk.system.gis.geo.Universal;
 import com.runwaysdk.system.metadata.MdAttributeConcrete;
 import com.runwaysdk.system.metadata.MdBusiness;
 import com.runwaysdk.system.metadata.MdClass;
@@ -95,17 +93,9 @@ public interface GeoObjectTypeBusinessServiceIF
 
   public List<ServerGeoObjectType> getChildren(ServerGeoObjectType sgot, ServerHierarchyType hierarchy);
 
-  public void createDefaultAttributes(Universal universal, MdBusiness definingMdBusiness);
-
-  public void createDefaultAttributes(Universal universal, MdGraphClassDAOIF mdClass);
-
   public ServerGeoObjectType create(String json);
 
   public ServerGeoObjectType create(GeoObjectType geoObjectType);
-
-  public ServerGeoObjectType build(Universal universal);
-
-  public GeoObjectType convertAttributeTypes(Universal uni, GeoObjectType gt, MdBusiness mdBusiness);
 
   /**
    * The GeoObjectType is a DTO type, which means it contains data which has
@@ -135,13 +125,11 @@ public interface GeoObjectTypeBusinessServiceIF
 
   public List<GeoObjectType> getGeoObjectTypes(String[] codes, PermissionContext context);
 
-  MdAttributeConcrete updateMdAttributeFromAttributeType(MdClass mdClass, AttributeType attributeType);
+  MdAttributeConcrete updateAttributeTypeFromDTO(MdClass mdClass, AttributeType attributeType);
 
-  MdAttributeConcrete createMdAttributeFromAttributeType(MdClass mdClass, AttributeType attributeType);
+  MdAttributeConcrete createAttributeTypeFromDTO(MdClass mdClass, AttributeType attributeType);
 
   AttributeType updateAttributeType(ServerGeoObjectType serverType, String attributeTypeJSON);
-
-  void deleteMdAttributeFromAttributeType(ServerGeoObjectType serverType, String attributeName);
 
   /**
    * Returns the {link MdAttributeConcreteDAOIF} for the given

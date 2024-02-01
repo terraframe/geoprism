@@ -35,9 +35,9 @@ import com.runwaysdk.system.metadata.MdClass;
 
 import net.geoprism.ontology.Classifier;
 import net.geoprism.ontology.ClassifierIsARelationship;
-import net.geoprism.registry.Organization;
 import net.geoprism.registry.RegistryConstants;
 import net.geoprism.registry.model.ServerGeoObjectType;
+import net.geoprism.registry.model.ServerOrganization;
 import net.geoprism.registry.service.permission.GeoObjectTypePermissionServiceIF;
 import net.geoprism.registry.service.permission.RepoPermissionActionIF;
 import net.geoprism.registry.service.permission.UserPermissionService.RepoPermissionAction;
@@ -300,7 +300,7 @@ public class TermConverter
 
         if (geoObjectType != null)
         {
-          Organization organization = geoObjectType.getOrganization();
+          ServerOrganization organization = geoObjectType.getOrganization();
 
           service.enforceActorHasPermission(organization.getCode(), geoObjectType, geoObjectType.getIsPrivate(), action);
         }

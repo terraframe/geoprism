@@ -49,6 +49,7 @@ import org.commongeoregistry.adapter.metadata.AttributeClassificationType;
 import org.commongeoregistry.adapter.metadata.AttributeLocalType;
 import org.commongeoregistry.adapter.metadata.AttributeTermType;
 import org.commongeoregistry.adapter.metadata.AttributeType;
+import org.commongeoregistry.adapter.metadata.GeoObjectType;
 import org.locationtech.jts.geom.Geometry;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -203,7 +204,7 @@ public class GeoObjectBusinessService extends RegistryLocalizedValueConverter im
   @Transaction
   public ServerGeoObjectIF apply(GeoObject object, Date startDate, Date endDate, boolean isNew, boolean isImport)
   {
-    ServerGeoObjectType type = ServerGeoObjectType.get(object.getType());
+    ServerGeoObjectType type = ServerGeoObjectType.get(object.getType().getCode());
     ServerGeoObjectStrategyIF strategy = this.getStrategy(type);
 
     if (isNew)
@@ -342,7 +343,7 @@ public class GeoObjectBusinessService extends RegistryLocalizedValueConverter im
   @Transaction
   public ServerGeoObjectIF apply(GeoObjectOverTime goTime, boolean isNew, boolean isImport)
   {
-    ServerGeoObjectType type = ServerGeoObjectType.get(goTime.getType());
+    ServerGeoObjectType type = ServerGeoObjectType.get(goTime.getType().getCode());
     ServerGeoObjectStrategyIF strategy = this.getStrategy(type);
 
     if (isNew)
@@ -605,7 +606,7 @@ public class GeoObjectBusinessService extends RegistryLocalizedValueConverter im
   @Override
   public ServerGeoObjectIF getGeoObject(GeoObject go)
   {
-    ServerGeoObjectType type = ServerGeoObjectType.get(go.getType());
+    ServerGeoObjectType type = ServerGeoObjectType.get(go.getType().getCode());
 
     ServerGeoObjectStrategyIF strategy = this.getStrategy(type);
 
@@ -615,7 +616,7 @@ public class GeoObjectBusinessService extends RegistryLocalizedValueConverter im
   @Override
   public ServerGeoObjectIF getGeoObject(GeoObjectOverTime timeGO)
   {
-    ServerGeoObjectType type = ServerGeoObjectType.get(timeGO.getType());
+    ServerGeoObjectType type = ServerGeoObjectType.get(timeGO.getType().getCode());
 
     ServerGeoObjectStrategyIF strategy = this.getStrategy(type);
 
@@ -922,11 +923,12 @@ public class GeoObjectBusinessService extends RegistryLocalizedValueConverter im
   @Override
   public GeoObject toGeoObject(ServerGeoObjectIF sgo, Date date, boolean includeExternalIds)
   {
-    Map<String, Attribute> attributeMap = GeoObject.buildAttributeMap(sgo.getType().getType());
+    GeoObjectType dto = sgo.getType().toDTO();
+    Map<String, Attribute> attributeMap = GeoObject.buildAttributeMap(dto);
 
-    GeoObject geoObj = new GeoObject(sgo.getType().getType(), sgo.getType().getGeometryType(), attributeMap);
+    GeoObject geoObj = new GeoObject(dto, sgo.getType().getGeometryType(), attributeMap);
 
-    Map<String, AttributeType> attributes = sgo.getType().getAttributeMap();
+    Map<String, AttributeType> attributes = dto.getAttributeMap();
     attributes.forEach((attributeName, attribute) -> {
       if (attributeName.equals(DefaultAttribute.TYPE.getName()))
       {
@@ -1011,47 +1013,49 @@ public class GeoObjectBusinessService extends RegistryLocalizedValueConverter im
       if (ServiceFactory.getHierarchyPermissionService().canWrite(sType.getOrganization().getCode()))
       {
 
-        // Note: Ordered ancestors always includes self
-        Collection<?> uniParents = GeoEntityUtil.getOrderedAncestors(root, geoObjectType.getUniversal(), sType.getUniversalType());
-
-        ParentTreeNode ptnAncestors = getParentGeoObjects(sgo, sType, null, true, true, date).toNode(true);
-
-        if (uniParents.size() > 1)
-        {
-          JsonObject object = new JsonObject();
-          object.addProperty("code", sType.getCode());
-          object.addProperty("label", sType.getDisplayLabel().getValue());
-
-          JsonArray pArray = new JsonArray();
-
-          for (Object parent : uniParents)
-          {
-            ServerGeoObjectType pType = ServerGeoObjectType.get((Universal) parent);
-
-            if (!pType.getCode().equals(geoObjectType.getCode()))
-            {
-              JsonObject pObject = new JsonObject();
-              pObject.addProperty("code", pType.getCode());
-              pObject.addProperty("label", pType.getLabel().getValue());
-
-              List<ParentTreeNode> ptns = ptnAncestors.findParentOfType(pType.getCode());
-              for (ParentTreeNode ptn : ptns)
-              {
-                if (ptn.getHierachyType().getCode().equals(sType.getCode()))
-                {
-                  pObject.add("ptn", ptn.toJSON());
-                  break; // TODO Sibling ancestors
-                }
-              }
-
-              pArray.add(pObject);
-            }
-          }
-
-          object.add("parents", pArray);
-
-          hierarchies.add(object);
-        }
+        // TODO: HEADS UP
+        
+//        // Note: Ordered ancestors always includes self
+//        Collection<?> uniParents = GeoEntityUtil.getOrderedAncestors(root, geoObjectType.getUniversal(), sType.getUniversalType());
+//
+//        ParentTreeNode ptnAncestors = getParentGeoObjects(sgo, sType, null, true, true, date).toNode(true);
+//
+//        if (uniParents.size() > 1)
+//        {
+//          JsonObject object = new JsonObject();
+//          object.addProperty("code", sType.getCode());
+//          object.addProperty("label", sType.getDisplayLabel().getValue());
+//
+//          JsonArray pArray = new JsonArray();
+//
+//          for (Object parent : uniParents)
+//          {
+//            ServerGeoObjectType pType = ServerGeoObjectType.get((Universal) parent);
+//
+//            if (!pType.getCode().equals(geoObjectType.getCode()))
+//            {
+//              JsonObject pObject = new JsonObject();
+//              pObject.addProperty("code", pType.getCode());
+//              pObject.addProperty("label", pType.getLabel().getValue());
+//
+//              List<ParentTreeNode> ptns = ptnAncestors.findParentOfType(pType.getCode());
+//              for (ParentTreeNode ptn : ptns)
+//              {
+//                if (ptn.getHierachyType().getCode().equals(sType.getCode()))
+//                {
+//                  pObject.add("ptn", ptn.toJSON());
+//                  break; // TODO Sibling ancestors
+//                }
+//              }
+//
+//              pArray.add(pObject);
+//            }
+//          }
+//
+//          object.add("parents", pArray);
+//
+//          hierarchies.add(object);
+//        }
       }
     }
 
@@ -1093,12 +1097,13 @@ public class GeoObjectBusinessService extends RegistryLocalizedValueConverter im
   @Override
   public GeoObjectOverTime toGeoObjectOverTime(ServerGeoObjectIF sgo, boolean generateUid, ClassifierCache classifierCache)
   {
-    Map<String, ValueOverTimeCollectionDTO> votAttributeMap = GeoObjectOverTime.buildVotAttributeMap(sgo.getType().getType());
-    Map<String, Attribute> attributeMap = GeoObjectOverTime.buildAttributeMap(sgo.getType().getType());
+    GeoObjectType typeDto = sgo.getType().toDTO();
+    Map<String, ValueOverTimeCollectionDTO> votAttributeMap = GeoObjectOverTime.buildVotAttributeMap(typeDto);
+    Map<String, Attribute> attributeMap = GeoObjectOverTime.buildAttributeMap(typeDto);
 
-    GeoObjectOverTime geoObj = new GeoObjectOverTime(sgo.getType().getType(), votAttributeMap, attributeMap);
+    GeoObjectOverTime geoObj = new GeoObjectOverTime(typeDto, votAttributeMap, attributeMap);
 
-    Map<String, AttributeType> attributes = sgo.getType().getAttributeMap();
+    Map<String, AttributeType> attributes = typeDto.getAttributeMap();
     attributes.forEach((attributeName, attribute) -> {
       if (attribute instanceof AttributeLocalType)
       {
@@ -1965,44 +1970,45 @@ public class GeoObjectBusinessService extends RegistryLocalizedValueConverter im
   {
     TreeMap<String, LocationInfo> map = new TreeMap<String, LocationInfo>();
 
-    GraphQuery<Map<String, Object>> query = buildAncestorSelectQueryFast(sgo, hierarchy, parents);
-
-    List<Map<String, Object>> results = query.getResults();
-
-    if (results.size() <= 1)
-    {
-      return map;
-    }
-
-    results.remove(0); // First result is the child object
-
-    results.forEach(result -> {
-      String clazz = (String) result.get("cl");
-      String code = (String) result.get("code");
-
-      List<Map<String, Object>> displayLabelRaw = (List<Map<String, Object>>) result.get("label");
-
-      LocalizedValue localized = RegistryLocalizedValueConverter.convert(displayLabelRaw, sgo.getDate());
-
-      ServerGeoObjectType type = null;
-      for (ServerGeoObjectType parent : parents)
-      {
-        if (parent.getMdVertex().getDBClassName().equals(clazz))
-        {
-          type = parent;
-        }
-      }
-
-      if (type != null && localized != null)
-      {
-        LocationInfoHolder holder = new LocationInfoHolder(code, localized, type);
-        map.put(type.getUniversal().getKey(), holder);
-      }
-      else
-      {
-        logger.error("Could not find [" + clazz + "] or the localized value was null.");
-      }
-    });
+    // TODO: HEADS UP
+//    GraphQuery<Map<String, Object>> query = buildAncestorSelectQueryFast(sgo, hierarchy, parents);
+//
+//    List<Map<String, Object>> results = query.getResults();
+//
+//    if (results.size() <= 1)
+//    {
+//      return map;
+//    }
+//
+//    results.remove(0); // First result is the child object
+//
+//    results.forEach(result -> {
+//      String clazz = (String) result.get("cl");
+//      String code = (String) result.get("code");
+//
+//      List<Map<String, Object>> displayLabelRaw = (List<Map<String, Object>>) result.get("label");
+//
+//      LocalizedValue localized = RegistryLocalizedValueConverter.convert(displayLabelRaw, sgo.getDate());
+//
+//      ServerGeoObjectType type = null;
+//      for (ServerGeoObjectType parent : parents)
+//      {
+//        if (parent.getMdVertex().getDBClassName().equals(clazz))
+//        {
+//          type = parent;
+//        }
+//      }
+//
+//      if (type != null && localized != null)
+//      {
+//        LocationInfoHolder holder = new LocationInfoHolder(code, localized, type);
+//        map.put(type.getUniversal().getKey(), holder);
+//      }
+//      else
+//      {
+//        logger.error("Could not find [" + clazz + "] or the localized value was null.");
+//      }
+//    });
 
     return map;
   }

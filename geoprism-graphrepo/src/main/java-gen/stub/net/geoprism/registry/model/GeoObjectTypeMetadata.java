@@ -56,11 +56,6 @@ public class GeoObjectTypeMetadata extends GeoObjectTypeMetadataBase
     }
   }
 
-  public ServerGeoObjectType getServerType()
-  {
-    return ServerGeoObjectType.get(this.getUniversal());
-  }
-
   @Override
   protected String buildKey()
   {

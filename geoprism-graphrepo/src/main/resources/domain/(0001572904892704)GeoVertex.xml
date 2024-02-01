@@ -28,10 +28,10 @@
         </attributes>
       </mdVertex>    
       
-      <mdGeoVertex name="net.geoprism.registry.graph.GeoVertex" label="Geo Vertex" isAbstract="true" enableChangeOverTime="true">
+      <mdVertex name="net.geoprism.registry.graph.GeoVertex" label="Geo Vertex" isAbstract="true" enableChangeOverTime="true">
         <attributes>
         </attributes>
-      </mdGeoVertex>
+      </mdVertex>
     </create>
   </doIt>
   <undoIt>

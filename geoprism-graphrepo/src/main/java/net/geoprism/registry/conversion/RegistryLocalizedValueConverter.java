@@ -36,11 +36,6 @@ import net.geoprism.registry.service.request.ServiceFactory;
 public class RegistryLocalizedValueConverter extends LocalizedValueConverter
 {
 
-  public Term getTerm(String code)
-  {
-    return ServiceFactory.getMetadataCache().getTerm(code).get();
-  }
-
   /**
    * Set the owner to the corresponding {@link Organization} role for the given
    * code, or if code is null then the owner field is not set.

@@ -20,23 +20,19 @@ package net.geoprism.registry.service.business;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Optional;
 
-import org.commongeoregistry.adapter.Optional;
 import org.commongeoregistry.adapter.Term;
 import org.commongeoregistry.adapter.dataaccess.LocalizedValue;
 import org.commongeoregistry.adapter.metadata.AttributeTermType;
-import org.commongeoregistry.adapter.metadata.AttributeType;
 import org.springframework.stereotype.Service;
 
-import com.runwaysdk.business.BusinessFacade;
-import com.runwaysdk.dataaccess.MdAttributeConcreteDAOIF;
 import com.runwaysdk.query.OIterator;
 import com.runwaysdk.system.metadata.MdAttributeConcrete;
 import com.runwaysdk.system.metadata.MdAttributeMultiTerm;
 import com.runwaysdk.system.metadata.MdAttributeTerm;
 
 import net.geoprism.ontology.Classifier;
-import net.geoprism.registry.conversion.RegistryAttributeTypeConverter;
 import net.geoprism.registry.conversion.TermConverter;
 import net.geoprism.registry.model.ServerGeoObjectType;
 import net.geoprism.registry.service.request.ServiceFactory;
@@ -112,11 +108,12 @@ public class TermBusinessService implements TermBusinessServiceIF
       {
         ServerGeoObjectType geoObjectType = optional.get();
 
-        AttributeType attributeType = new RegistryAttributeTypeConverter().build((MdAttributeConcreteDAOIF) BusinessFacade.getEntityDAO(mdAttribute));
-
-        geoObjectType.getType().addAttribute(attributeType);
-
-        ServiceFactory.getMetadataCache().addGeoObjectType(geoObjectType);
+        // TODO: HEADS UP
+//        AttributeType attributeType = new RegistryAttributeTypeConverter().build((MdAttributeConcreteDAOIF) BusinessFacade.getEntityDAO(mdAttribute));
+//
+//        geoObjectType.getType().addAttribute(attributeType);
+//
+//        ServiceFactory.getMetadataCache().addGeoObjectType(geoObjectType);
       }
     }
   }
