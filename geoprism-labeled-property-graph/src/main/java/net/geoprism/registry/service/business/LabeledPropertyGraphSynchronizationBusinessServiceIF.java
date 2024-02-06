@@ -25,6 +25,7 @@ import com.google.gson.JsonObject;
 import com.runwaysdk.business.graph.VertexObject;
 
 import net.geoprism.graph.LabeledPropertyGraphSynchronization;
+import net.geoprism.registry.model.ServerOrganization;
 import net.geoprism.registry.view.Page;
 
 @Component
@@ -50,5 +51,9 @@ public interface LabeledPropertyGraphSynchronizationBusinessServiceIF
   Page<LabeledPropertyGraphSynchronization> page(JsonObject criteria);
 
   LabeledPropertyGraphSynchronization get(String oid);
+
+  void createTiles(LabeledPropertyGraphSynchronization synchronization);
+
+  JsonArray getForOrganization(ServerOrganization organization);
 
 }

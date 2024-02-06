@@ -3,18 +3,18 @@
  *
  * This file is part of Geoprism(tm).
  *
- * Geoprism(tm) is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
+ * Geoprism(tm) is free software: you can redistribute it and/or modify it under
+ * the terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation, either version 3 of the License, or (at your option) any
+ * later version.
  *
- * Geoprism(tm) is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
+ * Geoprism(tm) is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with Geoprism(tm).  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with Geoprism(tm). If not, see <http://www.gnu.org/licenses/>.
  */
 package net.geoprism.registry.service.business;
 
@@ -22,11 +22,13 @@ import java.util.LinkedList;
 import java.util.Set;
 
 import org.apache.commons.lang.StringUtils;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+import com.runwaysdk.business.graph.GraphQuery;
 import com.runwaysdk.business.graph.VertexObject;
 import com.runwaysdk.dataaccess.transaction.Transaction;
 import com.runwaysdk.query.AttributeLocal;
@@ -35,17 +37,24 @@ import com.runwaysdk.query.OrderBy.SortOrder;
 import com.runwaysdk.query.QueryFactory;
 import com.runwaysdk.query.Selectable;
 import com.runwaysdk.query.SelectableChar;
+import com.runwaysdk.query.SelectableReference;
 import com.runwaysdk.session.Session;
 
+import net.geoprism.graph.GeoObjectTypeSnapshot;
+import net.geoprism.graph.GeoObjectTypeSnapshotQuery;
 import net.geoprism.graph.LabeledPropertyGraphSynchronization;
 import net.geoprism.graph.LabeledPropertyGraphSynchronizationQuery;
 import net.geoprism.graph.LabeledPropertyGraphType;
 import net.geoprism.graph.LabeledPropertyGraphTypeEntry;
+import net.geoprism.graph.LabeledPropertyGraphTypeQuery;
 import net.geoprism.graph.LabeledPropertyGraphTypeVersion;
 import net.geoprism.graph.LabeledPropertyGraphUtil;
+import net.geoprism.registry.LPGTileCache;
+import net.geoprism.registry.graph.GraphOrganization;
 import net.geoprism.registry.lpg.adapter.RegistryBridge;
 import net.geoprism.registry.lpg.adapter.RegistryConnectorFactory;
 import net.geoprism.registry.lpg.adapter.RegistryConnectorIF;
+import net.geoprism.registry.model.ServerOrganization;
 import net.geoprism.registry.service.request.AbstractGraphVersionPublisherService.State;
 import net.geoprism.registry.service.request.JsonGraphVersionPublisherServiceIF;
 import net.geoprism.registry.view.Page;
@@ -69,6 +78,8 @@ public class LabeledPropertyGraphSynchronizationBusinessService implements Label
   @Transaction
   public void delete(LabeledPropertyGraphSynchronization synchronization)
   {
+    LPGTileCache.deleteTiles(synchronization);
+
     synchronization.delete();
 
     if (!StringUtils.isEmpty(synchronization.getVersionOid()))
@@ -96,6 +107,8 @@ public class LabeledPropertyGraphSynchronizationBusinessService implements Label
   @Override
   public void executeNoAuth(LabeledPropertyGraphSynchronization synchronization)
   {
+    LPGTileCache.deleteTiles(synchronization);
+
     try
     {
       this.createTables(synchronization);
@@ -382,9 +395,83 @@ public class LabeledPropertyGraphSynchronizationBusinessService implements Label
   }
 
   @Override
+  public JsonArray getForOrganization(ServerOrganization organization)
+  {
+    // Two phase query. The first phase traverses the graph tree to find all of
+    // the child organizations of a node in the tree. The second phase then
+    // queries postgres with the list of child organizations as criteria
+
+    StringBuilder statement = new StringBuilder();
+    statement.append("TRAVERSE OUT('organization_hierarchy') FROM :organization");
+
+    GraphQuery<GraphOrganization> gQuery = new GraphQuery<GraphOrganization>(statement.toString());
+    gQuery.setParameter("organization", organization.getGraphOrganization().getRID());
+
+    String[] organizationIds = gQuery.getResults().stream().map(org -> org.getOrganizationOid()).toArray(String[]::new);
+
+    QueryFactory factory = new QueryFactory();
+
+    LabeledPropertyGraphTypeQuery query = new LabeledPropertyGraphTypeQuery(factory);
+    query.WHERE( ( (SelectableReference) query.get(LabeledPropertyGraphType.ORGANIZATION) ).IN(organizationIds));
+
+    LabeledPropertyGraphSynchronizationQuery sQuery = new LabeledPropertyGraphSynchronizationQuery(factory);
+    sQuery.WHERE(sQuery.getGraphType().EQ(query));
+
+    JsonArray array = new JsonArray();
+
+    try (OIterator<? extends LabeledPropertyGraphSynchronization> iterator = sQuery.getIterator())
+    {
+      iterator.forEach(i -> array.add(i.toJSON()));
+    }
+
+    return array;
+  }
+
+  @Override
   public LabeledPropertyGraphSynchronization get(String oid)
   {
     return LabeledPropertyGraphSynchronization.get(oid);
+  }
+
+  @Override
+  public void createTiles(LabeledPropertyGraphSynchronization synchronization)
+  {
+    final LabeledPropertyGraphTypeVersion version = synchronization.getVersion();
+
+    GeoObjectTypeSnapshotQuery query = new GeoObjectTypeSnapshotQuery(new QueryFactory());
+    query.WHERE(query.getVersion().EQ(version));
+
+    try (OIterator<? extends GeoObjectTypeSnapshot> it = query.getIterator())
+    {
+      while (it.hasNext())
+      {
+        GeoObjectTypeSnapshot snapshot = it.next();
+
+        if (!snapshot.getIsAbstract())
+        {
+          for (int z = 0; z < 4; z++)
+          {
+            int tiles = (int) Math.pow(2, z);
+
+            for (int x = 0; x < tiles; x++)
+            {
+              
+              for (int y = 0; y < tiles; y++)
+              {
+                JSONObject config = new JSONObject();
+                config.put("oid", synchronization.getOid());
+                config.put("typeCode", snapshot.getCode());
+                config.put("x", x);
+                config.put("y", y);
+                config.put("z", z);
+
+                LPGTileCache.getTile(config);
+              }
+            }
+          }
+        }
+      }
+    }
   }
 
 }

@@ -40,15 +40,20 @@
       <version>${project.version}</version>
     </dependency>
     <dependency>
-	  <groupId>net.geoprism</groupId>
-	  <artifactId>geoprism-classification</artifactId>
-	  <version>${project.version}</version>
-	</dependency>
+	    <groupId>net.geoprism</groupId>
+	    <artifactId>geoprism-classification</artifactId>
+	    <version>${project.version}</version>
+  	</dependency>
     <dependency>
       <groupId>org.apache.httpcomponents</groupId>
       <artifactId>httpclient</artifactId>
       <version>4.5.13</version>
     </dependency>
+    <dependency>
+      <groupId>com.wdtinc</groupId>
+      <artifactId>mapbox-vector-tile</artifactId>
+      <version>3.1.2-TF</version>
+    </dependency>        
   </dependencies>
   
   <build>
