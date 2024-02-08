@@ -52,8 +52,6 @@ public interface LabeledPropertyGraphSynchronizationBusinessServiceIF
 
   LabeledPropertyGraphSynchronization get(String oid);
 
-  void createTiles(LabeledPropertyGraphSynchronization synchronization);
-
   JsonArray getForOrganization(ServerOrganization organization);
 
 }

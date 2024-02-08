@@ -15,22 +15,15 @@
  */
 package net.geoprism.registry.service.request;
 
-import java.io.ByteArrayInputStream;
-import java.io.InputStream;
-
-import org.json.JSONException;
-import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
-import com.runwaysdk.dataaccess.ProgrammingErrorException;
 import com.runwaysdk.session.Request;
 import com.runwaysdk.session.RequestType;
 
 import net.geoprism.graph.LabeledPropertyGraphSynchronization;
-import net.geoprism.registry.LPGTileCache;
 import net.geoprism.registry.model.ServerOrganization;
 import net.geoprism.registry.service.business.LabeledPropertyGraphSynchronizationBusinessService;
 
@@ -108,38 +101,5 @@ public class LabeledPropertyGraphSynchronizationService implements LabeledProper
     this.synchronizationService.updateRemoteVersion(synchronization, versionId, versionNumber);
 
     return synchronization.toJSON();
-  }
-  
-  @Override
-  @Request(RequestType.SESSION)
-  public void createTiles(String sessionId, String oid)
-  {
-    LabeledPropertyGraphSynchronization synchronization = this.synchronizationService.get(oid);
-
-    this.synchronizationService.createTiles(synchronization);
-  }
-
-  @Override
-  @Request(RequestType.SESSION)
-  public InputStream getTile(String sessionId, JSONObject object)
-  {
-    try
-    {
-      byte[] bytes = LPGTileCache.getTile(object);
-
-      if (bytes != null)
-      {
-        return new ByteArrayInputStream(bytes);
-      }
-
-      return new ByteArrayInputStream(new byte[] {});
-    }
-    catch (JSONException e)
-    {
-      throw new ProgrammingErrorException(e);
-    }
-  }
-
-
-
+  }  
 }

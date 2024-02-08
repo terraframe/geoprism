@@ -78,4 +78,6 @@ public interface LabeledPropertyGraphTypeVersionBusinessServiceIF
 
   public void createPublishJob(LabeledPropertyGraphTypeVersion version);
 
+  void createTiles(LabeledPropertyGraphTypeVersion version);
+
 }

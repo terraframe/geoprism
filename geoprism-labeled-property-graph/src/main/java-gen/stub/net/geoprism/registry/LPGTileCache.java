@@ -24,9 +24,9 @@ import com.runwaysdk.session.RequestType;
 import com.runwaysdk.session.Session;
 import com.runwaysdk.session.SessionIF;
 
-import net.geoprism.graph.LabeledPropertyGraphSynchronization;
+import net.geoprism.graph.LabeledPropertyGraphTypeVersion;
 import net.geoprism.registry.tile.PublisherUtil;
-import net.geoprism.registry.tile.VectorTileBuilder;
+import net.geoprism.registry.tile.VersionVectorTileBuilder;
 
 public class LPGTileCache extends LPGTileCacheBase
 {
@@ -45,7 +45,7 @@ public class LPGTileCache extends LPGTileCacheBase
   {
     private ThreadTransactionState state;
 
-    private String                 synchronizationId;
+    private String                 versionId;
 
     private String                 typeCode;
 
@@ -55,11 +55,11 @@ public class LPGTileCache extends LPGTileCacheBase
 
     private int                    zoom;
 
-    public CacheCallable(ThreadTransactionState state, String synchronizationId, String typeCode, int x, int y, int zoom)
+    public CacheCallable(ThreadTransactionState state, String versionId, String typeCode, int x, int y, int zoom)
     {
       super();
       this.state = state;
-      this.synchronizationId = synchronizationId;
+      this.versionId = versionId;
       this.typeCode = typeCode;
       this.x = x;
       this.y = y;
@@ -80,7 +80,7 @@ public class LPGTileCache extends LPGTileCacheBase
         /*
          * Re-check
          */
-        byte[] cached = getCachedTile(synchronizationId, typeCode, x, y, zoom);
+        byte[] cached = getCachedTile(versionId, typeCode, x, y, zoom);
 
         if (cached != null)
         {
@@ -99,9 +99,9 @@ public class LPGTileCache extends LPGTileCacheBase
         Envelope envelope = PublisherUtil.getEnvelope(x, y, zoom);
         Envelope bounds = PublisherUtil.getTileBounds(envelope);
 
-        LabeledPropertyGraphSynchronization synchronization = LabeledPropertyGraphSynchronization.get(this.synchronizationId);
+        LabeledPropertyGraphTypeVersion version = LabeledPropertyGraphTypeVersion.get(this.versionId);
 
-        VectorTileBuilder builder = new VectorTileBuilder(synchronization, this.typeCode);
+        VersionVectorTileBuilder builder = new VersionVectorTileBuilder(version, this.typeCode);
         byte[] tile = builder.writeVectorTiles(envelope, bounds);
 
         this.populateTile(state, tile);
@@ -120,7 +120,7 @@ public class LPGTileCache extends LPGTileCacheBase
     private void populateTile(ThreadTransactionState state, byte[] tile)
     {
       LPGTileCache cache = new LPGTileCache();
-      cache.setSynchronizationId(this.synchronizationId);
+      cache.setVersionId(this.versionId);
       cache.setTypeCode(this.typeCode);
       cache.setX(this.x);
       cache.setY(this.y);
@@ -140,19 +140,19 @@ public class LPGTileCache extends LPGTileCacheBase
 
   public static byte[] getTile(JSONObject object) throws JSONException
   {
-    String synchronizationId = object.getString("oid");
+    String versionId = object.getString("oid");
     String typeCode = object.getString("typeCode");
     int x = object.getInt("x");
     int y = object.getInt("y");
     int zoom = object.getInt("z");
 
-    return getTile(synchronizationId, typeCode, x, y, zoom);
+    return getTile(versionId, typeCode, x, y, zoom);
   }
 
   @Transaction
-  private static byte[] getTile(String synchronizationId, String typeCode, int x, int y, int zoom)
+  private static byte[] getTile(String versionId, String typeCode, int x, int y, int zoom)
   {
-    byte[] cached = getCachedTile(synchronizationId, typeCode, x, y, zoom);
+    byte[] cached = getCachedTile(versionId, typeCode, x, y, zoom);
 
     if (cached != null)
     {
@@ -171,7 +171,7 @@ public class LPGTileCache extends LPGTileCacheBase
 
         try
         {
-          byte[] result = executor.submit(new CacheCallable(state, synchronizationId, typeCode, x, y, zoom)).get();
+          byte[] result = executor.submit(new CacheCallable(state, versionId, typeCode, x, y, zoom)).get();
 
           return result;
         }
@@ -185,10 +185,10 @@ public class LPGTileCache extends LPGTileCacheBase
     }
   }
 
-  public static byte[] getCachedTile(String synchronizationId, String typeCode, int x, int y, int zoom)
+  public static byte[] getCachedTile(String versionId, String typeCode, int x, int y, int zoom)
   {
     LPGTileCacheQuery query = new LPGTileCacheQuery(new QueryFactory());
-    query.WHERE(query.getSynchronization().EQ(synchronizationId));
+    query.WHERE(query.getVersion().EQ(versionId));
     query.WHERE(query.getTypeCode().EQ(typeCode));
     query.AND(query.getX().EQ(x));
     query.AND(query.getY().EQ(y));
@@ -206,10 +206,10 @@ public class LPGTileCache extends LPGTileCacheBase
     }
   }
 
-  public static void deleteTiles(LabeledPropertyGraphSynchronization synchronization)
+  public static void deleteTiles(LabeledPropertyGraphTypeVersion version)
   {
     LPGTileCacheQuery query = new LPGTileCacheQuery(new QueryFactory());
-    query.WHERE(query.getSynchronization().EQ(synchronization));
+    query.WHERE(query.getVersion().EQ(version));
 
     try (OIterator<? extends LPGTileCache> it = query.getIterator())
     {

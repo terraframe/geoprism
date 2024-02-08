@@ -255,27 +255,27 @@ public  class LPGTileCacheQuery extends com.runwaysdk.query.GeneratedBusinessQue
     return (com.runwaysdk.query.SelectableChar)this.getComponentQuery().get(net.geoprism.registry.LPGTileCache.SITEMASTER, alias, displayLabel);
 
   }
-  public net.geoprism.graph.LabeledPropertyGraphSynchronizationQuery.LabeledPropertyGraphSynchronizationQueryReferenceIF getSynchronization()
+  public net.geoprism.graph.LabeledPropertyGraphTypeVersionQuery.LabeledPropertyGraphTypeVersionQueryReferenceIF getVersion()
   {
-    return getSynchronization(null);
+    return getVersion(null);
 
   }
  
-  public net.geoprism.graph.LabeledPropertyGraphSynchronizationQuery.LabeledPropertyGraphSynchronizationQueryReferenceIF getSynchronization(String alias)
+  public net.geoprism.graph.LabeledPropertyGraphTypeVersionQuery.LabeledPropertyGraphTypeVersionQueryReferenceIF getVersion(String alias)
   {
 
-    com.runwaysdk.dataaccess.MdAttributeDAOIF mdAttributeIF = this.getComponentQuery().getMdAttributeROfromMap(net.geoprism.registry.LPGTileCache.SYNCHRONIZATION);
+    com.runwaysdk.dataaccess.MdAttributeDAOIF mdAttributeIF = this.getComponentQuery().getMdAttributeROfromMap(net.geoprism.registry.LPGTileCache.VERSION);
 
-    return (net.geoprism.graph.LabeledPropertyGraphSynchronizationQuery.LabeledPropertyGraphSynchronizationQueryReferenceIF)this.getComponentQuery().internalAttributeFactory(net.geoprism.registry.LPGTileCache.SYNCHRONIZATION, mdAttributeIF, this, alias, null);
+    return (net.geoprism.graph.LabeledPropertyGraphTypeVersionQuery.LabeledPropertyGraphTypeVersionQueryReferenceIF)this.getComponentQuery().internalAttributeFactory(net.geoprism.registry.LPGTileCache.VERSION, mdAttributeIF, this, alias, null);
 
   }
  
-  public net.geoprism.graph.LabeledPropertyGraphSynchronizationQuery.LabeledPropertyGraphSynchronizationQueryReferenceIF getSynchronization(String alias, String displayLabel)
+  public net.geoprism.graph.LabeledPropertyGraphTypeVersionQuery.LabeledPropertyGraphTypeVersionQueryReferenceIF getVersion(String alias, String displayLabel)
   {
 
-    com.runwaysdk.dataaccess.MdAttributeDAOIF mdAttributeIF = this.getComponentQuery().getMdAttributeROfromMap(net.geoprism.registry.LPGTileCache.SYNCHRONIZATION);
+    com.runwaysdk.dataaccess.MdAttributeDAOIF mdAttributeIF = this.getComponentQuery().getMdAttributeROfromMap(net.geoprism.registry.LPGTileCache.VERSION);
 
-    return (net.geoprism.graph.LabeledPropertyGraphSynchronizationQuery.LabeledPropertyGraphSynchronizationQueryReferenceIF)this.getComponentQuery().internalAttributeFactory(net.geoprism.registry.LPGTileCache.SYNCHRONIZATION, mdAttributeIF, this, alias, displayLabel);
+    return (net.geoprism.graph.LabeledPropertyGraphTypeVersionQuery.LabeledPropertyGraphTypeVersionQueryReferenceIF)this.getComponentQuery().internalAttributeFactory(net.geoprism.registry.LPGTileCache.VERSION, mdAttributeIF, this, alias, displayLabel);
 
   }
   public com.runwaysdk.query.SelectableBlob getTile()
@@ -404,9 +404,9 @@ public  class LPGTileCacheQuery extends com.runwaysdk.query.GeneratedBusinessQue
     {
        return new com.runwaysdk.system.ActorQuery.ActorQueryReference((com.runwaysdk.dataaccess.MdAttributeRefDAOIF)mdAttributeIF, attributeNamespace, definingTableName, definingTableAlias, referenceMdBusinessIF, referenceTableAlias, rootQuery, tableJoinSet, userDefinedAlias, userDefinedDisplayLabel);
     }
-    else if (name.equals(net.geoprism.registry.LPGTileCache.SYNCHRONIZATION)) 
+    else if (name.equals(net.geoprism.registry.LPGTileCache.VERSION)) 
     {
-       return new net.geoprism.graph.LabeledPropertyGraphSynchronizationQuery.LabeledPropertyGraphSynchronizationQueryReference((com.runwaysdk.dataaccess.MdAttributeRefDAOIF)mdAttributeIF, attributeNamespace, definingTableName, definingTableAlias, referenceMdBusinessIF, referenceTableAlias, rootQuery, tableJoinSet, userDefinedAlias, userDefinedDisplayLabel);
+       return new net.geoprism.graph.LabeledPropertyGraphTypeVersionQuery.LabeledPropertyGraphTypeVersionQueryReference((com.runwaysdk.dataaccess.MdAttributeRefDAOIF)mdAttributeIF, attributeNamespace, definingTableName, definingTableAlias, referenceMdBusinessIF, referenceTableAlias, rootQuery, tableJoinSet, userDefinedAlias, userDefinedDisplayLabel);
     }
     else 
     {
@@ -480,9 +480,9 @@ public  class LPGTileCacheQuery extends com.runwaysdk.query.GeneratedBusinessQue
     public com.runwaysdk.query.SelectableChar getSiteMaster();
     public com.runwaysdk.query.SelectableChar getSiteMaster(String alias);
     public com.runwaysdk.query.SelectableChar getSiteMaster(String alias, String displayLabel);
-    public net.geoprism.graph.LabeledPropertyGraphSynchronizationQuery.LabeledPropertyGraphSynchronizationQueryReferenceIF getSynchronization();
-    public net.geoprism.graph.LabeledPropertyGraphSynchronizationQuery.LabeledPropertyGraphSynchronizationQueryReferenceIF getSynchronization(String alias);
-    public net.geoprism.graph.LabeledPropertyGraphSynchronizationQuery.LabeledPropertyGraphSynchronizationQueryReferenceIF getSynchronization(String alias, String displayLabel);
+    public net.geoprism.graph.LabeledPropertyGraphTypeVersionQuery.LabeledPropertyGraphTypeVersionQueryReferenceIF getVersion();
+    public net.geoprism.graph.LabeledPropertyGraphTypeVersionQuery.LabeledPropertyGraphTypeVersionQueryReferenceIF getVersion(String alias);
+    public net.geoprism.graph.LabeledPropertyGraphTypeVersionQuery.LabeledPropertyGraphTypeVersionQueryReferenceIF getVersion(String alias, String displayLabel);
     public com.runwaysdk.query.SelectableBlob getTile();
     public com.runwaysdk.query.SelectableBlob getTile(String alias);
     public com.runwaysdk.query.SelectableBlob getTile(String alias, String displayLabel);
@@ -723,21 +723,21 @@ public  class LPGTileCacheQuery extends com.runwaysdk.query.GeneratedBusinessQue
     return (com.runwaysdk.query.SelectableChar)this.get(net.geoprism.registry.LPGTileCache.SITEMASTER, alias, displayLabel);
 
   }
-  public net.geoprism.graph.LabeledPropertyGraphSynchronizationQuery.LabeledPropertyGraphSynchronizationQueryReferenceIF getSynchronization()
+  public net.geoprism.graph.LabeledPropertyGraphTypeVersionQuery.LabeledPropertyGraphTypeVersionQueryReferenceIF getVersion()
   {
-    return getSynchronization(null);
+    return getVersion(null);
 
   }
  
-  public net.geoprism.graph.LabeledPropertyGraphSynchronizationQuery.LabeledPropertyGraphSynchronizationQueryReferenceIF getSynchronization(String alias)
+  public net.geoprism.graph.LabeledPropertyGraphTypeVersionQuery.LabeledPropertyGraphTypeVersionQueryReferenceIF getVersion(String alias)
   {
-    return (net.geoprism.graph.LabeledPropertyGraphSynchronizationQuery.LabeledPropertyGraphSynchronizationQueryReferenceIF)this.get(net.geoprism.registry.LPGTileCache.SYNCHRONIZATION, alias, null);
+    return (net.geoprism.graph.LabeledPropertyGraphTypeVersionQuery.LabeledPropertyGraphTypeVersionQueryReferenceIF)this.get(net.geoprism.registry.LPGTileCache.VERSION, alias, null);
 
   }
  
-  public net.geoprism.graph.LabeledPropertyGraphSynchronizationQuery.LabeledPropertyGraphSynchronizationQueryReferenceIF getSynchronization(String alias, String displayLabel)
+  public net.geoprism.graph.LabeledPropertyGraphTypeVersionQuery.LabeledPropertyGraphTypeVersionQueryReferenceIF getVersion(String alias, String displayLabel)
   {
-    return (net.geoprism.graph.LabeledPropertyGraphSynchronizationQuery.LabeledPropertyGraphSynchronizationQueryReferenceIF)this.get(net.geoprism.registry.LPGTileCache.SYNCHRONIZATION,  alias, displayLabel);
+    return (net.geoprism.graph.LabeledPropertyGraphTypeVersionQuery.LabeledPropertyGraphTypeVersionQueryReferenceIF)this.get(net.geoprism.registry.LPGTileCache.VERSION,  alias, displayLabel);
 
   }
   public com.runwaysdk.query.SelectableBlob getTile()
@@ -866,9 +866,9 @@ public  class LPGTileCacheQuery extends com.runwaysdk.query.GeneratedBusinessQue
     {
        return new com.runwaysdk.system.ActorQuery.ActorQueryReference((com.runwaysdk.dataaccess.MdAttributeRefDAOIF)mdAttributeIF, attributeNamespace, definingTableName, definingTableAlias, referenceMdBusinessIF, referenceTableAlias, rootQuery, tableJoinSet, userDefinedAlias, userDefinedDisplayLabel);
     }
-    else if (name.equals(net.geoprism.registry.LPGTileCache.SYNCHRONIZATION)) 
+    else if (name.equals(net.geoprism.registry.LPGTileCache.VERSION)) 
     {
-       return new net.geoprism.graph.LabeledPropertyGraphSynchronizationQuery.LabeledPropertyGraphSynchronizationQueryReference((com.runwaysdk.dataaccess.MdAttributeRefDAOIF)mdAttributeIF, attributeNamespace, definingTableName, definingTableAlias, referenceMdBusinessIF, referenceTableAlias, rootQuery, tableJoinSet, userDefinedAlias, userDefinedDisplayLabel);
+       return new net.geoprism.graph.LabeledPropertyGraphTypeVersionQuery.LabeledPropertyGraphTypeVersionQueryReference((com.runwaysdk.dataaccess.MdAttributeRefDAOIF)mdAttributeIF, attributeNamespace, definingTableName, definingTableAlias, referenceMdBusinessIF, referenceTableAlias, rootQuery, tableJoinSet, userDefinedAlias, userDefinedDisplayLabel);
     }
     else 
     {
@@ -919,9 +919,9 @@ public  class LPGTileCacheQuery extends com.runwaysdk.query.GeneratedBusinessQue
     public com.runwaysdk.query.SelectableChar getSiteMaster();
     public com.runwaysdk.query.SelectableChar getSiteMaster(String alias);
     public com.runwaysdk.query.SelectableChar getSiteMaster(String alias, String displayLabel);
-    public net.geoprism.graph.LabeledPropertyGraphSynchronizationQuery.LabeledPropertyGraphSynchronizationQueryReferenceIF getSynchronization();
-    public net.geoprism.graph.LabeledPropertyGraphSynchronizationQuery.LabeledPropertyGraphSynchronizationQueryReferenceIF getSynchronization(String alias);
-    public net.geoprism.graph.LabeledPropertyGraphSynchronizationQuery.LabeledPropertyGraphSynchronizationQueryReferenceIF getSynchronization(String alias, String displayLabel);
+    public net.geoprism.graph.LabeledPropertyGraphTypeVersionQuery.LabeledPropertyGraphTypeVersionQueryReferenceIF getVersion();
+    public net.geoprism.graph.LabeledPropertyGraphTypeVersionQuery.LabeledPropertyGraphTypeVersionQueryReferenceIF getVersion(String alias);
+    public net.geoprism.graph.LabeledPropertyGraphTypeVersionQuery.LabeledPropertyGraphTypeVersionQueryReferenceIF getVersion(String alias, String displayLabel);
     public com.runwaysdk.query.SelectableBlob getTile();
     public com.runwaysdk.query.SelectableBlob getTile(String alias);
     public com.runwaysdk.query.SelectableBlob getTile(String alias, String displayLabel);
@@ -1211,21 +1211,21 @@ public  class LPGTileCacheQuery extends com.runwaysdk.query.GeneratedBusinessQue
     return (com.runwaysdk.query.SelectableChar)this.get(net.geoprism.registry.LPGTileCache.SITEMASTER, alias, displayLabel);
 
   }
-  public net.geoprism.graph.LabeledPropertyGraphSynchronizationQuery.LabeledPropertyGraphSynchronizationQueryReferenceIF getSynchronization()
+  public net.geoprism.graph.LabeledPropertyGraphTypeVersionQuery.LabeledPropertyGraphTypeVersionQueryReferenceIF getVersion()
   {
-    return getSynchronization(null);
+    return getVersion(null);
 
   }
  
-  public net.geoprism.graph.LabeledPropertyGraphSynchronizationQuery.LabeledPropertyGraphSynchronizationQueryReferenceIF getSynchronization(String alias)
+  public net.geoprism.graph.LabeledPropertyGraphTypeVersionQuery.LabeledPropertyGraphTypeVersionQueryReferenceIF getVersion(String alias)
   {
-    return (net.geoprism.graph.LabeledPropertyGraphSynchronizationQuery.LabeledPropertyGraphSynchronizationQueryReferenceIF)this.get(net.geoprism.registry.LPGTileCache.SYNCHRONIZATION, alias, null);
+    return (net.geoprism.graph.LabeledPropertyGraphTypeVersionQuery.LabeledPropertyGraphTypeVersionQueryReferenceIF)this.get(net.geoprism.registry.LPGTileCache.VERSION, alias, null);
 
   }
  
-  public net.geoprism.graph.LabeledPropertyGraphSynchronizationQuery.LabeledPropertyGraphSynchronizationQueryReferenceIF getSynchronization(String alias, String displayLabel)
+  public net.geoprism.graph.LabeledPropertyGraphTypeVersionQuery.LabeledPropertyGraphTypeVersionQueryReferenceIF getVersion(String alias, String displayLabel)
   {
-    return (net.geoprism.graph.LabeledPropertyGraphSynchronizationQuery.LabeledPropertyGraphSynchronizationQueryReferenceIF)this.get(net.geoprism.registry.LPGTileCache.SYNCHRONIZATION,  alias, displayLabel);
+    return (net.geoprism.graph.LabeledPropertyGraphTypeVersionQuery.LabeledPropertyGraphTypeVersionQueryReferenceIF)this.get(net.geoprism.registry.LPGTileCache.VERSION,  alias, displayLabel);
 
   }
   public com.runwaysdk.query.SelectableBlob getTile()
@@ -1354,9 +1354,9 @@ public  class LPGTileCacheQuery extends com.runwaysdk.query.GeneratedBusinessQue
     {
        return new com.runwaysdk.system.ActorQuery.ActorQueryReference((com.runwaysdk.dataaccess.MdAttributeRefDAOIF)mdAttributeIF, attributeNamespace, definingTableName, definingTableAlias, referenceMdBusinessIF, referenceTableAlias, rootQuery, tableJoinSet, userDefinedAlias, userDefinedDisplayLabel);
     }
-    else if (name.equals(net.geoprism.registry.LPGTileCache.SYNCHRONIZATION)) 
+    else if (name.equals(net.geoprism.registry.LPGTileCache.VERSION)) 
     {
-       return new net.geoprism.graph.LabeledPropertyGraphSynchronizationQuery.LabeledPropertyGraphSynchronizationQueryReference((com.runwaysdk.dataaccess.MdAttributeRefDAOIF)mdAttributeIF, attributeNamespace, definingTableName, definingTableAlias, referenceMdBusinessIF, referenceTableAlias, rootQuery, tableJoinSet, userDefinedAlias, userDefinedDisplayLabel);
+       return new net.geoprism.graph.LabeledPropertyGraphTypeVersionQuery.LabeledPropertyGraphTypeVersionQueryReference((com.runwaysdk.dataaccess.MdAttributeRefDAOIF)mdAttributeIF, attributeNamespace, definingTableName, definingTableAlias, referenceMdBusinessIF, referenceTableAlias, rootQuery, tableJoinSet, userDefinedAlias, userDefinedDisplayLabel);
     }
     else 
     {

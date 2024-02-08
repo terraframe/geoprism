@@ -22,7 +22,7 @@ public abstract class LPGTileCacheBase extends com.runwaysdk.business.Business
   public final static java.lang.String OWNER = "owner";
   public final static java.lang.String SEQ = "seq";
   public final static java.lang.String SITEMASTER = "siteMaster";
-  public final static java.lang.String SYNCHRONIZATION = "synchronization";
+  public final static java.lang.String VERSION = "version";
   public final static java.lang.String TILE = "tile";
   public final static java.lang.String TYPE = "type";
   public final static java.lang.String TYPECODE = "typeCode";
@@ -333,55 +333,55 @@ public abstract class LPGTileCacheBase extends com.runwaysdk.business.Business
     return (com.runwaysdk.dataaccess.MdAttributeCharacterDAOIF)mdClassIF.definesAttribute(SITEMASTER);
   }
   
-  public net.geoprism.graph.LabeledPropertyGraphSynchronization getSynchronization()
+  public net.geoprism.graph.LabeledPropertyGraphTypeVersion getVersion()
   {
-    if (getValue(SYNCHRONIZATION).trim().equals(""))
+    if (getValue(VERSION).trim().equals(""))
     {
       return null;
     }
     else
     {
-      return net.geoprism.graph.LabeledPropertyGraphSynchronization.get(getValue(SYNCHRONIZATION));
+      return net.geoprism.graph.LabeledPropertyGraphTypeVersion.get(getValue(VERSION));
     }
   }
   
-  public String getSynchronizationOid()
+  public String getVersionOid()
   {
-    return getValue(SYNCHRONIZATION);
+    return getValue(VERSION);
   }
   
-  public void validateSynchronization()
+  public void validateVersion()
   {
-    this.validateAttribute(SYNCHRONIZATION);
+    this.validateAttribute(VERSION);
   }
   
-  public static com.runwaysdk.dataaccess.MdAttributeReferenceDAOIF getSynchronizationMd()
+  public static com.runwaysdk.dataaccess.MdAttributeReferenceDAOIF getVersionMd()
   {
     com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(net.geoprism.registry.LPGTileCache.CLASS);
-    return (com.runwaysdk.dataaccess.MdAttributeReferenceDAOIF)mdClassIF.definesAttribute(SYNCHRONIZATION);
+    return (com.runwaysdk.dataaccess.MdAttributeReferenceDAOIF)mdClassIF.definesAttribute(VERSION);
   }
   
-  public void setSynchronization(net.geoprism.graph.LabeledPropertyGraphSynchronization value)
+  public void setVersion(net.geoprism.graph.LabeledPropertyGraphTypeVersion value)
   {
     if(value == null)
     {
-      setValue(SYNCHRONIZATION, "");
+      setValue(VERSION, "");
     }
     else
     {
-      setValue(SYNCHRONIZATION, value.getOid());
+      setValue(VERSION, value.getOid());
     }
   }
   
-  public void setSynchronizationId(java.lang.String oid)
+  public void setVersionId(java.lang.String oid)
   {
     if(oid == null)
     {
-      setValue(SYNCHRONIZATION, "");
+      setValue(VERSION, "");
     }
     else
     {
-      setValue(SYNCHRONIZATION, oid);
+      setValue(VERSION, oid);
     }
   }
   

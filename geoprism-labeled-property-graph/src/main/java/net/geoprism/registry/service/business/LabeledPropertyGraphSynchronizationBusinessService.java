@@ -22,7 +22,6 @@ import java.util.LinkedList;
 import java.util.Set;
 
 import org.apache.commons.lang.StringUtils;
-import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -40,8 +39,6 @@ import com.runwaysdk.query.SelectableChar;
 import com.runwaysdk.query.SelectableReference;
 import com.runwaysdk.session.Session;
 
-import net.geoprism.graph.GeoObjectTypeSnapshot;
-import net.geoprism.graph.GeoObjectTypeSnapshotQuery;
 import net.geoprism.graph.LabeledPropertyGraphSynchronization;
 import net.geoprism.graph.LabeledPropertyGraphSynchronizationQuery;
 import net.geoprism.graph.LabeledPropertyGraphType;
@@ -49,7 +46,6 @@ import net.geoprism.graph.LabeledPropertyGraphTypeEntry;
 import net.geoprism.graph.LabeledPropertyGraphTypeQuery;
 import net.geoprism.graph.LabeledPropertyGraphTypeVersion;
 import net.geoprism.graph.LabeledPropertyGraphUtil;
-import net.geoprism.registry.LPGTileCache;
 import net.geoprism.registry.graph.GraphOrganization;
 import net.geoprism.registry.lpg.adapter.RegistryBridge;
 import net.geoprism.registry.lpg.adapter.RegistryConnectorFactory;
@@ -78,8 +74,6 @@ public class LabeledPropertyGraphSynchronizationBusinessService implements Label
   @Transaction
   public void delete(LabeledPropertyGraphSynchronization synchronization)
   {
-    LPGTileCache.deleteTiles(synchronization);
-
     synchronization.delete();
 
     if (!StringUtils.isEmpty(synchronization.getVersionOid()))
@@ -107,8 +101,6 @@ public class LabeledPropertyGraphSynchronizationBusinessService implements Label
   @Override
   public void executeNoAuth(LabeledPropertyGraphSynchronization synchronization)
   {
-    LPGTileCache.deleteTiles(synchronization);
-
     try
     {
       this.createTables(synchronization);
@@ -433,45 +425,5 @@ public class LabeledPropertyGraphSynchronizationBusinessService implements Label
     return LabeledPropertyGraphSynchronization.get(oid);
   }
 
-  @Override
-  public void createTiles(LabeledPropertyGraphSynchronization synchronization)
-  {
-    final LabeledPropertyGraphTypeVersion version = synchronization.getVersion();
-
-    GeoObjectTypeSnapshotQuery query = new GeoObjectTypeSnapshotQuery(new QueryFactory());
-    query.WHERE(query.getVersion().EQ(version));
-
-    try (OIterator<? extends GeoObjectTypeSnapshot> it = query.getIterator())
-    {
-      while (it.hasNext())
-      {
-        GeoObjectTypeSnapshot snapshot = it.next();
-
-        if (!snapshot.getIsAbstract())
-        {
-          for (int z = 0; z < 4; z++)
-          {
-            int tiles = (int) Math.pow(2, z);
-
-            for (int x = 0; x < tiles; x++)
-            {
-              
-              for (int y = 0; y < tiles; y++)
-              {
-                JSONObject config = new JSONObject();
-                config.put("oid", synchronization.getOid());
-                config.put("typeCode", snapshot.getCode());
-                config.put("x", x);
-                config.put("y", y);
-                config.put("z", z);
-
-                LPGTileCache.getTile(config);
-              }
-            }
-          }
-        }
-      }
-    }
-  }
 
 }

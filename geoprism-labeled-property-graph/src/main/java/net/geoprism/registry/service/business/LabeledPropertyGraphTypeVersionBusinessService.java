@@ -28,6 +28,7 @@ import org.commongeoregistry.adapter.Term;
 import org.commongeoregistry.adapter.constants.DefaultAttribute;
 import org.commongeoregistry.adapter.metadata.AttributeClassificationType;
 import org.commongeoregistry.adapter.metadata.GeoObjectType;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -55,6 +56,7 @@ import net.geoprism.graph.LabeledPropertyGraphTypeVersion;
 import net.geoprism.graph.LabeledPropertyGraphTypeVersionQuery;
 import net.geoprism.graph.LabeledPropertyGraphUtil;
 import net.geoprism.registry.DateUtil;
+import net.geoprism.registry.LPGTileCache;
 import net.geoprism.registry.RegistryConstants;
 import net.geoprism.registry.model.ClassificationType;
 
@@ -77,6 +79,8 @@ public class LabeledPropertyGraphTypeVersionBusinessService implements LabeledPr
   @Transaction
   public void delete(LabeledPropertyGraphTypeVersion version)
   {
+    LPGTileCache.deleteTiles(version);
+    
     this.getHierarchies(version).forEach(e -> this.hierarchyService.delete(e));
 
     // Delete the non-root snapshots first
@@ -203,6 +207,8 @@ public class LabeledPropertyGraphTypeVersionBusinessService implements LabeledPr
     // this.getTypes().forEach(type -> {
     // type.truncate();
     // });
+    
+    LPGTileCache.deleteTiles(version);
 
     this.objectService.truncate(this.getRootType(version));
 
@@ -429,6 +435,47 @@ public class LabeledPropertyGraphTypeVersionBusinessService implements LabeledPr
   public void createPublishJob(LabeledPropertyGraphTypeVersion version)
   {
     // Do nothing
+  }
+
+  @Override
+  public void createTiles(LabeledPropertyGraphTypeVersion version)
+  {
+    GeoObjectTypeSnapshotQuery query = new GeoObjectTypeSnapshotQuery(new QueryFactory());
+    query.WHERE(query.getVersion().EQ(version));
+
+    try (OIterator<? extends GeoObjectTypeSnapshot> it = query.getIterator())
+    {
+      while (it.hasNext())
+      {
+        GeoObjectTypeSnapshot snapshot = it.next();
+
+        if (!snapshot.getIsAbstract())
+        {
+          // Ensure there is at least one geometry defined for the type
+          
+          for (int z = 0; z < 4; z++)
+          {
+            int tiles = (int) Math.pow(2, z);
+
+            for (int x = 0; x < tiles; x++)
+            {
+              
+              for (int y = 0; y < tiles; y++)
+              {
+                JSONObject config = new JSONObject();
+                config.put("oid", version.getOid());
+                config.put("typeCode", snapshot.getCode());
+                config.put("x", x);
+                config.put("y", y);
+                config.put("z", z);
+
+                LPGTileCache.getTile(config);
+              }
+            }
+          }
+        }
+      }
+    }
   }
 
 }

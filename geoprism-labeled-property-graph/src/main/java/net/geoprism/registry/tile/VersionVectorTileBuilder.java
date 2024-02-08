@@ -63,21 +63,20 @@ import com.wdtinc.mapbox_vector_tile.build.MvtLayerProps;
 
 import net.geoprism.graph.GeoObjectTypeSnapshot;
 import net.geoprism.graph.HierarchyTypeSnapshot;
-import net.geoprism.graph.LabeledPropertyGraphSynchronization;
 import net.geoprism.graph.LabeledPropertyGraphTypeVersion;
 import net.geoprism.registry.service.business.GeoObjectTypeSnapshotBusinessServiceIF;
 import net.geoprism.registry.service.business.LabeledPropertyGraphTypeVersionBusinessServiceIF;
 import net.geoprism.spring.ApplicationContextHolder;
 
-public class VectorTileBuilder implements VectorLayerPublisherIF
+public class VersionVectorTileBuilder implements VectorLayerPublisherIF
 {
-  private LabeledPropertyGraphSynchronization synchronization;
+  private LabeledPropertyGraphTypeVersion version;
 
-  private String                              typeCode;
+  private String                          typeCode;
 
-  public VectorTileBuilder(LabeledPropertyGraphSynchronization synchronization, String typeCode)
+  public VersionVectorTileBuilder(LabeledPropertyGraphTypeVersion version, String typeCode)
   {
-    this.synchronization = synchronization;
+    this.version = version;
     this.typeCode = typeCode;
   }
 
@@ -86,7 +85,6 @@ public class VectorTileBuilder implements VectorLayerPublisherIF
     GeoObjectTypeSnapshotBusinessServiceIF gTypeService = ApplicationContextHolder.getBean(GeoObjectTypeSnapshotBusinessServiceIF.class);
     LabeledPropertyGraphTypeVersionBusinessServiceIF versionService = ApplicationContextHolder.getBean(LabeledPropertyGraphTypeVersionBusinessServiceIF.class);
 
-    LabeledPropertyGraphTypeVersion version = this.synchronization.getVersion();
     HierarchyTypeSnapshot hierarchy = versionService.getHierarchies(version).get(0);
     GeoObjectTypeSnapshot snapshot = gTypeService.get(version, this.typeCode);
 
@@ -107,23 +105,26 @@ public class VectorTileBuilder implements VectorLayerPublisherIF
       statement.append("  first(in('" + edgeName + "').uuid) AS parent,");
       statement.append("  geometry AS geometry");
       statement.append(" FROM " + tableName);
-      statement.append(" WHERE ST_Intersects(geometry, ST_GeomFromText(:bounds)) == true");
 
-      Polygon bounds = JTS.toGeometry(envelope);
-      String text = bounds.toText();
+      // There is a bug in orientdb where the ST_GeomFromText breaks if the
+      // bounds are at +-180, as such when that is the case don't restrict the
+      // results. The tile creation will filter out of tile results.
+      if (envelope.getMaxX() != 180D && envelope.getMinX() != -180D)
+      {
+        statement.append(" WHERE ST_Intersects(geometry, ST_GeomFromText(:bounds)) == true");
+      }
 
       GraphQuery<Map<String, Object>> query = new GraphQuery<Map<String, Object>>(statement.toString());
-      query.setParameter("bounds", text);
 
-      try
+      if (envelope.getMaxX() != 180D && envelope.getMinX() != -180D)
       {
+        Polygon bounds = JTS.toGeometry(envelope);
+        String text = bounds.toText();
 
-        return query.getResults();
+        query.setParameter("bounds", text);
       }
-      catch (OIOException e)
-      {
-        // No geometries, create a blank tile
-      }
+
+      return query.getResults();
     }
 
     return new LinkedList<>();

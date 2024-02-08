@@ -3,7 +3,7 @@
     <create>
       <mdBusiness name="net.geoprism.registry.LPGTileCache">
         <attributes>
-          <reference name="synchronization" label="Synchronization" type="net.geoprism.graph.LabeledPropertyGraphSynchronization"  required="true"/>
+          <reference name="version" label="Version" type="net.geoprism.graph.LabeledPropertyGraphTypeVersion"  required="true"/>
           <text name="typeCode" label="typeCode" required="true"/>          
           <integer name="x" label="X" required="true"/>
           <integer name="y" label="Y" required="true"/>
@@ -13,7 +13,7 @@
       </mdBusiness>
       
       <mdIndex type="net.geoprism.registry.LPGTileCache" label="Cache Label" active="true" unique="true">
-        <attribute name="synchronization" indexOrder="0"/>
+        <attribute name="version" indexOrder="0"/>
         <attribute name="typeCode" indexOrder="1"/>        
         <attribute name="x" indexOrder="2"/>
         <attribute name="y" indexOrder="3"/>
