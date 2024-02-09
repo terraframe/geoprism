@@ -30,7 +30,7 @@ import net.geoprism.registry.tile.VersionVectorTileBuilder;
 
 public class LPGTileCache extends LPGTileCacheBase
 {
-  public static final ExecutorService executor = Executors.newFixedThreadPool(5, new ThreadFactory()
+  public static final ExecutorService executor = Executors.newFixedThreadPool(2, new ThreadFactory()
   {    
     @Override
     public Thread newThread(Runnable r)
