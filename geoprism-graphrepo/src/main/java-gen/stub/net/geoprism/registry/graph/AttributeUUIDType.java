@@ -1,5 +1,7 @@
 package net.geoprism.registry.graph;
 
+import org.commongeoregistry.adapter.metadata.AttributeType;
+
 import com.runwaysdk.dataaccess.MdAttributeDAOIF;
 import com.runwaysdk.dataaccess.MdVertexDAOIF;
 import com.runwaysdk.dataaccess.metadata.MdAttributeUUIDDAO;
@@ -52,5 +54,12 @@ public class AttributeUUIDType extends AttributeUUIDTypeBase
 
     super.delete();
   }
+  
+  @Override
+  public AttributeType toDTO()
+  {
+    return new org.commongeoregistry.adapter.metadata.AttributeCharacterType(this.getCode(), getLocalizedLabel(), getLocalizedDescription(), isAppliedToDb(), isNew(), isAppliedToDb());
+  }
+
 
 }

@@ -22,6 +22,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.apache.commons.lang.StringUtils;
 import org.commongeoregistry.adapter.constants.DefaultAttribute;
@@ -131,37 +132,7 @@ public class ServerGeoObjectType implements ServerElement
 
   public org.commongeoregistry.adapter.metadata.GeoObjectType toDTO()
   {
-    GeometryType cgrGeometryType = this.getGeometryType();
-
-    ServerOrganization organization = this.getOrganization();
-
-    ServerGeoObjectType superType = this.getSuperType();
-
-    org.commongeoregistry.adapter.metadata.GeoObjectType type = new org.commongeoregistry.adapter.metadata.GeoObjectType(this.getCode(), cgrGeometryType, this.getLabel(), this.getDescription(), this.type.getIsGeometryEditable(), organization.getCode(), ServiceFactory.getAdapter());
-    type.setIsAbstract(this.type.getIsAbstract());
-    type.setIsPrivate(this.type.getIsPrivate());
-
-    if (superType != null)
-    {
-      type.setSuperTypeCode(superType.getCode());
-    }
-
-    this.attributes.values().stream().forEach(attributeType -> {
-      type.addAttribute(attributeType.toDTO());
-    });
-
-    // TODO: HEADS UP
-    // try
-    // {
-    // GeoObjectTypeMetadata metadata =
-    // GeoObjectTypeMetadata.getByKey(serverType.getUniversal().getKey());
-    // metadata.injectDisplayLabels(type);
-    // }
-    // catch (DataNotFoundException | AttributeDoesNotExistException e)
-    // {
-    // }
-
-    return type;
+    return this.getType().toDTO();
   }
 
   public JsonObject toJSON(CustomSerializer serializer)
@@ -244,6 +215,13 @@ public class ServerGeoObjectType implements ServerElement
   public String toString()
   {
     return GeoObjectTypeMetadata.sGetClassDisplayLabel() + " : " + this.getCode();
+  }
+
+  public static List<ServerGeoObjectType> getAll()
+  {
+    List<GeoObjectType> results = GeoObjectType.getAll();
+
+    return results.stream().map(t -> new ServerGeoObjectType(t)).collect(Collectors.toList());
   }
 
   public static ServerGeoObjectType get(MdVertexDAOIF mdVertex)

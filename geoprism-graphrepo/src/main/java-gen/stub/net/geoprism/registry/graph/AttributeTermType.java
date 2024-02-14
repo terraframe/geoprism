@@ -1,9 +1,12 @@
 package net.geoprism.registry.graph;
 
+import org.commongeoregistry.adapter.metadata.AttributeType;
+
 import com.runwaysdk.dataaccess.MdAttributeConcreteDAOIF;
 import com.runwaysdk.dataaccess.MdAttributeMultiTermDAOIF;
 import com.runwaysdk.dataaccess.MdAttributeTermDAOIF;
 import com.runwaysdk.dataaccess.cache.DataNotFoundException;
+import com.runwaysdk.dataaccess.metadata.MdAttributeConcreteDAO;
 import com.runwaysdk.dataaccess.transaction.Transaction;
 
 import net.geoprism.ontology.Classifier;
@@ -50,5 +53,42 @@ public class AttributeTermType extends AttributeTermTypeBase
 //    }
 
   }
+  
+  @Override
+  protected void populate(MdAttributeConcreteDAO mdAttribute)
+  {
+    // TODO Auto-generated method stub
+    super.populate(mdAttribute);
+  }
+  
+  @Override
+  public void fromDTO(AttributeType dto)
+  {
+    super.fromDTO(dto);
+    
+    // TODO: Heads up
+//  mdAttribute = new MdAttributeTerm();
+//  MdAttributeTerm mdAttributeTerm = (MdAttributeTerm) mdAttribute;
+//
+//  MdBusiness classifierMdBusiness = MdBusiness.getMdBusiness(Classifier.CLASS);
+//  mdAttributeTerm.setMdBusiness(classifierMdBusiness);
+//  // TODO implement support for multi-term
+//  // mdAttribute = new MdAttributeMultiTerm();
+//  // MdAttributeMultiTerm mdAttributeMultiTerm =
+//  // (MdAttributeMultiTerm)mdAttribute;
+//  //
+//  // MdBusiness classifierMdBusiness =
+//  // MdBusiness.getMdBusiness(Classifier.CLASS);
+//  // mdAttributeMultiTerm.setMdBusiness(classifierMdBusiness);
+  }
+  
+  @Override
+  public AttributeType toDTO()
+  {
+    // TODO: HEADS UP
+    // Populate root
+    return new org.commongeoregistry.adapter.metadata.AttributeTermType(this.getCode(), getLocalizedLabel(), getLocalizedDescription(), isAppliedToDb(), isNew(), isAppliedToDb());
+  }
+
   
 }

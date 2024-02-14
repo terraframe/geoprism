@@ -83,46 +83,49 @@ public class HierarchicalRelationshipType extends HierarchicalRelationshipTypeBa
   @Transaction
   public void addToHierarchy(ServerGeoObjectType parentType, ServerGeoObjectType childType)
   {
-
-    try
-    {
-      childType.getUniversal().addLink(parentType.getUniversal(), this.getMdTermRelationship().definesType());
-    }
-    catch (RelationshipCardinalityException e)
-    {
-      GeoObjectTypeAlreadyInHierarchyException ex = new GeoObjectTypeAlreadyInHierarchyException();
-      ex.setGotCode(childType.getCode());
-      throw ex;
-    }
+    // TODO: HEADS UP
+//
+//    try
+//    {
+//      childType.getUniversal().addLink(parentType.getUniversal(), this.getMdTermRelationship().definesType());
+//    }
+//    catch (RelationshipCardinalityException e)
+//    {
+//      GeoObjectTypeAlreadyInHierarchyException ex = new GeoObjectTypeAlreadyInHierarchyException();
+//      ex.setGotCode(childType.getCode());
+//      throw ex;
+//    }
   }
 
   @Transaction
   public void removeFromHierarchy(ServerGeoObjectType parentType, ServerGeoObjectType childType, boolean migrateChildren)
   {
-    Universal parent = parentType.getUniversal();
-    Universal cUniversal = childType.getUniversal();
+    // TODO: HEADS UP
 
-    removeLink(parent, cUniversal, this.getMdTermRelationship().definesType());
-
-    if (migrateChildren)
-    {
-      TermAndRel[] tnrChildren = TermUtil.getDirectDescendants(cUniversal.getOid(), new String[] { this.getMdTermRelationship().definesType() });
-
-      if (parent.getKey().equals(Universal.ROOT) && tnrChildren.length > 1)
-      {
-        MultipleHierarchyRootsException ex = new MultipleHierarchyRootsException();
-        throw ex;
-      }
-
-      for (TermAndRel tnrChild : tnrChildren)
-      {
-        Universal child = (Universal) tnrChild.getTerm();
-
-        removeLink(cUniversal, child, this.getMdTermRelationship().definesType());
-
-        child.addLink(parent, this.getMdTermRelationship().definesType());
-      }
-    }
+//    Universal parent = parentType.getUniversal();
+//    Universal cUniversal = childType.getUniversal();
+//
+//    removeLink(parent, cUniversal, this.getMdTermRelationship().definesType());
+//
+//    if (migrateChildren)
+//    {
+//      TermAndRel[] tnrChildren = TermUtil.getDirectDescendants(cUniversal.getOid(), new String[] { this.getMdTermRelationship().definesType() });
+//
+//      if (parent.getKey().equals(Universal.ROOT) && tnrChildren.length > 1)
+//      {
+//        MultipleHierarchyRootsException ex = new MultipleHierarchyRootsException();
+//        throw ex;
+//      }
+//
+//      for (TermAndRel tnrChild : tnrChildren)
+//      {
+//        Universal child = (Universal) tnrChild.getTerm();
+//
+//        removeLink(cUniversal, child, this.getMdTermRelationship().definesType());
+//
+//        child.addLink(parent, this.getMdTermRelationship().definesType());
+//      }
+//    }
   }
 
   @Override
@@ -155,22 +158,25 @@ public class HierarchicalRelationshipType extends HierarchicalRelationshipTypeBa
 
   public List<ServerGeoObjectType> getChildren(ServerGeoObjectType parent)
   {
-    Universal universal = parent.getUniversal();
-    List<ServerGeoObjectType> children = new LinkedList<>();
-    String mdRelationshipType = this.getMdTermRelationship().definesType();
+    // TODO: HEADS UP
 
-    try (OIterator<? extends Business> iterator = universal.getDirectDescendants(mdRelationshipType))
-    {
-      while (iterator.hasNext())
-      {
-        Universal cUniversal = (Universal) iterator.next();
-
-        children.add(ServerGeoObjectType.get(cUniversal));
-      }
-
-    }
-
-    return children;
+//    Universal universal = parent.getUniversal();
+//    List<ServerGeoObjectType> children = new LinkedList<>();
+//    String mdRelationshipType = this.getMdTermRelationship().definesType();
+//
+//    try (OIterator<? extends Business> iterator = universal.getDirectDescendants(mdRelationshipType))
+//    {
+//      while (iterator.hasNext())
+//      {
+//        Universal cUniversal = (Universal) iterator.next();
+//
+//        children.add(ServerGeoObjectType.get(cUniversal));
+//      }
+//
+//    }
+//
+//    return children;
+    return new LinkedList<>();
   }
 
   public static List<HierarchicalRelationshipType> getInheritedTypes()

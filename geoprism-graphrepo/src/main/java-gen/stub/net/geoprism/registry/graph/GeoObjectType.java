@@ -1,17 +1,27 @@
 package net.geoprism.registry.graph;
 
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.apache.commons.lang.StringUtils;
 import org.commongeoregistry.adapter.constants.DefaultAttribute;
 import org.commongeoregistry.adapter.dataaccess.GeoObject;
 import org.commongeoregistry.adapter.dataaccess.LocalizedValue;
 
+import com.runwaysdk.business.graph.GraphQuery;
+import com.runwaysdk.dataaccess.MdAttributeDAOIF;
+import com.runwaysdk.dataaccess.MdVertexDAOIF;
 import com.runwaysdk.dataaccess.metadata.MdBusinessDAO;
+import com.runwaysdk.dataaccess.metadata.graph.MdVertexDAO;
 import com.runwaysdk.dataaccess.transaction.Transaction;
+import com.runwaysdk.system.gis.geo.GeometryType;
 import com.runwaysdk.system.metadata.MdVertex;
 
 import net.geoprism.registry.RegistryConstants;
+import net.geoprism.registry.conversion.GeometryTypeFactory;
+import net.geoprism.registry.conversion.RegistryLocalizedValueConverter;
+import net.geoprism.registry.service.request.ServiceFactory;
 
 public class GeoObjectType extends GeoObjectTypeBase
 {
@@ -31,8 +41,17 @@ public class GeoObjectType extends GeoObjectTypeBase
 
   public Map<String, AttributeType> getAttributes()
   {
-    // TODO Auto-generated method stub
-    return null;
+    MdVertexDAOIF mdVertexDAO = MdVertexDAO.getMdVertexDAO(AttributeType.CLASS);
+    MdAttributeDAOIF mdAttribute = mdVertexDAO.definesAttribute(AttributeType.GEOOBJECTTYPE);
+
+    StringBuilder statement = new StringBuilder();
+    statement.append("SELECT FROM " + mdVertexDAO.getDBClassName());
+    statement.append(" WHERE " + mdAttribute.getColumnName() + " = :geoObjectType");
+
+    GraphQuery<AttributeType> query = new GraphQuery<AttributeType>(statement.toString());
+    query.setParameter("geoObjectType", this.getRID());
+
+    return query.getResults().stream().collect(Collectors.toMap(t -> t.getCode(), t -> t));
   }
 
   /**
@@ -105,5 +124,77 @@ public class GeoObjectType extends GeoObjectTypeBase
       code.setIsDefault(true);
       code.apply();
     }
+  }
+
+  public void fromDTO(org.commongeoregistry.adapter.metadata.GeoObjectType dto)
+  {
+    GeometryType geometryType = GeometryTypeFactory.get(dto.getGeometryType());
+
+    this.setIsGeometryEditable(dto.isGeometryEditable());
+    this.setIsPrivate(dto.getIsPrivate());
+    this.setIsAbstract(dto.getIsAbstract());
+    this.setGeometryType(geometryType.getEnumName());
+
+    RegistryLocalizedValueConverter.populate(this, GeoObjectType.LABEL, dto.getLabel());
+    RegistryLocalizedValueConverter.populate(this, GeoObjectType.DESCRIPTION, dto.getDescription());
+  }
+
+  /**
+   * The GeoObjectType is a DTO type, which means it contains data which has
+   * been localized to a particular user's session. We need to rebuild this
+   * object such that it includes relevant request information (like the correct
+   * locale).
+   */
+  public org.commongeoregistry.adapter.metadata.GeoObjectType toDTO()
+  {
+    com.runwaysdk.system.gis.geo.GeometryType geoPrismgeometryType = com.runwaysdk.system.gis.geo.GeometryType.valueOf(this.getGeometryType());
+
+    org.commongeoregistry.adapter.constants.GeometryType cgrGeometryType = GeometryTypeFactory.get(geoPrismgeometryType);
+
+    LocalizedValue label = RegistryLocalizedValueConverter.convert(this.getEmbeddedComponent(GeoObjectType.LABEL));
+    LocalizedValue description = RegistryLocalizedValueConverter.convert(this.getEmbeddedComponent(GeoObjectType.DESCRIPTION));
+
+    String orgCode = this.getOrganization().getCode();
+
+    GeoObjectType superType = this.getSuperType();
+
+    org.commongeoregistry.adapter.metadata.GeoObjectType dto = new org.commongeoregistry.adapter.metadata.GeoObjectType(this.getCode(), cgrGeometryType, label, description, this.getIsGeometryEditable(), orgCode, ServiceFactory.getAdapter());
+    dto.setIsAbstract(this.getIsAbstract());
+
+    this.getAttributes().forEach((attributeName, attributeType) -> {
+      dto.addAttribute(attributeType.toDTO());
+    });
+
+    if (superType != null)
+    {
+      dto.setSuperTypeCode(superType.getCode());
+    }
+
+    return dto;
+  }
+
+  public static List<GeoObjectType> getAll()
+  {
+    MdVertexDAOIF metadata = MdVertexDAO.getMdVertexDAO(GeoObjectType.CLASS);
+
+    StringBuilder statement = new StringBuilder();
+    statement.append("SELECT FROM " + metadata.getDBClassName());
+
+    GraphQuery<GeoObjectType> query = new GraphQuery<GeoObjectType>(statement.toString());
+
+    return query.getResults();
+  }
+
+  public static GeoObjectType getByCode(String code)
+  {
+    MdVertexDAOIF metadata = MdVertexDAO.getMdVertexDAO(GeoObjectType.CLASS);
+
+    StringBuilder statement = new StringBuilder();
+    statement.append("SELECT FROM " + metadata.getDBClassName());
+    statement.append(" WHERE " + metadata.definesAttribute(GeoObjectType.CODE).getColumnName() + " = :code");
+
+    GraphQuery<GeoObjectType> query = new GraphQuery<GeoObjectType>(statement.toString());
+
+    return query.getSingleResult();
   }
 }

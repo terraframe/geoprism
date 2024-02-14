@@ -3,32 +3,31 @@
  *
  * This file is part of Geoprism(tm).
  *
- * Geoprism(tm) is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
+ * Geoprism(tm) is free software: you can redistribute it and/or modify it under
+ * the terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation, either version 3 of the License, or (at your option) any
+ * later version.
  *
- * Geoprism(tm) is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
+ * Geoprism(tm) is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with Geoprism(tm).  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with Geoprism(tm). If not, see <http://www.gnu.org/licenses/>.
  */
 package net.geoprism.registry.service.request;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationListener;
-import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.stereotype.Service;
 
+import com.runwaysdk.business.graph.GraphQuery;
+import com.runwaysdk.dataaccess.MdVertexDAOIF;
 import com.runwaysdk.dataaccess.metadata.MdClassDAO;
+import com.runwaysdk.dataaccess.metadata.graph.MdVertexDAO;
 import com.runwaysdk.query.OIterator;
 import com.runwaysdk.query.QueryFactory;
 import com.runwaysdk.session.Request;
-import com.runwaysdk.system.gis.geo.Universal;
-import com.runwaysdk.system.gis.geo.UniversalQuery;
 
 import net.geoprism.registry.BusinessEdgeType;
 import net.geoprism.registry.BusinessType;
@@ -37,6 +36,7 @@ import net.geoprism.registry.HierarchicalRelationshipType;
 import net.geoprism.registry.Organization;
 import net.geoprism.registry.OrganizationQuery;
 import net.geoprism.registry.UndirectedGraphType;
+import net.geoprism.registry.graph.GeoObjectType;
 import net.geoprism.registry.model.ServerElement;
 import net.geoprism.registry.model.ServerGeoObjectType;
 import net.geoprism.registry.model.ServerHierarchyType;
@@ -52,22 +52,22 @@ import net.geoprism.registry.service.business.UndirectedGraphTypeBusinessService
 public class GraphRepoService implements GraphRepoServiceIF
 {
   @Autowired
-  private HierarchyTypeBusinessServiceIF hierarchyService;
+  private HierarchyTypeBusinessServiceIF            hierarchyService;
 
   @Autowired
-  private GeoObjectTypeBusinessServiceIF typeService;
-  
+  private GeoObjectTypeBusinessServiceIF            typeService;
+
   @Autowired
-  private BusinessEdgeTypeBusinessServiceIF bizEdgeTypeService;
-  
+  private BusinessEdgeTypeBusinessServiceIF         bizEdgeTypeService;
+
   @Autowired
-  private BusinessTypeBusinessServiceIF bizTypeService;
-  
+  private BusinessTypeBusinessServiceIF             bizTypeService;
+
   @Autowired
   private DirectedAcyclicGraphTypeBusinessServiceIF dagTypeService;
-  
+
   @Autowired
-  private UndirectedGraphTypeBusinessServiceIF ugtTypeService;
+  private UndirectedGraphTypeBusinessServiceIF      ugtTypeService;
 
   @Request
   @Override
@@ -81,30 +81,9 @@ public class GraphRepoService implements GraphRepoServiceIF
   {
     ServiceFactory.getMetadataCache().rebuild();
 
-    QueryFactory qf = new QueryFactory();
-    UniversalQuery uq = new UniversalQuery(qf);
-    OIterator<? extends Universal> it = uq.getIterator();
-
-    try
-    {
-      while (it.hasNext())
-      {
-        Universal uni = it.next();
-
-        if (uni.getKey().equals(Universal.ROOT_KEY))
-        {
-          continue;
-        }
-
-        ServerGeoObjectType type = typeService.build(uni);
-
-        ServiceFactory.getMetadataCache().addGeoObjectType(type);
-      }
-    }
-    finally
-    {
-      it.close();
-    }
+    ServerGeoObjectType.getAll().stream().forEach(type -> {
+      ServiceFactory.getMetadataCache().addGeoObjectType(type);
+    });
 
     // We must build the hierarchy types which are inherited first
     // Otherwise you will end up with a NPE when building the hierarchies
@@ -138,7 +117,7 @@ public class GraphRepoService implements GraphRepoServiceIF
       // before the organization class is defined
       MdClassDAO.getMdClassDAO(Organization.CLASS);
 
-      OrganizationQuery oQ = new OrganizationQuery(qf);
+      OrganizationQuery oQ = new OrganizationQuery(new QueryFactory());
       OIterator<? extends Organization> it3 = oQ.getIterator();
 
       try
@@ -160,7 +139,7 @@ public class GraphRepoService implements GraphRepoServiceIF
       // skip for now
     }
   }
-  
+
   @Override
   public void deleteObject(ServerElement obj)
   {

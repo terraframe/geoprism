@@ -27,7 +27,6 @@ import org.springframework.stereotype.Component;
 
 import com.runwaysdk.dataaccess.MdAttributeConcreteDAOIF;
 import com.runwaysdk.dataaccess.transaction.Transaction;
-import com.runwaysdk.system.metadata.MdAttributeConcrete;
 import com.runwaysdk.system.metadata.MdBusiness;
 import com.runwaysdk.system.metadata.MdClass;
 
@@ -97,14 +96,6 @@ public interface GeoObjectTypeBusinessServiceIF
 
   public ServerGeoObjectType create(GeoObjectType geoObjectType);
 
-  /**
-   * The GeoObjectType is a DTO type, which means it contains data which has
-   * been localized to a particular user's session. We need to rebuild this
-   * object such that it includes relevant request information (like the correct
-   * locale).
-   */
-  public GeoObjectType buildType(ServerGeoObjectType serverType);
-
   public List<GeoObjectType> getAncestors(String code, String hierarchyCode, Boolean includeInheritedTypes, Boolean includeChild);
 
   public void deleteGeoObjectType(String code);
@@ -124,10 +115,6 @@ public interface GeoObjectTypeBusinessServiceIF
   public GeoObjectType createGeoObjectType(String gtJSON);
 
   public List<GeoObjectType> getGeoObjectTypes(String[] codes, PermissionContext context);
-
-  MdAttributeConcrete updateAttributeTypeFromDTO(MdClass mdClass, AttributeType attributeType);
-
-  MdAttributeConcrete createAttributeTypeFromDTO(MdClass mdClass, AttributeType attributeType);
 
   AttributeType updateAttributeType(ServerGeoObjectType serverType, String attributeTypeJSON);
 

@@ -1,5 +1,7 @@
 package net.geoprism.registry.graph;
 
+import org.commongeoregistry.adapter.metadata.AttributeType;
+
 import com.runwaysdk.dataaccess.MdAttributeDAOIF;
 import com.runwaysdk.dataaccess.MdVertexDAOIF;
 import com.runwaysdk.dataaccess.metadata.MdAttributeDateTimeDAO;
@@ -10,12 +12,12 @@ public class AttributeDateType extends AttributeDateTypeBase
 {
   @SuppressWarnings("unused")
   private static final long serialVersionUID = -1619753569;
-  
+
   public AttributeDateType()
   {
     super();
   }
-  
+
   @Override
   @Transaction
   public void apply()
@@ -53,5 +55,10 @@ public class AttributeDateType extends AttributeDateTypeBase
     super.delete();
   }
 
+  @Override
+  public AttributeType toDTO()
+  {
+    return new org.commongeoregistry.adapter.metadata.AttributeDateType(this.getCode(), getLocalizedLabel(), getLocalizedDescription(), isAppliedToDb(), isNew(), isAppliedToDb());
+  }
 
 }

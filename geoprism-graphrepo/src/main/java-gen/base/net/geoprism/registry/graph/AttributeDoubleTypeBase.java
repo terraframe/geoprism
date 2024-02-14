@@ -11,6 +11,8 @@ package net.geoprism.registry.graph;
 public abstract class AttributeDoubleTypeBase extends net.geoprism.registry.graph.AttributeType
 {
   public final static String CLASS = "net.geoprism.registry.graph.AttributeDoubleType";
+  public final static String PRECISION = "precision";
+  public final static String SCALE = "scale";
   @SuppressWarnings("unused")
   private static final long serialVersionUID = 1524384537;
   

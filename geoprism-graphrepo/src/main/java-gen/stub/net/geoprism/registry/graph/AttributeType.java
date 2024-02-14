@@ -1,25 +1,14 @@
 package net.geoprism.registry.graph;
 
-import org.commongeoregistry.adapter.Term;
 import org.commongeoregistry.adapter.dataaccess.LocalizedValue;
-import org.commongeoregistry.adapter.metadata.AttributeClassificationType;
-import org.commongeoregistry.adapter.metadata.AttributeFloatType;
-import org.commongeoregistry.adapter.metadata.AttributeTermType;
 
-import com.runwaysdk.business.BusinessFacade;
 import com.runwaysdk.constants.IndexTypes;
 import com.runwaysdk.constants.MdAttributeBooleanInfo;
 import com.runwaysdk.constants.MdAttributeConcreteInfo;
-import com.runwaysdk.constants.MdAttributeDoubleInfo;
 import com.runwaysdk.dataaccess.metadata.MdAttributeConcreteDAO;
-import com.runwaysdk.system.metadata.MdAttributeClassification;
-import com.runwaysdk.system.metadata.MdAttributeConcrete;
 import com.runwaysdk.system.metadata.MdVertex;
 
 import net.geoprism.registry.conversion.LocalizedValueConverter;
-import net.geoprism.registry.conversion.TermConverter;
-import net.geoprism.registry.model.Classification;
-import net.geoprism.registry.model.ClassificationType;
 
 public abstract class AttributeType extends AttributeTypeBase
 {
@@ -73,40 +62,38 @@ public abstract class AttributeType extends AttributeTypeBase
     LocalizedValueConverter.populate(this, AttributeType.LABEL, dto.getLabel());
     LocalizedValueConverter.populate(this, AttributeType.DESCRIPTION, dto.getDescription());
 
-    if (dto instanceof AttributeFloatType)
-    {
-      // Refresh the terms
-    }
-    else if (dto instanceof AttributeClassificationType)
-    {
-      MdAttributeClassification mdAttributeTerm = (MdAttributeClassification) mdAttribute;
-
-      AttributeClassificationType attributeClassificationType = (AttributeClassificationType) dto;
-      String classificationTypeCode = attributeClassificationType.getClassificationType();
-
-      ClassificationType classificationType = this.cTypeService.getByCode(classificationTypeCode);
-
-      Term root = attributeClassificationType.getRootTerm();
-
-      if (root != null)
-      {
-        Classification classification = this.cService.get(classificationType, root.getCode());
-
-        mdAttributeTerm.setValue(MdAttributeClassification.ROOT, classification.getOid());
-      }
-    }
-
-    if (dto instanceof AttributeTermType)
-    {
-      // Refresh the terms
-      AttributeTermType attributeTermType = (AttributeTermType) dto;
-
-      org.commongeoregistry.adapter.Term getRootTerm = attributeTermType.getRootTerm();
-      String classifierKey = TermConverter.buildClassifierKeyFromTermCode(getRootTerm.getCode());
-
-      TermConverter termBuilder = new TermConverter(classifierKey);
-      attributeTermType.setRootTerm(termBuilder.build());
-    }
+    // TODO: HEADS UP
+//    if (dto instanceof AttributeClassificationType)
+//    {
+//      // Refresh the terms
+//      MdAttributeClassification mdAttributeTerm = (MdAttributeClassification) mdAttribute;
+//
+//      AttributeClassificationType attributeClassificationType = (AttributeClassificationType) dto;
+//      String classificationTypeCode = attributeClassificationType.getClassificationType();
+//
+//      ClassificationType classificationType = this.cTypeService.getByCode(classificationTypeCode);
+//
+//      Term root = attributeClassificationType.getRootTerm();
+//
+//      if (root != null)
+//      {
+//        Classification classification = this.cService.get(classificationType, root.getCode());
+//
+//        mdAttributeTerm.setValue(MdAttributeClassification.ROOT, classification.getOid());
+//      }
+//    }
+//
+//    if (dto instanceof AttributeTermType)
+//    {
+//      // Refresh the terms
+//      AttributeTermType attributeTermType = (AttributeTermType) dto;
+//
+//      org.commongeoregistry.adapter.Term getRootTerm = attributeTermType.getRootTerm();
+//      String classifierKey = TermConverter.buildClassifierKeyFromTermCode(getRootTerm.getCode());
+//
+//      TermConverter termBuilder = new TermConverter(classifierKey);
+//      attributeTermType.setRootTerm(termBuilder.build());
+//    }
   }
 
 }

@@ -45,11 +45,6 @@ public abstract class AttributeTypeBase extends com.runwaysdk.business.graph.Ver
     this.setValue(CODE, value);
   }
   
-  public com.runwaysdk.ComponentIF getDescription()
-  {
-    return (com.runwaysdk.ComponentIF) this.getObjectValue(DESCRIPTION);
-  }
-  
   public static com.runwaysdk.dataaccess.MdAttributeDAOIF getDescriptionMd()
   {
     com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(net.geoprism.registry.graph.AttributeType.CLASS);
@@ -107,11 +102,6 @@ public abstract class AttributeTypeBase extends com.runwaysdk.business.graph.Ver
   public void setIsDefault(Boolean value)
   {
     this.setValue(ISDEFAULT, value);
-  }
-  
-  public com.runwaysdk.ComponentIF getLabel()
-  {
-    return (com.runwaysdk.ComponentIF) this.getObjectValue(LABEL);
   }
   
   public static com.runwaysdk.dataaccess.MdAttributeDAOIF getLabelMd()

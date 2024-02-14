@@ -1,5 +1,7 @@
 package net.geoprism.registry.graph;
 
+import org.commongeoregistry.adapter.metadata.AttributeType;
+
 import com.runwaysdk.dataaccess.MdAttributeDAOIF;
 import com.runwaysdk.dataaccess.MdVertexDAOIF;
 import com.runwaysdk.dataaccess.metadata.MdAttributeTextDAO;
@@ -52,5 +54,13 @@ public class AttributeCharacterType extends AttributeCharacterTypeBase
 
     super.delete();
   }
+  
+
+  @Override
+  public AttributeType toDTO()
+  {
+    return new org.commongeoregistry.adapter.metadata.AttributeCharacterType(this.getCode(), getLocalizedLabel(), getLocalizedDescription(), isAppliedToDb(), isNew(), isAppliedToDb());
+  }
+
 
 }

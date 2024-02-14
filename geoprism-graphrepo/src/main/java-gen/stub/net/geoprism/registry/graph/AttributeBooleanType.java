@@ -1,5 +1,7 @@
 package net.geoprism.registry.graph;
 
+import org.commongeoregistry.adapter.metadata.AttributeType;
+
 import com.runwaysdk.constants.MdAttributeBooleanInfo;
 import com.runwaysdk.constants.MdAttributeConcreteInfo;
 import com.runwaysdk.dataaccess.MdAttributeDAOIF;
@@ -60,4 +62,9 @@ public class AttributeBooleanType extends AttributeBooleanTypeBase
     super.delete();
   }
 
+  @Override
+  public AttributeType toDTO()
+  {
+    return new org.commongeoregistry.adapter.metadata.AttributeBooleanType(this.getCode(), getLocalizedLabel(), getLocalizedDescription(), isAppliedToDb(), isNew(), isAppliedToDb());
+  }
 }
