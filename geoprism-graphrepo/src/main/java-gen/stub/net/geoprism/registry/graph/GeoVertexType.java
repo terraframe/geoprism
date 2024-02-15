@@ -23,8 +23,6 @@ import com.runwaysdk.constants.MdAttributeBooleanInfo;
 import com.runwaysdk.dataaccess.MdVertexDAOIF;
 import com.runwaysdk.dataaccess.metadata.graph.MdVertexDAO;
 import com.runwaysdk.gis.constants.MdGeoVertexInfo;
-import com.runwaysdk.gis.dataaccess.MdGeoVertexDAOIF;
-import com.runwaysdk.gis.dataaccess.metadata.graph.MdGeoVertexDAO;
 import com.runwaysdk.system.gis.geo.Universal;
 
 import net.geoprism.registry.RegistryConstants;
@@ -45,7 +43,7 @@ public class GeoVertexType extends GeoVertexTypeBase
    * @param code
    * @param ownerActorId
    *          = the ID of the {@link ActorDAOIF} that is the owner of the
-   *          {@link MdGeoVertexDAOIF}.
+   *          {@link MdVertexDAOIF}.
    * @param isAbstract
    *          TODO
    * @param parentType
@@ -58,7 +56,7 @@ public class GeoVertexType extends GeoVertexTypeBase
 
     if (parentType == null)
     {
-      parentVertexDAO = MdGeoVertexDAO.getMdGeoVertexDAO(GeoVertex.CLASS);
+      parentVertexDAO = MdVertexDAO.getMdVertexDAO(GeoVertex.CLASS);
     }
     else
     {
@@ -69,7 +67,7 @@ public class GeoVertexType extends GeoVertexTypeBase
     child.setValue(MdGeoVertexInfo.PACKAGE, RegistryConstants.UNIVERSAL_GRAPH_PACKAGE);
     child.setValue(MdGeoVertexInfo.NAME, code);
     child.setValue(MdGeoVertexInfo.SUPER_MD_VERTEX, parentVertexDAO.getOid());
-    child.setValue(MdGeoVertexInfo.ENABLE_CHANGE_OVER_TIME, MdAttributeBooleanInfo.TRUE);
+    child.setValue(MdGeoVertexInfo.ENABLE_CHANGE_OVER_TIME, MdAttributeBooleanInfo.FALSE);
     child.setValue(MdGeoVertexInfo.GENERATE_SOURCE, MdAttributeBooleanInfo.FALSE);
     child.setValue(MdGeoVertexInfo.ABSTRACT, isAbstract.toString());
     child.apply();
@@ -79,15 +77,15 @@ public class GeoVertexType extends GeoVertexTypeBase
 
   public static void remove(String code)
   {
-    MdGeoVertexDAO mdGeoVertex = getMdGeoVertex(code);
+    MdVertexDAO mdGeoVertex = getMdGeoVertex(code);
     mdGeoVertex.delete();
   }
 
-  public static MdGeoVertexDAO getMdGeoVertex(String code)
+  public static MdVertexDAO getMdGeoVertex(String code)
   {
     if (!code.equals(Universal.ROOT))
     {
-      return MdGeoVertexDAO.getMdGeoVertexDAO(buildMdGeoVertexKey(code)).getBusinessDAO();
+      return MdVertexDAO.getMdVertexDAO(buildMdGeoVertexKey(code)).getBusinessDAO();
     }
 
     return null;

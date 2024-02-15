@@ -19,6 +19,7 @@
 package net.geoprism.registry.conversion;
 
 import java.util.Date;
+import java.util.TreeMap;
 
 import org.commongeoregistry.adapter.constants.DefaultAttribute;
 import org.commongeoregistry.adapter.dataaccess.GeoObject;
@@ -65,13 +66,13 @@ public class VertexGeoObjectStrategy extends RegistryLocalizedValueConverter imp
         throw ex;
       }
 
-      return new VertexServerGeoObject(type, vertex);
+      return new VertexServerGeoObject(type, vertex, new TreeMap<>());
     }
     else
     {
       VertexObject vertex = VertexServerGeoObject.newInstance(type);
 
-      return new VertexServerGeoObject(type, vertex);
+      return new VertexServerGeoObject(type, vertex, new TreeMap<>());
     }
   }
 
@@ -91,13 +92,13 @@ public class VertexGeoObjectStrategy extends RegistryLocalizedValueConverter imp
         throw ex;
       }
 
-      return new VertexServerGeoObject(type, vertex);
+      return new VertexServerGeoObject(type, vertex, new TreeMap<>());
     }
     else
     {
       VertexObject vertex = VertexServerGeoObject.newInstance(type);
 
-      return new VertexServerGeoObject(type, vertex);
+      return new VertexServerGeoObject(type, vertex, new TreeMap<>());
     }
   }
 
@@ -106,7 +107,7 @@ public class VertexGeoObjectStrategy extends RegistryLocalizedValueConverter imp
   {
     VertexObject vertex = (VertexObject) dbObject;
 
-    return new VertexServerGeoObject(type, vertex);
+    return new VertexServerGeoObject(type, vertex, new TreeMap<>());
   }
 
   @Override
@@ -116,7 +117,7 @@ public class VertexGeoObjectStrategy extends RegistryLocalizedValueConverter imp
 
     if (vertex != null)
     {
-      return new VertexServerGeoObject(type, vertex);
+      return new VertexServerGeoObject(type, vertex, new TreeMap<>());
     }
 
     return null;
@@ -129,7 +130,7 @@ public class VertexGeoObjectStrategy extends RegistryLocalizedValueConverter imp
 
     if (vertex != null)
     {
-      return new VertexServerGeoObject(type, vertex);
+      return new VertexServerGeoObject(type, vertex, new TreeMap<>());
     }
 
     return null;
@@ -140,7 +141,7 @@ public class VertexGeoObjectStrategy extends RegistryLocalizedValueConverter imp
   {
     VertexObject vertex = VertexServerGeoObject.newInstance(type);
 
-    return new VertexServerGeoObject(type, vertex);
+    return new VertexServerGeoObject(type, vertex, new TreeMap<>());
   }
 
   @Override

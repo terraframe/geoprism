@@ -20,6 +20,7 @@ package net.geoprism.registry.service.business;
 
 import java.util.Date;
 import java.util.List;
+import java.util.TreeMap;
 import java.util.stream.Collectors;
 
 import org.commongeoregistry.adapter.constants.DefaultAttribute;
@@ -179,7 +180,7 @@ public class BusinessObjectBusinessService implements BusinessObjectBusinessServ
       MdVertexDAOIF mdVertex = (MdVertexDAOIF) geoVertex.getMdClass();
       ServerGeoObjectType vertexType = ServerGeoObjectType.get(mdVertex);
 
-      return new VertexServerGeoObject(vertexType, geoVertex);
+      return new VertexServerGeoObject(vertexType, geoVertex, new TreeMap<>());
 
     }).sorted((a, b) -> {
       return a.getDisplayLabel().getValue().compareTo(b.getDisplayLabel().getValue());

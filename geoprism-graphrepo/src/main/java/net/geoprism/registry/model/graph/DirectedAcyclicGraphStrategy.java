@@ -24,6 +24,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.SortedSet;
+import java.util.TreeMap;
 import java.util.TreeSet;
 
 import org.apache.commons.collections4.map.HashedMap;
@@ -111,7 +112,7 @@ public class DirectedAcyclicGraphStrategy extends AbstractGraphStrategy implemen
 
       ServerGeoObjectType childType = ServerGeoObjectType.get(mdVertex);
 
-      VertexServerGeoObject child = new VertexServerGeoObject(childType, childVertex, date);
+      VertexServerGeoObject child = new VertexServerGeoObject(childType, childVertex, new TreeMap<>(), date);
 
       ServerChildGraphNode tnParent;
 
@@ -194,7 +195,7 @@ public class DirectedAcyclicGraphStrategy extends AbstractGraphStrategy implemen
 
       ServerGeoObjectType parentType = ServerGeoObjectType.get(mdVertex);
 
-      VertexServerGeoObject parent = new VertexServerGeoObject(parentType, parentVertex, date);
+      VertexServerGeoObject parent = new VertexServerGeoObject(parentType, parentVertex, new TreeMap<>(), date);
 
       ServerParentGraphNode tnParent;
 
@@ -317,7 +318,7 @@ public class DirectedAcyclicGraphStrategy extends AbstractGraphStrategy implemen
       VertexObject parentVertex = edge.getParent();
       MdVertexDAOIF mdVertex = (MdVertexDAOIF) parentVertex.getMdClass();
       ServerGeoObjectType parentType = ServerGeoObjectType.get(mdVertex);
-      VertexServerGeoObject parent = new VertexServerGeoObject(parentType, parentVertex, startDate);
+      VertexServerGeoObject parent = new VertexServerGeoObject(parentType, parentVertex, new TreeMap<>(), startDate);
 
       set.add(new ValueOverTime(edge.getOid(), startDate, endDate, parent));
     }
@@ -338,7 +339,7 @@ public class DirectedAcyclicGraphStrategy extends AbstractGraphStrategy implemen
       VertexObject parentVertex = edge.getParent();
       MdVertexDAOIF mdVertex = (MdVertexDAOIF) parentVertex.getMdClass();
       ServerGeoObjectType parentType = ServerGeoObjectType.get(mdVertex);
-      final VertexServerGeoObject edgeGo = new VertexServerGeoObject(parentType, parentVertex, startDate);
+      final VertexServerGeoObject edgeGo = new VertexServerGeoObject(parentType, parentVertex, new TreeMap<>(), startDate);
 
       ValueOverTime inVot = null;
 

@@ -8,6 +8,10 @@ import com.runwaysdk.dataaccess.metadata.MdAttributeTextDAO;
 import com.runwaysdk.dataaccess.metadata.graph.MdVertexDAO;
 import com.runwaysdk.dataaccess.transaction.Transaction;
 
+import net.geoprism.registry.model.ValueNodeStrategy;
+import net.geoprism.registry.model.ValueStrategy;
+import net.geoprism.registry.model.VertexValueStrategy;
+
 public class AttributeCharacterType extends AttributeCharacterTypeBase
 {
   @SuppressWarnings("unused")
@@ -54,7 +58,6 @@ public class AttributeCharacterType extends AttributeCharacterTypeBase
 
     super.delete();
   }
-  
 
   @Override
   public AttributeType toDTO()
@@ -62,5 +65,16 @@ public class AttributeCharacterType extends AttributeCharacterTypeBase
     return new org.commongeoregistry.adapter.metadata.AttributeCharacterType(this.getCode(), getLocalizedLabel(), getLocalizedDescription(), isAppliedToDb(), isNew(), isAppliedToDb());
   }
 
-
+  @Override
+  public ValueStrategy getStrategy()
+  {
+    if (!this.getIsChangeOverTime())
+    {
+      return new VertexValueStrategy(this);
+    }
+    else
+    {
+      return new ValueNodeStrategy(this, MdVertexDAO.getMdVertexDAO(AttributeCharacterValue.CLASS), AttributeCharacterValue.VALUE);
+    }
+  }
 }

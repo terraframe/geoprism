@@ -11,6 +11,7 @@ import com.runwaysdk.dataaccess.transaction.Transaction;
 
 import net.geoprism.ontology.Classifier;
 import net.geoprism.registry.conversion.TermConverter;
+import net.geoprism.registry.model.ValueStrategy;
 
 public class AttributeTermType extends AttributeTermTypeBase
 {
@@ -90,5 +91,19 @@ public class AttributeTermType extends AttributeTermTypeBase
     return new org.commongeoregistry.adapter.metadata.AttributeTermType(this.getCode(), getLocalizedLabel(), getLocalizedDescription(), isAppliedToDb(), isNew(), isAppliedToDb());
   }
 
-  
+  @Override
+  public ValueStrategy getStrategy()
+  {
+    throw new UnsupportedOperationException();
+    // TODO: HEADS UP 
+//    if (!this.getIsChangeOverTime())
+//    {
+//      return new VertexValueStrategy(this);
+//    }
+//    else
+//    {
+//      return new ValueNodeStrategy(this, MdVertexDAO.getMdVertexDAO(AttributeCharacterValue.CLASS), AttributeCharacterValue.VALUE);
+//    }
+  }
+
 }

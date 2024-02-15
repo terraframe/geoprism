@@ -21,6 +21,7 @@ package net.geoprism.registry.model.graph;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.TreeMap;
 
 import org.apache.commons.collections4.map.HashedMap;
 
@@ -106,7 +107,7 @@ public class ServerHierarchyStrategy extends AbstractGraphStrategy implements Gr
 
       ServerGeoObjectType childType = ServerGeoObjectType.get(mdVertex);
 
-      VertexServerGeoObject child = new VertexServerGeoObject(childType, childVertex, date);
+      VertexServerGeoObject child = new VertexServerGeoObject(childType, childVertex, new TreeMap<>(), date);
 
       ServerChildGraphNode tnParent;
 
@@ -189,7 +190,7 @@ public class ServerHierarchyStrategy extends AbstractGraphStrategy implements Gr
 
       ServerGeoObjectType parentType = ServerGeoObjectType.get(mdVertex);
 
-      VertexServerGeoObject parent = new VertexServerGeoObject(parentType, parentVertex, date);
+      VertexServerGeoObject parent = new VertexServerGeoObject(parentType, parentVertex, new TreeMap<>(), date);
 
       ServerParentGraphNode tnParent;
 

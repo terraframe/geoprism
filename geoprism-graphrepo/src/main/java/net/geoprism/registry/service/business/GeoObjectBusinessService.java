@@ -3,18 +3,18 @@
  *
  * This file is part of Geoprism(tm).
  *
- * Geoprism(tm) is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
+ * Geoprism(tm) is free software: you can redistribute it and/or modify it under
+ * the terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation, either version 3 of the License, or (at your option) any
+ * later version.
  *
- * Geoprism(tm) is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
+ * Geoprism(tm) is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with Geoprism(tm).  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with Geoprism(tm). If not, see <http://www.gnu.org/licenses/>.
  */
 package net.geoprism.registry.service.business;
 
@@ -75,7 +75,6 @@ import com.runwaysdk.system.gis.geo.Universal;
 
 import net.geoprism.dashboard.GeometryUpdateException;
 import net.geoprism.ontology.Classifier;
-import net.geoprism.ontology.GeoEntityUtil;
 import net.geoprism.registry.BusinessType;
 import net.geoprism.registry.DataNotFoundException;
 import net.geoprism.registry.DuplicateGeoObjectCodeException;
@@ -100,7 +99,6 @@ import net.geoprism.registry.model.ClassificationType;
 import net.geoprism.registry.model.GeoObjectMetadata;
 import net.geoprism.registry.model.GeoObjectTypeMetadata;
 import net.geoprism.registry.model.LocationInfo;
-import net.geoprism.registry.model.LocationInfoHolder;
 import net.geoprism.registry.model.ServerChildTreeNode;
 import net.geoprism.registry.model.ServerGeoObjectIF;
 import net.geoprism.registry.model.ServerGeoObjectType;
@@ -202,9 +200,9 @@ public class GeoObjectBusinessService extends RegistryLocalizedValueConverter im
 
   @Override
   @Transaction
-  public ServerGeoObjectIF apply(GeoObject object, Date startDate, Date endDate, boolean isNew, boolean isImport)
+  public ServerGeoObjectIF apply(GeoObject dto, Date startDate, Date endDate, boolean isNew, boolean isImport)
   {
-    ServerGeoObjectType type = ServerGeoObjectType.get(object.getType().getCode());
+    ServerGeoObjectType type = ServerGeoObjectType.get(dto.getType().getCode());
     ServerGeoObjectStrategyIF strategy = this.getStrategy(type);
 
     if (isNew)
@@ -216,15 +214,10 @@ public class GeoObjectBusinessService extends RegistryLocalizedValueConverter im
       permissionService.enforceCanWrite(type.getOrganization().getCode(), type);
     }
 
-    ServerGeoObjectIF geoObject = strategy.constructFromGeoObject(object, isNew);
+    ServerGeoObjectIF geoObject = strategy.constructFromGeoObject(dto, isNew);
     geoObject.setDate(startDate);
 
-    if (!isNew)
-    {
-      geoObject.lock();
-    }
-
-    populate(geoObject, object, startDate, endDate);
+    populate(geoObject, dto, startDate, endDate);
 
     try
     {
@@ -290,21 +283,22 @@ public class GeoObjectBusinessService extends RegistryLocalizedValueConverter im
   }
 
   @Override
+  @Transaction
   public void apply(ServerGeoObjectIF sgo, boolean isImport)
   {
-    if (!isImport && !sgo.getVertex().isNew() && !sgo.getType().isGeometryEditable() && sgo.getVertex().isModified(sgo.getGeometryAttributeName()))
+    if (!isImport && !sgo.isNew() && !sgo.getType().isGeometryEditable() && sgo.isModified(DefaultAttribute.GEOMETRY.getName()))
     {
       throw new GeometryUpdateException();
     }
 
-    final boolean isNew = sgo.getVertex().isNew() || sgo.getVertex().getObjectValue(GeoVertex.CREATEDATE) == null;
+    final boolean isNew = sgo.isNew() || sgo.getValue(GeoVertex.CREATEDATE) == null;
 
     if (isNew)
     {
-      sgo.getVertex().setValue(GeoVertex.CREATEDATE, new Date());
+      sgo.setValue(GeoVertex.CREATEDATE, new Date());
     }
 
-    sgo.getVertex().setValue(GeoVertex.LASTUPDATEDATE, new Date());
+    sgo.setValue(GeoVertex.LASTUPDATEDATE, new Date());
 
     if (sgo.getInvalid() == null)
     {
@@ -313,7 +307,7 @@ public class GeoObjectBusinessService extends RegistryLocalizedValueConverter im
 
     validate(sgo);
 
-    sgo.getVertex().apply();
+    sgo.apply();
   }
 
   protected void validate(ServerGeoObjectIF sgo)
@@ -356,11 +350,6 @@ public class GeoObjectBusinessService extends RegistryLocalizedValueConverter im
     }
 
     ServerGeoObjectIF goServer = strategy.constructFromGeoObjectOverTime(goTime, isNew);
-
-    if (!isNew)
-    {
-      goServer.lock();
-    }
 
     populate(goServer, goTime);
 
@@ -490,6 +479,8 @@ public class GeoObjectBusinessService extends RegistryLocalizedValueConverter im
         sgo.getValuesOverTime(attributeName).clear();
         ValueOverTimeCollectionDTO collection = goTime.getAllValues(attributeName);
 
+        ValueOverTimeCollection c = new ValueOverTimeCollection();
+
         for (ValueOverTimeDTO votDTO : collection)
         {
           if (attribute instanceof AttributeTermType)
@@ -506,11 +497,11 @@ public class GeoObjectBusinessService extends RegistryLocalizedValueConverter im
               String classifierKey = Classifier.buildKey(parent, code);
               Classifier classifier = Classifier.getByKey(classifierKey);
 
-              sgo.getVertex().setValue(attributeName, classifier.getOid(), votDTO.getStartDate(), votDTO.getEndDate());
+              c.add(new ValueOverTime(votDTO.getStartDate(), votDTO.getEndDate(), classifier.getOid()));
             }
             else
             {
-              sgo.getVertex().setValue(attributeName, (String) null, votDTO.getStartDate(), votDTO.getEndDate());
+              c.add(new ValueOverTime(votDTO.getStartDate(), votDTO.getEndDate(), (String) null));
             }
           }
           else if (attribute instanceof AttributeClassificationType)
@@ -522,41 +513,37 @@ public class GeoObjectBusinessService extends RegistryLocalizedValueConverter im
               Classification classification = this.cService.get((AttributeClassificationType) attribute, value);
 
               sgo.getVertex().setValue(attributeName, classification.getVertex(), votDTO.getStartDate(), votDTO.getEndDate());
+
+              c.add(new ValueOverTime(votDTO.getStartDate(), votDTO.getEndDate(), classification.getVertex()));
+
             }
             else
             {
-              sgo.getVertex().setValue(attributeName, (String) null, sgo.getDate(), sgo.getDate());
+              c.add(new ValueOverTime(votDTO.getStartDate(), votDTO.getEndDate(), (String) null));
             }
           }
           else
           {
             Object value = votDTO.getValue();
 
-            // if (value != null)
-            // {
-            // sgo.getVertex().setValue(attributeName, value,
-            // votDTO.getStartDate(),
-            // votDTO.getEndDate());
-            // }
-            // else
-            // {
-            // sgo.getVertex().setValue(attributeName, (String) null,
-            // votDTO.getStartDate(), votDTO.getEndDate());
-            // }
-
-            sgo.setValue(attributeName, value, votDTO.getStartDate(), votDTO.getEndDate());
+            c.add(new ValueOverTime(votDTO.getStartDate(), votDTO.getEndDate(), value));
           }
         }
+
+        sgo.setValuesOverTime(attributeName, c);
       }
     });
 
-    sgo.getValuesOverTime(sgo.getGeometryAttributeName()).clear();
+    ValueOverTimeCollection geometries = new ValueOverTimeCollection();
+
     for (ValueOverTimeDTO votDTO : goTime.getAllValues(DefaultAttribute.GEOMETRY.getName()))
     {
       Geometry geom = goTime.getGeometry(votDTO.getStartDate());
 
-      sgo.setGeometry(geom, votDTO.getStartDate(), votDTO.getEndDate());
+      geometries.add(new ValueOverTime(votDTO.getStartDate(), votDTO.getEndDate(), geom));
     }
+
+    sgo.setValuesOverTime(DefaultAttribute.GEOMETRY.getName(), geometries);
 
     sgo.setUid(goTime.getUid());
     sgo.setCode(goTime.getCode());
@@ -767,7 +754,7 @@ public class GeoObjectBusinessService extends RegistryLocalizedValueConverter im
       List<VertexObject> results = query.getResults();
 
       results.forEach(result -> {
-        list.add(new VertexServerGeoObject(sgo.getType(), result, sgo.getDate()));
+        list.add(new VertexServerGeoObject(sgo.getType(), result, new TreeMap<>(), sgo.getDate()));
       });
     }
     else
@@ -777,7 +764,7 @@ public class GeoObjectBusinessService extends RegistryLocalizedValueConverter im
       List<VertexObject> results = query.getResults();
 
       results.forEach(result -> {
-        list.add(new VertexServerGeoObject(sgo.getType(), result, sgo.getDate()));
+        list.add(new VertexServerGeoObject(sgo.getType(), result, new TreeMap<>(), sgo.getDate()));
       });
     }
 
@@ -1014,48 +1001,52 @@ public class GeoObjectBusinessService extends RegistryLocalizedValueConverter im
       {
 
         // TODO: HEADS UP
-        
-//        // Note: Ordered ancestors always includes self
-//        Collection<?> uniParents = GeoEntityUtil.getOrderedAncestors(root, geoObjectType.getUniversal(), sType.getUniversalType());
-//
-//        ParentTreeNode ptnAncestors = getParentGeoObjects(sgo, sType, null, true, true, date).toNode(true);
-//
-//        if (uniParents.size() > 1)
-//        {
-//          JsonObject object = new JsonObject();
-//          object.addProperty("code", sType.getCode());
-//          object.addProperty("label", sType.getDisplayLabel().getValue());
-//
-//          JsonArray pArray = new JsonArray();
-//
-//          for (Object parent : uniParents)
-//          {
-//            ServerGeoObjectType pType = ServerGeoObjectType.get((Universal) parent);
-//
-//            if (!pType.getCode().equals(geoObjectType.getCode()))
-//            {
-//              JsonObject pObject = new JsonObject();
-//              pObject.addProperty("code", pType.getCode());
-//              pObject.addProperty("label", pType.getLabel().getValue());
-//
-//              List<ParentTreeNode> ptns = ptnAncestors.findParentOfType(pType.getCode());
-//              for (ParentTreeNode ptn : ptns)
-//              {
-//                if (ptn.getHierachyType().getCode().equals(sType.getCode()))
-//                {
-//                  pObject.add("ptn", ptn.toJSON());
-//                  break; // TODO Sibling ancestors
-//                }
-//              }
-//
-//              pArray.add(pObject);
-//            }
-//          }
-//
-//          object.add("parents", pArray);
-//
-//          hierarchies.add(object);
-//        }
+
+        // // Note: Ordered ancestors always includes self
+        // Collection<?> uniParents = GeoEntityUtil.getOrderedAncestors(root,
+        // geoObjectType.getUniversal(), sType.getUniversalType());
+        //
+        // ParentTreeNode ptnAncestors = getParentGeoObjects(sgo, sType, null,
+        // true, true, date).toNode(true);
+        //
+        // if (uniParents.size() > 1)
+        // {
+        // JsonObject object = new JsonObject();
+        // object.addProperty("code", sType.getCode());
+        // object.addProperty("label", sType.getDisplayLabel().getValue());
+        //
+        // JsonArray pArray = new JsonArray();
+        //
+        // for (Object parent : uniParents)
+        // {
+        // ServerGeoObjectType pType = ServerGeoObjectType.get((Universal)
+        // parent);
+        //
+        // if (!pType.getCode().equals(geoObjectType.getCode()))
+        // {
+        // JsonObject pObject = new JsonObject();
+        // pObject.addProperty("code", pType.getCode());
+        // pObject.addProperty("label", pType.getLabel().getValue());
+        //
+        // List<ParentTreeNode> ptns =
+        // ptnAncestors.findParentOfType(pType.getCode());
+        // for (ParentTreeNode ptn : ptns)
+        // {
+        // if (ptn.getHierachyType().getCode().equals(sType.getCode()))
+        // {
+        // pObject.add("ptn", ptn.toJSON());
+        // break; // TODO Sibling ancestors
+        // }
+        // }
+        //
+        // pArray.add(pObject);
+        // }
+        // }
+        //
+        // object.add("parents", pArray);
+        //
+        // hierarchies.add(object);
+        // }
       }
     }
 
@@ -1310,7 +1301,7 @@ public class GeoObjectBusinessService extends RegistryLocalizedValueConverter im
       geoObj.setUid(sgo.getVertex().getObjectValue(RegistryConstants.UUID));
     }
 
-    ValueOverTimeCollection votc = sgo.getValuesOverTime(sgo.getGeometryAttributeName());
+    ValueOverTimeCollection votc = sgo.getValuesOverTime(DefaultAttribute.GEOMETRY.getName());
     ValueOverTimeCollectionDTO votcDTO = new ValueOverTimeCollectionDTO(geoObj.getGeometryAttributeType());
     for (ValueOverTime vot : votc)
     {
@@ -1491,7 +1482,7 @@ public class GeoObjectBusinessService extends RegistryLocalizedValueConverter im
         ServerHierarchyType ht = ServerHierarchyType.get(mdEdge);
         ServerGeoObjectType childType = ServerGeoObjectType.get(mdVertex);
 
-        VertexServerGeoObject child = new VertexServerGeoObject(childType, childVertex, date);
+        VertexServerGeoObject child = new VertexServerGeoObject(childType, childVertex, new TreeMap<>(), date);
 
         ServerChildTreeNode tnChild;
 
@@ -1584,7 +1575,7 @@ public class GeoObjectBusinessService extends RegistryLocalizedValueConverter im
         ServerHierarchyType ht = ServerHierarchyType.get(mdEdge);
         ServerGeoObjectType parentType = ServerGeoObjectType.get(mdVertex);
 
-        VertexServerGeoObject parent = new VertexServerGeoObject(parentType, parentVertex, date);
+        VertexServerGeoObject parent = new VertexServerGeoObject(parentType, parentVertex, new TreeMap<>(), date);
 
         ServerParentTreeNode tnParent;
 
@@ -1691,7 +1682,7 @@ public class GeoObjectBusinessService extends RegistryLocalizedValueConverter im
         tnRoot.setEndDate(endDate);
         tnRoot.setOid(oid);
 
-        VertexServerGeoObject parent = new VertexServerGeoObject(parentType, parentVertex, date);
+        VertexServerGeoObject parent = new VertexServerGeoObject(parentType, parentVertex, new TreeMap<>(), date);
 
         ServerParentTreeNode tnParent;
 
@@ -1747,7 +1738,7 @@ public class GeoObjectBusinessService extends RegistryLocalizedValueConverter im
       VertexObject parentVertex = edge.getParent();
       MdVertexDAOIF mdVertex = (MdVertexDAOIF) parentVertex.getMdClass();
       ServerGeoObjectType parentType = ServerGeoObjectType.get(mdVertex);
-      VertexServerGeoObject parent = new VertexServerGeoObject(parentType, parentVertex, startDate);
+      VertexServerGeoObject parent = new VertexServerGeoObject(parentType, parentVertex, new TreeMap<>(), startDate);
 
       votc.add(new ValueOverTime(edge.getOid(), startDate, endDate, parent));
     }
@@ -1769,7 +1760,7 @@ public class GeoObjectBusinessService extends RegistryLocalizedValueConverter im
       VertexObject parentVertex = edge.getParent();
       MdVertexDAOIF mdVertex = (MdVertexDAOIF) parentVertex.getMdClass();
       ServerGeoObjectType parentType = ServerGeoObjectType.get(mdVertex);
-      final VertexServerGeoObject edgeGo = new VertexServerGeoObject(parentType, parentVertex, startDate);
+      final VertexServerGeoObject edgeGo = new VertexServerGeoObject(parentType, parentVertex, new TreeMap<>(), startDate);
 
       ValueOverTime inVot = null;
       for (ValueOverTime vot : votc)
@@ -1971,44 +1962,49 @@ public class GeoObjectBusinessService extends RegistryLocalizedValueConverter im
     TreeMap<String, LocationInfo> map = new TreeMap<String, LocationInfo>();
 
     // TODO: HEADS UP
-//    GraphQuery<Map<String, Object>> query = buildAncestorSelectQueryFast(sgo, hierarchy, parents);
-//
-//    List<Map<String, Object>> results = query.getResults();
-//
-//    if (results.size() <= 1)
-//    {
-//      return map;
-//    }
-//
-//    results.remove(0); // First result is the child object
-//
-//    results.forEach(result -> {
-//      String clazz = (String) result.get("cl");
-//      String code = (String) result.get("code");
-//
-//      List<Map<String, Object>> displayLabelRaw = (List<Map<String, Object>>) result.get("label");
-//
-//      LocalizedValue localized = RegistryLocalizedValueConverter.convert(displayLabelRaw, sgo.getDate());
-//
-//      ServerGeoObjectType type = null;
-//      for (ServerGeoObjectType parent : parents)
-//      {
-//        if (parent.getMdVertex().getDBClassName().equals(clazz))
-//        {
-//          type = parent;
-//        }
-//      }
-//
-//      if (type != null && localized != null)
-//      {
-//        LocationInfoHolder holder = new LocationInfoHolder(code, localized, type);
-//        map.put(type.getUniversal().getKey(), holder);
-//      }
-//      else
-//      {
-//        logger.error("Could not find [" + clazz + "] or the localized value was null.");
-//      }
-//    });
+    // GraphQuery<Map<String, Object>> query = buildAncestorSelectQueryFast(sgo,
+    // hierarchy, parents);
+    //
+    // List<Map<String, Object>> results = query.getResults();
+    //
+    // if (results.size() <= 1)
+    // {
+    // return map;
+    // }
+    //
+    // results.remove(0); // First result is the child object
+    //
+    // results.forEach(result -> {
+    // String clazz = (String) result.get("cl");
+    // String code = (String) result.get("code");
+    //
+    // List<Map<String, Object>> displayLabelRaw = (List<Map<String, Object>>)
+    // result.get("label");
+    //
+    // LocalizedValue localized =
+    // RegistryLocalizedValueConverter.convert(displayLabelRaw, sgo.getDate());
+    //
+    // ServerGeoObjectType type = null;
+    // for (ServerGeoObjectType parent : parents)
+    // {
+    // if (parent.getMdVertex().getDBClassName().equals(clazz))
+    // {
+    // type = parent;
+    // }
+    // }
+    //
+    // if (type != null && localized != null)
+    // {
+    // LocationInfoHolder holder = new LocationInfoHolder(code, localized,
+    // type);
+    // map.put(type.getUniversal().getKey(), holder);
+    // }
+    // else
+    // {
+    // logger.error("Could not find [" + clazz + "] or the localized value was
+    // null.");
+    // }
+    // });
 
     return map;
   }

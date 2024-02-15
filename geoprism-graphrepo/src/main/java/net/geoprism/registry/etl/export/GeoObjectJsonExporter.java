@@ -26,6 +26,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.TreeMap;
 
 import org.commongeoregistry.adapter.dataaccess.GeoObject;
 import org.commongeoregistry.adapter.dataaccess.GeoObjectJsonAdapters;
@@ -151,7 +152,7 @@ public class GeoObjectJsonExporter
 
     for (VertexObject vObject : vObjects)
     {
-      VertexServerGeoObject vSGO = new VertexServerGeoObject(got, vObject);
+      VertexServerGeoObject vSGO = new VertexServerGeoObject(got, vObject, new TreeMap<>());
       vSGO.setDate(ValueOverTime.INFINITY_END_DATE);
 
       response.add(vSGO);

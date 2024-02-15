@@ -55,13 +55,9 @@ import com.runwaysdk.dataaccess.MdClassDAOIF;
 import com.runwaysdk.dataaccess.attributes.AttributeValueException;
 import com.runwaysdk.dataaccess.metadata.graph.MdVertexDAO;
 import com.runwaysdk.dataaccess.transaction.Transaction;
-import com.runwaysdk.gis.dataaccess.metadata.graph.MdGeoVertexDAO;
-import com.runwaysdk.query.OIterator;
-import com.runwaysdk.query.QueryFactory;
 import com.runwaysdk.session.Session;
 import com.runwaysdk.system.Roles;
 import com.runwaysdk.system.gis.metadata.graph.MdGeoVertex;
-import com.runwaysdk.system.gis.metadata.graph.MdGeoVertexQuery;
 import com.runwaysdk.system.metadata.MdAttributeConcrete;
 import com.runwaysdk.system.metadata.MdBusiness;
 import com.runwaysdk.system.metadata.MdClass;
@@ -74,6 +70,7 @@ import net.geoprism.registry.HierarchicalRelationshipType;
 import net.geoprism.registry.HierarchyRootException;
 import net.geoprism.registry.InheritedHierarchyAnnotation;
 import net.geoprism.registry.TypeInUseException;
+import net.geoprism.registry.command.GeoObjectTypeCacheEventCommand;
 import net.geoprism.registry.graph.GeoVertexType;
 import net.geoprism.registry.model.GeoObjectTypeMetadata;
 import net.geoprism.registry.model.ServerGeoObjectType;
@@ -104,28 +101,15 @@ public class GeoObjectTypeBusinessService implements GeoObjectTypeBusinessServic
   {
   }
 
-  public List<ServerGeoObjectType> getSubtypes(ServerGeoObjectType sgot)
+  @Override
+  public List<ServerGeoObjectType> getSubtypes(ServerGeoObjectType type)
   {
-    List<ServerGeoObjectType> children = new LinkedList<>();
-
-    if (sgot.getIsAbstract())
+    if (type.getIsAbstract())
     {
-      MdGeoVertexQuery query = new MdGeoVertexQuery(new QueryFactory());
-      query.WHERE(query.getSuperMdVertex().EQ(sgot.getMdVertex().getOid()));
-
-      try (OIterator<? extends MdGeoVertex> iterator = query.getIterator())
-      {
-        while (iterator.hasNext())
-        {
-          MdGeoVertex cUniversal = (MdGeoVertex) iterator.next();
-
-          children.add(ServerGeoObjectType.get(MdGeoVertexDAO.get(cUniversal.getOid())));
-        }
-
-      }
+      return type.getSubTypes();
     }
 
-    return children;
+    return new LinkedList<>();
   }
 
   public Set<ServerHierarchyType> getHierarchiesOfSubTypes(ServerGeoObjectType sgot)
@@ -400,12 +384,16 @@ public class GeoObjectTypeBusinessService implements GeoObjectTypeBusinessServic
     return htServ.getChildren(hierarchy, sgot);
   }
 
-  @Transaction
   public ServerGeoObjectType create(String json)
   {
     GeoObjectType dto = GeoObjectType.fromJSON(json, ServiceFactory.getAdapter());
 
-    return this.create(dto);
+    ServerGeoObjectType type = this.create(dto);
+
+    // Refresh the users session
+    ( (Session) Session.getCurrentSession() ).reloadPermissions();
+
+    return type;
   }
 
   @Transaction
@@ -449,9 +437,10 @@ public class GeoObjectTypeBusinessService implements GeoObjectTypeBusinessServic
 
     // 1st create the MdVertex
     MdVertexDAO mdVertex = GeoVertexType.create(dto.getCode(), isAbstract, superType);
+    ServerOrganization organization = ServerOrganization.getByCode(dto.getOrganizationCode(), true);
 
     net.geoprism.registry.graph.GeoObjectType type = new net.geoprism.registry.graph.GeoObjectType();
-    type.setOrganization(ServerOrganization.getByCode(dto.getOrganizationCode(), true).getGraphOrganization());
+    type.setOrganization(organization.getGraphOrganization());
     type.setValue(net.geoprism.registry.graph.GeoObjectType.MDVERTEX, mdVertex.getOid());
     type.fromDTO(dto);
 
@@ -480,7 +469,11 @@ public class GeoObjectTypeBusinessService implements GeoObjectTypeBusinessServic
     // // Build the parent class term root if it does not exist.
     // TermConverter.buildIfNotExistdMdBusinessClassifier(mdBusiness);
 
-    return this.build(type);
+    ServerGeoObjectType sType = new ServerGeoObjectType(type);
+
+    new GeoObjectTypeCacheEventCommand(sType, GeoObjectTypeCacheEventCommand.EventType.CREATE).doIt();
+
+    return sType;
   }
 
   /**
@@ -505,11 +498,16 @@ public class GeoObjectTypeBusinessService implements GeoObjectTypeBusinessServic
   {
     serverType.removeAttribute(attributeName);
 
-    // If this did not error out then add to the cache
-    refreshCache(serverType);
+    new GeoObjectTypeCacheEventCommand(serverType, GeoObjectTypeCacheEventCommand.EventType.UPDATE).doIt();
 
+    // If this did not error out then add to the cache
     // Refresh the users session
-    ( (Session) Session.getCurrentSession() ).reloadPermissions();
+    Session session = (Session) Session.getCurrentSession();
+
+    if (session != null)
+    {
+      session.reloadPermissions();
+    }
   }
 
   @Override
@@ -521,11 +519,6 @@ public class GeoObjectTypeBusinessService implements GeoObjectTypeBusinessServic
     net.geoprism.registry.graph.AttributeType attributeType = this.updateAttributeTypeFromDTO(serverType, dto);
     dto = attributeType.toDTO();
 
-    // serverType.getType().addAttribute(dto);
-
-    // If this did not error out then add to the cache
-    refreshCache(serverType);
-
     return dto;
   }
 
@@ -535,11 +528,6 @@ public class GeoObjectTypeBusinessService implements GeoObjectTypeBusinessServic
     net.geoprism.registry.graph.AttributeType attributeType = createAttributeTypeFromDTO(serverType, dto);
 
     dto = attributeType.toDTO();
-    //
-    // serverType.getType().addAttribute(dto);
-
-    // If this did not error out then add to the cache
-    refreshCache(serverType);
 
     // Refresh the users session
     if (Session.getCurrentSession() != null)
@@ -558,21 +546,6 @@ public class GeoObjectTypeBusinessService implements GeoObjectTypeBusinessServic
     AttributeType attrType = AttributeType.parse(attrObj);
 
     return createAttributeType(sgot, attrType);
-  }
-
-  private void refreshCache(ServerGeoObjectType type)
-  {
-    ServiceFactory.getMetadataCache().addGeoObjectType(type);
-
-    // Refresh all of the subtypes
-    List<ServerGeoObjectType> subtypes = getSubtypes(type);
-    
-    for (ServerGeoObjectType subtype : subtypes)
-    {
-      ServerGeoObjectType type2 = build(subtype.getType());
-
-      ServiceFactory.getMetadataCache().addGeoObjectType(type2);
-    }
   }
 
   public ServerGeoObjectType build(net.geoprism.registry.graph.GeoObjectType type)
@@ -635,12 +608,6 @@ public class GeoObjectTypeBusinessService implements GeoObjectTypeBusinessServic
       // Refresh the users session
       session.setUser(Session.getCurrentSession().getUser());
     }
-
-    // If we get here then it was successfully deleted
-    // We have to do a full metadata cache
-    // refresh because the GeoObjectType is
-    // embedded in the HierarchyType
-    ServiceFactory.getGraphRepoService().refreshMetadataCache();
   }
 
   @Transaction
@@ -719,6 +686,10 @@ public class GeoObjectTypeBusinessService implements GeoObjectTypeBusinessServic
     tranEventServ.removeAll(type);
 
     tranServ.removeAll(type);
+
+    type.delete();
+
+    new GeoObjectTypeCacheEventCommand(type, GeoObjectTypeCacheEventCommand.EventType.DELETE).doIt();
   }
 
   /**
@@ -783,14 +754,18 @@ public class GeoObjectTypeBusinessService implements GeoObjectTypeBusinessServic
    *          Name of the attribute to be removed from the GeoObjectType
    * @return updated {@link GeoObjectType}
    */
-
+  @Override
   public void deleteAttributeType(String gtId, String attributeName)
   {
-    ServerGeoObjectType got = ServerGeoObjectType.get(gtId);
+    this.deleteAttributeType(ServerGeoObjectType.get(gtId), attributeName);
+  }
 
-    ServiceFactory.getGeoObjectTypePermissionService().enforceCanWrite(got.getOrganization().getCode(), got, got.getIsPrivate());
+  @Override
+  public void deleteAttributeType(ServerGeoObjectType type, String attributeName)
+  {
+    ServiceFactory.getGeoObjectTypePermissionService().enforceCanWrite(type.getOrganization().getCode(), type, type.getIsPrivate());
 
-    removeAttribute(got, attributeName);
+    removeAttribute(type, attributeName);
   }
 
   @Transaction
@@ -890,7 +865,10 @@ public class GeoObjectTypeBusinessService implements GeoObjectTypeBusinessServic
 
     attributeType.setGeoObjectType(type.getType());
     attributeType.fromDTO(dto);
+    attributeType.setIsDefault(false);
     attributeType.apply();
+
+    new GeoObjectTypeCacheEventCommand(type, GeoObjectTypeCacheEventCommand.EventType.UPDATE).doIt();
 
     // mdAttribute.setAttributeName(dto.getName());
     // mdAttribute.setValue(MdAttributeConcreteInfo.REQUIRED,
@@ -979,6 +957,8 @@ public class GeoObjectTypeBusinessService implements GeoObjectTypeBusinessServic
       attribute.fromDTO(dto);
       attribute.apply();
 
+      new GeoObjectTypeCacheEventCommand(type, GeoObjectTypeCacheEventCommand.EventType.UPDATE).doIt();
+
       return attribute;
     }
 
@@ -997,45 +977,29 @@ public class GeoObjectTypeBusinessService implements GeoObjectTypeBusinessServic
    */
   public GeoObjectType updateGeoObjectType(String gtJSON)
   {
-    GeoObjectType geoObjectType = GeoObjectType.fromJSON(gtJSON, ServiceFactory.getAdapter());
-    ServerGeoObjectType serverGeoObjectType = ServerGeoObjectType.get(geoObjectType.getCode());
+    GeoObjectType dto = GeoObjectType.fromJSON(gtJSON, ServiceFactory.getAdapter());
+    ServerGeoObjectType type = ServerGeoObjectType.get(dto.getCode());
 
-    ServiceFactory.getGeoObjectTypePermissionService().enforceCanWrite(geoObjectType.getOrganizationCode(), serverGeoObjectType, geoObjectType.getIsPrivate());
-
-    update(serverGeoObjectType, geoObjectType);
-
-    return serverGeoObjectType.toDTO();
+    return this.update(type, dto);
   }
 
-  protected void update(ServerGeoObjectType serverGeoObjectType, GeoObjectType dto)
+  protected GeoObjectType update(ServerGeoObjectType type, GeoObjectType dto)
   {
-    dto = serverGeoObjectType.toDTO().copy(dto);
+    ServiceFactory.getGeoObjectTypePermissionService().enforceCanWrite(dto.getOrganizationCode(), type, dto.getIsPrivate());
 
-    updateInTrans(serverGeoObjectType, dto);
+    updateFromDTO(type, dto);
 
-    // If this did not error out then add to the cache
-    ServiceFactory.getMetadataCache().refreshGeoObjectType(serverGeoObjectType);
-
-    // Modifications to supertypes can affect subtypes (i.e. changing
-    // isPrivate). We should refresh them as well.
-    if (serverGeoObjectType.getIsAbstract())
-    {
-      List<ServerGeoObjectType> subtypes = getSubtypes(serverGeoObjectType);
-
-      for (ServerGeoObjectType subtype : subtypes)
-      {
-        ServerGeoObjectType refreshedSubtype = build(subtype.getType());
-        ServiceFactory.getMetadataCache().refreshGeoObjectType(refreshedSubtype);
-      }
-    }
+    return type.toDTO();
   }
 
   @Transaction
-  protected void updateInTrans(ServerGeoObjectType serverGeoObjectType, GeoObjectType dto)
+  protected void updateFromDTO(ServerGeoObjectType serverGeoObjectType, GeoObjectType dto)
   {
     net.geoprism.registry.graph.GeoObjectType type = serverGeoObjectType.getType();
     type.fromDTO(dto);
     type.apply();
+
+    new GeoObjectTypeCacheEventCommand(serverGeoObjectType, GeoObjectTypeCacheEventCommand.EventType.UPDATE).doIt();
   }
 
   /**
@@ -1049,17 +1013,7 @@ public class GeoObjectTypeBusinessService implements GeoObjectTypeBusinessServic
 
   public GeoObjectType createGeoObjectType(String gtJSON)
   {
-    ServerGeoObjectType type = null;
-
-    type = create(gtJSON);
-
-    // Refresh the users session
-    ( (Session) Session.getCurrentSession() ).reloadPermissions();
-
-    // If this did not error out then add to the cache
-    ServiceFactory.getMetadataCache().addGeoObjectType(type);
-
-    return type.toDTO();
+    return this.create(gtJSON).toDTO();
   }
 
   /**

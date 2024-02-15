@@ -34,24 +34,65 @@ public class GeoObjectType extends GeoObjectTypeBase
   }
 
   @Override
+  @Transaction
+  public void delete()
+  {
+    // Delete all attributes types
+    this.getAttributes().stream().forEach(attributeType -> attributeType.delete());
+
+    MdVertex mdVertex = this.getMdVertex();
+
+    super.delete();
+
+    if (mdVertex != null)
+    {
+      mdVertex.delete();
+    }
+  }
+
+  @Override
   public MdVertex getMdVertex()
   {
     return MdVertex.get(this.getObjectValue(GeoObjectType.MDVERTEX));
   }
 
-  public Map<String, AttributeType> getAttributes()
+  @Override
+  public GraphOrganization getOrganization()
+  {
+    return GraphOrganization.get((String) this.getObjectValue(GeoObjectType.MDVERTEX));
+  }
+
+  @Override
+  public GeoObjectType getSuperType()
+  {
+    String oid = (String) this.getObjectValue(GeoObjectType.SUPERTYPE);
+
+    if (!StringUtils.isBlank(oid))
+    {
+      return GeoObjectType.get(oid);
+    }
+
+    return null;
+  }
+
+  public Map<String, AttributeType> getAttributeMap()
+  {
+    return this.getAttributes().stream().collect(Collectors.toMap(t -> t.getCode(), t -> t));
+  }
+
+  public List<AttributeType> getAttributes()
   {
     MdVertexDAOIF mdVertexDAO = MdVertexDAO.getMdVertexDAO(AttributeType.CLASS);
     MdAttributeDAOIF mdAttribute = mdVertexDAO.definesAttribute(AttributeType.GEOOBJECTTYPE);
 
     StringBuilder statement = new StringBuilder();
     statement.append("SELECT FROM " + mdVertexDAO.getDBClassName());
-    statement.append(" WHERE " + mdAttribute.getColumnName() + " = :geoObjectType");
+    statement.append(" WHERE " + mdAttribute.getColumnName() + ".oid = :geoObjectType");
 
     GraphQuery<AttributeType> query = new GraphQuery<AttributeType>(statement.toString());
-    query.setParameter("geoObjectType", this.getRID());
+    query.setParameter("geoObjectType", this.getOid());
 
-    return query.getResults().stream().collect(Collectors.toMap(t -> t.getCode(), t -> t));
+    return query.getResults();
   }
 
   /**
@@ -126,10 +167,25 @@ public class GeoObjectType extends GeoObjectTypeBase
     }
   }
 
+  public List<String> getSubTypeCodes()
+  {
+    MdVertexDAOIF metadata = MdVertexDAO.getMdVertexDAO(GeoObjectType.CLASS);
+
+    StringBuilder statement = new StringBuilder();
+    statement.append("SELECT " + metadata.definesAttribute(GeoObjectType.CODE).getColumnName() + " FROM " + metadata.getDBClassName());
+    statement.append(" WHERE " + metadata.definesAttribute(GeoObjectType.SUPERTYPE).getColumnName() + " = :rid");
+
+    GraphQuery<String> query = new GraphQuery<String>(statement.toString());
+    query.setParameter("rid", this.getRID());
+
+    return query.getResults();
+  }
+
   public void fromDTO(org.commongeoregistry.adapter.metadata.GeoObjectType dto)
   {
     GeometryType geometryType = GeometryTypeFactory.get(dto.getGeometryType());
 
+    this.setCode(dto.getCode());
     this.setIsGeometryEditable(dto.isGeometryEditable());
     this.setIsPrivate(dto.getIsPrivate());
     this.setIsAbstract(dto.getIsAbstract());
@@ -154,14 +210,16 @@ public class GeoObjectType extends GeoObjectTypeBase
     LocalizedValue label = RegistryLocalizedValueConverter.convert(this.getEmbeddedComponent(GeoObjectType.LABEL));
     LocalizedValue description = RegistryLocalizedValueConverter.convert(this.getEmbeddedComponent(GeoObjectType.DESCRIPTION));
 
-    String orgCode = this.getOrganization().getCode();
+    GraphOrganization organization = this.getOrganization();
+
+    String orgCode = organization != null ? organization.getCode() : null;
 
     GeoObjectType superType = this.getSuperType();
 
     org.commongeoregistry.adapter.metadata.GeoObjectType dto = new org.commongeoregistry.adapter.metadata.GeoObjectType(this.getCode(), cgrGeometryType, label, description, this.getIsGeometryEditable(), orgCode, ServiceFactory.getAdapter());
     dto.setIsAbstract(this.getIsAbstract());
 
-    this.getAttributes().forEach((attributeName, attributeType) -> {
+    this.getAttributeMap().forEach((attributeName, attributeType) -> {
       dto.addAttribute(attributeType.toDTO());
     });
 
@@ -194,7 +252,9 @@ public class GeoObjectType extends GeoObjectTypeBase
     statement.append(" WHERE " + metadata.definesAttribute(GeoObjectType.CODE).getColumnName() + " = :code");
 
     GraphQuery<GeoObjectType> query = new GraphQuery<GeoObjectType>(statement.toString());
+    query.setParameter("code", code);
 
     return query.getSingleResult();
   }
+
 }

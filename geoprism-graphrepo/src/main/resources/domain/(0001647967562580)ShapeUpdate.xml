@@ -21,13 +21,13 @@
 <version xsi:noNamespaceSchemaLocation="classpath:com/runwaysdk/resources/xsd/version_gis.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <doIt>
     <update>
-      <mdGeoVertex name="net.geoprism.registry.graph.GeoVertex">
+      <mdVertex name="net.geoprism.registry.graph.GeoVertex">
        <create>
           <attributes>
             <shape name="shape" label="Shape" srid="4326" dimension="2"/>
           </attributes>
         </create>
-      </mdGeoVertex>    
+      </mdVertex>    
     </update>
   </doIt>
   <undoIt>

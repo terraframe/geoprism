@@ -8,16 +8,20 @@ import com.runwaysdk.dataaccess.metadata.MdAttributeLongDAO;
 import com.runwaysdk.dataaccess.metadata.graph.MdVertexDAO;
 import com.runwaysdk.dataaccess.transaction.Transaction;
 
+import net.geoprism.registry.model.ValueNodeStrategy;
+import net.geoprism.registry.model.ValueStrategy;
+import net.geoprism.registry.model.VertexValueStrategy;
+
 public class AttributeLongType extends AttributeLongTypeBase
 {
   @SuppressWarnings("unused")
   private static final long serialVersionUID = 971955729;
-  
+
   public AttributeLongType()
   {
     super();
   }
-  
+
   @Override
   @Transaction
   public void apply()
@@ -54,11 +58,24 @@ public class AttributeLongType extends AttributeLongTypeBase
 
     super.delete();
   }
-  
+
   @Override
   public AttributeType toDTO()
   {
     return new org.commongeoregistry.adapter.metadata.AttributeIntegerType(this.getCode(), getLocalizedLabel(), getLocalizedDescription(), isAppliedToDb(), isNew(), isAppliedToDb());
+  }
+
+  @Override
+  public ValueStrategy getStrategy()
+  {
+    if (!this.getIsChangeOverTime())
+    {
+      return new VertexValueStrategy(this);
+    }
+    else
+    {
+      return new ValueNodeStrategy(this, MdVertexDAO.getMdVertexDAO(AttributeLongValue.CLASS), AttributeLongValue.VALUE);
+    }
   }
 
 }

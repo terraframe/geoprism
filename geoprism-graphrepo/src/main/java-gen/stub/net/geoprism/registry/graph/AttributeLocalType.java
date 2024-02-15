@@ -8,6 +8,10 @@ import com.runwaysdk.dataaccess.metadata.MdAttributeLocalCharacterEmbeddedDAO;
 import com.runwaysdk.dataaccess.metadata.graph.MdVertexDAO;
 import com.runwaysdk.dataaccess.transaction.Transaction;
 
+import net.geoprism.registry.model.ValueNodeStrategy;
+import net.geoprism.registry.model.ValueStrategy;
+import net.geoprism.registry.model.VertexValueStrategy;
+
 public class AttributeLocalType extends AttributeLocalTypeBase
 {
   @SuppressWarnings("unused")
@@ -60,4 +64,18 @@ public class AttributeLocalType extends AttributeLocalTypeBase
   {
     return new org.commongeoregistry.adapter.metadata.AttributeLocalType(this.getCode(), getLocalizedLabel(), getLocalizedDescription(), isAppliedToDb(), isNew(), isAppliedToDb());
   }
+  
+  @Override
+  public ValueStrategy getStrategy()
+  {
+    if (!this.getIsChangeOverTime())
+    {
+      return new VertexValueStrategy(this);
+    }
+    else
+    {
+      return new ValueNodeStrategy(this, MdVertexDAO.getMdVertexDAO(AttributeLocalValue.CLASS), AttributeLocalValue.DEFAULTLOCALE);
+    }
+  }
+
 }

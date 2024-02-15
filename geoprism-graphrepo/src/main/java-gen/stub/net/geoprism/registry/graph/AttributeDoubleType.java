@@ -6,6 +6,8 @@ import org.commongeoregistry.adapter.metadata.AttributeType;
 import com.runwaysdk.constants.MdAttributeDoubleInfo;
 import com.runwaysdk.dataaccess.metadata.MdAttributeConcreteDAO;
 
+import net.geoprism.registry.model.ValueStrategy;
+
 public class AttributeDoubleType extends AttributeDoubleTypeBase
 {
   @SuppressWarnings("unused")
@@ -54,6 +56,23 @@ public class AttributeDoubleType extends AttributeDoubleTypeBase
     dto.setScale(this.getScale());
 
     return dto;
+  }
+
+  @Override
+  public ValueStrategy getStrategy()
+  {
+    throw new UnsupportedOperationException();
+    // TODO: HEADS UP
+    // if (!this.getIsChangeOverTime())
+    // {
+    // return new VertexValueStrategy(this);
+    // }
+    // else
+    // {
+    // return new ValueNodeStrategy(this,
+    // MdVertexDAO.getMdVertexDAO(AttributeCharacterValue.CLASS),
+    // AttributeCharacterValue.VALUE);
+    // }
   }
 
 }

@@ -22,6 +22,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.TreeMap;
 
 import com.runwaysdk.business.graph.GraphQuery;
 import com.runwaysdk.business.graph.VertexObject;
@@ -157,7 +158,7 @@ public class VertexGeoObjectQuery implements ServerGeoObjectQuery
 
     if (vertex != null)
     {
-      return new VertexServerGeoObject(type, vertex, this.date);
+      return new VertexServerGeoObject(type, vertex, new TreeMap<>(), this.date);
     }
 
     return null;
@@ -172,7 +173,7 @@ public class VertexGeoObjectQuery implements ServerGeoObjectQuery
 
     for (VertexObject result : results)
     {
-      list.add(new VertexServerGeoObject(type, result, this.date));
+      list.add(new VertexServerGeoObject(type, result, new TreeMap<>(), this.date));
     }
 
     return list;

@@ -71,45 +71,6 @@ public class ServerMetadataCache extends ServerOrganizationCache
     getAdapter().getMetadataCache().rebuild();
   }
 
-  /**
-   * Updates the cache with the new GeoObjectType everywhere where it is cached
-   * (including in HierarchyTypes).
-   */
-  public void refreshGeoObjectType(ServerGeoObjectType refreshGot)
-  {
-    this.addGeoObjectType(refreshGot);
-
-    // List<ServerHierarchyType> hierarchyTypes =
-    // ServiceFactory.getMetadataCache().getAllHierarchyTypes();
-    // for (ServerHierarchyType ht : hierarchyTypes)
-    // {
-    // List<HierarchyNode> rootNodes = ht.getRootGeoObjectTypes();
-    //
-    // for (HierarchyNode rootNode : rootNodes)
-    // {
-    // if (refreshGot.getCode().equals(rootNode.getGeoObjectType().getCode()))
-    // {
-    // rootNode.setGeoObjectType(refreshGot.getType());
-    // break;
-    // }
-    //
-    // List<HierarchyNode> rootDescends = rootNode.getAllDescendants();
-    //
-    // Iterator<HierarchyNode> rootDescendIt = rootDescends.iterator();
-    //
-    // while (rootDescendIt.hasNext())
-    // {
-    // HierarchyNode childNode = rootDescendIt.next();
-    //
-    // if (childNode.getGeoObjectType().getCode().equals(refreshGot.getCode()))
-    // {
-    // childNode.setGeoObjectType(refreshGot.getType());
-    // break;
-    // }
-    // }
-    // }
-    // }
-  }
 
   public void addGeoObjectType(ServerGeoObjectType geoObjectType)
   {
@@ -121,12 +82,12 @@ public class ServerMetadataCache extends ServerOrganizationCache
 
   public Optional<ServerGeoObjectType> getGeoObjectType(String code)
   {
-    return Optional.of(this.geoGeoObjectTypeCodeMap.get(code));
+    return Optional.ofNullable(this.geoGeoObjectTypeCodeMap.get(code));
   }
 
   public Optional<ServerGeoObjectType> getGeoObjectTypeByOid(String oid)
   {
-    return Optional.of(this.geoGeoObjectTypeOidMap.get(oid));
+    return Optional.ofNullable(this.geoGeoObjectTypeOidMap.get(oid));
   }
   
   public void removeGeoObjectType(ServerGeoObjectType type)
@@ -151,7 +112,7 @@ public class ServerMetadataCache extends ServerOrganizationCache
 
   public Optional<ServerHierarchyType> getHierachyType(String code)
   {
-    return Optional.of(this.hierarchyTypeMap.get(code));
+    return Optional.ofNullable(this.hierarchyTypeMap.get(code));
   }
 
   public void removeHierarchyType(String code)

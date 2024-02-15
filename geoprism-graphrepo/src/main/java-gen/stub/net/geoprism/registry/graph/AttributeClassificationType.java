@@ -8,6 +8,10 @@ import com.runwaysdk.dataaccess.metadata.MdAttributeDateTimeDAO;
 import com.runwaysdk.dataaccess.metadata.graph.MdVertexDAO;
 import com.runwaysdk.dataaccess.transaction.Transaction;
 
+import net.geoprism.registry.model.ValueNodeStrategy;
+import net.geoprism.registry.model.ValueStrategy;
+import net.geoprism.registry.model.VertexValueStrategy;
+
 public class AttributeClassificationType extends AttributeClassificationTypeBase
 {
   @SuppressWarnings("unused")
@@ -66,5 +70,21 @@ public class AttributeClassificationType extends AttributeClassificationTypeBase
   {
     return new org.commongeoregistry.adapter.metadata.AttributeClassificationType(this.getCode(), getLocalizedLabel(), getLocalizedDescription(), isAppliedToDb(), isNew(), isAppliedToDb());
   }
+
+  @Override
+  public ValueStrategy getStrategy()
+  {
+    throw new UnsupportedOperationException();
+    // TODO: HEADS UP 
+//    if (!this.getIsChangeOverTime())
+//    {
+//      return new VertexValueStrategy(this);
+//    }
+//    else
+//    {
+//      return new ValueNodeStrategy(this, MdVertexDAO.getMdVertexDAO(AttributeCharacterValue.CLASS), AttributeCharacterValue.VALUE);
+//    }
+  }
+
 
 }

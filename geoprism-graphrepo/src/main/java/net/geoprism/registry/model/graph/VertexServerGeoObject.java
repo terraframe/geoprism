@@ -32,6 +32,8 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.stream.Collectors;
+import java.util.Optional;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
@@ -98,6 +100,7 @@ import net.geoprism.registry.graph.AttributeType;
 import net.geoprism.registry.graph.GeoVertex;
 import net.geoprism.registry.graph.GeoVertexSynonym;
 import net.geoprism.registry.model.AbstractServerGeoObject;
+import net.geoprism.registry.model.AttributeState;
 import net.geoprism.registry.model.GeoObjectMetadata;
 import net.geoprism.registry.model.GraphType;
 import net.geoprism.registry.model.LocationInfo;
@@ -110,6 +113,7 @@ import net.geoprism.registry.service.request.ServiceFactory;
 
 public class VertexServerGeoObject extends AbstractServerGeoObject implements ServerGeoObjectIF, LocationInfo, VertexComponent
 {
+
   private static final Logger logger = LoggerFactory.getLogger(VertexServerGeoObject.class);
 
   public static class EdgeComparator implements Comparator<EdgeObject>, Serializable
@@ -126,25 +130,52 @@ public class VertexServerGeoObject extends AbstractServerGeoObject implements Se
     }
   }
 
-  protected ServerGeoObjectType type;
+  protected ServerGeoObjectType         type;
 
-  protected VertexObject        vertex;
+  protected VertexObject                vertex;
 
-  protected Date                date;
+  // Current state of values. May not have been applied to the database.
+  protected Map<String, AttributeState> valueNodeMap;
 
-  public VertexServerGeoObject(ServerGeoObjectType type, VertexObject vertex)
+  protected Date                        date;
+
+  public VertexServerGeoObject(ServerGeoObjectType type, VertexObject vertex, Map<String, List<VertexObject>> valueNodeMap)
   {
-    this(type, vertex, null);
+    this(type, vertex, valueNodeMap, null);
   }
 
-  public VertexServerGeoObject(ServerGeoObjectType type, VertexObject vertex, Date date)
+  public VertexServerGeoObject(ServerGeoObjectType type, VertexObject vertex, Map<String, List<VertexObject>> valueNodeMap, Date date)
   {
     MdVertexDAOIF actualVertexType = (MdVertexDAOIF) vertex.getMdClass();
     ServerGeoObjectType actualType = ServerGeoObjectType.get(actualVertexType);
 
     this.type = actualType;
     this.vertex = vertex;
+    this.valueNodeMap = valueNodeMap.entrySet().stream().map(entry -> new AttributeState(entry.getKey(), entry.getValue())).collect(Collectors.toMap(s -> s.getAttributeName(), s -> s));
     this.date = date;
+  }
+
+  @Override
+  @Transaction
+  public void apply()
+  {
+    // TODO: HEADS UP: Add a version check to ensure this object is current,
+    // otherwise the value node map may create duplicates
+    this.vertex.apply();
+
+    this.valueNodeMap.forEach((attributeName, state) -> {
+      state.persit();
+
+      // TODO: HEADS UP: Handle rollback of object on persist failure
+      // Only clear the state after the transaction has passed
+      state.clear();
+    });
+  }
+
+  @Override
+  public boolean isNew()
+  {
+    return this.vertex.isNew();
   }
 
   public String getDBClassName()
@@ -175,13 +206,13 @@ public class VertexServerGeoObject extends AbstractServerGeoObject implements Se
   @Override
   public Date getCreateDate()
   {
-    return this.vertex.getObjectValue(GeoVertex.CREATEDATE);
+    return this.getValue(GeoVertex.CREATEDATE);
   }
 
   @Override
   public Date getLastUpdateDate()
   {
-    return this.vertex.getObjectValue(GeoVertex.LASTUPDATEDATE);
+    return this.getValue(GeoVertex.LASTUPDATEDATE);
   }
 
   @Override
@@ -204,31 +235,17 @@ public class VertexServerGeoObject extends AbstractServerGeoObject implements Se
       code = code.replaceAll("\\s+", "");
     }
 
-    // this.vertex.setValue(GeoVertex.GEOID, code);
-    this.vertex.setValue(DefaultAttribute.CODE.getName(), code);
+    final String value = code;
+
+    this.type.getAttribute(DefaultAttribute.CODE.getName()).ifPresent( ( attr -> {
+      attr.getStrategy().setValue(this.vertex, this.valueNodeMap, value, null, null);
+    } ));
   }
 
   @Override
   public void setGeometry(Geometry geometry)
   {
-    if (geometry != null && geometry.getNumPoints() > GeoprismProperties.getMaxNumberOfPoints())
-    {
-      throw new GeometrySizeException();
-    }
-
-    if (!this.isValidGeometry(geometry))
-    {
-      GeometryTypeException ex = new GeometryTypeException();
-      ex.setActualType(geometry.getGeometryType());
-      ex.setExpectedType(this.getType().getGeometryType().name());
-
-      throw ex;
-    }
-
-    // Populate the correct geom field
-    String geometryAttribute = this.getGeometryAttributeName();
-
-    this.getVertex().setValue(geometryAttribute, geometry, this.date, this.date);
+    this.setGeometry(geometry, this.date, this.date);
   }
 
   @Override
@@ -248,35 +265,34 @@ public class VertexServerGeoObject extends AbstractServerGeoObject implements Se
       throw ex;
     }
 
-    // Populate the correct geom field
-    String geometryAttribute = this.getGeometryAttributeName();
-
-    this.getVertex().setValue(geometryAttribute, geometry, startDate, endDate);
+    this.type.getAttribute(DefaultAttribute.GEOMETRY.getName()).ifPresent( ( attr -> {
+      attr.getStrategy().setValue(this.vertex, this.valueNodeMap, geometry, startDate, endDate);
+    } ));
   }
 
   @Override
   public void setExists(Boolean value)
   {
-    this.vertex.setValue(DefaultAttribute.EXISTS.getName(), value == null ? Boolean.FALSE : value, this.date, this.date);
+    this.setExists(value, this.date, this.date);
   }
 
   @Override
   public void setExists(Boolean value, Date startDate, Date endDate)
   {
-    this.vertex.setValue(DefaultAttribute.EXISTS.getName(), value == null ? Boolean.FALSE : value, startDate, endDate);
+    this.type.getAttribute(DefaultAttribute.EXISTS.getName()).ifPresent( ( attr -> {
+      attr.getStrategy().setValue(this.vertex, this.valueNodeMap, value == null ? Boolean.FALSE : value, startDate, endDate);
+    } ));
   }
 
   @Override
   public Boolean getExists()
   {
-    Boolean value = this.vertex.getObjectValue(DefaultAttribute.EXISTS.getName(), this.date);
-
-    return value == null ? Boolean.FALSE : value;
+    return this.getExists(this.date);
   }
 
   public Boolean getExists(Date date)
   {
-    Boolean value = this.vertex.getObjectValue(DefaultAttribute.EXISTS.getName(), date);
+    Boolean value = this.getValue(DefaultAttribute.EXISTS.getName(), date);
 
     return value == null ? Boolean.FALSE : value;
   }
@@ -284,19 +300,23 @@ public class VertexServerGeoObject extends AbstractServerGeoObject implements Se
   @Override
   public void setUid(String uid)
   {
-    this.vertex.setValue(RegistryConstants.UUID, uid, this.date, this.date);
+    this.type.getAttribute(DefaultAttribute.UID.getName()).ifPresent( ( attr -> {
+      attr.getStrategy().setValue(this.vertex, this.valueNodeMap, uid, null, null);
+    } ));
   }
 
   @Override
   public void setDisplayLabel(LocalizedValue value)
   {
-    RegistryLocalizedValueConverter.populate(this.vertex, DefaultAttribute.DISPLAY_LABEL.getName(), value, this.date, null);
+    this.setDisplayLabel(value, this.date, this.date);
   }
 
   @Override
   public void setDisplayLabel(LocalizedValue value, Date startDate, Date endDate)
   {
-    RegistryLocalizedValueConverter.populate(this.vertex, DefaultAttribute.DISPLAY_LABEL.getName(), value, startDate, endDate);
+    this.type.getAttribute(DefaultAttribute.DISPLAY_LABEL.getName()).ifPresent( ( attr -> {
+      attr.getStrategy().setValue(this.vertex, this.valueNodeMap, value, startDate, endDate);
+    } ));
   }
 
   public boolean existsAtRange(Date startDate, Date endDate)
@@ -378,15 +398,7 @@ public class VertexServerGeoObject extends AbstractServerGeoObject implements Se
   @Override
   public void setValue(String attributeName, Object value)
   {
-    AttributeType at = this.type.getAttribute(attributeName).orElse(null); // This
-                                                                           // may
-                                                                           // return
-                                                                           // null
-                                                                           // if
-                                                                           // it's
-                                                                           // a
-                                                                           // Geometry
-                                                                           // attribute.
+    AttributeType at = this.type.getAttribute(attributeName).orElse(null);
 
     if (at instanceof AttributeLocalType)
     {
@@ -401,15 +413,7 @@ public class VertexServerGeoObject extends AbstractServerGeoObject implements Se
   @Override
   public void setValue(String attributeName, Object value, Date startDate, Date endDate)
   {
-    AttributeType at = this.type.getAttribute(attributeName).orElse(null); // This
-                                                                           // may
-                                                                           // return
-                                                                           // null
-                                                                           // if
-                                                                           // it's
-                                                                           // a
-                                                                           // Geometry
-                                                                           // attribute.
+    AttributeType at = this.type.getAttribute(attributeName).orElse(null);
 
     if (at instanceof AttributeLocalType)
     {
@@ -525,13 +529,13 @@ public class VertexServerGeoObject extends AbstractServerGeoObject implements Se
   @Override
   public String getCode()
   {
-    return (String) this.vertex.getObjectValue(DefaultAttribute.CODE.getName());
+    return (String) this.getValue(DefaultAttribute.CODE.getName());
   }
 
   @Override
   public String getUid()
   {
-    return (String) this.vertex.getObjectValue(RegistryConstants.UUID);
+    return (String) this.getValue(RegistryConstants.UUID);
   }
 
   @Override
@@ -553,179 +557,85 @@ public class VertexServerGeoObject extends AbstractServerGeoObject implements Se
   }
 
   @Override
-  public Object getValue(String attributeName)
+  public boolean isModified(String attributeName)
   {
-    AttributeType at = this.type.getAttribute(attributeName).orElse(null); // This
-                                                                           // may
-                                                                           // return
-                                                                           // null
-                                                                           // if
-                                                                           // it's
-                                                                           // a
-                                                                           // Geometry
-                                                                           // attribute.
+    Optional<AttributeType> optional = this.type.getAttribute(attributeName);
 
-    if (attributeName.equals(DefaultAttribute.CODE.getName()))
+    if (optional.isPresent())
     {
-      return this.getCode();
-    }
-    else if (attributeName.equals(DefaultAttribute.UID.getName()))
-    {
-      return this.getUid();
-    }
-    else if (attributeName.equals(DefaultAttribute.CREATE_DATE.getName()))
-    {
-      return this.getCreateDate();
-    }
-    else if (attributeName.equals(DefaultAttribute.EXISTS.getName()))
-    {
-      return this.getExists();
-    }
-    else if (at instanceof AttributeLocalType)
-    {
-      return this.getValueLocalized(attributeName);
+      AttributeType attributeType = optional.get();
+
+      return attributeType.getStrategy().isModified(attributeType, valueNodeMap);
     }
 
-    if (at != null && !at.getIsChangeOverTime())
-    {
-      return this.vertex.getObjectValue(attributeName);
-    }
-
-    Object value = this.getMostRecentValue(attributeName);
-
-    if (value != null && at instanceof AttributeTermType)
-    {
-      return Classifier.get((String) value);
-    }
-
-    return value;
+    return false;
   }
 
+  @SuppressWarnings("unchecked")
   @Override
-  public Object getValue(String attributeName, Date date)
+  public <T> T getValue(String attributeName)
   {
-    AttributeType at = this.type.getAttribute(attributeName).orElse(null); // This
-                                                                           // may
-                                                                           // return
-                                                                           // null
-                                                                           // if
-                                                                           // it's
-                                                                           // a
-                                                                           // Geometry
-                                                                           // attribute.
+    Optional<AttributeType> optional = this.type.getAttribute(attributeName);
 
-    if (attributeName.equals(DefaultAttribute.CODE.getName()))
+    if (optional.isPresent())
     {
-      return this.getCode();
-    }
-    else if (attributeName.equals(DefaultAttribute.UID.getName()))
-    {
-      return this.getUid();
-    }
-    else if (attributeName.equals(DefaultAttribute.CREATE_DATE.getName()))
-    {
-      return this.getCreateDate();
-    }
-    else if (attributeName.equals(DefaultAttribute.EXISTS.getName()))
-    {
-      return this.getExists(date);
-    }
-    else if (at instanceof AttributeLocalType)
-    {
-      return this.getValueLocalized(attributeName, date);
+      AttributeType attributeType = optional.get();
+
+      Object value = !attributeType.getIsChangeOverTime() ? attributeType.getStrategy().getValue(attributeType, valueNodeMap, null) : this.getMostRecentValue(attributeName);
+
+      if (value != null && attributeType instanceof AttributeTermType)
+      {
+        return (T) Classifier.get((String) value);
+      }
+
+      return (T) value;
     }
 
-    if (at != null && !at.getIsChangeOverTime())
+    return null;
+  }
+
+  @SuppressWarnings("unchecked")
+  @Override
+  public <T> T getValue(String attributeName, Date date)
+  {
+    AttributeType at = this.type.getAttribute(attributeName).orElse(null);
+
+    if (at != null)
     {
-      return this.vertex.getObjectValue(attributeName);
+      Object value = at.getStrategy().getValue(at, valueNodeMap, date);
+
+      if (value != null && at instanceof AttributeTermType)
+      {
+        return (T) Classifier.get((String) value);
+      }
+
+      return (T) value;
     }
 
-    Object value = this.vertex.getObjectValue(attributeName, date);
-
-    if (value != null && at instanceof AttributeTermType)
-    {
-      return Classifier.get((String) value);
-    }
-
-    return value;
+    return null;
   }
 
   @Override
   public ValueOverTimeCollection getValuesOverTime(String attributeName)
   {
-    return this.vertex.getValuesOverTime(attributeName);
+    Optional<AttributeType> attribute = this.type.getAttribute(attributeName);
+
+    if (attribute.isPresent())
+    {
+      return attribute.get().getStrategy().getValueOverTimeCollection(this.vertex, this.valueNodeMap);
+    }
+
+    return new ValueOverTimeCollection();
   }
 
   @Override
   public void setValuesOverTime(String attributeName, ValueOverTimeCollection collection)
   {
-    this.vertex.setValuesOverTime(attributeName, collection);
-  }
+    this.type.getAttribute(attributeName).ifPresent( ( attr -> {
+      attr.getStrategy().setValuesOverTime(this.vertex, this.valueNodeMap, collection);
+    } ));
 
-  @Override
-  public void lock()
-  {
-    // Do nothing
   }
-
-  @Override
-  public void unlock()
-  {
-    // Do nothing?
-  }
-
-  // private void validateCOTAttr(String attrName)
-  // {
-  // ValueOverTimeCollection votc = this.vertex.getValuesOverTime(attrName);
-  //
-  // if (votc == null || votc.size() == 0)
-  // {
-  // RequiredAttributeException ex = new RequiredAttributeException();
-  // ex.setAttributeLabel(GeoObjectTypeMetadata.getAttributeDisplayLabel(attrName));
-  // throw ex;
-  // }
-  // else if (votc != null && votc.size() > 0)
-  // {
-  // boolean hasValue = false;
-  //
-  // for (int i = 0; i < votc.size(); ++i)
-  // {
-  // ValueOverTime vot = votc.get(i);
-  //
-  // if (vot.getValue() != null)
-  // {
-  // if (vot.getValue() instanceof String && ((String)vot.getValue()).length() >
-  // 0)
-  // {
-  // hasValue = true;
-  // break;
-  // }
-  // else if (vot.getValue() instanceof Collection)
-  // {
-  // Collection<?> val = (Collection<?>) vot.getValue();
-  //
-  // if (val.size() > 0)
-  // {
-  // hasValue = true;
-  // break;
-  // }
-  // }
-  // else
-  // {
-  // hasValue = true;
-  // break;
-  // }
-  // }
-  // }
-  //
-  // if (!hasValue)
-  // {
-  // RequiredAttributeException ex = new RequiredAttributeException();
-  // ex.setAttributeLabel(GeoObjectTypeMetadata.getAttributeDisplayLabel(attrName));
-  // throw ex;
-  // }
-  // }
-  // }
 
   public ValueOverTime buildDefaultExists()
   {
@@ -1147,7 +1057,7 @@ public class VertexServerGeoObject extends AbstractServerGeoObject implements Se
   @Override
   public Boolean getInvalid()
   {
-    return (Boolean) this.vertex.getObjectValue(DefaultAttribute.INVALID.getName());
+    return (Boolean) this.getValue(DefaultAttribute.INVALID.getName());
   }
 
   @Override

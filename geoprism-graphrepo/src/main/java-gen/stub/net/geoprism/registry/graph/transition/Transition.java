@@ -18,7 +18,7 @@
  */
 package net.geoprism.registry.graph.transition;
 
-import java.util.List;
+import java.util.TreeMap;
 
 import com.google.gson.JsonObject;
 import com.runwaysdk.business.graph.GraphQuery;
@@ -26,7 +26,6 @@ import com.runwaysdk.business.graph.VertexObject;
 import com.runwaysdk.dataaccess.MdAttributeDAOIF;
 import com.runwaysdk.dataaccess.MdVertexDAOIF;
 import com.runwaysdk.dataaccess.metadata.graph.MdVertexDAO;
-import com.runwaysdk.dataaccess.transaction.Transaction;
 
 import net.geoprism.registry.conversion.VertexGeoObjectStrategy;
 import net.geoprism.registry.model.ServerGeoObjectType;
@@ -129,7 +128,7 @@ public class Transition extends TransitionBase
 
     ServerGeoObjectType type = ServerGeoObjectType.get(geoVertex);
 
-    return new VertexServerGeoObject(type, vertex);
+    return new VertexServerGeoObject(type, vertex, new TreeMap<>());
   }
 
   public static Transition apply(TransitionEvent event, int order, JsonObject object)

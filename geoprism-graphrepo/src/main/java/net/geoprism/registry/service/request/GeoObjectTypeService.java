@@ -83,7 +83,7 @@ public class GeoObjectTypeService implements GeoObjectTypeServiceIF
   @Request(RequestType.SESSION)
   public GeoObjectType createGeoObjectType(String sessionId, String gtJSON)
   {
-    return this.service.createGeoObjectType(gtJSON);
+    return this.service.create(gtJSON).toDTO();
   }
 
   @Override

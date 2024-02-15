@@ -32,21 +32,13 @@ import org.commongeoregistry.adapter.metadata.CustomSerializer;
 
 import com.google.gson.JsonObject;
 import com.runwaysdk.business.graph.GraphQuery;
-import com.runwaysdk.dataaccess.MdAttributeConcreteDAOIF;
-import com.runwaysdk.dataaccess.MdAttributeDAOIF;
-import com.runwaysdk.dataaccess.MdAttributeMultiTermDAOIF;
-import com.runwaysdk.dataaccess.MdAttributeTermDAOIF;
 import com.runwaysdk.dataaccess.MdVertexDAOIF;
 import com.runwaysdk.dataaccess.ProgrammingErrorException;
-import com.runwaysdk.dataaccess.cache.DataNotFoundException;
 import com.runwaysdk.dataaccess.metadata.graph.MdVertexDAO;
-import com.runwaysdk.dataaccess.transaction.Transaction;
 import com.runwaysdk.dataaccess.transaction.TransactionState;
 import com.runwaysdk.system.gis.geo.Universal;
 
-import net.geoprism.ontology.Classifier;
 import net.geoprism.registry.conversion.LocalizedValueConverter;
-import net.geoprism.registry.conversion.TermConverter;
 import net.geoprism.registry.graph.AttributeType;
 import net.geoprism.registry.graph.GeoObjectType;
 import net.geoprism.registry.service.request.ServiceFactory;
@@ -55,9 +47,11 @@ public class ServerGeoObjectType implements ServerElement
 {
   // private Logger logger = LoggerFactory.getLogger(ServerLeafGeoObject.class);
 
-  private GeoObjectType              type;
+  private GeoObjectType                                        type;
 
-  private Map<String, AttributeType> attributes;
+  private org.commongeoregistry.adapter.metadata.GeoObjectType dto;
+
+  private Map<String, AttributeType>                           attributes;
 
   public ServerGeoObjectType()
   {
@@ -66,7 +60,7 @@ public class ServerGeoObjectType implements ServerElement
   public ServerGeoObjectType(GeoObjectType type)
   {
     this.type = type;
-    this.attributes = type.getAttributes();
+    this.attributes = type.getAttributeMap();
   }
 
   public ServerGeoObjectType(GeoObjectType type, Map<String, AttributeType> attributes)
@@ -88,6 +82,8 @@ public class ServerGeoObjectType implements ServerElement
   public void setType(GeoObjectType type)
   {
     this.type = type;
+    this.attributes = type.getAttributeMap();
+    this.dto = null;
   }
 
   public String getCode()
@@ -132,7 +128,12 @@ public class ServerGeoObjectType implements ServerElement
 
   public org.commongeoregistry.adapter.metadata.GeoObjectType toDTO()
   {
-    return this.getType().toDTO();
+    if (this.dto == null)
+    {
+      this.dto = this.type.toDTO();
+    }
+
+    return this.dto;
   }
 
   public JsonObject toJSON(CustomSerializer serializer)
@@ -360,7 +361,17 @@ public class ServerGeoObjectType implements ServerElement
 
       this.attributes.remove(attributeName);
     }
+  }
 
+  public void delete()
+  {
+    this.type.delete();
+  }
+
+  public List<ServerGeoObjectType> getSubTypes()
+  {
+    List<String> codes = this.type.getSubTypeCodes();
+    return codes.stream().map(code -> ServerGeoObjectType.get(code)).collect(Collectors.toList());
   }
 
 }

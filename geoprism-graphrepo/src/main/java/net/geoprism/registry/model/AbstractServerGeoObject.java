@@ -18,19 +18,6 @@
  */
 package net.geoprism.registry.model;
 
-import java.util.Collection;
-import java.util.Date;
-import java.util.List;
-
-import org.commongeoregistry.adapter.dataaccess.ParentTreeNode;
-
-import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
-import com.runwaysdk.system.gis.geo.Universal;
-
-import net.geoprism.ontology.GeoEntityUtil;
-import net.geoprism.registry.service.request.ServiceFactory;
-
 public abstract class AbstractServerGeoObject implements ServerGeoObjectIF
 {
   

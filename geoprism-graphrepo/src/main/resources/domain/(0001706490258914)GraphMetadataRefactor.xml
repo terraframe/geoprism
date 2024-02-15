@@ -87,11 +87,17 @@
           <localCharEmbedded name="label" label="Label" required="true" />        
           <localCharEmbedded name="description" label="Description" />        
           <boolean name="required" label="Required" />
+          <boolean name="unique" label="Unique" />
           <boolean name="isDefault" label="Is Default" />
           <boolean name="isChangeOverTime" label="Is Change Over Time" />
+          <graphReference name="geoObjectType" label="Geo Object Type" required="true" type="net.geoprism.registry.graph.GeoObjectType"/>
         </attributes>
       </mdVertex>    
       <mdVertex name="net.geoprism.registry.graph.AttributeBooleanType" extends="net.geoprism.registry.graph.AttributeType" label="Attribute Boolean Type">
+        <attributes>
+        </attributes>
+      </mdVertex>    
+      <mdVertex name="net.geoprism.registry.graph.AttributeUUIDType" extends="net.geoprism.registry.graph.AttributeType" label="Attribute Character Type">
         <attributes>
         </attributes>
       </mdVertex>    
@@ -122,7 +128,7 @@
           <reference name="rootTerm" label="Root Term" required="false" type="net.geoprism.ontology.Classifier"  />          
         </attributes>
       </mdVertex>    
-      <mdVertex name="net.geoprism.registry.graph.AttributeClassificationType" isAbstract="true" label="AttributeValue">
+      <mdVertex name="net.geoprism.registry.graph.AttributeClassificationType" extends="net.geoprism.registry.graph.AttributeType" label="Attribute Classification Type">
         <attributes>
           <reference name="mdClassification" type="com.runwaysdk.system.metadata.MdClassification" label="MdClassification" required="true"/>          
           <text name="rootTerm" label="Root Term" required="false"/>          
@@ -145,7 +151,8 @@
           <boolean name="isGeometryEditable" label="Is Geometry Editable" />
           <boolean name="isAbstract" label="Is Abstract" />
           <graphReference name="superType" label="Super Type" type="net.geoprism.registry.graph.GeoObjectType" />
-          <graphReference name="organization" label="Organization" type="net.geoprism.registry.graph.GraphOrganization" />
+          <graphReference name="organization" label="Organization" type="net.geoprism.registry.graph.GraphOrganization" required="true" />
+          <reference name="mdVertex" label="MdVertex" type="com.runwaysdk.system.metadata.MdVertex" />
           <boolean name="isPrivate" label="Is Private" />          
         </attributes>
       </mdVertex>    
