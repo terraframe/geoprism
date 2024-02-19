@@ -46,7 +46,7 @@ public class ValueNodeStrategy extends AbstractValueStrategy implements ValueStr
   {
     String key = this.getType().getCode();
 
-    valueNodeMap.putIfAbsent(key, new AttributeState(this.getType().getCode(), new LinkedList<>()));
+    valueNodeMap.putIfAbsent(key, new AttributeState(this.getType(), new LinkedList<>()));
 
     return valueNodeMap.get(key);
   }
@@ -55,7 +55,7 @@ public class ValueNodeStrategy extends AbstractValueStrategy implements ValueStr
   {
     Date startDate = this.getStartDate(node);
     Date endDate = this.getEndDate(node);
-    Object value = node.getObjectValue(nodeAttribute);
+    Object value = this.getNodeValue(node);
 
     return new ValueOverTime(node.getOid(), startDate, endDate, value);
   }
@@ -69,16 +69,22 @@ public class ValueNodeStrategy extends AbstractValueStrategy implements ValueStr
       return getStartDate(node).equals(startDate) && getEndDate(node).equals(endDate);
     }).findFirst().ifPresentOrElse(node -> {
       // Update the existing node
-      node.setValue(nodeAttribute, value);
+      setNodeValue(node, value);
     }, () -> {
       // If not create a new node
       VertexObject node = new VertexObject(nodeVertex.definesType());
       node.setValue(AttributeValue.STARTDATE, startDate);
       node.setValue(AttributeValue.ENDDATE, endDate);
-      node.setValue(this.nodeAttribute, value);
+
+      setNodeValue(node, value);
 
       state.add(node);
     });
+  }
+
+  protected void setNodeValue(VertexObject node, Object value)
+  {
+    node.setValue(nodeAttribute, value);
   }
 
   @Override
@@ -87,7 +93,6 @@ public class ValueNodeStrategy extends AbstractValueStrategy implements ValueStr
     return getState(valueNodeMap).isModified();
   }
 
-  @SuppressWarnings("unchecked")
   @Override
   public <T> T getValue(VertexObject vertex, Map<String, AttributeState> valueNodeMap, Date date)
   {
@@ -99,10 +104,16 @@ public class ValueNodeStrategy extends AbstractValueStrategy implements ValueStr
 
     if (optional.isPresent())
     {
-      return (T) optional.get().getObjectValue(nodeAttribute);
+      return getNodeValue(optional.get());
     }
 
     return null;
+  }
+
+  @SuppressWarnings("unchecked")
+  protected <T> T getNodeValue(VertexObject node)
+  {
+    return (T) node.getObjectValue(nodeAttribute);
   }
 
   @Override

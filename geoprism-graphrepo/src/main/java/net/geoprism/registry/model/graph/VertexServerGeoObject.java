@@ -32,10 +32,10 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.stream.Collectors;
 import java.util.Optional;
 import java.util.SortedSet;
 import java.util.TreeSet;
+import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -151,7 +151,19 @@ public class VertexServerGeoObject extends AbstractServerGeoObject implements Se
 
     this.type = actualType;
     this.vertex = vertex;
-    this.valueNodeMap = valueNodeMap.entrySet().stream().map(entry -> new AttributeState(entry.getKey(), entry.getValue())).collect(Collectors.toMap(s -> s.getAttributeName(), s -> s));
+
+    this.valueNodeMap = valueNodeMap.entrySet().stream().map(entry -> {
+
+      Optional<AttributeType> attribute = type.getAttribute(entry.getKey());
+
+      if (attribute.isPresent())
+      {
+        return new AttributeState(attribute.get(), entry.getValue());
+      }
+
+      return null;
+    }).filter(t -> t != null).collect(Collectors.toMap(s -> s.getAttributeType().getCode(), s -> s));
+
     this.date = date;
   }
 
@@ -164,7 +176,22 @@ public class VertexServerGeoObject extends AbstractServerGeoObject implements Se
     this.vertex.apply();
 
     this.valueNodeMap.forEach((attributeName, state) -> {
-      state.persit();
+      state.persit(this.vertex);
+
+      // TODO: HEADS UP: Handle rollback of object on persist failure
+      // Only clear the state after the transaction has passed
+      state.clear();
+    });
+  }
+
+  @Override
+  @Transaction
+  public void delete()
+  {
+    this.vertex.apply();
+
+    this.valueNodeMap.forEach((attributeName, state) -> {
+      state.delete();
 
       // TODO: HEADS UP: Handle rollback of object on persist failure
       // Only clear the state after the transaction has passed
@@ -314,9 +341,7 @@ public class VertexServerGeoObject extends AbstractServerGeoObject implements Se
   @Override
   public void setDisplayLabel(LocalizedValue value, Date startDate, Date endDate)
   {
-    this.type.getAttribute(DefaultAttribute.DISPLAY_LABEL.getName()).ifPresent( ( attr -> {
-      attr.getStrategy().setValue(this.vertex, this.valueNodeMap, value, startDate, endDate);
-    } ));
+    this.setValue(DefaultAttribute.DISPLAY_LABEL.getName(), value, startDate, endDate);
   }
 
   public boolean existsAtRange(Date startDate, Date endDate)
@@ -394,7 +419,6 @@ public class VertexServerGeoObject extends AbstractServerGeoObject implements Se
     return lv.getValue(MdAttributeLocalInfo.DEFAULT_LOCALE);
   }
 
-  @SuppressWarnings("unchecked")
   @Override
   public void setValue(String attributeName, Object value)
   {
@@ -413,26 +437,10 @@ public class VertexServerGeoObject extends AbstractServerGeoObject implements Se
   @Override
   public void setValue(String attributeName, Object value, Date startDate, Date endDate)
   {
-    AttributeType at = this.type.getAttribute(attributeName).orElse(null);
+    this.type.getAttribute(attributeName).ifPresent( ( attr -> {
+      attr.getStrategy().setValue(this.vertex, this.valueNodeMap, value, startDate, endDate);
+    } ));
 
-    if (at instanceof AttributeLocalType)
-    {
-      RegistryLocalizedValueConverter.populate(this.vertex, attributeName, (LocalizedValue) value, startDate, endDate);
-    }
-    else
-    {
-      // this.vertex.setValue(attributeName, value, startDate, endDate);
-
-      // TODO I don't know why this if check is here
-      if (value != null)
-      {
-        this.vertex.setValue(attributeName, value, startDate, endDate);
-      }
-      else
-      {
-        this.vertex.setValue(attributeName, (String) null, startDate, endDate);
-      }
-    }
   }
 
   @Override
@@ -581,7 +589,7 @@ public class VertexServerGeoObject extends AbstractServerGeoObject implements Se
     {
       AttributeType attributeType = optional.get();
 
-      Object value = !attributeType.getIsChangeOverTime() ? attributeType.getStrategy().getValue(attributeType, valueNodeMap, null) : this.getMostRecentValue(attributeName);
+      Object value = !attributeType.getIsChangeOverTime() ? attributeType.getStrategy().getValue(vertex, valueNodeMap, null) : this.getMostRecentValue(attributeName);
 
       if (value != null && attributeType instanceof AttributeTermType)
       {
@@ -602,7 +610,7 @@ public class VertexServerGeoObject extends AbstractServerGeoObject implements Se
 
     if (at != null)
     {
-      Object value = at.getStrategy().getValue(at, valueNodeMap, date);
+      Object value = at.getStrategy().getValue(this.vertex, this.valueNodeMap, date);
 
       if (value != null && at instanceof AttributeTermType)
       {

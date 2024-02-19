@@ -55,7 +55,7 @@
  -->      
       
       
-      <mdVertex name="net.geoprism.registry.graph.AttributeGeometryValue"  extends="net.geoprism.registry.graph.AttributeBasicValue" isAbstract="true" label="Attribute Geometry Value">
+      <mdVertex name="net.geoprism.registry.graph.AttributeGeometryValue"  extends="net.geoprism.registry.graph.AttributeValue" isAbstract="true" label="Attribute Geometry Value">
         <attributes>
         </attributes>
       </mdVertex>    
@@ -151,7 +151,7 @@
           <boolean name="isGeometryEditable" label="Is Geometry Editable" />
           <boolean name="isAbstract" label="Is Abstract" />
           <graphReference name="superType" label="Super Type" type="net.geoprism.registry.graph.GeoObjectType" />
-          <graphReference name="organization" label="Organization" type="net.geoprism.registry.graph.GraphOrganization" required="true" />
+          <graphReference name="organization" label="Organization" type="net.geoprism.registry.graph.GraphOrganization" />
           <reference name="mdVertex" label="MdVertex" type="com.runwaysdk.system.metadata.MdVertex" />
           <boolean name="isPrivate" label="Is Private" />          
         </attributes>
@@ -177,6 +177,11 @@
         </attributes>
       </mdVertex>    
       
+      <mdEdge name="net.geoprism.registry.graph.HasValue" label="Has Value" parent="net.geoprism.registry.graph.GeoVertex" child="net.geoprism.registry.graph.AttributeBasicValue" generateSource="false">
+      </mdEdge>
+
+      <mdEdge name="net.geoprism.registry.graph.HasGeometry" label="Has Geometry" parent="net.geoprism.registry.graph.GeoVertex" child="net.geoprism.registry.graph.AttributeGeometryValue" generateSource="false">
+      </mdEdge>      
     </create>
   </doIt>
   <undoIt>

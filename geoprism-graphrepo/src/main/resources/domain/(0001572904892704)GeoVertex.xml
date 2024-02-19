@@ -28,7 +28,7 @@
         </attributes>
       </mdVertex>    
       
-      <mdVertex name="net.geoprism.registry.graph.GeoVertex" label="Geo Vertex" isAbstract="true" enableChangeOverTime="true">
+      <mdVertex name="net.geoprism.registry.graph.GeoVertex" label="Geo Vertex" isAbstract="true" enableChangeOverTime="false">
         <attributes>
         </attributes>
       </mdVertex>

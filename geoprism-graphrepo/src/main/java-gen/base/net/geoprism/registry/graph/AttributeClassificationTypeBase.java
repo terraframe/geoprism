@@ -1,6 +1,6 @@
 package net.geoprism.registry.graph;
 
-@com.runwaysdk.business.ClassSignature(hash = 101658815)
+@com.runwaysdk.business.ClassSignature(hash = -420254037)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -12,11 +12,9 @@ public abstract class AttributeClassificationTypeBase extends net.geoprism.regis
 {
   public final static String CLASS = "net.geoprism.registry.graph.AttributeClassificationType";
   public final static java.lang.String MDCLASSIFICATION = "mdClassification";
-  public final static java.lang.String OID = "oid";
   public final static java.lang.String ROOTTERM = "rootTerm";
-  public final static java.lang.String SEQ = "seq";
   @SuppressWarnings("unused")
-  private static final long serialVersionUID = 101658815;
+  private static final long serialVersionUID = -420254037;
   
   public AttributeClassificationTypeBase()
   {
@@ -56,17 +54,6 @@ public abstract class AttributeClassificationTypeBase extends net.geoprism.regis
     this.setValue(MDCLASSIFICATION, oid);
   }
   
-  public String getOid()
-  {
-    return (String) this.getObjectValue(OID);
-  }
-  
-  public static com.runwaysdk.dataaccess.MdAttributeUUIDDAOIF getOidMd()
-  {
-    com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(net.geoprism.registry.graph.AttributeClassificationType.CLASS);
-    return (com.runwaysdk.dataaccess.MdAttributeUUIDDAOIF)mdClassIF.definesAttribute(OID);
-  }
-  
   public String getRootTerm()
   {
     return (String) this.getObjectValue(ROOTTERM);
@@ -81,22 +68,6 @@ public abstract class AttributeClassificationTypeBase extends net.geoprism.regis
   public void setRootTerm(String value)
   {
     this.setValue(ROOTTERM, value);
-  }
-  
-  public Long getSeq()
-  {
-    return (Long) this.getObjectValue(SEQ);
-  }
-  
-  public static com.runwaysdk.dataaccess.MdAttributeLongDAOIF getSeqMd()
-  {
-    com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(net.geoprism.registry.graph.AttributeClassificationType.CLASS);
-    return (com.runwaysdk.dataaccess.MdAttributeLongDAOIF)mdClassIF.definesAttribute(SEQ);
-  }
-  
-  public void setSeq(Long value)
-  {
-    this.setValue(SEQ, value);
   }
   
   protected String getDeclaredType()

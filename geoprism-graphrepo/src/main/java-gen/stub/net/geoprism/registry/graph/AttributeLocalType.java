@@ -8,7 +8,7 @@ import com.runwaysdk.dataaccess.metadata.MdAttributeLocalCharacterEmbeddedDAO;
 import com.runwaysdk.dataaccess.metadata.graph.MdVertexDAO;
 import com.runwaysdk.dataaccess.transaction.Transaction;
 
-import net.geoprism.registry.model.ValueNodeStrategy;
+import net.geoprism.registry.model.LocalValueNodeStrategy;
 import net.geoprism.registry.model.ValueStrategy;
 import net.geoprism.registry.model.VertexValueStrategy;
 
@@ -74,7 +74,7 @@ public class AttributeLocalType extends AttributeLocalTypeBase
     }
     else
     {
-      return new ValueNodeStrategy(this, MdVertexDAO.getMdVertexDAO(AttributeLocalValue.CLASS), AttributeLocalValue.DEFAULTLOCALE);
+      return new LocalValueNodeStrategy(this, MdVertexDAO.getMdVertexDAO(AttributeLocalValue.CLASS), AttributeLocalValue.DEFAULTLOCALE);
     }
   }
 

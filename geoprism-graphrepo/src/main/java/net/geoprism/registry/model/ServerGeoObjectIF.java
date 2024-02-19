@@ -128,4 +128,6 @@ public interface ServerGeoObjectIF
   public boolean isModified(String attributeName);
 
   public void apply();
+
+  void delete();
 }

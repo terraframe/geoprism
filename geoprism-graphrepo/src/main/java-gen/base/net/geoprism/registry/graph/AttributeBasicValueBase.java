@@ -24,6 +24,22 @@ public abstract class AttributeBasicValueBase extends net.geoprism.registry.grap
     return CLASS;
   }
   
+  public com.runwaysdk.business.graph.EdgeObject addHasValueParent(net.geoprism.registry.graph.GeoVertex geoVertex)
+  {
+    return super.addParent(geoVertex, "net.geoprism.registry.graph.HasValue");
+  }
+  
+  public void removeHasValueParent(net.geoprism.registry.graph.GeoVertex geoVertex)
+  {
+    super.removeParent(geoVertex, "net.geoprism.registry.graph.HasValue");
+  }
+  
+  @SuppressWarnings("unchecked")
+  public java.util.List<net.geoprism.registry.graph.GeoVertex> getHasValueParentGeoVertexs()
+  {
+    return super.getParents("net.geoprism.registry.graph.HasValue", net.geoprism.registry.graph.GeoVertex.class);
+  }
+  
   public static AttributeBasicValue get(String oid)
   {
     return (AttributeBasicValue) com.runwaysdk.business.graph.VertexObject.get(CLASS, oid);

@@ -147,7 +147,7 @@ public class GeoObjectType extends GeoObjectTypeBase
       labelAttr.setValue(AttributeBooleanType.GEOOBJECTTYPE, this.getOid());
       labelAttr.setRequired(false);
       labelAttr.setUnique(false);
-      labelAttr.setIsChangeOverTime(false);
+      labelAttr.setIsChangeOverTime(true);
       labelAttr.setIsDefault(true);
       labelAttr.apply();
     }
