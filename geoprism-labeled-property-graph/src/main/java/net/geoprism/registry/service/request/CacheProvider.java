@@ -45,12 +45,6 @@ public class CacheProvider implements CacheProviderIF
   }
 
   @Override
-  public MetadataCache getAdapterCache()
-  {
-    return this.adapter.getMetadataCache();
-  }
-
-  @Override
   public ServerOrganizationCache getServerCache()
   {
     return this.metadataCache;

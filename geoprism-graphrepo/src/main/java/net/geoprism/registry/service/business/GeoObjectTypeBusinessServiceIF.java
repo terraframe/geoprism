@@ -100,13 +100,13 @@ public interface GeoObjectTypeBusinessServiceIF
 
   public void deleteGeoObjectType(String code);
 
-  public AttributeType createAttributeType(String geoObjectTypeCode, String attributeTypeJSON);
+  public <T extends AttributeType> T createAttributeType(String geoObjectTypeCode, String attributeTypeJSON);
 
-  public AttributeType createAttributeType(ServerGeoObjectType type, String attributeTypeJSON);
+  public <T extends AttributeType> T createAttributeType(ServerGeoObjectType type, String attributeTypeJSON);
 
-  public AttributeType createAttributeType(ServerGeoObjectType type, AttributeType attributeType);
+  public <T extends AttributeType> T createAttributeType(ServerGeoObjectType type, AttributeType attributeType);
 
-  public AttributeType updateAttributeType(String geoObjectTypeCode, String attributeTypeJSON);
+  public <T extends AttributeType> T updateAttributeType(String geoObjectTypeCode, String attributeTypeJSON);
 
   public void deleteAttributeType(String gtId, String attributeName);
 
@@ -116,9 +116,9 @@ public interface GeoObjectTypeBusinessServiceIF
 
   public List<GeoObjectType> getGeoObjectTypes(String[] codes, PermissionContext context);
 
-  AttributeType updateAttributeType(ServerGeoObjectType serverType, String attributeTypeJSON);
+  <T extends AttributeType> T updateAttributeType(ServerGeoObjectType serverType, String attributeTypeJSON);
 
-  AttributeType updateAttributeType(ServerGeoObjectType serverType, AttributeType dto);
+  <T extends AttributeType> T updateAttributeType(ServerGeoObjectType serverType, AttributeType dto);
 
   /**
    * Returns the {link MdAttributeConcreteDAOIF} for the given

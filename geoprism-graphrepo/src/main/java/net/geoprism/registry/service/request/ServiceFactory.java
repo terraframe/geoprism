@@ -20,7 +20,6 @@ package net.geoprism.registry.service.request;
 
 import org.commongeoregistry.adapter.RegistryAdapter;
 import org.commongeoregistry.adapter.RegistryAdapterServer;
-import org.commongeoregistry.adapter.metadata.MetadataCache;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 
@@ -53,12 +52,6 @@ public class ServiceFactory implements CacheProviderIF
 
     this.metadataCache = new ServerMetadataCache(this.adapter);
     this.metadataCache.rebuild();
-  }
-
-  @Override
-  public MetadataCache getAdapterCache()
-  {
-    return this.adapter.getMetadataCache();
   }
 
   @Override

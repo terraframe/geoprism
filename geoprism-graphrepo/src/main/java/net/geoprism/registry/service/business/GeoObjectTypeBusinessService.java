@@ -808,44 +808,8 @@ public class GeoObjectTypeBusinessService implements GeoObjectTypeBusinessServic
     }
     else if (dto.getType().equals(AttributeClassificationType.TYPE))
     {
-      // TODO: HEADS UP
-      // attributeType = new
-      // net.geoprism.registry.graph.AttributeClassificationType();
+      attributeType = new net.geoprism.registry.graph.AttributeClassificationType();
 
-      // AttributeClassificationType attributeClassificationType =
-      // (AttributeClassificationType) dto;
-      // String classificationTypeCode =
-      // attributeClassificationType.getClassificationType();
-      //
-      // ClassificationType classificationType =
-      // this.cTypeService.getByCode(classificationTypeCode);
-      //
-      // mdAttribute = new MdAttributeClassification();
-      // MdAttributeClassification mdAttributeTerm = (MdAttributeClassification)
-      // mdAttribute;
-      // mdAttributeTerm.setReferenceMdClassification(classificationType.getMdClassificationObject());
-      //
-      // Term root = attributeClassificationType.getRootTerm();
-      //
-      // if (root != null)
-      // {
-      // Classification classification = this.cService.get(classificationType,
-      // root.getCode());
-      //
-      // if (classification == null)
-      // {
-      // net.geoprism.registry.DataNotFoundException ex = new
-      // net.geoprism.registry.DataNotFoundException();
-      // ex.setTypeLabel(classificationType.getDisplayLabel().getValue());
-      // ex.setDataIdentifier(root.getCode());
-      // ex.setAttributeLabel(GeoObjectMetadata.get().getAttributeDisplayLabel(DefaultAttribute.CODE.getName()));
-      //
-      // throw ex;
-      // }
-      //
-      // mdAttributeTerm.setValue(MdAttributeClassification.ROOT,
-      // classification.getOid());
-      // }
     }
     else if (dto.getType().equals(AttributeBooleanType.TYPE))
     {
@@ -1012,7 +976,7 @@ public class GeoObjectTypeBusinessService implements GeoObjectTypeBusinessServic
   {
     return this.create(gtJSON).toDTO();
   }
-  
+
   /**
    * Returns the {@link GeoObjectType}s with the given codes or all
    * {@link GeoObjectType}s if no codes are provided.

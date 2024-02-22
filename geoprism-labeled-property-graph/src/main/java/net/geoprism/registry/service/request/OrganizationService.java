@@ -3,26 +3,26 @@
  *
  * This file is part of Geoprism(tm).
  *
- * Geoprism(tm) is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
+ * Geoprism(tm) is free software: you can redistribute it and/or modify it under
+ * the terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation, either version 3 of the License, or (at your option) any
+ * later version.
  *
- * Geoprism(tm) is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
+ * Geoprism(tm) is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with Geoprism(tm).  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with Geoprism(tm). If not, see <http://www.gnu.org/licenses/>.
  */
 package net.geoprism.registry.service.request;
 
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Optional;
 
-import org.commongeoregistry.adapter.Optional;
 import org.commongeoregistry.adapter.constants.DefaultAttribute;
 import org.commongeoregistry.adapter.metadata.OrganizationDTO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -71,22 +71,22 @@ public class OrganizationService implements OrganizationServiceIF
 
     if (codes == null || codes.length == 0)
     {
-      List<OrganizationDTO> cachedOrgs = provider.getAdapterCache().getAllOrganizations();
+      List<ServerOrganization> cachedOrgs = provider.getServerCache().getAllOrganizations();
 
-      for (OrganizationDTO cachedOrg : cachedOrgs)
+      for (ServerOrganization cachedOrg : cachedOrgs)
       {
-        orgs.add(cachedOrg);
+        orgs.add(cachedOrg.toDTO());
       }
     }
     else
     {
       for (int i = 0; i < codes.length; ++i)
       {
-        Optional<OrganizationDTO> optional = provider.getAdapterCache().getOrganization(codes[i]);
+        Optional<ServerOrganization> optional = provider.getServerCache().getOrganization(codes[i]);
 
         if (optional.isPresent())
         {
-          orgs.add(optional.get());
+          orgs.add(optional.get().toDTO());
         }
         else
         {
@@ -134,7 +134,7 @@ public class OrganizationService implements OrganizationServiceIF
     // If this did not error out then add to the cache
     provider.getServerCache().addOrganization(org);
 
-    return provider.getAdapterCache().getOrganization(org.getCode()).get();
+    return org.toDTO();
   }
 
   /**
@@ -157,7 +157,7 @@ public class OrganizationService implements OrganizationServiceIF
     // If this did not error out then add to the cache
     provider.getServerCache().addOrganization(org);
 
-    return provider.getAdapterCache().getOrganization(org.getCode()).get();
+    return org.toDTO();
   }
 
   /**
@@ -251,7 +251,7 @@ public class OrganizationService implements OrganizationServiceIF
   public void importJsonTree(String sessionId, String json)
   {
     this.service.importJsonTree(JsonParser.parseString(json).getAsJsonArray());
-    
+
     provider.getServerCache().refresh();
   }
 

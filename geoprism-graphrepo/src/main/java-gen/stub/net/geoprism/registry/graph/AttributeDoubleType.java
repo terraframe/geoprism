@@ -8,7 +8,6 @@ import com.runwaysdk.constants.MdAttributeDoubleInfo;
 import com.runwaysdk.constants.MdAttributeLocalInfo;
 import com.runwaysdk.constants.graph.MdVertexInfo;
 import com.runwaysdk.dataaccess.MdVertexDAOIF;
-import com.runwaysdk.dataaccess.database.Database;
 import com.runwaysdk.dataaccess.metadata.MdAttributeConcreteDAO;
 import com.runwaysdk.dataaccess.metadata.MdAttributeDoubleDAO;
 import com.runwaysdk.dataaccess.metadata.graph.MdVertexDAO;
@@ -19,10 +18,11 @@ import net.geoprism.registry.RegistryConstants;
 import net.geoprism.registry.model.ValueNodeStrategy;
 import net.geoprism.registry.model.ValueStrategy;
 import net.geoprism.registry.model.VertexValueStrategy;
+import net.geoprism.registry.model.graph.GraphTableUtil;
 
 public class AttributeDoubleType extends AttributeDoubleTypeBase
 {
-  public static final String PREFIX           = "dv_";
+  public static final String PREFIX           = "avd_";
 
   public static final String VALUE            = "value";
 
@@ -34,32 +34,6 @@ public class AttributeDoubleType extends AttributeDoubleTypeBase
     super();
   }
 
-  private String getTableName()
-  {
-    int count = 0;
-
-    String name = PREFIX + count + "DoubleValue";
-
-    if (name.length() > 25)
-    {
-      name = name.substring(0, 25);
-    }
-
-    while (Database.tableExists(name))
-    {
-      count++;
-
-      name = PREFIX + count + "DoubleValue";
-
-      if (name.length() > 25)
-      {
-        name = name.substring(0, 25);
-      }
-    }
-
-    return name;
-  }
-
   @Override
   @Transaction
   public void apply()
@@ -67,7 +41,7 @@ public class AttributeDoubleType extends AttributeDoubleTypeBase
     // Create the value vertex class
     if (this.isNew() && !this.isAppliedToDb())
     {
-      String tableName = this.getTableName();
+      String tableName = GraphTableUtil.generateTableName(PREFIX, "_double");
 
       MdVertexDAOIF superVertex = MdVertexDAO.getMdVertexDAO(AttributeBasicValue.CLASS);
 
@@ -96,7 +70,7 @@ public class AttributeDoubleType extends AttributeDoubleTypeBase
     {
       // Update the precision and scale of the value attribute
       MdVertexDAOIF mdVertex = MdVertexDAO.get(this.getValueVertexOid());
-      
+
       MdAttributeDoubleDAO mdAttribute = (MdAttributeDoubleDAO) mdVertex.definesAttribute(VALUE).getBusinessDAO();
       mdAttribute.setValue(MdAttributeDoubleInfo.LENGTH, getPrecision());
       mdAttribute.setValue(MdAttributeDoubleInfo.DECIMAL, getScale());
