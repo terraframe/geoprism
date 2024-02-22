@@ -150,6 +150,18 @@ public class GeoObjectType extends GeoObjectTypeBase
       labelAttr.setIsChangeOverTime(true);
       labelAttr.setIsDefault(true);
       labelAttr.apply();
+      
+      AttributeGeometryType geometryAttr = new AttributeGeometryType();
+      geometryAttr.setCode(DefaultAttribute.GEOMETRY.getName());
+      geometryAttr.setEmbeddedValue(AttributeUUIDType.LABEL, LocalizedValue.DEFAULT_LOCALE, DefaultAttribute.GEOMETRY.getDefaultLocalizedName());
+      geometryAttr.setEmbeddedValue(AttributeUUIDType.DESCRIPTION, LocalizedValue.DEFAULT_LOCALE, DefaultAttribute.GEOMETRY.getDefaultDescription());
+      geometryAttr.setValue(AttributeBooleanType.GEOOBJECTTYPE, this.getOid());
+      geometryAttr.setRequired(false);
+      geometryAttr.setUnique(false);
+      geometryAttr.setIsChangeOverTime(true);
+      geometryAttr.setIsDefault(true);
+      geometryAttr.setGeometryType(this.getGeometryType());
+      geometryAttr.apply();      
     }
 
     if (!this.getIsAbstract())

@@ -66,11 +66,11 @@ public class AttributeState
 
       if (attributeType instanceof AttributeGeometryType)
       {
-        vertex.addChild(node, "net.geoprism.registry.graph.HasGeometry").apply();
+        vertex.addChild(node, EdgeConstant.HAS_GEOMETRY.getMdEdge()).apply();
       }
       else
       {
-        vertex.addChild(node, "net.geoprism.registry.graph.HasValue").apply();
+        vertex.addChild(node, EdgeConstant.HAS_VALUE.getMdEdge()).apply();
       }
     });
   }

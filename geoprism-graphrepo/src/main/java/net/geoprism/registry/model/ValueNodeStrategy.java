@@ -73,6 +73,7 @@ public class ValueNodeStrategy extends AbstractValueStrategy implements ValueStr
     }, () -> {
       // If not create a new node
       VertexObject node = new VertexObject(nodeVertex.definesType());
+      node.setValue(AttributeValue.ATTRIBUTENAME, this.getType().getCode());
       node.setValue(AttributeValue.STARTDATE, startDate);
       node.setValue(AttributeValue.ENDDATE, endDate);
 

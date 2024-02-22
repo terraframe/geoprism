@@ -101,6 +101,7 @@ import net.geoprism.registry.graph.GeoVertex;
 import net.geoprism.registry.graph.GeoVertexSynonym;
 import net.geoprism.registry.model.AbstractServerGeoObject;
 import net.geoprism.registry.model.AttributeState;
+import net.geoprism.registry.model.EdgeConstant;
 import net.geoprism.registry.model.GeoObjectMetadata;
 import net.geoprism.registry.model.GraphType;
 import net.geoprism.registry.model.LocationInfo;
@@ -182,14 +183,13 @@ public class VertexServerGeoObject extends AbstractServerGeoObject implements Se
       // Only clear the state after the transaction has passed
       state.clear();
     });
+
   }
 
   @Override
   @Transaction
   public void delete()
   {
-    this.vertex.apply();
-
     this.valueNodeMap.forEach((attributeName, state) -> {
       state.delete();
 
@@ -197,6 +197,8 @@ public class VertexServerGeoObject extends AbstractServerGeoObject implements Se
       // Only clear the state after the transaction has passed
       state.clear();
     });
+
+    this.vertex.delete();
   }
 
   @Override
@@ -800,32 +802,12 @@ public class VertexServerGeoObject extends AbstractServerGeoObject implements Se
 
   public LocalizedValue getValueLocalized(String attributeName, Date date)
   {
-    GraphObject graphObject = vertex.getEmbeddedComponent(attributeName, date);
-
-    if (graphObject == null)
-    {
-      return null;
-    }
-
-    return RegistryLocalizedValueConverter.convert(graphObject);
+    return this.getValue(attributeName, date);
   }
 
   public Geometry getGeometry(Date date)
   {
-    String attrName = this.getGeometryAttributeName();
-
-    Geometry geom = null;
-
-    if (date == null)
-    {
-      geom = (Geometry) this.getMostRecentValue(attrName);
-    }
-    else
-    {
-      geom = vertex.getObjectValue(attrName, date);
-    }
-
-    return geom;
+    return this.getValue(DefaultAttribute.GEOMETRY.getName(), date);    
   }
 
   public Geometry getGeometry()
@@ -899,26 +881,32 @@ public class VertexServerGeoObject extends AbstractServerGeoObject implements Se
     return synonym.getOid();
   }
 
-  public static VertexObject getVertex(ServerGeoObjectType type, String uuid)
+  public static List<VertexObject> getVertex(ServerGeoObjectType type, String uuid)
   {
-    String statement = "SELECT FROM " + type.getDBClassName();
-    statement += " WHERE uuid = :uuid";
+    StringBuilder statement = new StringBuilder();
+    statement.append("TRAVERSE out('" + EdgeConstant.HAS_VALUE.getDBClassName() + "', '" + EdgeConstant.HAS_GEOMETRY.getDBClassName() + "') FROM (");
+    statement.append(" SELECT FROM " + type.getDBClassName());
+    statement.append(" WHERE uuid = :uuid");
+    statement.append(")");
 
-    GraphQuery<GeoVertex> query = new GraphQuery<GeoVertex>(statement);
+    GraphQuery<VertexObject> query = new GraphQuery<VertexObject>(statement.toString());
     query.setParameter("uuid", uuid);
 
-    return query.getSingleResult();
+    return query.getResults();
   }
 
-  public static VertexObject getVertexByCode(ServerGeoObjectType type, String code)
+  public static List<VertexObject> getVertexByCode(ServerGeoObjectType type, String code)
   {
-    String statement = "SELECT FROM " + type.getMdVertex().getDBClassName();
-    statement += " WHERE code = :code";
+    StringBuilder statement = new StringBuilder();
+    statement.append("TRAVERSE out('" + EdgeConstant.HAS_VALUE.getDBClassName() + "', '" + EdgeConstant.HAS_GEOMETRY.getDBClassName() + "') FROM (");
+    statement.append(" SELECT FROM " + type.getDBClassName());
+    statement.append(" WHERE code = :code");
+    statement.append(")");
 
-    GraphQuery<GeoVertex> query = new GraphQuery<GeoVertex>(statement);
+    GraphQuery<VertexObject> query = new GraphQuery<VertexObject>(statement.toString());
     query.setParameter("code", code);
 
-    return query.getSingleResult();
+    return query.getResults();
   }
 
   public static VertexObject newInstance(ServerGeoObjectType type)

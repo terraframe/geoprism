@@ -3,31 +3,39 @@
  *
  * This file is part of Geoprism(tm).
  *
- * Geoprism(tm) is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
+ * Geoprism(tm) is free software: you can redistribute it and/or modify it under
+ * the terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation, either version 3 of the License, or (at your option) any
+ * later version.
  *
- * Geoprism(tm) is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
+ * Geoprism(tm) is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with Geoprism(tm).  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with Geoprism(tm). If not, see <http://www.gnu.org/licenses/>.
  */
 package net.geoprism.registry.conversion;
 
 import java.util.Date;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import java.util.TreeMap;
+import java.util.stream.Collectors;
 
 import org.commongeoregistry.adapter.constants.DefaultAttribute;
 import org.commongeoregistry.adapter.dataaccess.GeoObject;
 import org.commongeoregistry.adapter.dataaccess.GeoObjectOverTime;
 
 import com.runwaysdk.business.graph.VertexObject;
+import com.runwaysdk.dataaccess.MdVertexDAOIF;
+import com.runwaysdk.dataaccess.metadata.graph.MdVertexDAO;
 
 import net.geoprism.registry.DataNotFoundException;
+import net.geoprism.registry.graph.AttributeValue;
+import net.geoprism.registry.graph.GeoVertex;
 import net.geoprism.registry.model.GeoObjectMetadata;
 import net.geoprism.registry.model.ServerGeoObjectType;
 import net.geoprism.registry.model.graph.VertexServerGeoObject;
@@ -55,7 +63,7 @@ public class VertexGeoObjectStrategy extends RegistryLocalizedValueConverter imp
   {
     if (!isNew)
     {
-      VertexObject vertex = VertexServerGeoObject.getVertex(type, geoObject.getUid());
+      VertexServerGeoObject vertex = getGeoObjectByUid(geoObject.getUid());
 
       if (vertex == null)
       {
@@ -66,7 +74,7 @@ public class VertexGeoObjectStrategy extends RegistryLocalizedValueConverter imp
         throw ex;
       }
 
-      return new VertexServerGeoObject(type, vertex, new TreeMap<>());
+      return vertex;
     }
     else
     {
@@ -81,7 +89,7 @@ public class VertexGeoObjectStrategy extends RegistryLocalizedValueConverter imp
   {
     if (!isNew)
     {
-      VertexObject vertex = VertexServerGeoObject.getVertex(type, goTime.getUid());
+      VertexServerGeoObject vertex = getGeoObjectByUid(goTime.getUid());
 
       if (vertex == null)
       {
@@ -92,7 +100,7 @@ public class VertexGeoObjectStrategy extends RegistryLocalizedValueConverter imp
         throw ex;
       }
 
-      return new VertexServerGeoObject(type, vertex, new TreeMap<>());
+      return vertex;
     }
     else
     {
@@ -113,24 +121,41 @@ public class VertexGeoObjectStrategy extends RegistryLocalizedValueConverter imp
   @Override
   public VertexServerGeoObject getGeoObjectByCode(String code)
   {
-    VertexObject vertex = VertexServerGeoObject.getVertexByCode(type, code);
+    List<VertexObject> rows = VertexServerGeoObject.getVertexByCode(type, code);
 
-    if (vertex != null)
-    {
-      return new VertexServerGeoObject(type, vertex, new TreeMap<>());
-    }
-
-    return null;
+    return buildVertexServerGeoObject(rows);
   }
 
   @Override
   public VertexServerGeoObject getGeoObjectByUid(String uid)
   {
-    VertexObject vertex = VertexServerGeoObject.getVertex(type, uid);
+    List<VertexObject> rows = VertexServerGeoObject.getVertex(type, uid);
 
-    if (vertex != null)
+    return buildVertexServerGeoObject(rows);
+  }
+
+  protected VertexServerGeoObject buildVertexServerGeoObject(List<VertexObject> rows)
+  {
+    if (rows.size() > 0)
     {
-      return new VertexServerGeoObject(type, vertex, new TreeMap<>());
+      Optional<VertexObject> vertex = rows.stream().filter(v -> {
+        MdVertexDAOIF mdClass = (MdVertexDAOIF) v.getMdClass();
+
+        return mdClass.getSuperClasses().contains(MdVertexDAO.getMdVertexDAO(GeoVertex.CLASS));
+      }).findFirst();
+
+      if (vertex.isPresent())
+      {
+        Map<String, List<VertexObject>> attributeNodeMap = rows.stream().filter(v -> {
+          MdVertexDAOIF mdClass = (MdVertexDAOIF) v.getMdClass();
+
+          return mdClass.getSuperClasses().contains(MdVertexDAO.getMdVertexDAO(AttributeValue.CLASS));
+        }).collect(Collectors.groupingBy(v -> {
+          return (String) v.getObjectValue(AttributeValue.ATTRIBUTENAME);
+        }));
+
+        return new VertexServerGeoObject(type, vertex.get(), attributeNodeMap);
+      }
     }
 
     return null;
