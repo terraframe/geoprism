@@ -68,7 +68,7 @@ public class AttributeDoubleType extends AttributeDoubleTypeBase
     if (this.isNew() && !this.isAppliedToDb())
     {
       String tableName = this.getTableName();
-      
+
       MdVertexDAOIF superVertex = MdVertexDAO.getMdVertexDAO(AttributeBasicValue.CLASS);
 
       MdVertexDAO mdVertex = MdVertexDAO.newInstance();
@@ -91,6 +91,16 @@ public class AttributeDoubleType extends AttributeDoubleTypeBase
       mdAttribute.apply();
 
       this.setValueVertexId(mdVertex.getOid());
+    }
+    else
+    {
+      // Update the precision and scale of the value attribute
+      MdVertexDAOIF mdVertex = MdVertexDAO.get(this.getValueVertexOid());
+      
+      MdAttributeDoubleDAO mdAttribute = (MdAttributeDoubleDAO) mdVertex.definesAttribute(VALUE).getBusinessDAO();
+      mdAttribute.setValue(MdAttributeDoubleInfo.LENGTH, getPrecision());
+      mdAttribute.setValue(MdAttributeDoubleInfo.DECIMAL, getScale());
+      mdAttribute.apply();
     }
 
     super.apply();

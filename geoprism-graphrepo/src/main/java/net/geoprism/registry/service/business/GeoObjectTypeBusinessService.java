@@ -97,10 +97,6 @@ public class GeoObjectTypeBusinessService implements GeoObjectTypeBusinessServic
   @Autowired
   private ClassificationBusinessServiceIF     cService;
 
-  public GeoObjectTypeBusinessService()
-  {
-  }
-
   @Override
   public List<ServerGeoObjectType> getSubtypes(ServerGeoObjectType type)
   {
@@ -516,6 +512,12 @@ public class GeoObjectTypeBusinessService implements GeoObjectTypeBusinessServic
     JsonObject attrObj = JsonParser.parseString(attributeTypeJSON).getAsJsonObject();
     AttributeType dto = AttributeType.parse(attrObj);
 
+    return updateAttributeType(serverType, dto);
+  }
+
+  @Override
+  public AttributeType updateAttributeType(ServerGeoObjectType serverType, AttributeType dto)
+  {
     net.geoprism.registry.graph.AttributeType attributeType = this.updateAttributeTypeFromDTO(serverType, dto);
     dto = attributeType.toDTO();
 
@@ -546,11 +548,6 @@ public class GeoObjectTypeBusinessService implements GeoObjectTypeBusinessServic
     AttributeType attrType = AttributeType.parse(attrObj);
 
     return createAttributeType(sgot, attrType);
-  }
-
-  public ServerGeoObjectType build(net.geoprism.registry.graph.GeoObjectType type)
-  {
-    return new ServerGeoObjectType(type);
   }
 
   public List<GeoObjectType> getAncestors(String code, String hierarchyCode, Boolean includeInheritedTypes, Boolean includeChild)
@@ -1015,7 +1012,7 @@ public class GeoObjectTypeBusinessService implements GeoObjectTypeBusinessServic
   {
     return this.create(gtJSON).toDTO();
   }
-
+  
   /**
    * Returns the {@link GeoObjectType}s with the given codes or all
    * {@link GeoObjectType}s if no codes are provided.

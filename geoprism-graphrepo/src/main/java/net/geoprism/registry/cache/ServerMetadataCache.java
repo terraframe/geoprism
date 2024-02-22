@@ -24,6 +24,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
 
 import org.commongeoregistry.adapter.RegistryAdapter;
 import org.commongeoregistry.adapter.dataaccess.GeoObject;
@@ -71,7 +72,6 @@ public class ServerMetadataCache extends ServerOrganizationCache
     getAdapter().getMetadataCache().rebuild();
   }
 
-
   public void addGeoObjectType(ServerGeoObjectType geoObjectType)
   {
     this.geoGeoObjectTypeCodeMap.put(geoObjectType.getCode(), geoObjectType);
@@ -82,14 +82,14 @@ public class ServerMetadataCache extends ServerOrganizationCache
 
   public Optional<ServerGeoObjectType> getGeoObjectType(String code)
   {
-    return Optional.ofNullable(this.geoGeoObjectTypeCodeMap.get(code));
+    return Optional.ofNullable(geoGeoObjectTypeCodeMap.get(code));
   }
 
   public Optional<ServerGeoObjectType> getGeoObjectTypeByOid(String oid)
   {
-    return Optional.ofNullable(this.geoGeoObjectTypeOidMap.get(oid));
+    return Optional.ofNullable(geoGeoObjectTypeOidMap.get(oid));
   }
-  
+
   public void removeGeoObjectType(ServerGeoObjectType type)
   {
     removeGeoObjectType(type.getCode(), type.getOid());
@@ -124,10 +124,7 @@ public class ServerMetadataCache extends ServerOrganizationCache
 
   public List<ServerGeoObjectType> getAllGeoObjectTypes()
   {
-    // return this.geoGeoObjectTypeMap.values().toArray(new
-    // GeoObjectType[this.geoGeoObjectTypeMap.values().size()]);
-
-    return new ArrayList<ServerGeoObjectType>(this.geoGeoObjectTypeOidMap.values());
+    return this.getAllGeoObjectTypeCodes().stream().map(code -> this.getGeoObjectType(code).get()).collect(Collectors.toList());
   }
 
   public List<String> getAllGeoObjectTypeCodes()

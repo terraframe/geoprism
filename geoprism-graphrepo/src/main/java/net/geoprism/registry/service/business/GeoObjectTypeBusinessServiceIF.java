@@ -118,6 +118,8 @@ public interface GeoObjectTypeBusinessServiceIF
 
   AttributeType updateAttributeType(ServerGeoObjectType serverType, String attributeTypeJSON);
 
+  AttributeType updateAttributeType(ServerGeoObjectType serverType, AttributeType dto);
+
   /**
    * Returns the {link MdAttributeConcreteDAOIF} for the given
    * {@link AttributeType} defined on the given {@link MdBusiness} or null no

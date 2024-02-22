@@ -1,11 +1,8 @@
 package net.geoprism.registry.command;
 
-import java.util.List;
-
 import com.runwaysdk.dataaccess.Command;
 
 import net.geoprism.registry.model.ServerGeoObjectType;
-import net.geoprism.registry.service.business.GeoObjectTypeBusinessServiceIF;
 import net.geoprism.registry.service.request.ServiceFactory;
 
 public class GeoObjectTypeCacheEventCommand implements Command
@@ -47,19 +44,8 @@ public class GeoObjectTypeCacheEventCommand implements Command
 
   private void refreshCache(ServerGeoObjectType type)
   {
-    GeoObjectTypeBusinessServiceIF service = ServiceFactory.getBean(GeoObjectTypeBusinessServiceIF.class);
-
-    type.setType(net.geoprism.registry.graph.GeoObjectType.getByCode(type.getCode()));
-
-    ServiceFactory.getMetadataCache().addGeoObjectType(type);
-
-    // Refresh all of the subtypes
-    List<ServerGeoObjectType> subtypes = service.getSubtypes(type);
-
-    for (ServerGeoObjectType subtype : subtypes)
-    {
-      this.refreshCache(subtype);
-    }
+    type.getSubTypes().forEach(t -> t.markAsDirty());
+    type.markAsDirty();
   }
 
   @Override

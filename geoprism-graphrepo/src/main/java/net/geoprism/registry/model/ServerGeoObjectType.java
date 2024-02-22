@@ -43,11 +43,9 @@ import net.geoprism.registry.graph.AttributeType;
 import net.geoprism.registry.graph.GeoObjectType;
 import net.geoprism.registry.service.request.ServiceFactory;
 
-public class ServerGeoObjectType implements ServerElement
+public class ServerGeoObjectType extends DirtySoftReference<GeoObjectType> implements ServerElement
 {
   // private Logger logger = LoggerFactory.getLogger(ServerLeafGeoObject.class);
-
-  private GeoObjectType                                        type;
 
   private org.commongeoregistry.adapter.metadata.GeoObjectType dto;
 
@@ -55,40 +53,52 @@ public class ServerGeoObjectType implements ServerElement
 
   public ServerGeoObjectType()
   {
+    super();
   }
 
   public ServerGeoObjectType(GeoObjectType type)
   {
-    this.type = type;
+    super(type);
     this.attributes = type.getAttributeMap();
   }
 
   public ServerGeoObjectType(GeoObjectType type, Map<String, AttributeType> attributes)
   {
-    this.type = type;
+    super(type);
     this.attributes = attributes;
   }
 
-  public String getOid()
+  protected Map<String, AttributeType> getAttributes()
   {
-    return this.type.getOid();
+    // Ensure the object isn't dirty and up to date
+    this.getType();
+
+    return this.attributes;
   }
 
-  public GeoObjectType getType()
+  @Override
+  protected void refresh(GeoObjectType object)
   {
-    return type;
-  }
+    GeoObjectType type = GeoObjectType.getByCode(object.getCode());
 
-  public void setType(GeoObjectType type)
-  {
-    this.type = type;
+    this.setObject(type);
     this.attributes = type.getAttributeMap();
     this.dto = null;
   }
 
+  public String getOid()
+  {
+    return this.getObject().getOid();
+  }
+
+  public GeoObjectType getType()
+  {
+    return this.getObject();
+  }
+
   public String getCode()
   {
-    return this.type.getCode();
+    return this.getObject().getCode();
   }
 
   public String getDBClassName()
@@ -98,39 +108,39 @@ public class ServerGeoObjectType implements ServerElement
 
   public MdVertexDAOIF getMdVertex()
   {
-    return MdVertexDAO.get(this.type.getObjectValue(GeoObjectType.MDVERTEX));
+    return MdVertexDAO.get(this.getObject().getObjectValue(GeoObjectType.MDVERTEX));
   }
 
   public GeometryType getGeometryType()
   {
-    return GeometryType.valueOf(this.type.getGeometryType());
+    return GeometryType.valueOf(this.getObject().getGeometryType());
   }
 
   public boolean isGeometryEditable()
   {
-    return this.type.getIsGeometryEditable();
+    return this.getObject().getIsGeometryEditable();
   }
 
   public LocalizedValue getLabel()
   {
-    return LocalizedValueConverter.convert(this.type.getEmbeddedComponent(GeoObjectType.LABEL));
+    return LocalizedValueConverter.convert(this.getObject().getEmbeddedComponent(GeoObjectType.LABEL));
   }
 
   public LocalizedValue getDescription()
   {
-    return LocalizedValueConverter.convert(this.type.getEmbeddedComponent(GeoObjectType.DESCRIPTION));
+    return LocalizedValueConverter.convert(this.getObject().getEmbeddedComponent(GeoObjectType.DESCRIPTION));
   }
 
   public boolean getIsAbstract()
   {
-    return this.type.getIsAbstract();
+    return this.getObject().getIsAbstract();
   }
 
   public org.commongeoregistry.adapter.metadata.GeoObjectType toDTO()
   {
     if (this.dto == null)
     {
-      this.dto = this.type.toDTO();
+      this.dto = this.getObject().toDTO();
     }
 
     return this.dto;
@@ -143,17 +153,17 @@ public class ServerGeoObjectType implements ServerElement
 
   public Map<String, AttributeType> getAttributeMap()
   {
-    return this.attributes;
+    return getAttributes();
   }
 
   public Optional<AttributeType> getAttribute(String name)
   {
-    return Optional.ofNullable(this.attributes.get(name));
+    return Optional.ofNullable(getAttributes().get(name));
   }
 
   public List<AttributeType> definesAttributes()
   {
-    return new LinkedList<AttributeType>(this.attributes.values());
+    return new LinkedList<AttributeType>(getAttributes().values());
   }
 
   /**
@@ -161,7 +171,7 @@ public class ServerGeoObjectType implements ServerElement
    */
   public ServerOrganization getOrganization()
   {
-    return ServerOrganization.getByGraphId(this.type.getObjectValue(GeoObjectType.ORGANIZATION));
+    return ServerOrganization.getByGraphId(this.getObject().getObjectValue(GeoObjectType.ORGANIZATION));
   }
 
   public String getOrganizationCode()
@@ -171,7 +181,7 @@ public class ServerGeoObjectType implements ServerElement
 
   public ServerGeoObjectType getSuperType()
   {
-    String oid = this.type.getObjectValue(GeoObjectType.SUPERTYPE);
+    String oid = this.getObject().getObjectValue(GeoObjectType.SUPERTYPE);
 
     if (!StringUtils.isBlank(oid))
     {
@@ -183,12 +193,12 @@ public class ServerGeoObjectType implements ServerElement
 
   public boolean getIsPrivate()
   {
-    return this.type.getIsPrivate();
+    return this.getObject().getIsPrivate();
   }
 
   public void setIsPrivate(Boolean isPrivate)
   {
-    this.type.setIsPrivate(isPrivate);
+    this.getObject().setIsPrivate(isPrivate);
   }
 
   @Override
@@ -353,24 +363,24 @@ public class ServerGeoObjectType implements ServerElement
 
   public synchronized void removeAttribute(String attributeName)
   {
-    AttributeType attributeType = this.attributes.get(attributeName);
+    AttributeType attributeType = getAttributes().get(attributeName);
 
     if (attributeType != null)
     {
       attributeType.delete();
 
-      this.attributes.remove(attributeName);
+      getAttributes().remove(attributeName);
     }
   }
 
   public void delete()
   {
-    this.type.delete();
+    this.getObject().delete();
   }
 
   public List<ServerGeoObjectType> getSubTypes()
   {
-    List<String> codes = this.type.getSubTypeCodes();
+    List<String> codes = this.getObject().getSubTypeCodes();
     return codes.stream().map(code -> ServerGeoObjectType.get(code)).collect(Collectors.toList());
   }
 
