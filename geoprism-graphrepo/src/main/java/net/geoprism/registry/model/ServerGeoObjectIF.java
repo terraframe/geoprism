@@ -127,7 +127,10 @@ public interface ServerGeoObjectIF
 
   public boolean isModified(String attributeName);
 
+  public boolean hasAttribute(String attributeName);
+
   public void apply();
 
   void delete();
+
 }

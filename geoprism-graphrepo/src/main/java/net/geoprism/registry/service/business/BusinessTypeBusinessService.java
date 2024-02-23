@@ -49,7 +49,6 @@ import com.runwaysdk.dataaccess.MdEdgeDAOIF;
 import com.runwaysdk.dataaccess.MdVertexDAOIF;
 import com.runwaysdk.dataaccess.cache.DataNotFoundException;
 import com.runwaysdk.dataaccess.metadata.MdAttributeCharacterDAO;
-import com.runwaysdk.dataaccess.metadata.MdAttributeConcreteDAO;
 import com.runwaysdk.dataaccess.metadata.graph.MdEdgeDAO;
 import com.runwaysdk.dataaccess.metadata.graph.MdVertexDAO;
 import com.runwaysdk.dataaccess.transaction.Transaction;
@@ -59,7 +58,6 @@ import com.runwaysdk.localization.SupportedLocaleIF;
 import com.runwaysdk.query.OIterator;
 import com.runwaysdk.query.QueryFactory;
 import com.runwaysdk.session.Session;
-import com.runwaysdk.system.metadata.MdAttributeConcrete;
 import com.runwaysdk.system.metadata.MdEdge;
 import com.runwaysdk.system.metadata.MdVertex;
 
@@ -71,7 +69,6 @@ import net.geoprism.registry.BusinessTypeQuery;
 import net.geoprism.registry.CodeLengthException;
 import net.geoprism.registry.Organization;
 import net.geoprism.registry.RegistryConstants;
-import net.geoprism.registry.conversion.RegistryAttributeTypeConverter;
 import net.geoprism.registry.conversion.RegistryLocalizedValueConverter;
 import net.geoprism.registry.conversion.TermConverter;
 import net.geoprism.registry.graph.GeoVertex;
@@ -98,9 +95,11 @@ public class BusinessTypeBusinessService implements BusinessTypeBusinessServiceI
   @Transaction
   public void delete(BusinessType type)
   {
-    // Delete the term root
-    Classifier classRootTerm = TermConverter.buildIfNotExistdMdBusinessClassifier(type.getMdVertex());
-    classRootTerm.delete();
+    // TODO: HEADS UP
+    
+//    // Delete the term root
+//    Classifier classRootTerm = TermConverter.buildIfNotExistGeoObjectTypeClassifier(type.getMdVertex());
+//    classRootTerm.delete();
 
     MdVertex mdVertex = type.getMdVertex();
     MdEdge mdEdge = type.getMdEdge();

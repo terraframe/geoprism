@@ -581,6 +581,12 @@ public class VertexServerGeoObject extends AbstractServerGeoObject implements Se
     return false;
   }
 
+  @Override
+  public boolean hasAttribute(String attributeName)
+  {
+    return this.type.getAttribute(attributeName).isPresent();
+  }
+
   @SuppressWarnings("unchecked")
   @Override
   public <T> T getValue(String attributeName)
@@ -593,10 +599,10 @@ public class VertexServerGeoObject extends AbstractServerGeoObject implements Se
 
       Object value = !attributeType.getIsChangeOverTime() ? attributeType.getStrategy().getValue(vertex, valueNodeMap, null) : this.getMostRecentValue(attributeName);
 
-      if (value != null && attributeType instanceof AttributeTermType)
-      {
-        return (T) Classifier.get((String) value);
-      }
+      // if (value != null && attributeType instanceof AttributeTermType)
+      // {
+      // return (T) Classifier.get((String) value);
+      // }
 
       return (T) value;
     }
@@ -614,10 +620,10 @@ public class VertexServerGeoObject extends AbstractServerGeoObject implements Se
     {
       Object value = at.getStrategy().getValue(this.vertex, this.valueNodeMap, date);
 
-      if (value != null && at instanceof AttributeTermType)
-      {
-        return (T) Classifier.get((String) value);
-      }
+      // if (value != null && at instanceof AttributeTermType)
+      // {
+      // return (T) Classifier.get((String) value);
+      // }
 
       return (T) value;
     }
@@ -807,7 +813,7 @@ public class VertexServerGeoObject extends AbstractServerGeoObject implements Se
 
   public Geometry getGeometry(Date date)
   {
-    return this.getValue(DefaultAttribute.GEOMETRY.getName(), date);    
+    return this.getValue(DefaultAttribute.GEOMETRY.getName(), date);
   }
 
   public Geometry getGeometry()

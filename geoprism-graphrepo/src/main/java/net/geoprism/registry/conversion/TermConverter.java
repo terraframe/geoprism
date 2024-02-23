@@ -31,11 +31,11 @@ import com.runwaysdk.session.Request;
 import com.runwaysdk.system.metadata.MdAttributeMultiTerm;
 import com.runwaysdk.system.metadata.MdAttributeTerm;
 import com.runwaysdk.system.metadata.MdBusiness;
-import com.runwaysdk.system.metadata.MdClass;
 
 import net.geoprism.ontology.Classifier;
 import net.geoprism.ontology.ClassifierIsARelationship;
 import net.geoprism.registry.RegistryConstants;
+import net.geoprism.registry.graph.GeoObjectType;
 import net.geoprism.registry.model.ServerGeoObjectType;
 import net.geoprism.registry.model.ServerOrganization;
 import net.geoprism.registry.service.permission.GeoObjectTypePermissionServiceIF;
@@ -135,9 +135,9 @@ public class TermConverter
    * @return {@link Classifier} object as a parent of terms that pertain to the
    *         given {@link MdBusiness}.
    */
-  public static Classifier buildIfNotExistdMdBusinessClassifier(MdClass mdClass)
+  public static Classifier buildIfNotExistGeoObjectTypeClassifier(GeoObjectType type)
   {
-    String classTermKey = buildRootClassKey(mdClass.getTypeName());
+    String classTermKey = buildRootClassKey(type.getCode());
 
     Classifier classTerm = null;
 
@@ -147,16 +147,15 @@ public class TermConverter
     }
     catch (DataNotFoundException e)
     {
-
-      String classifierId = buildRootClassClassifierId(mdClass.getTypeName());
+      String classifierId = buildRootClassClassifierId(type.getCode());
 
       classTerm = new Classifier();
       classTerm.setClassifierId(classifierId);
       classTerm.setClassifierPackage(RegistryConstants.REGISTRY_PACKAGE);
       // This will set the value of the display label to the locale of the user
       // performing the action.
-      classTerm.getDisplayLabel().setValue(mdClass.getDisplayLabel().getValue());
-      classTerm.getDisplayLabel().setDefaultValue(mdClass.getDisplayLabel().getDefaultValue());
+      classTerm.getDisplayLabel().setValue(type.getEmbeddedValue(GeoObjectType.LABEL, LocalizedValue.DEFAULT_LOCALE));
+      classTerm.getDisplayLabel().setDefaultValue(type.getEmbeddedValue(GeoObjectType.LABEL, LocalizedValue.DEFAULT_LOCALE));
       classTerm.apply();
 
       Classifier rootClassTerm = Classifier.getByKey(RegistryConstants.TERM_CLASS);
@@ -181,9 +180,9 @@ public class TermConverter
    * @return {@link Classifier} object as a parent of terms that pertain to the
    *         given {@link MdBusiness}.
    */
-  public static Classifier buildIfNotExistAttribute(MdClass mdClass, String mdAttributeTermOrMultiName, Classifier parent)
+  public static Classifier buildIfNotExistAttribute(GeoObjectType type, String mdAttributeTermOrMultiName, Classifier parent)
   {
-    String attributeTermKey = buildtAtttributeKey(mdClass.getTypeName(), mdAttributeTermOrMultiName);
+    String attributeTermKey = buildtAtttributeKey(type.getCode(), mdAttributeTermOrMultiName);
 
     Classifier attributeTerm = null;
 
@@ -193,15 +192,15 @@ public class TermConverter
     }
     catch (DataNotFoundException e)
     {
-      String classifierId = buildtAtttributeClassifierId(mdClass.getTypeName(), mdAttributeTermOrMultiName);
+      String classifierId = buildtAtttributeClassifierId(type.getCode(), mdAttributeTermOrMultiName);
 
       attributeTerm = new Classifier();
       attributeTerm.setClassifierId(classifierId);
       attributeTerm.setClassifierPackage(RegistryConstants.REGISTRY_PACKAGE);
       // This will set the value of the display label to the locale of the user
       // performing the action.
-      attributeTerm.getDisplayLabel().setValue(mdClass.getDisplayLabel().getValue());
-      attributeTerm.getDisplayLabel().setDefaultValue(mdClass.getDisplayLabel().getDefaultValue());
+      attributeTerm.getDisplayLabel().setValue(type.getEmbeddedValue(GeoObjectType.LABEL, LocalizedValue.DEFAULT_LOCALE));
+      attributeTerm.getDisplayLabel().setDefaultValue(type.getEmbeddedValue(GeoObjectType.LABEL, LocalizedValue.DEFAULT_LOCALE));
       attributeTerm.apply();
 
       if (parent != null)

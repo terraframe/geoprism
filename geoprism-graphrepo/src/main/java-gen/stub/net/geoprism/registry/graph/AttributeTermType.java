@@ -2,108 +2,102 @@ package net.geoprism.registry.graph;
 
 import org.commongeoregistry.adapter.metadata.AttributeType;
 
-import com.runwaysdk.dataaccess.MdAttributeConcreteDAOIF;
-import com.runwaysdk.dataaccess.MdAttributeMultiTermDAOIF;
-import com.runwaysdk.dataaccess.MdAttributeTermDAOIF;
-import com.runwaysdk.dataaccess.cache.DataNotFoundException;
+import com.runwaysdk.constants.MdAttributeTermInfo;
+import com.runwaysdk.dataaccess.MdAttributeDAOIF;
+import com.runwaysdk.dataaccess.MdVertexDAOIF;
 import com.runwaysdk.dataaccess.metadata.MdAttributeConcreteDAO;
+import com.runwaysdk.dataaccess.metadata.MdAttributeTermDAO;
+import com.runwaysdk.dataaccess.metadata.MdBusinessDAO;
+import com.runwaysdk.dataaccess.metadata.graph.MdVertexDAO;
 import com.runwaysdk.dataaccess.transaction.Transaction;
 
 import net.geoprism.ontology.Classifier;
 import net.geoprism.registry.conversion.TermConverter;
+import net.geoprism.registry.model.ValueNodeStrategy;
 import net.geoprism.registry.model.ValueStrategy;
+import net.geoprism.registry.model.VertexValueStrategy;
 
 public class AttributeTermType extends AttributeTermTypeBase
 {
   @SuppressWarnings("unused")
   private static final long serialVersionUID = -1954824376;
-  
+
   public AttributeTermType()
   {
     super();
   }
-  
-  
+
+  @Override
+  @Transaction
+  public void apply()
+  {
+    GeoObjectType type = this.getGeoObjectType();
+
+    // Create the root term node for this attribute
+    this.setRootTerm(TermConverter.buildIfNotExistAttribute(type, this.getCode(), type.getRootTerm()));
+
+    super.apply();
+
+    if (!this.getIsChangeOverTime())
+    {
+      // Create the MdAttribute on the MdVertex
+      MdAttributeTermDAO mdAttribute = MdAttributeTermDAO.newInstance();
+
+      populate(mdAttribute);
+
+      mdAttribute.apply();
+    }
+  }
+
+  @Override
+  protected void populate(MdAttributeConcreteDAO mdAttribute)
+  {
+    super.populate(mdAttribute);
+
+    mdAttribute.setValue(MdAttributeTermInfo.REF_MD_ENTITY, MdBusinessDAO.getMdBusinessDAO(Classifier.CLASS).getOid());
+  }
+
   @Override
   @Transaction
   public void delete()
   {
-    super.delete();
-    
-    // TODO: HEADS UP
-    
-//    MdAttributeConcreteDAOIF mdAttributeConcreteDAOIF = this.getMdAttribute(serverType.getMdBusiness(), attributeName);
-//
-//    if (mdAttributeConcreteDAOIF != null)
-//    {
-//      if (mdAttributeConcreteDAOIF instanceof MdAttributeTermDAOIF || mdAttributeConcreteDAOIF instanceof MdAttributeMultiTermDAOIF)
-//      {
-//        String attributeTermKey = TermConverter.buildtAtttributeKey(serverType.getMdBusiness().getTypeName(), mdAttributeConcreteDAOIF.definesAttribute());
-//
-//        try
-//        {
-//          Classifier attributeTerm = Classifier.getByKey(attributeTermKey);
-//          attributeTerm.delete();
-//        }
-//        catch (DataNotFoundException e)
-//        {
-//        }
-//      }
-//
-//      mdAttributeConcreteDAOIF.getBusinessDAO().delete();
-//    }
+    if (!this.getIsChangeOverTime())
+    {
+      GeoObjectType type = this.getGeoObjectType();
+      MdVertexDAOIF mdVertex = MdVertexDAO.get(type.getMdVertexOid());
+      MdAttributeDAOIF mdAttribute = mdVertex.definesAttribute(this.getCode());
 
+      if (mdAttribute != null)
+      {
+        mdAttribute.getBusinessDAO().delete();
+      }
+    }
+
+    this.getRootTerm().delete();
+
+    super.delete();
   }
-  
-  @Override
-  protected void populate(MdAttributeConcreteDAO mdAttribute)
-  {
-    // TODO Auto-generated method stub
-    super.populate(mdAttribute);
-  }
-  
-  @Override
-  public void fromDTO(AttributeType dto)
-  {
-    super.fromDTO(dto);
-    
-    // TODO: Heads up
-//  mdAttribute = new MdAttributeTerm();
-//  MdAttributeTerm mdAttributeTerm = (MdAttributeTerm) mdAttribute;
-//
-//  MdBusiness classifierMdBusiness = MdBusiness.getMdBusiness(Classifier.CLASS);
-//  mdAttributeTerm.setMdBusiness(classifierMdBusiness);
-//  // TODO implement support for multi-term
-//  // mdAttribute = new MdAttributeMultiTerm();
-//  // MdAttributeMultiTerm mdAttributeMultiTerm =
-//  // (MdAttributeMultiTerm)mdAttribute;
-//  //
-//  // MdBusiness classifierMdBusiness =
-//  // MdBusiness.getMdBusiness(Classifier.CLASS);
-//  // mdAttributeMultiTerm.setMdBusiness(classifierMdBusiness);
-  }
-  
+
   @Override
   public AttributeType toDTO()
   {
-    // TODO: HEADS UP
-    // Populate root
-    return new org.commongeoregistry.adapter.metadata.AttributeTermType(this.getCode(), getLocalizedLabel(), getLocalizedDescription(), isAppliedToDb(), isNew(), isAppliedToDb());
+    org.commongeoregistry.adapter.metadata.AttributeTermType attributeType = new org.commongeoregistry.adapter.metadata.AttributeTermType(this.getCode(), getLocalizedLabel(), getLocalizedDescription(), isAppliedToDb(), isNew(), isAppliedToDb());
+    attributeType.setRootTerm(TermConverter.buildTermFromClassifier(this.getRootTerm()));
+
+    return attributeType;
   }
 
   @Override
   public ValueStrategy getStrategy()
   {
-    throw new UnsupportedOperationException();
-    // TODO: HEADS UP 
-//    if (!this.getIsChangeOverTime())
-//    {
-//      return new VertexValueStrategy(this);
-//    }
-//    else
-//    {
-//      return new ValueNodeStrategy(this, MdVertexDAO.getMdVertexDAO(AttributeCharacterValue.CLASS), AttributeCharacterValue.VALUE);
-//    }
+    if (!this.getIsChangeOverTime())
+    {
+      return new VertexValueStrategy(this);
+    }
+    else
+    {
+      return new ValueNodeStrategy(this, MdVertexDAO.getMdVertexDAO(AttributeTermValue.CLASS), AttributeTermValue.VALUE);
+    }
   }
 
 }

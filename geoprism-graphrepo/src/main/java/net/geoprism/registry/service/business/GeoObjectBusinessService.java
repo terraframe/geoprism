@@ -378,7 +378,7 @@ public class GeoObjectBusinessService extends RegistryLocalizedValueConverter im
       {
         // Ignore the attributes
       }
-      else if (sgo.getVertex().hasAttribute(attributeName) && !sgo.getVertex().getMdAttributeDAO(attributeName).isSystem())
+      else if (sgo.hasAttribute(attributeName))
       {
         if (attribute instanceof AttributeTermType)
         {
@@ -394,11 +394,11 @@ public class GeoObjectBusinessService extends RegistryLocalizedValueConverter im
             String classifierKey = Classifier.buildKey(parent, code);
             Classifier classifier = Classifier.getByKey(classifierKey);
 
-            sgo.getVertex().setValue(attributeName, classifier.getOid(), startDate, endDate);
+            sgo.setValue(attributeName, classifier.getOid(), startDate, endDate);
           }
           else
           {
-            sgo.getVertex().setValue(attributeName, (String) null, startDate, endDate);
+            sgo.setValue(attributeName, (String) null, startDate, endDate);
           }
         }
         else if (attribute instanceof AttributeClassificationType)
@@ -409,11 +409,11 @@ public class GeoObjectBusinessService extends RegistryLocalizedValueConverter im
           {
             Classification classification = this.cService.get((AttributeClassificationType) attribute, value);
 
-            sgo.getVertex().setValue(attributeName, classification.getVertex(), startDate, endDate);
+            sgo.setValue(attributeName, classification.getVertex(), startDate, endDate);
           }
           else
           {
-            sgo.getVertex().setValue(attributeName, (String) null, startDate, endDate);
+            sgo.setValue(attributeName, (String) null, startDate, endDate);
           }
         }
         else
@@ -512,7 +512,7 @@ public class GeoObjectBusinessService extends RegistryLocalizedValueConverter im
             {
               Classification classification = this.cService.get((AttributeClassificationType) attribute, value);
 
-              sgo.getVertex().setValue(attributeName, classification.getVertex(), votDTO.getStartDate(), votDTO.getEndDate());
+              sgo.setValue(attributeName, classification.getVertex(), votDTO.getStartDate(), votDTO.getEndDate());
 
               c.add(new ValueOverTime(votDTO.getStartDate(), votDTO.getEndDate(), classification.getVertex()));
 
@@ -921,7 +921,7 @@ public class GeoObjectBusinessService extends RegistryLocalizedValueConverter im
       {
         // Ignore
       }
-      else if (sgo.getVertex().hasAttribute(attributeName))
+      else if (sgo.hasAttribute(attributeName))
       {
         Object value = sgo.getVertex().getObjectValue(attributeName, date);
 

@@ -71,6 +71,7 @@ import net.geoprism.registry.HierarchyRootException;
 import net.geoprism.registry.InheritedHierarchyAnnotation;
 import net.geoprism.registry.TypeInUseException;
 import net.geoprism.registry.command.GeoObjectTypeCacheEventCommand;
+import net.geoprism.registry.conversion.TermConverter;
 import net.geoprism.registry.graph.GeoVertexType;
 import net.geoprism.registry.model.GeoObjectTypeMetadata;
 import net.geoprism.registry.model.ServerGeoObjectType;
@@ -436,6 +437,7 @@ public class GeoObjectTypeBusinessService implements GeoObjectTypeBusinessServic
     ServerOrganization organization = ServerOrganization.getByCode(dto.getOrganizationCode(), true);
 
     net.geoprism.registry.graph.GeoObjectType type = new net.geoprism.registry.graph.GeoObjectType();
+    type.setRootTerm(TermConverter.buildIfNotExistGeoObjectTypeClassifier(type));
     type.setOrganization(organization.getGraphOrganization());
     type.setValue(net.geoprism.registry.graph.GeoObjectType.MDVERTEX, mdVertex.getOid());
     type.fromDTO(dto);
@@ -445,6 +447,7 @@ public class GeoObjectTypeBusinessService implements GeoObjectTypeBusinessServic
       type.setSuperType(superType.getType());
     }
 
+    
     try
     {
       // The DuplicateDataException on code was found to be thrown here.
@@ -460,10 +463,6 @@ public class GeoObjectTypeBusinessService implements GeoObjectTypeBusinessServic
       ex2.setDuplicateValue(dto.getCode());
       throw ex2;
     }
-
-    // HEADS UP:
-    // // Build the parent class term root if it does not exist.
-    // TermConverter.buildIfNotExistdMdBusinessClassifier(mdBusiness);
 
     ServerGeoObjectType sType = new ServerGeoObjectType(type);
 
@@ -789,27 +788,10 @@ public class GeoObjectTypeBusinessService implements GeoObjectTypeBusinessServic
     else if (dto.getType().equals(AttributeTermType.TYPE))
     {
       attributeType = new net.geoprism.registry.graph.AttributeTermType();
-
-      // TODO: HEADS UP
-      // mdAttribute = new MdAttributeTerm();
-      // MdAttributeTerm mdAttributeTerm = (MdAttributeTerm) mdAttribute;
-      //
-      // MdBusiness classifierMdBusiness =
-      // MdBusiness.getMdBusiness(Classifier.CLASS);
-      // mdAttributeTerm.setMdBusiness(classifierMdBusiness);
-      // // TODO implement support for multi-term
-      // // mdAttribute = new MdAttributeMultiTerm();
-      // // MdAttributeMultiTerm mdAttributeMultiTerm =
-      // // (MdAttributeMultiTerm)mdAttribute;
-      // //
-      // // MdBusiness classifierMdBusiness =
-      // // MdBusiness.getMdBusiness(Classifier.CLASS);
-      // // mdAttributeMultiTerm.setMdBusiness(classifierMdBusiness);
     }
     else if (dto.getType().equals(AttributeClassificationType.TYPE))
     {
       attributeType = new net.geoprism.registry.graph.AttributeClassificationType();
-
     }
     else if (dto.getType().equals(AttributeBooleanType.TYPE))
     {
@@ -848,32 +830,6 @@ public class GeoObjectTypeBusinessService implements GeoObjectTypeBusinessServic
     // mdAttribute.setDefiningMdClass(mdClass);
     // mdAttribute.apply();
     //
-    // if (dto.getType().equals(AttributeTermType.TYPE))
-    // {
-    // MdAttributeTerm mdAttributeTerm = (MdAttributeTerm) mdAttribute;
-    //
-    // // Build the parent class term root if it does not exist.
-    // Classifier classTerm =
-    // TermConverter.buildIfNotExistdMdBusinessClassifier(mdClass);
-    //
-    // // Create the root term node for this attribute
-    // Classifier attributeTermRoot =
-    // TermConverter.buildIfNotExistAttribute(mdClass,
-    // mdAttributeTerm.getAttributeName(), classTerm);
-    //
-    // // Make this the root term of the multi-attribute
-    // attributeTermRoot.addClassifierTermAttributeRoots(mdAttributeTerm).apply();
-    //
-    // AttributeTermType attributeTermType = (AttributeTermType) dto;
-    //
-    // LocalizedValue label =
-    // RegistryLocalizedValueConverter.convert(attributeTermRoot.getDisplayLabel());
-    //
-    // org.commongeoregistry.adapter.Term term = new
-    // org.commongeoregistry.adapter.Term(attributeTermRoot.getClassifierId(),
-    // label, new LocalizedValue(""));
-    // attributeTermType.setRootTerm(term);
-    // }
     return attributeType;
   }
 

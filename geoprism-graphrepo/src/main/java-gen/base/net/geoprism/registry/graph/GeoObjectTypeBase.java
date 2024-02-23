@@ -1,6 +1,6 @@
 package net.geoprism.registry.graph;
 
-@com.runwaysdk.business.ClassSignature(hash = -503146755)
+@com.runwaysdk.business.ClassSignature(hash = 1383945968)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -21,10 +21,11 @@ public abstract class GeoObjectTypeBase extends com.runwaysdk.business.graph.Ver
   public final static java.lang.String MDVERTEX = "mdVertex";
   public final static java.lang.String OID = "oid";
   public final static java.lang.String ORGANIZATION = "organization";
+  public final static java.lang.String ROOTTERM = "rootTerm";
   public final static java.lang.String SEQ = "seq";
   public final static java.lang.String SUPERTYPE = "superType";
   @SuppressWarnings("unused")
-  private static final long serialVersionUID = -503146755;
+  private static final long serialVersionUID = 1383945968;
   
   public GeoObjectTypeBase()
   {
@@ -201,6 +202,39 @@ public abstract class GeoObjectTypeBase extends com.runwaysdk.business.graph.Ver
   public void setOrganization(net.geoprism.registry.graph.GraphOrganization value)
   {
     this.setValue(ORGANIZATION, value);
+  }
+  
+  public net.geoprism.ontology.Classifier getRootTerm()
+  {
+    if (this.getObjectValue(ROOTTERM) == null)
+    {
+      return null;
+    }
+    else
+    {
+      return net.geoprism.ontology.Classifier.get( (String) this.getObjectValue(ROOTTERM));
+    }
+  }
+  
+  public String getRootTermOid()
+  {
+    return (String) this.getObjectValue(ROOTTERM);
+  }
+  
+  public static com.runwaysdk.dataaccess.MdAttributeReferenceDAOIF getRootTermMd()
+  {
+    com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(net.geoprism.registry.graph.GeoObjectType.CLASS);
+    return (com.runwaysdk.dataaccess.MdAttributeReferenceDAOIF)mdClassIF.definesAttribute(ROOTTERM);
+  }
+  
+  public void setRootTerm(net.geoprism.ontology.Classifier value)
+  {
+    this.setValue(ROOTTERM, value.getOid());
+  }
+  
+  public void setRootTermId(java.lang.String oid)
+  {
+    this.setValue(ROOTTERM, oid);
   }
   
   public Long getSeq()
