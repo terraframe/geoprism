@@ -2,14 +2,14 @@ package net.geoprism.registry.command;
 
 import com.runwaysdk.dataaccess.Command;
 
-import net.geoprism.registry.model.ServerGeoObjectType;
+import net.geoprism.registry.model.ServerHierarchyType;
 import net.geoprism.registry.service.request.ServiceFactory;
 
-public class GeoObjectTypeCacheEventCommand extends AbstractCacheCommand implements Command
+public class HierarchicalRelationshipTypeCacheEventCommand extends AbstractCacheCommand implements Command
 {
-  private ServerGeoObjectType type;
+  private ServerHierarchyType type;
 
-  public GeoObjectTypeCacheEventCommand(ServerGeoObjectType type, CacheEventType eventType)
+  public HierarchicalRelationshipTypeCacheEventCommand(ServerHierarchyType type, CacheEventType eventType)
   {
     super(eventType);
 
@@ -21,11 +21,11 @@ public class GeoObjectTypeCacheEventCommand extends AbstractCacheCommand impleme
   {
     if (this.type != null && this.getEventType().equals(CacheEventType.CREATE))
     {
-      ServiceFactory.getMetadataCache().addGeoObjectType(this.type);
+      ServiceFactory.getMetadataCache().addHierarchyType(this.type);
     }
     else if (this.type != null && this.getEventType().equals(CacheEventType.UPDATE))
     {
-      this.refreshCache(this.type);
+      this.type.markAsDirty();
     }
     else if (this.getEventType().equals(CacheEventType.DELETE))
     {
@@ -35,11 +35,5 @@ public class GeoObjectTypeCacheEventCommand extends AbstractCacheCommand impleme
       // embedded in the HierarchyType
       ServiceFactory.getGraphRepoService().refreshMetadataCache();
     }
-  }
-
-  private void refreshCache(ServerGeoObjectType type)
-  {
-    type.getSubTypes().forEach(t -> t.markAsDirty());
-    type.markAsDirty();
   }
 }

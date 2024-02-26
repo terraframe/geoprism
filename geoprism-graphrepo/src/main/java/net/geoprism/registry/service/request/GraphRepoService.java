@@ -21,10 +21,7 @@ package net.geoprism.registry.service.request;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.runwaysdk.business.graph.GraphQuery;
-import com.runwaysdk.dataaccess.MdVertexDAOIF;
 import com.runwaysdk.dataaccess.metadata.MdClassDAO;
-import com.runwaysdk.dataaccess.metadata.graph.MdVertexDAO;
 import com.runwaysdk.query.OIterator;
 import com.runwaysdk.query.QueryFactory;
 import com.runwaysdk.session.Request;
@@ -32,11 +29,10 @@ import com.runwaysdk.session.Request;
 import net.geoprism.registry.BusinessEdgeType;
 import net.geoprism.registry.BusinessType;
 import net.geoprism.registry.DirectedAcyclicGraphType;
-import net.geoprism.registry.HierarchicalRelationshipType;
 import net.geoprism.registry.Organization;
 import net.geoprism.registry.OrganizationQuery;
 import net.geoprism.registry.UndirectedGraphType;
-import net.geoprism.registry.graph.GeoObjectType;
+import net.geoprism.registry.graph.HierarchicalRelationshipType;
 import net.geoprism.registry.model.ServerElement;
 import net.geoprism.registry.model.ServerGeoObjectType;
 import net.geoprism.registry.model.ServerHierarchyType;
@@ -91,7 +87,7 @@ public class GraphRepoService implements GraphRepoServiceIF
     HierarchicalRelationshipType.getInheritedTypes().forEach(relationship -> {
       ServerHierarchyType ht = hierarchyService.get(relationship, false);
 
-      ServiceFactory.getMetadataCache().addHierarchyType(ht, this.hierarchyService.toHierarchyType(ht));
+      ServiceFactory.getMetadataCache().addHierarchyType(ht);
     });
 
     HierarchicalRelationshipType.getAll().forEach(relationship -> {
@@ -99,7 +95,7 @@ public class GraphRepoService implements GraphRepoServiceIF
 
       if (!ServiceFactory.getMetadataCache().getHierachyType(ht.getCode()).isPresent())
       {
-        ServiceFactory.getMetadataCache().addHierarchyType(ht, this.hierarchyService.toHierarchyType(ht));
+        ServiceFactory.getMetadataCache().addHierarchyType(ht);
       }
     });
 

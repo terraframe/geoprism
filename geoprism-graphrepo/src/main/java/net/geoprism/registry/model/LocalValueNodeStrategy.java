@@ -1,9 +1,13 @@
 package net.geoprism.registry.model;
 
+import java.util.Locale;
+import java.util.Set;
+
 import org.commongeoregistry.adapter.dataaccess.LocalizedValue;
 
 import com.runwaysdk.business.graph.VertexObject;
 import com.runwaysdk.dataaccess.MdVertexDAOIF;
+import com.runwaysdk.localization.LocalizationFacade;
 
 import net.geoprism.registry.graph.AttributeType;
 
@@ -22,8 +26,19 @@ public class LocalValueNodeStrategy extends ValueNodeStrategy implements ValueSt
     {
       LocalizedValue lValue = (LocalizedValue) value;
 
-      // TODO: HEADS UP - Handle all locales
       node.setValue(LocalizedValue.DEFAULT_LOCALE, lValue.getValue(LocalizedValue.DEFAULT_LOCALE));
+
+      Set<Locale> locales = LocalizationFacade.getInstalledLocales();
+
+      for (Locale locale : locales)
+      {
+        String localeName = locale.toString();
+
+        if (lValue.contains(locale) && node.hasAttribute(localeName))
+        {
+          node.setValue(localeName, lValue.getValue(localeName));
+        }
+      }
     }
   }
 
@@ -31,9 +46,21 @@ public class LocalValueNodeStrategy extends ValueNodeStrategy implements ValueSt
   @Override
   protected <T> T getNodeValue(VertexObject node)
   {
-    // TODO: HEADS UP: populate other locales
+    LocalizedValue value = new LocalizedValue(node.getObjectValue(LocalizedValue.DEFAULT_LOCALE));
 
-    return (T) new LocalizedValue(node.getObjectValue(LocalizedValue.DEFAULT_LOCALE));
+    Set<Locale> locales = LocalizationFacade.getInstalledLocales();
+
+    for (Locale locale : locales)
+    {
+      String localeName = locale.toString();
+
+      if (node.hasAttribute(localeName))
+      {
+        value.setValue(locale, node.getValue(localeName));
+      }
+    }
+
+    return (T) value;
   }
 
 }

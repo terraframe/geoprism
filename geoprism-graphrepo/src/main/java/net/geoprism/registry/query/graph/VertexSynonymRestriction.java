@@ -72,13 +72,13 @@ public class VertexSynonymRestriction extends AbstractVertexRestriction implemen
     if (this.parent != null && this.hierarchyType != null)
     {
       Set<String> edges = new TreeSet<String>();
-      edges.add(this.hierarchyType.getMdEdge().getDBClassName());
+      edges.add(this.hierarchyType.getObjectEdge().getDBClassName());
 
       ServerHierarchyType inheritedHierarchy = ServiceFactory.getBean(GeoObjectTypeBusinessServiceIF.class).findHierarchy(type, this.hierarchyType, this.parent.getType());
 
       if (inheritedHierarchy != null)
       {
-        edges.add(inheritedHierarchy.getMdEdge().getDBClassName());
+        edges.add(inheritedHierarchy.getObjectEdge().getDBClassName());
       }
 
       statement.append("}.in(");

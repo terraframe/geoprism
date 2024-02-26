@@ -117,8 +117,10 @@ public class Transition extends TransitionBase
     MdAttributeDAOIF mdAttribute = mdVertex.definesAttribute(attributeName);
 
     StringBuilder statement = new StringBuilder();
-    statement.append("SELECT expand(" + mdAttribute.getColumnName() + ")");
-    statement.append(" FROM :parent");
+    statement.append("TRAVERSE out('has_value', 'has_geometry') FROM (");
+    statement.append(" SELECT expand(" + mdAttribute.getColumnName() + ")");
+    statement.append("   FROM :parent");
+    statement.append(")");
 
     GraphQuery<VertexObject> query = new GraphQuery<VertexObject>(statement.toString());
     query.setParameter("parent", this.getRID());

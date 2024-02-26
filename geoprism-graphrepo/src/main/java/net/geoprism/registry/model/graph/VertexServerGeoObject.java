@@ -830,7 +830,7 @@ public class VertexServerGeoObject extends AbstractServerGeoObject implements Se
 
   public EdgeObject getEdge(ServerGeoObjectIF parent, ServerHierarchyType hierarchyType, Date startDate, Date endDate)
   {
-    String statement = "SELECT FROM " + hierarchyType.getMdEdge().getDBClassName();
+    String statement = "SELECT FROM " + hierarchyType.getObjectEdge().getDBClassName();
     statement += " WHERE out = :parent";
     statement += " AND in = :child";
 
@@ -865,7 +865,7 @@ public class VertexServerGeoObject extends AbstractServerGeoObject implements Se
   {
     TreeSet<EdgeObject> set = new TreeSet<EdgeObject>(new EdgeComparator());
 
-    String statement = "SELECT expand(inE('" + hierarchyType.getMdEdge().getDBClassName() + "'))";
+    String statement = "SELECT expand(inE('" + hierarchyType.getObjectEdge().getDBClassName() + "'))";
     statement += " FROM :child";
 
     GraphQuery<EdgeObject> query = new GraphQuery<EdgeObject>(statement);
@@ -947,7 +947,7 @@ public class VertexServerGeoObject extends AbstractServerGeoObject implements Se
   public static boolean hasData(ServerHierarchyType hierarchyType, ServerGeoObjectType childType)
   {
     StringBuilder statement = new StringBuilder();
-    statement.append("SELECT COUNT(*) FROM " + hierarchyType.getMdEdge().getDBClassName());
+    statement.append("SELECT COUNT(*) FROM " + hierarchyType.getObjectEdge().getDBClassName());
     statement.append(" WHERE in.@class = :class");
     statement.append(" OR out.@class = :class");
 
@@ -962,7 +962,7 @@ public class VertexServerGeoObject extends AbstractServerGeoObject implements Se
   public static void removeAllEdges(ServerHierarchyType hierarchyType, ServerGeoObjectType childType)
   {
     StringBuilder statement = new StringBuilder();
-    statement.append("DELETE EDGE " + hierarchyType.getMdEdge().getDBClassName());
+    statement.append("DELETE EDGE " + hierarchyType.getObjectEdge().getDBClassName());
     statement.append(" WHERE in.@class = :class");
     statement.append(" OR out.@class = :class");
 
@@ -1170,7 +1170,7 @@ public class VertexServerGeoObject extends AbstractServerGeoObject implements Se
     {
       StringBuilder parentCondition = new StringBuilder();
 
-      parentCondition.append("(@rid in ( TRAVERSE outE('" + ht.getMdEdge().getDBClassName() + "')");
+      parentCondition.append("(@rid in ( TRAVERSE outE('" + ht.getObjectEdge().getDBClassName() + "')");
 
       if (startDate != null && endDate != null)
       {

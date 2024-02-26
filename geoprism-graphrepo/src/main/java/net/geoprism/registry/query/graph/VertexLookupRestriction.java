@@ -79,7 +79,7 @@ public class VertexLookupRestriction extends AbstractVertexRestriction implement
 
     if (this.parentCode != null && this.hierarchyType != null)
     {
-      MdEdgeDAOIF mdEdge = this.hierarchyType.getMdEdge();
+      MdEdgeDAOIF mdEdge = this.hierarchyType.getObjectEdge();
 
       statement.append("}.in('" + mdEdge.getDBClassName() + "'){where: (code=:code), while: ($depth < 1)");
 

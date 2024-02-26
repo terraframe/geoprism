@@ -215,6 +215,8 @@
       
       <object type="com.runwaysdk.system.metadata.MdVertex" key="net.geoprism.registry.graph.HierarchicalRelationshipType" />
       <object type="com.runwaysdk.system.metadata.MdVertex" key="net.geoprism.registry.graph.GeoObjectType" />      
+      
+      
     </delete>
   </undoIt>
 </version>

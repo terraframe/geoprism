@@ -780,7 +780,7 @@ public class GeoObjectBusinessService extends RegistryLocalizedValueConverter im
       StringBuilder statement = new StringBuilder();
       statement.append("MATCH ");
       statement.append("{class:" + dbClassName + ", where: (@rid=:rid)}");
-      statement.append(".in('" + hierarchy.getMdEdge().getDBClassName() + "')");
+      statement.append(".in('" + hierarchy.getObjectEdge().getDBClassName() + "')");
 
       String existCriteria = includeNonExist ? "" : "exists=true AND";
       statement.append("{as: ancestor, where: (" + existCriteria + " invalid=false), while: (true)}");
@@ -797,7 +797,7 @@ public class GeoObjectBusinessService extends RegistryLocalizedValueConverter im
       StringBuilder statement = new StringBuilder();
       statement.append("MATCH ");
       statement.append("{class:" + dbClassName + ", where: (@rid=:rid)}");
-      statement.append(".(inE('" + hierarchy.getMdEdge().getDBClassName() + "'){where: (:date BETWEEN startDate AND endDate)}.outV())");
+      statement.append(".(inE('" + hierarchy.getObjectEdge().getDBClassName() + "'){where: (:date BETWEEN startDate AND endDate)}.outV())");
 
       String existCriteria = includeNonExist ? "" : "AND exists_cot CONTAINS (value=true AND :date BETWEEN startDate AND endDate )";
       statement.append("{as: ancestor, where: (invalid=false " + existCriteria + "), while: (true)}");
@@ -848,11 +848,11 @@ public class GeoObjectBusinessService extends RegistryLocalizedValueConverter im
     {
       if (sgo.getDate() != null)
       {
-        statement.append("TRAVERSE inE('" + hier.getMdEdge().getDBClassName() + "')[:date between startDate AND endDate].outV() FROM (");
+        statement.append("TRAVERSE inE('" + hier.getObjectEdge().getDBClassName() + "')[:date between startDate AND endDate].outV() FROM (");
       }
       else
       {
-        statement.append("TRAVERSE inE('" + hier.getMdEdge().getDBClassName() + "').outV() FROM (");
+        statement.append("TRAVERSE inE('" + hier.getObjectEdge().getDBClassName() + "').outV() FROM (");
       }
     }
 
@@ -1062,7 +1062,7 @@ public class GeoObjectBusinessService extends RegistryLocalizedValueConverter im
         {
           JsonObject object = new JsonObject();
           object.addProperty("code", hierarchyType.getCode());
-          object.addProperty("label", hierarchyType.getDisplayLabel().getValue());
+          object.addProperty("label", hierarchyType.getLabel().getValue());
           object.add("parents", new JsonArray());
 
           hierarchies.add(object);
@@ -1375,7 +1375,7 @@ public class GeoObjectBusinessService extends RegistryLocalizedValueConverter im
       {
         final ServerGeoObjectIF parent = entry.getGeoObject();
 
-        EdgeObject newEdge = sgo.getVertex().addParent( ( (VertexComponent) parent ).getVertex(), hierarchyType.getMdEdge());
+        EdgeObject newEdge = sgo.getVertex().addParent( ( (VertexComponent) parent ).getVertex(), hierarchyType.getObjectEdge());
         newEdge.setValue(GeoVertex.START_DATE, entry.getStartDate());
         newEdge.setValue(GeoVertex.END_DATE, entry.getEndDate());
 
@@ -1404,16 +1404,16 @@ public class GeoObjectBusinessService extends RegistryLocalizedValueConverter im
   @Override
   public ServerParentTreeNode addParent(ServerGeoObjectIF sgo, ServerGeoObjectIF parent, ServerHierarchyType hierarchyType)
   {
-    if (!hierarchyType.getUniversalType().equals(AllowedIn.CLASS))
-    {
+//    if (!hierarchyType.getUniversalType().equals(AllowedIn.CLASS))
+//    {
       htService.validateUniversalRelationship(hierarchyType, sgo.getType(), parent.getType());
-    }
+//    }
 
     String edgeOid = null;
 
     if (sgo.getVertex().isNew() || !sgo.exists(parent, hierarchyType, null, null))
     {
-      EdgeObject edge = sgo.getVertex().addParent( ( (VertexComponent) parent ).getVertex(), hierarchyType.getMdEdge());
+      EdgeObject edge = sgo.getVertex().addParent( ( (VertexComponent) parent ).getVertex(), hierarchyType.getObjectEdge());
       edge.apply();
 
       edgeOid = edge.getOid();
@@ -1437,7 +1437,7 @@ public class GeoObjectBusinessService extends RegistryLocalizedValueConverter im
 
     if (htIn != null)
     {
-      statement.append("'" + htIn.getMdEdge().getDBClassName() + "'");
+      statement.append("'" + htIn.getObjectEdge().getDBClassName() + "'");
     }
     statement.append(")");
 
@@ -1514,7 +1514,7 @@ public class GeoObjectBusinessService extends RegistryLocalizedValueConverter im
 
     if (htIn != null)
     {
-      statement.append("'" + htIn.getMdEdge().getDBClassName() + "'");
+      statement.append("'" + htIn.getObjectEdge().getDBClassName() + "'");
     }
     statement.append(")");
 
@@ -1583,19 +1583,26 @@ public class GeoObjectBusinessService extends RegistryLocalizedValueConverter im
         {
           if (includeInherited && gotService.isRoot(parentType, ht))
           {
-            InheritedHierarchyAnnotation anno = InheritedHierarchyAnnotation.getByForHierarchical(ht.getHierarchicalRelationshipType());
-
-            if (anno != null)
-            {
-              HierarchicalRelationshipType hrtInherited = anno.getInheritedHierarchicalRelationshipType();
-              ServerHierarchyType shtInherited = ServerHierarchyType.get(hrtInherited);
-
-              tnParent = internalGetParentGeoObjects(parent, parentTypes, recursive, includeInherited, shtInherited, date);
-            }
-            else
-            {
-              tnParent = internalGetParentGeoObjects(parent, parentTypes, recursive, includeInherited, ht, date);
-            }
+            // TODO: HEADS UP
+            // InheritedHierarchyAnnotation anno =
+            // InheritedHierarchyAnnotation.getByForHierarchical(ht.getHierarchicalRelationshipType());
+            //
+            // if (anno != null)
+            // {
+            // HierarchicalRelationshipType hrtInherited =
+            // anno.getInheritedHierarchicalRelationshipType();
+            // ServerHierarchyType shtInherited =
+            // ServerHierarchyType.get(hrtInherited);
+            //
+            // tnParent = internalGetParentGeoObjects(parent, parentTypes,
+            // recursive, includeInherited, shtInherited, date);
+            // }
+            // else
+            // {
+            // tnParent = internalGetParentGeoObjects(parent, parentTypes,
+            // recursive, includeInherited, ht, date);
+            // }
+            tnParent = null;
           }
           else
           {
@@ -1690,19 +1697,21 @@ public class GeoObjectBusinessService extends RegistryLocalizedValueConverter im
         {
           if (includeInherited && gotService.isRoot(parentType, ht))
           {
-            InheritedHierarchyAnnotation anno = InheritedHierarchyAnnotation.getByForHierarchical(ht.getHierarchicalRelationshipType());
-
-            if (anno != null)
-            {
-              HierarchicalRelationshipType hrtInherited = anno.getInheritedHierarchicalRelationshipType();
-              ServerHierarchyType shtInherited = ServerHierarchyType.get(hrtInherited);
-
-              tnParent = internalGetParentGeoObjects(parent, parentTypes, recursive, includeInherited, shtInherited, date);
-            }
-            else
-            {
-              tnParent = internalGetParentGeoObjects(parent, parentTypes, recursive, includeInherited, ht, date);
-            }
+            // TODO: HEADS UP
+//            InheritedHierarchyAnnotation anno = InheritedHierarchyAnnotation.getByForHierarchical(ht.getHierarchicalRelationshipType());
+//
+//            if (anno != null)
+//            {
+//              HierarchicalRelationshipType hrtInherited = anno.getInheritedHierarchicalRelationshipType();
+//              ServerHierarchyType shtInherited = ServerHierarchyType.get(hrtInherited);
+//
+//              tnParent = internalGetParentGeoObjects(parent, parentTypes, recursive, includeInherited, shtInherited, date);
+//            }
+//            else
+//            {
+//              tnParent = internalGetParentGeoObjects(parent, parentTypes, recursive, includeInherited, ht, date);
+//            }
+            tnParent = null;
           }
           else
           {
@@ -1795,7 +1804,7 @@ public class GeoObjectBusinessService extends RegistryLocalizedValueConverter im
         {
           edge.delete();
 
-          EdgeObject newEdge = addParentRaw(sgo, inGo.getVertex(), hierarchyType.getMdEdge(), startDate, endDate);
+          EdgeObject newEdge = addParentRaw(sgo, inGo.getVertex(), hierarchyType.getObjectEdge(), startDate, endDate);
 
           resultEdges.add(newEdge);
         }
@@ -1841,7 +1850,7 @@ public class GeoObjectBusinessService extends RegistryLocalizedValueConverter im
 
       if (isNew)
       {
-        EdgeObject newEdge = addParentRaw(sgo, ( (VertexServerGeoObject) vot.getValue() ).getVertex(), hierarchyType.getMdEdge(), vot.getStartDate(), vot.getEndDate());
+        EdgeObject newEdge = addParentRaw(sgo, ( (VertexServerGeoObject) vot.getValue() ).getVertex(), hierarchyType.getObjectEdge(), vot.getStartDate(), vot.getEndDate());
 
         resultEdges.add(newEdge);
       }
@@ -1853,10 +1862,7 @@ public class GeoObjectBusinessService extends RegistryLocalizedValueConverter im
   @Override
   public ServerParentTreeNode addParent(ServerGeoObjectIF sgo, ServerGeoObjectIF parent, ServerHierarchyType hierarchyType, Date startDate, Date endDate)
   {
-    if (!hierarchyType.getUniversalType().equals(AllowedIn.CLASS))
-    {
-      htService.validateUniversalRelationship(hierarchyType, sgo.getType(), parent.getType());
-    }
+    htService.validateUniversalRelationship(hierarchyType, sgo.getType(), parent.getType());
 
     ValueOverTimeCollection votc = getParentCollection(sgo, hierarchyType);
     votc.add(new ValueOverTime(startDate, endDate, parent));
@@ -1920,11 +1926,11 @@ public class GeoObjectBusinessService extends RegistryLocalizedValueConverter im
     {
       if (sgo.getDate() != null)
       {
-        statement.append("TRAVERSE inE('" + hier.getMdEdge().getDBClassName() + "')[:date between startDate AND endDate].outV() FROM (");
+        statement.append("TRAVERSE inE('" + hier.getObjectEdge().getDBClassName() + "')[:date between startDate AND endDate].outV() FROM (");
       }
       else
       {
-        statement.append("TRAVERSE inE('" + hier.getMdEdge().getDBClassName() + "').outV() FROM (");
+        statement.append("TRAVERSE inE('" + hier.getObjectEdge().getDBClassName() + "').outV() FROM (");
       }
     }
 

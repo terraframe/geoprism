@@ -45,11 +45,13 @@ public class HierarchyMetadata extends HierarchyMetadataBase
 
   public static ServerHierarchyType getHierarchyType(String key)
   {
-    HierarchyMetadata hierarchy = HierarchyMetadata.getByKey(key);
-    MdTermRelationship mdTermRelationship = hierarchy.getMdTermRelationship();
-
-    ServerHierarchyType hierarchyType = ServerHierarchyType.get(mdTermRelationship);
-    return hierarchyType;
+    // TODO: CLASS goes away
+//    HierarchyMetadata hierarchy = HierarchyMetadata.getByKey(key);
+//    MdTermRelationship mdTermRelationship = hierarchy.getMdTermRelationship();
+//
+//    ServerHierarchyType hierarchyType = ServerHierarchyType.get(mdTermRelationship);
+//    return hierarchyType;
+    return null;
   }
 
   public static void deleteByRelationship(MdTermRelationship mdRelationship)

@@ -62,7 +62,7 @@ public class ServerHierarchyStrategy extends AbstractGraphStrategy implements Gr
 
     StringBuilder statement = new StringBuilder();
     statement.append("SELECT EXPAND( outE(");
-    statement.append("'" + this.hierarchy.getMdEdge().getDBClassName() + "'");
+    statement.append("'" + this.hierarchy.getObjectEdge().getDBClassName() + "'");
     statement.append(")");
 
     if (date != null)
@@ -145,7 +145,7 @@ public class ServerHierarchyStrategy extends AbstractGraphStrategy implements Gr
 
     StringBuilder statement = new StringBuilder();
     statement.append("SELECT EXPAND( inE(");
-    statement.append("'" + this.hierarchy.getMdEdge().getDBClassName() + "'");
+    statement.append("'" + this.hierarchy.getObjectEdge().getDBClassName() + "'");
     statement.append(")");
 
     if (date != null)

@@ -81,7 +81,7 @@ public class HierarchyTypeService implements HierarchyTypeServiceIF
       {
         JsonObject object = new JsonObject();
         object.addProperty("code", sHT.getCode());
-        object.addProperty("label", sHT.getDisplayLabel().getValue());
+        object.addProperty("label", sHT.getLabel().getValue());
 
         hierarchies.add(object);
       }

@@ -30,8 +30,8 @@ import com.runwaysdk.dataaccess.transaction.Transaction;
 import com.runwaysdk.system.metadata.MdBusiness;
 import com.runwaysdk.system.metadata.MdClass;
 
-import net.geoprism.registry.HierarchicalRelationshipType;
 import net.geoprism.registry.InheritedHierarchyAnnotation;
+import net.geoprism.registry.graph.HierarchicalRelationshipType;
 import net.geoprism.registry.model.ServerGeoObjectType;
 import net.geoprism.registry.model.ServerHierarchyType;
 import net.geoprism.registry.permission.PermissionContext;

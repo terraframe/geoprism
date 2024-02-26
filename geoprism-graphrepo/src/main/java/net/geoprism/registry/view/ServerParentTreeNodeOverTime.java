@@ -260,13 +260,14 @@ public class ServerParentTreeNodeOverTime
           
           if (ServiceFactory.getBean(GeoObjectTypeBusinessServiceIF.class).isRoot(pType, inherited))
           {
-            InheritedHierarchyAnnotation anno = InheritedHierarchyAnnotation.getByForHierarchical(ht.getHierarchicalRelationshipType());
-            
-            if (anno != null)
-            {
-              HierarchicalRelationshipType hrtInherited = anno.getInheritedHierarchicalRelationshipType();
-              inherited = ServerHierarchyType.get(hrtInherited);
-            }
+            // TODO: HEADS UP
+//            InheritedHierarchyAnnotation anno = InheritedHierarchyAnnotation.getByForHierarchical(ht.getHierarchicalRelationshipType());
+//            
+//            if (anno != null)
+//            {
+//              HierarchicalRelationshipType hrtInherited = anno.getInheritedHierarchicalRelationshipType();
+//              inherited = ServerHierarchyType.get(hrtInherited);
+//            }
           }
         }
       }
@@ -329,7 +330,7 @@ public class ServerParentTreeNodeOverTime
 
       JsonObject object = new JsonObject();
       object.addProperty(JSON_HIERARCHY_CODE, ht.getCode());
-      object.addProperty(JSON_HIERARCHY_LABEL, ht.getDisplayLabel().getValue());
+      object.addProperty(JSON_HIERARCHY_LABEL, ht.getLabel().getValue());
       object.add(JSON_HIERARCHY_TYPES, types);
       object.add(JSON_HIERARCHY_ENTRIES, entries);
 

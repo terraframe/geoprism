@@ -27,6 +27,7 @@ import java.util.TreeMap;
 import com.runwaysdk.business.graph.GraphQuery;
 import com.runwaysdk.business.graph.VertexObject;
 
+import net.geoprism.registry.model.EdgeConstant;
 import net.geoprism.registry.model.ServerGeoObjectIF;
 import net.geoprism.registry.model.ServerGeoObjectType;
 import net.geoprism.registry.model.graph.VertexServerGeoObject;
@@ -99,6 +100,7 @@ public class BasicVertexQuery
     HashMap<String, Object> parameters = new HashMap<String, Object>();
 
     StringBuilder statement = new StringBuilder();
+    statement.append("TRAVERSE out('" + EdgeConstant.HAS_VALUE.getDBClassName() + "', '" + EdgeConstant.HAS_GEOMETRY.getDBClassName() + "') FROM (");
     statement.append("SELECT FROM " + this.type.getMdVertex().getDBClassName());
 
     if (this.restriction != null)
@@ -117,6 +119,9 @@ public class BasicVertexQuery
     {
       statement.append(" LIMIT " + this.limit);
     }
+    
+    statement.append(")");
+    
 
     return new GraphQuery<VertexObject>(statement.toString(), parameters);
   }
@@ -157,6 +162,7 @@ public class BasicVertexQuery
     GraphQuery<VertexObject> query = this.getQuery();
 
     List<VertexObject> results = query.getResults();
+    
 
     for (VertexObject result : results)
     {

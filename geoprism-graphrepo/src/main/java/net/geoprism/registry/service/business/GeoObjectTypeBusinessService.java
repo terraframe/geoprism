@@ -66,13 +66,14 @@ import net.geoprism.registry.ChainInheritanceException;
 import net.geoprism.registry.CodeLengthException;
 import net.geoprism.registry.DuplicateGeoObjectTypeException;
 import net.geoprism.registry.GeoObjectTypeAssignmentException;
-import net.geoprism.registry.HierarchicalRelationshipType;
 import net.geoprism.registry.HierarchyRootException;
 import net.geoprism.registry.InheritedHierarchyAnnotation;
 import net.geoprism.registry.TypeInUseException;
+import net.geoprism.registry.command.CacheEventType;
 import net.geoprism.registry.command.GeoObjectTypeCacheEventCommand;
 import net.geoprism.registry.conversion.TermConverter;
 import net.geoprism.registry.graph.GeoVertexType;
+import net.geoprism.registry.graph.HierarchicalRelationshipType;
 import net.geoprism.registry.model.GeoObjectTypeMetadata;
 import net.geoprism.registry.model.ServerGeoObjectType;
 import net.geoprism.registry.model.ServerHierarchyType;
@@ -160,21 +161,25 @@ public class GeoObjectTypeBusinessService implements GeoObjectTypeBusinessServic
     {
       throw new HierarchyRootException();
     }
-
-    HierarchicalRelationshipType fhrt = forHierarchy.getHierarchicalRelationshipType();
-    HierarchicalRelationshipType ihrt = inheritedHierarchy.getHierarchicalRelationshipType();
-
-    if (InheritedHierarchyAnnotation.getByForHierarchical(fhrt) != null)
-    {
-      throw new UnsupportedOperationException("A hierarchy cannot inherit from more than one other hierarchy");
-    }
-
-    if (isRoot(sgot, inheritedHierarchy))
-    {
-      throw new UnsupportedOperationException("A root node in a hierarchy cannot be inherited");
-    }
-
     // TODO: HEADS UP
+
+    // HierarchicalRelationshipType fhrt =
+    // forHierarchy.getHierarchicalRelationshipType();
+    // HierarchicalRelationshipType ihrt =
+    // inheritedHierarchy.getHierarchicalRelationshipType();
+    //
+    // if (InheritedHierarchyAnnotation.getByForHierarchical(fhrt) != null)
+    // {
+    // throw new UnsupportedOperationException("A hierarchy cannot inherit from
+    // more than one other hierarchy");
+    // }
+    //
+    // if (isRoot(sgot, inheritedHierarchy))
+    // {
+    // throw new UnsupportedOperationException("A root node in a hierarchy
+    // cannot be inherited");
+    // }
+    //
     // InheritedHierarchyAnnotation annotation = new
     // InheritedHierarchyAnnotation();
     // annotation.setUniversal(sgot.getUniversal());
@@ -190,12 +195,14 @@ public class GeoObjectTypeBusinessService implements GeoObjectTypeBusinessServic
   @Transaction
   public void removeInheritedHierarchy(ServerHierarchyType forHierarchy)
   {
-    InheritedHierarchyAnnotation annotation = InheritedHierarchyAnnotation.getByForHierarchical(forHierarchy.getHierarchicalRelationshipType());
-
-    if (annotation != null)
-    {
-      annotation.delete();
-    }
+    // TODO: HEADS UP
+    // InheritedHierarchyAnnotation annotation =
+    // InheritedHierarchyAnnotation.getByForHierarchical(forHierarchy.getHierarchicalRelationshipType());
+    //
+    // if (annotation != null)
+    // {
+    // annotation.delete();
+    // }
   }
 
   public List<ServerHierarchyType> getHierarchies(ServerGeoObjectType sgot)
@@ -254,7 +261,8 @@ public class GeoObjectTypeBusinessService implements GeoObjectTypeBusinessServic
 
   public ServerHierarchyType getInheritedHierarchy(ServerGeoObjectType sgot, ServerHierarchyType hierarchy)
   {
-    return this.getInheritedHierarchy(sgot, hierarchy.getHierarchicalRelationshipType());
+    // TODO: HEADS UP
+    return this.getInheritedHierarchy(sgot, hierarchy.getObject());
   }
 
   public ServerHierarchyType getInheritedHierarchy(ServerGeoObjectType sgot, HierarchicalRelationshipType hierarchicalRelationship)
@@ -447,7 +455,6 @@ public class GeoObjectTypeBusinessService implements GeoObjectTypeBusinessServic
       type.setSuperType(superType.getType());
     }
 
-    
     try
     {
       // The DuplicateDataException on code was found to be thrown here.
@@ -466,7 +473,7 @@ public class GeoObjectTypeBusinessService implements GeoObjectTypeBusinessServic
 
     ServerGeoObjectType sType = new ServerGeoObjectType(type);
 
-    new GeoObjectTypeCacheEventCommand(sType, GeoObjectTypeCacheEventCommand.EventType.CREATE).doIt();
+    new GeoObjectTypeCacheEventCommand(sType, CacheEventType.CREATE).doIt();
 
     return sType;
   }
@@ -493,7 +500,7 @@ public class GeoObjectTypeBusinessService implements GeoObjectTypeBusinessServic
   {
     serverType.removeAttribute(attributeName);
 
-    new GeoObjectTypeCacheEventCommand(serverType, GeoObjectTypeCacheEventCommand.EventType.UPDATE).doIt();
+    new GeoObjectTypeCacheEventCommand(serverType, CacheEventType.UPDATE).doIt();
 
     // If this did not error out then add to the cache
     // Refresh the users session
@@ -685,7 +692,7 @@ public class GeoObjectTypeBusinessService implements GeoObjectTypeBusinessServic
 
     type.delete();
 
-    new GeoObjectTypeCacheEventCommand(type, GeoObjectTypeCacheEventCommand.EventType.DELETE).doIt();
+    new GeoObjectTypeCacheEventCommand(type, CacheEventType.DELETE).doIt();
   }
 
   /**
@@ -811,7 +818,7 @@ public class GeoObjectTypeBusinessService implements GeoObjectTypeBusinessServic
     attributeType.setIsDefault(false);
     attributeType.apply();
 
-    new GeoObjectTypeCacheEventCommand(type, GeoObjectTypeCacheEventCommand.EventType.UPDATE).doIt();
+    new GeoObjectTypeCacheEventCommand(type, CacheEventType.UPDATE).doIt();
 
     // mdAttribute.setAttributeName(dto.getName());
     // mdAttribute.setValue(MdAttributeConcreteInfo.REQUIRED,
@@ -874,7 +881,7 @@ public class GeoObjectTypeBusinessService implements GeoObjectTypeBusinessServic
       attribute.fromDTO(dto);
       attribute.apply();
 
-      new GeoObjectTypeCacheEventCommand(type, GeoObjectTypeCacheEventCommand.EventType.UPDATE).doIt();
+      new GeoObjectTypeCacheEventCommand(type, CacheEventType.UPDATE).doIt();
 
       return attribute;
     }
@@ -916,7 +923,7 @@ public class GeoObjectTypeBusinessService implements GeoObjectTypeBusinessServic
     type.fromDTO(dto);
     type.apply();
 
-    new GeoObjectTypeCacheEventCommand(serverGeoObjectType, GeoObjectTypeCacheEventCommand.EventType.UPDATE).doIt();
+    new GeoObjectTypeCacheEventCommand(serverGeoObjectType, CacheEventType.UPDATE).doIt();
   }
 
   /**

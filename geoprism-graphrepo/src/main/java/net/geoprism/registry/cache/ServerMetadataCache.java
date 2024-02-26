@@ -28,7 +28,6 @@ import java.util.stream.Collectors;
 
 import org.commongeoregistry.adapter.RegistryAdapter;
 import org.commongeoregistry.adapter.dataaccess.GeoObject;
-import org.commongeoregistry.adapter.metadata.HierarchyType;
 
 import net.geoprism.registry.model.ServerGeoObjectType;
 import net.geoprism.registry.model.ServerHierarchyType;
@@ -103,11 +102,11 @@ public class ServerMetadataCache extends ServerOrganizationCache
     getAdapter().getMetadataCache().removeGeoObjectType(code);
   }
 
-  public void addHierarchyType(ServerHierarchyType hierarchyType, HierarchyType dto)
+  public void addHierarchyType(ServerHierarchyType hierarchyType)
   {
     this.hierarchyTypeMap.put(hierarchyType.getCode(), hierarchyType);
 
-    getAdapter().getMetadataCache().addHierarchyType(dto);
+    getAdapter().getMetadataCache().addHierarchyType(hierarchyType.toDTO());
   }
 
   public Optional<ServerHierarchyType> getHierachyType(String code)
