@@ -3,22 +3,25 @@
  *
  * This file is part of Geoprism(tm).
  *
- * Geoprism(tm) is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
+ * Geoprism(tm) is free software: you can redistribute it and/or modify it under
+ * the terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation, either version 3 of the License, or (at your option) any
+ * later version.
  *
- * Geoprism(tm) is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
+ * Geoprism(tm) is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with Geoprism(tm).  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with Geoprism(tm). If not, see <http://www.gnu.org/licenses/>.
  */
 package net.geoprism.registry.model;
 
-import com.runwaysdk.business.ontology.Term;
+import java.util.TreeMap;
+
+import net.geoprism.registry.graph.BaseGeoObjectType;
+import net.geoprism.registry.graph.GeoObjectType;
 
 public class RootGeoObjectType extends ServerGeoObjectType
 {
@@ -26,7 +29,7 @@ public class RootGeoObjectType extends ServerGeoObjectType
 
   public RootGeoObjectType()
   {
-    super();
+    super(BaseGeoObjectType.getByCode(GeoObjectType.ROOT), new TreeMap<>());
   }
 
   @Override
@@ -34,12 +37,12 @@ public class RootGeoObjectType extends ServerGeoObjectType
   {
     return false;
   }
-  
+
   public boolean getIsPrivate()
   {
     return false;
   }
-  
+
   public void setIsPrivate(Boolean isPrivate)
   {
   }
@@ -47,6 +50,6 @@ public class RootGeoObjectType extends ServerGeoObjectType
   @Override
   public String getCode()
   {
-    return Term.ROOT_KEY;
+    return GeoObjectType.ROOT;
   }
 }

@@ -25,6 +25,8 @@ import net.geoprism.registry.service.request.ServiceFactory;
 
 public class GeoObjectType extends GeoObjectTypeBase
 {
+  public static final String ROOT = "ROOT";
+  
   @SuppressWarnings("unused")
   private static final long serialVersionUID = -942330515;
 

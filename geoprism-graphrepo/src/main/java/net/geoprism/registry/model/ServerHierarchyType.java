@@ -30,10 +30,8 @@ import org.commongeoregistry.adapter.metadata.HierarchyType;
 import com.runwaysdk.business.graph.GraphQuery;
 import com.runwaysdk.dataaccess.MdClassDAOIF;
 import com.runwaysdk.dataaccess.MdEdgeDAOIF;
-import com.runwaysdk.dataaccess.MdVertexDAOIF;
 import com.runwaysdk.dataaccess.metadata.MdClassDAO;
 import com.runwaysdk.dataaccess.metadata.graph.MdEdgeDAO;
-import com.runwaysdk.dataaccess.metadata.graph.MdVertexDAO;
 import com.runwaysdk.dataaccess.transaction.Transaction;
 import com.runwaysdk.session.Session;
 
@@ -191,7 +189,7 @@ public class ServerHierarchyType extends DirtySoftReference<HierarchicalRelation
 
   public void addToHierarchy(ServerGeoObjectType parentType, ServerGeoObjectType childType)
   {
-    parentType.getObject().addChild(childType.getObject(), this.getDefinitionEdge());
+    parentType.getObject().addChild(childType.getObject(), this.getDefinitionEdge()).apply();
   }
 
   public List<ServerGeoObjectType> getChildren(ServerGeoObjectType parent)
@@ -206,23 +204,22 @@ public class ServerHierarchyType extends DirtySoftReference<HierarchicalRelation
     GraphQuery<String> query = new GraphQuery<String>(statement.toString());
     query.setParameter("rid", parent.getObject().getRID());
 
-    return query.getResults().stream().map(code -> ServerGeoObjectType.get(code)).collect(Collectors.toList());
+    return query.getResults().stream().filter(code -> !code.equals(GeoObjectType.ROOT)).map(code -> ServerGeoObjectType.get(code)).collect(Collectors.toList());
   }
 
   public List<ServerGeoObjectType> getRootNodes()
   {
     // We only need the code because we want to use the cached
     // ServerGeoObjectType instead of creating a new one
-    MdVertexDAOIF mdVertex = MdVertexDAO.getMdVertexDAO(GeoObjectType.CLASS);
-
     StringBuilder statement = new StringBuilder();
-    statement.append("SELECT code FROM " + mdVertex.getDBClassName());
-    statement.append(" WHERE in('" + this.getObject().getDefinitionEdge().getDbClassName() + "').size() = :size");
+    statement.append("SELECT code FROM (");
+    statement.append(" SELECT EXPAND(out('" + this.getObject().getDefinitionEdge().getDbClassName() + "')) FROM :rid");
+    statement.append(")");
 
     GraphQuery<String> query = new GraphQuery<String>(statement.toString());
-    query.setParameter("size", 0);
+    query.setParameter("rid", RootGeoObjectType.INSTANCE.getObject().getRID());
 
-    return query.getResults().stream().map(code -> ServerGeoObjectType.get(code)).collect(Collectors.toList());
+    return query.getResults().stream().filter(code -> !code.equals(GeoObjectType.ROOT)).map(code -> ServerGeoObjectType.get(code)).collect(Collectors.toList());
   }
 
   public List<ServerGeoObjectType> getOrderedDescendants(ServerGeoObjectType type)
@@ -237,7 +234,7 @@ public class ServerHierarchyType extends DirtySoftReference<HierarchicalRelation
     GraphQuery<String> query = new GraphQuery<String>(statement.toString());
     query.setParameter("rid", type.getObject().getRID());
 
-    return query.getResults().stream().map(code -> ServerGeoObjectType.get(code)).collect(Collectors.toList());
+    return query.getResults().stream().filter(code -> !code.equals(GeoObjectType.ROOT)).map(code -> ServerGeoObjectType.get(code)).collect(Collectors.toList());
   }
 
   public List<ServerGeoObjectType> getAncestors(ServerGeoObjectType childType)
@@ -250,9 +247,9 @@ public class ServerHierarchyType extends DirtySoftReference<HierarchicalRelation
     statement.append(")");
 
     GraphQuery<String> query = new GraphQuery<String>(statement.toString());
-    query.setParameter("rid", this.getObject().getRID());
+    query.setParameter("rid", childType.getObject().getRID());
 
-    return query.getResults().stream().map(code -> ServerGeoObjectType.get(code)).collect(Collectors.toList());
+    return query.getResults().stream().filter(code -> !code.equals(GeoObjectType.ROOT)).map(code -> ServerGeoObjectType.get(code)).collect(Collectors.toList());
   }
 
   @Transaction

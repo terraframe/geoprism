@@ -298,45 +298,37 @@ public class GeoObjectTypeBusinessService implements GeoObjectTypeBusinessServic
   public List<ServerGeoObjectType> getTypeAncestors(ServerGeoObjectType sgot, ServerHierarchyType hierarchyType, Boolean includeInheritedTypes)
   {
     List<ServerGeoObjectType> ancestors = new LinkedList<ServerGeoObjectType>();
+    
+    List<ServerGeoObjectType> list = hierarchyType.getAncestors(sgot);
+    ancestors.addAll(list);
 
-    // TODO: HEADS UP
-    // Collection<com.runwaysdk.business.ontology.Term> list =
-    // GeoEntityUtil.getOrderedAncestors(Universal.getRoot(),
-    // sgot.getUniversal(), hierarchyType.getUniversalType());
-    //
-    // list.forEach(term -> {
-    // Universal parent = (Universal) term;
-    //
-    // if (!parent.getKeyName().equals(Universal.ROOT) &&
-    // !parent.getOid().equals(sgot.getUniversal().getOid()))
-    // {
-    // ServerGeoObjectType sParent = ServerGeoObjectType.get(parent);
-    //
-    // ancestors.add(sParent);
-    //
-    // if (includeInheritedTypes && isRoot(sParent, hierarchyType))
-    // {
-    // ServerHierarchyType inheritedHierarchy = getInheritedHierarchy(sParent,
-    // hierarchyType);
-    //
-    // if (inheritedHierarchy != null)
-    // {
-    // ancestors.addAll(0, getTypeAncestors(sParent, inheritedHierarchy,
-    // includeInheritedTypes));
-    // }
-    // }
-    // }
-    // });
-    //
-    // if (ancestors.size() == 0)
-    // {
-    // ServerGeoObjectType superType = sgot.getSuperType();
-    //
-    // if (superType != null)
-    // {
-    // return getTypeAncestors(superType, hierarchyType, includeInheritedTypes);
-    // }
-    // }
+    list.forEach(parent -> {
+
+      if (!parent.getOid().equals(sgot.getOid()))
+      {
+        ancestors.add(parent);
+
+        if (includeInheritedTypes && isRoot(parent, hierarchyType))
+        {
+          ServerHierarchyType inheritedHierarchy = getInheritedHierarchy(parent, hierarchyType);
+
+          if (inheritedHierarchy != null)
+          {
+            ancestors.addAll(0, getTypeAncestors(parent, inheritedHierarchy, includeInheritedTypes));
+          }
+        }
+      }
+    });
+
+    if (ancestors.size() == 0)
+    {
+      ServerGeoObjectType superType = sgot.getSuperType();
+
+      if (superType != null)
+      {
+        return getTypeAncestors(superType, hierarchyType, includeInheritedTypes);
+      }
+    }
 
     return ancestors;
   }

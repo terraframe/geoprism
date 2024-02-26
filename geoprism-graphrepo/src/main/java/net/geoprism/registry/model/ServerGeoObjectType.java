@@ -40,10 +40,11 @@ import com.runwaysdk.system.gis.geo.Universal;
 
 import net.geoprism.registry.conversion.LocalizedValueConverter;
 import net.geoprism.registry.graph.AttributeType;
+import net.geoprism.registry.graph.BaseGeoObjectType;
 import net.geoprism.registry.graph.GeoObjectType;
 import net.geoprism.registry.service.request.ServiceFactory;
 
-public class ServerGeoObjectType extends DirtySoftReference<GeoObjectType> implements ServerElement
+public class ServerGeoObjectType extends DirtySoftReference<BaseGeoObjectType> implements ServerElement
 {
   // private Logger logger = LoggerFactory.getLogger(ServerLeafGeoObject.class);
 
@@ -62,7 +63,7 @@ public class ServerGeoObjectType extends DirtySoftReference<GeoObjectType> imple
     this.attributes = type.getAttributeMap();
   }
 
-  public ServerGeoObjectType(GeoObjectType type, Map<String, AttributeType> attributes)
+  public ServerGeoObjectType(BaseGeoObjectType type, Map<String, AttributeType> attributes)
   {
     super(type);
     this.attributes = attributes;
@@ -77,7 +78,7 @@ public class ServerGeoObjectType extends DirtySoftReference<GeoObjectType> imple
   }
 
   @Override
-  protected void refresh(GeoObjectType object)
+  protected void refresh(BaseGeoObjectType object)
   {
     GeoObjectType type = GeoObjectType.getByCode(object.getCode());
 
@@ -93,7 +94,7 @@ public class ServerGeoObjectType extends DirtySoftReference<GeoObjectType> imple
 
   public GeoObjectType getType()
   {
-    return this.getObject();
+    return (GeoObjectType) this.getObject();
   }
 
   public String getCode()
@@ -113,12 +114,12 @@ public class ServerGeoObjectType extends DirtySoftReference<GeoObjectType> imple
 
   public GeometryType getGeometryType()
   {
-    return GeometryType.valueOf(this.getObject().getGeometryType());
+    return GeometryType.valueOf(this.getType().getGeometryType());
   }
 
   public boolean isGeometryEditable()
   {
-    return this.getObject().getIsGeometryEditable();
+    return this.getType().getIsGeometryEditable();
   }
 
   public LocalizedValue getLabel()
@@ -133,14 +134,14 @@ public class ServerGeoObjectType extends DirtySoftReference<GeoObjectType> imple
 
   public boolean getIsAbstract()
   {
-    return this.getObject().getIsAbstract();
+    return this.getType().getIsAbstract();
   }
 
   public org.commongeoregistry.adapter.metadata.GeoObjectType toDTO()
   {
     if (this.dto == null)
     {
-      this.dto = this.getObject().toDTO();
+      this.dto = this.getType().toDTO();
     }
 
     return this.dto;
@@ -193,12 +194,12 @@ public class ServerGeoObjectType extends DirtySoftReference<GeoObjectType> imple
 
   public boolean getIsPrivate()
   {
-    return this.getObject().getIsPrivate();
+    return this.getType().getIsPrivate();
   }
 
   public void setIsPrivate(Boolean isPrivate)
   {
-    this.getObject().setIsPrivate(isPrivate);
+    this.getType().setIsPrivate(isPrivate);
   }
 
   @Override
@@ -380,7 +381,7 @@ public class ServerGeoObjectType extends DirtySoftReference<GeoObjectType> imple
 
   public List<ServerGeoObjectType> getSubTypes()
   {
-    List<String> codes = this.getObject().getSubTypeCodes();
+    List<String> codes = this.getType().getSubTypeCodes();
     return codes.stream().map(code -> ServerGeoObjectType.get(code)).collect(Collectors.toList());
   }
 

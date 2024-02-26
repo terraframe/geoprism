@@ -507,7 +507,7 @@ public class HierarchyTypeBusinessService implements HierarchyTypeBusinessServic
    */
   protected MdEdge createDefitionMdEdge(HierarchyType dto)
   {
-    MdVertexDAOIF mdGeoObjectType = MdVertexDAO.getMdVertexDAO(net.geoprism.registry.graph.GeoObjectType.CLASS);
+    MdVertexDAOIF mdGeoObjectType = MdVertexDAO.getMdVertexDAO(net.geoprism.registry.graph.BaseGeoObjectType.CLASS);
 
     MdEdgeDAO mdEdgeDAO = MdEdgeDAO.newInstance();
     mdEdgeDAO.setValue(MdEdgeInfo.PACKAGE, RegistryConstants.UNIVERSAL_GRAPH_PACKAGE);
