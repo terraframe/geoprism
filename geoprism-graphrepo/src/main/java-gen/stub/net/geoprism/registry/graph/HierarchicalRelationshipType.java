@@ -31,6 +31,12 @@ public class HierarchicalRelationshipType extends HierarchicalRelationshipTypeBa
     super();
   }
 
+  @Override
+  public GraphOrganization getOrganization()
+  {
+    return GraphOrganization.get((String) this.getObjectValue(HierarchicalRelationshipType.ORGANIZATION));
+  }
+
   protected MdEdgeDAOIF getDefinitionEdgeDAO()
   {
     return MdEdgeDAO.get(this.getDefinitionEdgeOid());
@@ -116,20 +122,21 @@ public class HierarchicalRelationshipType extends HierarchicalRelationshipTypeBa
       return ServerGeoObjectType.get(code);
     }).collect(Collectors.toList());
   }
-  
-  public String getOrganizationCode() {
+
+  public String getOrganizationCode()
+  {
     MdVertexDAOIF mdVertexDAO = MdVertexDAO.getMdVertexDAO(CLASS);
     MdAttributeDAOIF mdAttribute = mdVertexDAO.definesAttribute(HierarchicalRelationshipType.ORGANIZATION);
 
     StringBuilder statement = new StringBuilder();
-    statement.append("SELECT " + mdAttribute.getColumnName()+".code FROM :rid");
+    statement.append("SELECT " + mdAttribute.getColumnName() + ".code FROM :rid");
 
     GraphQuery<String> query = new GraphQuery<String>(statement.toString());
     query.setParameter("rid", this.getRID());
 
     return query.getSingleResult();
   }
-  
+
   public void fromDTO(HierarchyType dto)
   {
     this.setCode(dto.getCode());
@@ -145,7 +152,7 @@ public class HierarchicalRelationshipType extends HierarchicalRelationshipTypeBa
     this.setAccessConstraints(dto.getAccessConstraints());
     this.setUseConstraints(dto.getUseConstraints());
   }
-  
+
   public HierarchyType toDTO()
   {
     LocalizedValue label = LocalizedValueConverter.convert(this.getEmbeddedComponent(LABEL));
@@ -161,10 +168,9 @@ public class HierarchicalRelationshipType extends HierarchicalRelationshipTypeBa
     dto.setProgress(this.getProgress());
     dto.setAccessConstraints(this.getAccessConstraints());
     dto.setUseConstraints(this.getUseConstraints());
-    
+
     return dto;
   }
-
 
   public static List<HierarchicalRelationshipType> getInheritedTypes()
   {

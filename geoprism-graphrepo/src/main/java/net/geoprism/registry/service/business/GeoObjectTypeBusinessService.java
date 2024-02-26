@@ -505,7 +505,7 @@ public class GeoObjectTypeBusinessService implements GeoObjectTypeBusinessServic
   }
 
   @Override
-  public AttributeType updateAttributeType(ServerGeoObjectType serverType, String attributeTypeJSON)
+  public <T extends AttributeType> T updateAttributeType(ServerGeoObjectType serverType, String attributeTypeJSON)
   {
     JsonObject attrObj = JsonParser.parseString(attributeTypeJSON).getAsJsonObject();
     AttributeType dto = AttributeType.parse(attrObj);
@@ -513,17 +513,19 @@ public class GeoObjectTypeBusinessService implements GeoObjectTypeBusinessServic
     return updateAttributeType(serverType, dto);
   }
 
+  @SuppressWarnings("unchecked")
   @Override
-  public AttributeType updateAttributeType(ServerGeoObjectType serverType, AttributeType dto)
+  public <T extends AttributeType> T updateAttributeType(ServerGeoObjectType serverType, AttributeType dto)
   {
     net.geoprism.registry.graph.AttributeType attributeType = this.updateAttributeTypeFromDTO(serverType, dto);
     dto = attributeType.toDTO();
 
-    return dto;
+    return (T) dto;
   }
 
+  @SuppressWarnings("unchecked")
   @Override
-  public AttributeType createAttributeType(ServerGeoObjectType serverType, AttributeType dto)
+  public <T extends AttributeType> T createAttributeType(ServerGeoObjectType serverType, AttributeType dto)
   {
     net.geoprism.registry.graph.AttributeType attributeType = createAttributeTypeFromDTO(serverType, dto);
 
@@ -535,11 +537,11 @@ public class GeoObjectTypeBusinessService implements GeoObjectTypeBusinessServic
       ( (Session) Session.getCurrentSession() ).reloadPermissions();
     }
 
-    return dto;
+    return (T) dto;
   }
 
   @Override
-  public AttributeType createAttributeType(ServerGeoObjectType sgot, String attributeTypeJSON)
+  public <T extends AttributeType> T createAttributeType(ServerGeoObjectType sgot, String attributeTypeJSON)
   {
     JsonObject attrObj = JsonParser.parseString(attributeTypeJSON).getAsJsonObject();
 
@@ -590,7 +592,7 @@ public class GeoObjectTypeBusinessService implements GeoObjectTypeBusinessServic
 
   protected void delete(ServerGeoObjectType type)
   {
-    ServiceFactory.getGeoObjectTypePermissionService().enforceCanDelete(type.getOrganization().getCode(), type, type.getIsPrivate());
+    ServiceFactory.getGeoObjectTypePermissionService().enforceCanDelete(type.getOrganizationCode(), type, type.getIsPrivate());
 
     this.deleteInTransaction(type);
 
@@ -660,7 +662,7 @@ public class GeoObjectTypeBusinessService implements GeoObjectTypeBusinessServic
     // roles specified on the super type.
     if (type.getSuperType() == null)
     {
-      String organizationCode = type.getOrganizationCode();
+      String organizationCode = type.getOrganization().getCode();
 
       String geoObjectTypeCode = type.getCode();
 
@@ -700,16 +702,17 @@ public class GeoObjectTypeBusinessService implements GeoObjectTypeBusinessServic
    *          AttributeType to be added to the GeoObjectType
    * @return updated {@link GeoObjectType}
    */
+  @SuppressWarnings("unchecked")
   @Override
-  public AttributeType createAttributeType(String geoObjectTypeCode, String attributeTypeJSON)
+  public <T extends AttributeType> T createAttributeType(String geoObjectTypeCode, String attributeTypeJSON)
   {
     ServerGeoObjectType got = ServerGeoObjectType.get(geoObjectTypeCode);
 
-    ServiceFactory.getGeoObjectTypePermissionService().enforceCanWrite(got.getOrganization().getCode(), got, got.getIsPrivate());
+    ServiceFactory.getGeoObjectTypePermissionService().enforceCanWrite(got.getOrganizationCode(), got, got.getIsPrivate());
 
-    AttributeType attrType = createAttributeType(got, attributeTypeJSON);
+    AttributeType dto = createAttributeType(got, attributeTypeJSON);
 
-    return attrType;
+    return (T) dto;
   }
 
   /**
@@ -724,8 +727,9 @@ public class GeoObjectTypeBusinessService implements GeoObjectTypeBusinessServic
    *          AttributeType to be added to the GeoObjectType
    * @return updated {@link AttributeType}
    */
+  @SuppressWarnings("unchecked")
   @Override
-  public AttributeType updateAttributeType(String geoObjectTypeCode, String attributeTypeJSON)
+  public <T extends AttributeType> T updateAttributeType(String geoObjectTypeCode, String attributeTypeJSON)
   {
     ServerGeoObjectType got = ServerGeoObjectType.get(geoObjectTypeCode);
 
@@ -733,7 +737,7 @@ public class GeoObjectTypeBusinessService implements GeoObjectTypeBusinessServic
 
     AttributeType attrType = updateAttributeType(got, attributeTypeJSON);
 
-    return attrType;
+    return (T) attrType;
   }
 
   /**

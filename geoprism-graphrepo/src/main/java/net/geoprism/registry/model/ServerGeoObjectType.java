@@ -139,9 +139,12 @@ public class ServerGeoObjectType extends DirtySoftReference<BaseGeoObjectType> i
 
   public org.commongeoregistry.adapter.metadata.GeoObjectType toDTO()
   {
-    if (this.dto == null)
+    synchronized (this)
     {
-      this.dto = this.getType().toDTO();
+      if (this.dto == null)
+      {
+        this.dto = this.getType().toDTO();
+      }
     }
 
     return this.dto;
@@ -172,12 +175,14 @@ public class ServerGeoObjectType extends DirtySoftReference<BaseGeoObjectType> i
    */
   public ServerOrganization getOrganization()
   {
-    return ServerOrganization.getByGraphId(this.getObject().getObjectValue(GeoObjectType.ORGANIZATION));
+    return ServiceFactory.getMetadataCache().getOrganization(this.getOrganizationCode()).orElseThrow();
   }
 
   public String getOrganizationCode()
   {
-    return this.getOrganization().getCode();
+    // Use the DTO to avoid a call to the database to get the organization
+    // information
+    return this.toDTO().getOrganizationCode();
   }
 
   public ServerGeoObjectType getSuperType()

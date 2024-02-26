@@ -61,7 +61,7 @@ public class GeoObjectType extends GeoObjectTypeBase
   @Override
   public GraphOrganization getOrganization()
   {
-    return GraphOrganization.get((String) this.getObjectValue(GeoObjectType.MDVERTEX));
+    return GraphOrganization.get((String) this.getObjectValue(GeoObjectType.ORGANIZATION));
   }
 
   @Override

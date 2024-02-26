@@ -156,7 +156,9 @@ public class ServerHierarchyType extends DirtySoftReference<HierarchicalRelation
    */
   public String getOrganizationCode()
   {
-    return this.getObject().getOrganizationCode();
+    // Use the DTO to avoid a call to the database to get the organization
+    // information
+    return this.toDTO().getOrganizationCode();
   }
 
   /**
@@ -166,7 +168,7 @@ public class ServerHierarchyType extends DirtySoftReference<HierarchicalRelation
    */
   public ServerOrganization getOrganization()
   {
-    return ServerOrganization.getByCode(this.getObject().getOrganizationCode());
+    return ServiceFactory.getMetadataCache().getOrganization(this.getOrganizationCode()).orElseThrow();
   }
 
   @Override
