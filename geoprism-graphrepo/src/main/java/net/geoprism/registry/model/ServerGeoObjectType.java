@@ -44,7 +44,7 @@ import net.geoprism.registry.graph.BaseGeoObjectType;
 import net.geoprism.registry.graph.GeoObjectType;
 import net.geoprism.registry.service.request.ServiceFactory;
 
-public class ServerGeoObjectType extends DirtySoftReference<BaseGeoObjectType> implements ServerElement
+public class ServerGeoObjectType extends CachableObjectWrapper<BaseGeoObjectType> implements ServerElement
 {
   // private Logger logger = LoggerFactory.getLogger(ServerLeafGeoObject.class);
 

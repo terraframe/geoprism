@@ -47,7 +47,7 @@ import net.geoprism.registry.model.graph.ServerHierarchyStrategy;
 import net.geoprism.registry.service.permission.HierarchyTypePermissionServiceIF;
 import net.geoprism.registry.service.request.ServiceFactory;
 
-public class ServerHierarchyType extends DirtySoftReference<HierarchicalRelationshipType> implements ServerElement, GraphType
+public class ServerHierarchyType extends CachableObjectWrapper<HierarchicalRelationshipType> implements ServerElement, GraphType
 {
   private org.commongeoregistry.adapter.metadata.HierarchyType dto;
 

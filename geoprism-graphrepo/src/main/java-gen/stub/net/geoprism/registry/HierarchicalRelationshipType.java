@@ -83,7 +83,7 @@ public class HierarchicalRelationshipType extends HierarchicalRelationshipTypeBa
   @Transaction
   public void addToHierarchy(ServerGeoObjectType parentType, ServerGeoObjectType childType)
   {
-    // TODO: HEADS UP
+    // TODO: HEADS UP - Remove this entire class
 //
 //    try
 //    {
@@ -100,7 +100,7 @@ public class HierarchicalRelationshipType extends HierarchicalRelationshipTypeBa
   @Transaction
   public void removeFromHierarchy(ServerGeoObjectType parentType, ServerGeoObjectType childType, boolean migrateChildren)
   {
-    // TODO: HEADS UP
+    // TODO: HEADS UP - Remove this entire class
 
 //    Universal parent = parentType.getUniversal();
 //    Universal cUniversal = childType.getUniversal();
@@ -158,7 +158,7 @@ public class HierarchicalRelationshipType extends HierarchicalRelationshipTypeBa
 
   public List<ServerGeoObjectType> getChildren(ServerGeoObjectType parent)
   {
-    // TODO: HEADS UP
+    // TODO: HEADS UP - Remove this entire class
 
 //    Universal universal = parent.getUniversal();
 //    List<ServerGeoObjectType> children = new LinkedList<>();

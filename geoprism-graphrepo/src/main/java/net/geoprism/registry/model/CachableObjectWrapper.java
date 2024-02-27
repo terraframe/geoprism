@@ -1,16 +1,16 @@
 package net.geoprism.registry.model;
 
-public abstract class DirtySoftReference<T>
+public abstract class CachableObjectWrapper<T>
 {
   private boolean dirty;
 
   private T       object;
 
-  public DirtySoftReference()
+  public CachableObjectWrapper()
   {
   }
 
-  public DirtySoftReference(T object)
+  public CachableObjectWrapper(T object)
   {
     this();
     this.object = object;
