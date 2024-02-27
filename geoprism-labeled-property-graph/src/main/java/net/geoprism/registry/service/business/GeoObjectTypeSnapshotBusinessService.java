@@ -625,7 +625,7 @@ public class GeoObjectTypeSnapshotBusinessService implements GeoObjectTypeSnapsh
       }
     });
 
-    geoObj.setUid(vertex.getObjectValue(RegistryConstants.UUID));
+    geoObj.setUid(vertex.getObjectValue(DefaultAttribute.UID.getName()));
     geoObj.setCode(vertex.getObjectValue(DefaultAttribute.CODE.getName()));
     geoObj.setGeometry(vertex.getObjectValue(DefaultAttribute.GEOMETRY.getName()));
     geoObj.setDisplayLabel(LocalizedValueConverter.convert(vertex.getEmbeddedComponent(DefaultAttribute.DISPLAY_LABEL.getName())));

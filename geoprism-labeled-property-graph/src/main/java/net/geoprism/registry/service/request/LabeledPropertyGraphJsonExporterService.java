@@ -124,7 +124,7 @@ public class LabeledPropertyGraphJsonExporterService
     MdEdge mdEdge = hierarchy.getGraphMdEdge();
 
     StringBuilder statement = new StringBuilder();
-    statement.append("SELECT out.uuid AS parentUid, out.@class AS parentClass, in.uuid AS childUid, in.@class AS childClass FROM " + mdEdge.getDbClassName());
+    statement.append("SELECT out.uid AS parentUid, out.@class AS parentClass, in.uid AS childUid, in.@class AS childClass FROM " + mdEdge.getDbClassName());
     statement.append(" ORDER BY oid");
     statement.append(" SKIP " + skip);
     statement.append(" LIMIT " + blockSize);

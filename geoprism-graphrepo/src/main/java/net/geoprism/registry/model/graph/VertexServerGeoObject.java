@@ -545,7 +545,7 @@ public class VertexServerGeoObject extends AbstractServerGeoObject implements Se
   @Override
   public String getUid()
   {
-    return (String) this.getValue(RegistryConstants.UUID);
+    return (String) this.getValue(DefaultAttribute.UID.getName());
   }
 
   @Override
@@ -887,16 +887,16 @@ public class VertexServerGeoObject extends AbstractServerGeoObject implements Se
     return synonym.getOid();
   }
 
-  public static List<VertexObject> getVertex(ServerGeoObjectType type, String uuid)
+  public static List<VertexObject> getVertex(ServerGeoObjectType type, String uid)
   {
     StringBuilder statement = new StringBuilder();
     statement.append("TRAVERSE out('" + EdgeConstant.HAS_VALUE.getDBClassName() + "', '" + EdgeConstant.HAS_GEOMETRY.getDBClassName() + "') FROM (");
     statement.append(" SELECT FROM " + type.getDBClassName());
-    statement.append(" WHERE uuid = :uuid");
+    statement.append(" WHERE uid = :uid");
     statement.append(")");
 
     GraphQuery<VertexObject> query = new GraphQuery<VertexObject>(statement.toString());
-    query.setParameter("uuid", uuid);
+    query.setParameter("uid", uid);
 
     return query.getResults();
   }
@@ -1267,7 +1267,7 @@ public class VertexServerGeoObject extends AbstractServerGeoObject implements Se
         result.addProperty("id", (String) row.get("oid"));
         result.addProperty("name", (String) row.get("$filteredLabel"));
         result.addProperty(GeoObject.CODE, (String) row.get("code"));
-        result.addProperty(GeoObject.UID, (String) row.get("uuid"));
+        result.addProperty(GeoObject.UID, (String) row.get("uid"));
         result.addProperty("typeCode", rowType.getCode());
 
         array.add(result);

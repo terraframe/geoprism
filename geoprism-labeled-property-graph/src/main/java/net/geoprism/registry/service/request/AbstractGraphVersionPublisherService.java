@@ -97,7 +97,7 @@ public abstract class AbstractGraphVersionPublisherService
     VertexObject node = new VertexObject(mdVertex.definesType());
 
     node.setValue(DefaultAttribute.CODE.getName(), geoObject.getCode());
-    node.setValue(RegistryConstants.UUID, geoObject.getUid());
+    node.setValue(DefaultAttribute.UID.getName(), geoObject.getUid());
 
     this.setGeometryValue(geoObject, type, node);
 

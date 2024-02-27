@@ -18,17 +18,16 @@ import com.runwaysdk.dataaccess.transaction.Transaction;
 import com.runwaysdk.system.gis.geo.GeometryType;
 import com.runwaysdk.system.metadata.MdVertex;
 
-import net.geoprism.registry.RegistryConstants;
 import net.geoprism.registry.conversion.GeometryTypeFactory;
 import net.geoprism.registry.conversion.RegistryLocalizedValueConverter;
 import net.geoprism.registry.service.request.ServiceFactory;
 
 public class GeoObjectType extends GeoObjectTypeBase
 {
-  public static final String ROOT = "ROOT";
-  
+  public static final String ROOT             = "ROOT";
+
   @SuppressWarnings("unused")
-  private static final long serialVersionUID = -942330515;
+  private static final long  serialVersionUID = -942330515;
 
   public GeoObjectType()
   {
@@ -109,16 +108,16 @@ public class GeoObjectType extends GeoObjectTypeBase
   {
     if (StringUtils.isBlank(this.getObjectValue(GeoObjectType.SUPERTYPE)))
     {
-      AttributeUUIDType uuidAttr = new AttributeUUIDType();
-      uuidAttr.setCode(RegistryConstants.UUID);
-      uuidAttr.setEmbeddedValue(AttributeUUIDType.LABEL, LocalizedValue.DEFAULT_LOCALE, RegistryConstants.UUID_LABEL);
-      uuidAttr.setEmbeddedValue(AttributeUUIDType.DESCRIPTION, LocalizedValue.DEFAULT_LOCALE, RegistryConstants.UUID_LABEL);
-      uuidAttr.setValue(AttributeBooleanType.GEOOBJECTTYPE, this.getOid());
-      uuidAttr.setRequired(true);
-      uuidAttr.setUnique(true);
-      uuidAttr.setIsChangeOverTime(false);
-      uuidAttr.setIsDefault(true);
-      uuidAttr.apply();
+      AttributeUUIDType uidAttr = new AttributeUUIDType();
+      uidAttr.setCode(DefaultAttribute.UID.getName());
+      uidAttr.setEmbeddedValue(AttributeUUIDType.LABEL, LocalizedValue.DEFAULT_LOCALE, DefaultAttribute.UID.getDefaultLocalizedName());
+      uidAttr.setEmbeddedValue(AttributeUUIDType.DESCRIPTION, LocalizedValue.DEFAULT_LOCALE, DefaultAttribute.UID.getDefaultDescription());
+      uidAttr.setValue(AttributeBooleanType.GEOOBJECTTYPE, this.getOid());
+      uidAttr.setRequired(true);
+      uidAttr.setUnique(true);
+      uidAttr.setIsChangeOverTime(false);
+      uidAttr.setIsDefault(true);
+      uidAttr.apply();
 
       AttributeBooleanType exists = new AttributeBooleanType();
       exists.setCode(DefaultAttribute.EXISTS.getName());
@@ -152,7 +151,7 @@ public class GeoObjectType extends GeoObjectTypeBase
       labelAttr.setIsChangeOverTime(true);
       labelAttr.setIsDefault(true);
       labelAttr.apply();
-      
+
       AttributeGeometryType geometryAttr = new AttributeGeometryType();
       geometryAttr.setCode(DefaultAttribute.GEOMETRY.getName());
       geometryAttr.setEmbeddedValue(AttributeUUIDType.LABEL, LocalizedValue.DEFAULT_LOCALE, DefaultAttribute.GEOMETRY.getDefaultLocalizedName());
@@ -163,7 +162,7 @@ public class GeoObjectType extends GeoObjectTypeBase
       geometryAttr.setIsChangeOverTime(true);
       geometryAttr.setIsDefault(true);
       geometryAttr.setGeometryType(this.getGeometryType());
-      geometryAttr.apply();      
+      geometryAttr.apply();
     }
 
     if (!this.getIsAbstract())
@@ -186,7 +185,7 @@ public class GeoObjectType extends GeoObjectTypeBase
     MdVertexDAOIF metadata = MdVertexDAO.getMdVertexDAO(GeoObjectType.CLASS);
 
     StringBuilder statement = new StringBuilder();
-    statement.append("SELECT " + metadata.definesAttribute(GeoObjectType.CODE).getColumnName() + " FROM " + metadata.getDBClassName());
+    statement.append("SELECT " + metadata.definesAttributeRecursive(GeoObjectType.CODE).getColumnName() + " FROM " + metadata.getDBClassName());
     statement.append(" WHERE " + metadata.definesAttribute(GeoObjectType.SUPERTYPE).getColumnName() + " = :rid");
 
     GraphQuery<String> query = new GraphQuery<String>(statement.toString());
@@ -259,11 +258,11 @@ public class GeoObjectType extends GeoObjectTypeBase
 
   public static GeoObjectType getByCode(String code)
   {
-    MdVertexDAOIF metadata = MdVertexDAO.getMdVertexDAO(BaseGeoObjectType.CLASS);
+    MdVertexDAOIF metadata = MdVertexDAO.getMdVertexDAO(GeoObjectType.CLASS);
 
     StringBuilder statement = new StringBuilder();
     statement.append("SELECT FROM " + metadata.getDBClassName());
-    statement.append(" WHERE " + metadata.definesAttribute(BaseGeoObjectType.CODE).getColumnName() + " = :code");
+    statement.append(" WHERE " + metadata.definesAttributeRecursive(GeoObjectType.CODE).getColumnName() + " = :code");
 
     GraphQuery<GeoObjectType> query = new GraphQuery<GeoObjectType>(statement.toString());
     query.setParameter("code", code);

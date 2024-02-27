@@ -97,9 +97,9 @@ public class VertexSynonymRestriction extends AbstractVertexRestriction implemen
         i++;
       }
 
-      statement.append("){where: (uuid=:uuid), while: (true)");
+      statement.append("){where: (uid=:uid), while: (true)");
 
-      parameters.put("uuid", this.parent.getUid());
+      parameters.put("uid", this.parent.getUid());
 
     }
   }

@@ -104,7 +104,7 @@ public class LabeledPropertyGraphTypeVersionBusinessService implements LabeledPr
     GeoObjectTypeSnapshot type = this.objectService.get(version, typeCode);
 
     MdVertexDAOIF mdVertex = (MdVertexDAOIF) BusinessFacade.getEntityDAO(type.getGraphMdVertex());
-    MdAttributeDAOIF mdAttribute = mdVertex.getAllDefinedMdAttributeMap().get(RegistryConstants.UUID);
+    MdAttributeDAOIF mdAttribute = mdVertex.getAllDefinedMdAttributeMap().get(DefaultAttribute.UID.getName());
 
     StringBuilder statement = new StringBuilder();
     statement.append("SELECT FROM " + mdVertex.getDBClassName());
@@ -213,8 +213,8 @@ public class LabeledPropertyGraphTypeVersionBusinessService implements LabeledPr
   {
     GeoObjectTypeSnapshot rootType = this.getRootType(version);
 
-    GraphQuery<VertexObject> query = new GraphQuery<VertexObject>("SELECT FROM " + rootType.getGraphMdVertex().getDbClassName() + " WHERE uuid = :uuid");
-    query.setParameter("uuid", uid);
+    GraphQuery<VertexObject> query = new GraphQuery<VertexObject>("SELECT FROM " + rootType.getGraphMdVertex().getDbClassName() + " WHERE uid = :uid");
+    query.setParameter("uid", uid);
 
     return query.getSingleResult();
   }

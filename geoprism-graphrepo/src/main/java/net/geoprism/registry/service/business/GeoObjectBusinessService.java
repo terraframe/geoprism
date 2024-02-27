@@ -971,14 +971,14 @@ public class GeoObjectBusinessService extends RegistryLocalizedValueConverter im
       }
     });
 
-    geoObj.setUid(sgo.getVertex().getObjectValue(RegistryConstants.UUID));
+    geoObj.setUid(sgo.getVertex().getObjectValue(DefaultAttribute.UID.getName()));
     geoObj.setCode(sgo.getVertex().getObjectValue(DefaultAttribute.CODE.getName()));
     geoObj.setGeometry(sgo.getGeometry(date));
     geoObj.setDisplayLabel(sgo.getDisplayLabel(date));
     geoObj.setExists(sgo.getExists(date));
     geoObj.setInvalid(sgo.getInvalid());
 
-    if (sgo.getVertex().isNew())// && !vertex.isAppliedToDB())
+    if (sgo.isNew())// && !vertex.isAppliedToDB())
     {
       geoObj.setUid(UUID.randomUUID().toString());
     }
@@ -1289,7 +1289,7 @@ public class GeoObjectBusinessService extends RegistryLocalizedValueConverter im
       }
     });
 
-    if (generateUid && sgo.getVertex().isNew())// && !vertex.isAppliedToDB())
+    if (generateUid && sgo.isNew())// && !vertex.isAppliedToDB())
     {
       geoObj.setUid(UUID.randomUUID().toString());
 
@@ -1298,7 +1298,7 @@ public class GeoObjectBusinessService extends RegistryLocalizedValueConverter im
     }
     else
     {
-      geoObj.setUid(sgo.getVertex().getObjectValue(RegistryConstants.UUID));
+      geoObj.setUid(sgo.getValue(DefaultAttribute.UID.getName()));
     }
 
     ValueOverTimeCollection votc = sgo.getValuesOverTime(DefaultAttribute.GEOMETRY.getName());
@@ -1313,7 +1313,7 @@ public class GeoObjectBusinessService extends RegistryLocalizedValueConverter im
     }
     geoObj.setValueCollection(DefaultAttribute.GEOMETRY.getName(), votcDTO);
 
-    geoObj.setCode(sgo.getVertex().getObjectValue(DefaultAttribute.CODE.getName()));
+    geoObj.setCode(sgo.getCode());
 
     return geoObj;
   }
@@ -1411,7 +1411,7 @@ public class GeoObjectBusinessService extends RegistryLocalizedValueConverter im
 
     String edgeOid = null;
 
-    if (sgo.getVertex().isNew() || !sgo.exists(parent, hierarchyType, null, null))
+    if (sgo.isNew() || !sgo.exists(parent, hierarchyType, null, null))
     {
       EdgeObject edge = sgo.getVertex().addParent( ( (VertexComponent) parent ).getVertex(), hierarchyType.getObjectEdge());
       edge.apply();
