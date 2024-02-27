@@ -23,7 +23,11 @@ public class AttributeGeometryType extends AttributeGeometryTypeBase
   @Override
   public AttributeType toDTO()
   {
-    return new org.commongeoregistry.adapter.metadata.AttributeGeometryType(this.getCode(), getLocalizedLabel(), getLocalizedDescription(), isAppliedToDb(), isNew(), isAppliedToDb());
+    org.commongeoregistry.adapter.metadata.AttributeGeometryType dto = new org.commongeoregistry.adapter.metadata.AttributeGeometryType(this.getCode(), getLocalizedLabel(), getLocalizedDescription(), isAppliedToDb(), isNew(), isAppliedToDb());
+    
+    this.populate(dto);
+    
+    return dto;
   }
 
   @Override

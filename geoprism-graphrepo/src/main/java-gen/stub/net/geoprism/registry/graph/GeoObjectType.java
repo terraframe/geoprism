@@ -259,11 +259,11 @@ public class GeoObjectType extends GeoObjectTypeBase
 
   public static GeoObjectType getByCode(String code)
   {
-    MdVertexDAOIF metadata = MdVertexDAO.getMdVertexDAO(GeoObjectType.CLASS);
+    MdVertexDAOIF metadata = MdVertexDAO.getMdVertexDAO(BaseGeoObjectType.CLASS);
 
     StringBuilder statement = new StringBuilder();
     statement.append("SELECT FROM " + metadata.getDBClassName());
-    statement.append(" WHERE " + metadata.definesAttribute(GeoObjectType.CODE).getColumnName() + " = :code");
+    statement.append(" WHERE " + metadata.definesAttribute(BaseGeoObjectType.CODE).getColumnName() + " = :code");
 
     GraphQuery<GeoObjectType> query = new GraphQuery<GeoObjectType>(statement.toString());
     query.setParameter("code", code);

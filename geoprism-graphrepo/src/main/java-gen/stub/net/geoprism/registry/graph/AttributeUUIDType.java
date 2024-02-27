@@ -16,12 +16,12 @@ public class AttributeUUIDType extends AttributeUUIDTypeBase
 {
   @SuppressWarnings("unused")
   private static final long serialVersionUID = -9145966;
-  
+
   public AttributeUUIDType()
   {
     super();
   }
-  
+
   @Override
   @Transaction
   public void apply()
@@ -58,11 +58,15 @@ public class AttributeUUIDType extends AttributeUUIDTypeBase
 
     super.delete();
   }
-  
+
   @Override
   public AttributeType toDTO()
   {
-    return new org.commongeoregistry.adapter.metadata.AttributeCharacterType(this.getCode(), getLocalizedLabel(), getLocalizedDescription(), isAppliedToDb(), isNew(), isAppliedToDb());
+    org.commongeoregistry.adapter.metadata.AttributeCharacterType dto = new org.commongeoregistry.adapter.metadata.AttributeCharacterType(this.getCode(), getLocalizedLabel(), getLocalizedDescription(), isAppliedToDb(), isNew(), isAppliedToDb());
+
+    this.populate(dto);
+
+    return dto;
   }
 
   @Override

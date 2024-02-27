@@ -16,12 +16,12 @@ public class AttributeLocalType extends AttributeLocalTypeBase
 {
   @SuppressWarnings("unused")
   private static final long serialVersionUID = 534282830;
-  
+
   public AttributeLocalType()
   {
     super();
   }
-  
+
   @Override
   @Transaction
   public void apply()
@@ -58,13 +58,17 @@ public class AttributeLocalType extends AttributeLocalTypeBase
 
     super.delete();
   }
-  
+
   @Override
   public AttributeType toDTO()
   {
-    return new org.commongeoregistry.adapter.metadata.AttributeLocalType(this.getCode(), getLocalizedLabel(), getLocalizedDescription(), isAppliedToDb(), isNew(), isAppliedToDb());
+    org.commongeoregistry.adapter.metadata.AttributeLocalType dto = new org.commongeoregistry.adapter.metadata.AttributeLocalType(this.getCode(), getLocalizedLabel(), getLocalizedDescription(), isAppliedToDb(), isNew(), isAppliedToDb());
+
+    this.populate(dto);
+
+    return dto;
   }
-  
+
   @Override
   public ValueStrategy getStrategy()
   {

@@ -79,12 +79,21 @@ public class AttributeTermType extends AttributeTermTypeBase
   }
 
   @Override
+  protected void populate(AttributeType dto)
+  {
+    super.populate(dto);
+
+    ( (org.commongeoregistry.adapter.metadata.AttributeTermType) dto ).setRootTerm(TermConverter.buildTermFromClassifier(this.getRootTerm()));
+  }
+
+  @Override
   public AttributeType toDTO()
   {
-    org.commongeoregistry.adapter.metadata.AttributeTermType attributeType = new org.commongeoregistry.adapter.metadata.AttributeTermType(this.getCode(), getLocalizedLabel(), getLocalizedDescription(), isAppliedToDb(), isNew(), isAppliedToDb());
-    attributeType.setRootTerm(TermConverter.buildTermFromClassifier(this.getRootTerm()));
+    org.commongeoregistry.adapter.metadata.AttributeTermType dto = new org.commongeoregistry.adapter.metadata.AttributeTermType(this.getCode(), getLocalizedLabel(), getLocalizedDescription(), isAppliedToDb(), isNew(), isAppliedToDb());
 
-    return attributeType;
+    this.populate(dto);
+
+    return dto;
   }
 
   @Override

@@ -125,11 +125,20 @@ public class AttributeDoubleType extends AttributeDoubleTypeBase
   }
 
   @Override
+  protected void populate(AttributeType dto)
+  {
+    super.populate(dto);
+
+    ( (AttributeFloatType) dto ).setPrecision(this.getPrecision());
+    ( (AttributeFloatType) dto ).setScale(this.getScale());
+  }
+
+  @Override
   public AttributeType toDTO()
   {
     AttributeFloatType dto = new AttributeFloatType(this.getCode(), getLocalizedLabel(), getLocalizedDescription(), isAppliedToDb(), isNew(), isAppliedToDb());
-    dto.setPrecision(this.getPrecision());
-    dto.setScale(this.getScale());
+
+    this.populate(dto);
 
     return dto;
   }

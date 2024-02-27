@@ -449,7 +449,7 @@ public class GeoObjectBusinessService extends RegistryLocalizedValueConverter im
   {
     Map<String, AttributeType> attributes = goTime.getType().getAttributeMap();
     attributes.forEach((attributeName, attribute) -> {
-      if (attributeName.equals(DefaultAttribute.INVALID.getName()) || attributeName.equals(DefaultAttribute.CODE.getName()) || attributeName.equals(DefaultAttribute.UID.getName()) || attributeName.equals(GeoVertex.LASTUPDATEDATE) || attributeName.equals(GeoVertex.CREATEDATE) || attributeName.equals(DefaultAttribute.ALT_IDS.getName()))
+      if (!attribute.isChangeOverTime() || attributeName.equals(DefaultAttribute.INVALID.getName()) || attributeName.equals(DefaultAttribute.CODE.getName()) || attributeName.equals(DefaultAttribute.UID.getName()) || attributeName.equals(GeoVertex.LASTUPDATEDATE) || attributeName.equals(GeoVertex.CREATEDATE) || attributeName.equals(DefaultAttribute.ALT_IDS.getName()))
       {
         // Ignore the attributes
       }
@@ -474,7 +474,7 @@ public class GeoObjectBusinessService extends RegistryLocalizedValueConverter im
       // votDTO.getEndDate());
       // }
       // }
-      else if (sgo.getVertex().hasAttribute(attributeName) && !sgo.getVertex().getMdAttributeDAO(attributeName).isSystem())
+      else if (sgo.hasAttribute(attributeName))
       {
         sgo.getValuesOverTime(attributeName).clear();
         ValueOverTimeCollectionDTO collection = goTime.getAllValues(attributeName);

@@ -69,8 +69,13 @@ public class AttributeBooleanType extends AttributeBooleanTypeBase
   @Override
   public AttributeType toDTO()
   {
-    return new org.commongeoregistry.adapter.metadata.AttributeBooleanType(this.getCode(), getLocalizedLabel(), getLocalizedDescription(), isAppliedToDb(), isNew(), isAppliedToDb());
+    org.commongeoregistry.adapter.metadata.AttributeBooleanType dto = new org.commongeoregistry.adapter.metadata.AttributeBooleanType(this.getCode(), getLocalizedLabel(), getLocalizedDescription(), isAppliedToDb(), isNew(), isAppliedToDb());
+    
+    this.populate(dto);
+    
+    return dto;
   }
+
 
   @Override
   public ValueStrategy getStrategy()

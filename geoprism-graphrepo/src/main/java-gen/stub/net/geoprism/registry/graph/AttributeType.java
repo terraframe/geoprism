@@ -42,6 +42,11 @@ public abstract class AttributeType extends AttributeTypeBase
   {
     return LocalizedValueConverter.convert(this.getEmbeddedComponent(DESCRIPTION));
   }
+  
+  protected void populate(org.commongeoregistry.adapter.metadata.AttributeType dto)
+  {
+    dto.setIsChangeOverTime(this.getIsChangeOverTime());
+  }
 
   protected void populate(MdAttributeConcreteDAO mdAttribute)
   {

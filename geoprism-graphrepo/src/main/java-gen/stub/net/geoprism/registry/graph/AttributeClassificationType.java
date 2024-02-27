@@ -159,6 +159,8 @@ public class AttributeClassificationType extends AttributeClassificationTypeBase
   {
     org.commongeoregistry.adapter.metadata.AttributeClassificationType dto = new org.commongeoregistry.adapter.metadata.AttributeClassificationType(this.getCode(), getLocalizedLabel(), getLocalizedDescription(), isAppliedToDb(), isNew(), isAppliedToDb());
 
+    this.populate(dto);
+
     return dto;
   }
 
