@@ -163,12 +163,12 @@ public class HierarchyTypeService implements HierarchyTypeServiceIF
   @Request(RequestType.SESSION)
   public HierarchyType updateHierarchyType(String sessionId, String htJSON)
   {
-    HierarchyType hierarchyType = HierarchyType.fromJSON(htJSON, ServiceFactory.getAdapter());
-    ServerHierarchyType type = ServerHierarchyType.get(hierarchyType);
+    HierarchyType dto = HierarchyType.fromJSON(htJSON, ServiceFactory.getAdapter());
+    ServerHierarchyType type = ServerHierarchyType.get(dto);
 
     ServiceFactory.getHierarchyPermissionService().enforceCanWrite(type.getOrganization().getCode());
 
-    service.update(type, hierarchyType);
+    service.update(type, dto);
 
     return service.toHierarchyType(type);
   }

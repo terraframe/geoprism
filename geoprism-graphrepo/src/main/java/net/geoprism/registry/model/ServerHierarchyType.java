@@ -55,6 +55,14 @@ public class ServerHierarchyType extends DirtySoftReference<HierarchicalRelation
   {
     super(hierarchicalRelationship);
   }
+  
+  @Override
+  public void markAsDirty()
+  {
+    super.markAsDirty();
+    
+    this.dto = null;
+  }
 
   @Transaction
   public void update(HierarchyType dto)

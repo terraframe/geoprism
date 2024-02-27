@@ -76,6 +76,14 @@ public class ServerGeoObjectType extends DirtySoftReference<BaseGeoObjectType> i
 
     return this.attributes;
   }
+  
+  @Override
+  public void markAsDirty()
+  {
+    super.markAsDirty();
+    
+    this.dto = null;
+  }
 
   @Override
   protected void refresh(BaseGeoObjectType object)
