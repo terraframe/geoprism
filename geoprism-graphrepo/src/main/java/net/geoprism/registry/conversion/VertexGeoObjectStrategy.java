@@ -111,11 +111,11 @@ public class VertexGeoObjectStrategy extends RegistryLocalizedValueConverter imp
   }
 
   @Override
-  public VertexServerGeoObject constructFromDB(Object dbObject)
+  public VertexServerGeoObject constructFromDB(VertexObject dbObject)
   {
-    VertexObject vertex = (VertexObject) dbObject;
+    List<VertexObject> rows = VertexServerGeoObject.getByRID(type, dbObject.getRID());
 
-    return new VertexServerGeoObject(type, vertex, new TreeMap<>());
+    return buildVertexServerGeoObject(rows);
   }
 
   @Override

@@ -23,6 +23,8 @@ import java.util.Date;
 import org.commongeoregistry.adapter.dataaccess.GeoObject;
 import org.commongeoregistry.adapter.dataaccess.GeoObjectOverTime;
 
+import com.runwaysdk.business.graph.VertexObject;
+
 import net.geoprism.registry.model.ServerGeoObjectIF;
 import net.geoprism.registry.model.ServerGeoObjectType;
 import net.geoprism.registry.query.ServerGeoObjectQuery;
@@ -35,7 +37,7 @@ public interface ServerGeoObjectStrategyIF
 
   public ServerGeoObjectIF constructFromGeoObjectOverTime(GeoObjectOverTime geoObject, boolean isNew);
 
-  public ServerGeoObjectIF constructFromDB(Object dbObject);
+  public ServerGeoObjectIF constructFromDB(VertexObject dbObject);
 
   public ServerGeoObjectIF getGeoObjectByCode(String code);
 

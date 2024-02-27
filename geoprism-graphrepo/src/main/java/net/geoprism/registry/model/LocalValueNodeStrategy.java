@@ -47,6 +47,7 @@ public class LocalValueNodeStrategy extends ValueNodeStrategy implements ValueSt
   protected <T> T getNodeValue(VertexObject node)
   {
     LocalizedValue value = new LocalizedValue(node.getObjectValue(LocalizedValue.DEFAULT_LOCALE));
+    value.setValue(LocalizedValue.DEFAULT_LOCALE, node.getObjectValue(LocalizedValue.DEFAULT_LOCALE));
 
     Set<Locale> locales = LocalizationFacade.getInstalledLocales();
 
@@ -56,7 +57,7 @@ public class LocalValueNodeStrategy extends ValueNodeStrategy implements ValueSt
 
       if (node.hasAttribute(localeName))
       {
-        value.setValue(locale, node.getValue(localeName));
+        value.setValue(locale, node.getObjectValue(localeName));
       }
     }
 

@@ -158,7 +158,7 @@ public class GeoObjectService implements GeoObjectServiceIF
     GeoObjectOverTime goTime = GeoObjectOverTime.fromJSON(ServiceFactory.getAdapter(), jGeoObj);
     ServerGeoObjectType type = ServerGeoObjectType.get(goTime.getType().getCode());
 
-    this.permissionService.enforceCanCreate(goTime.getType().getOrganizationCode(), type);
+    this.permissionService.enforceCanCreate(type.getOrganizationCode(), type);
 
     ServerGeoObjectIF object = service.apply(goTime, true, false);
 

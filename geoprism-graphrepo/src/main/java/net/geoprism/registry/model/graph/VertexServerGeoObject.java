@@ -887,6 +887,19 @@ public class VertexServerGeoObject extends AbstractServerGeoObject implements Se
     return synonym.getOid();
   }
 
+  public static List<VertexObject> getByRID(ServerGeoObjectType type, Object rid)
+  {
+    StringBuilder statement = new StringBuilder();
+    statement.append("TRAVERSE out('" + EdgeConstant.HAS_VALUE.getDBClassName() + "', '" + EdgeConstant.HAS_GEOMETRY.getDBClassName() + "') FROM (");
+    statement.append(" SELECT FROM :rid");
+    statement.append(")");
+
+    GraphQuery<VertexObject> query = new GraphQuery<VertexObject>(statement.toString());
+    query.setParameter("rid", rid);
+
+    return query.getResults();
+  }
+
   public static List<VertexObject> getVertex(ServerGeoObjectType type, String uid)
   {
     StringBuilder statement = new StringBuilder();

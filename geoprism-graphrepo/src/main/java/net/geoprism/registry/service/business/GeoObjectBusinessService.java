@@ -221,7 +221,7 @@ public class GeoObjectBusinessService extends RegistryLocalizedValueConverter im
       apply(geoObject, isImport);
 
       // Return the refreshed copy of the geoObject
-      return this.build(type, geoObject.getRunwayId());
+      return strategy.getGeoObjectByUid(geoObject.getUid());
     }
     catch (DuplicateDataException e)
     {
@@ -355,7 +355,7 @@ public class GeoObjectBusinessService extends RegistryLocalizedValueConverter im
       apply(goServer, isImport);
 
       // Return the refreshed copy of the geoObject
-      return this.build(type, goServer.getRunwayId());
+      return strategy.getGeoObjectByUid(goServer.getUid());
     }
     catch (DuplicateDataException e)
     {
@@ -676,22 +676,6 @@ public class GeoObjectBusinessService extends RegistryLocalizedValueConverter im
   }
 
   @Override
-  public ServerGeoObjectIF build(ServerGeoObjectType type, String runwayId)
-  {
-    ServerGeoObjectStrategyIF strategy = this.getStrategy(type);
-    VertexObject vertex = VertexObject.get(type.getMdVertex(), runwayId);
-
-    return strategy.constructFromDB(vertex);
-  }
-
-  @Override
-  public ServerGeoObjectIF build(ServerGeoObjectType type, Object dbObject)
-  {
-    ServerGeoObjectStrategyIF strategy = this.getStrategy(type);
-    return strategy.constructFromDB(dbObject);
-  }
-
-  @Override
   public ServerGeoObjectQuery createQuery(ServerGeoObjectType type, Date date)
   {
     return new VertexGeoObjectQuery(type, date);
@@ -914,13 +898,13 @@ public class GeoObjectBusinessService extends RegistryLocalizedValueConverter im
 
     Map<String, AttributeType> attributes = dto.getAttributeMap();
     attributes.forEach((attributeName, attribute) -> {
-      if (attributeName.equals(DefaultAttribute.TYPE.getName()))
+      if (attributeName.equals(DefaultAttribute.TYPE.getName()) || attributeName.equals(DefaultAttribute.GEOMETRY.getName()))
       {
         // Ignore
       }
       else if (sgo.hasAttribute(attributeName))
       {
-        Object value = sgo.getVertex().getObjectValue(attributeName, date);
+        Object value = sgo.getValue(attributeName, date);
 
         if (value != null)
         {
@@ -968,8 +952,8 @@ public class GeoObjectBusinessService extends RegistryLocalizedValueConverter im
       }
     });
 
-    geoObj.setUid(sgo.getVertex().getObjectValue(DefaultAttribute.UID.getName()));
-    geoObj.setCode(sgo.getVertex().getObjectValue(DefaultAttribute.CODE.getName()));
+    geoObj.setUid(sgo.getValue(DefaultAttribute.UID.getName()));
+    geoObj.setCode(sgo.getValue(DefaultAttribute.CODE.getName()));
     geoObj.setGeometry(sgo.getGeometry(date));
     geoObj.setDisplayLabel(sgo.getDisplayLabel(date));
     geoObj.setExists(sgo.getExists(date));
@@ -1122,7 +1106,7 @@ public class GeoObjectBusinessService extends RegistryLocalizedValueConverter im
       // vot.getEndDate());
       // }
       // }
-      else if (sgo.getVertex().hasAttribute(attributeName))
+      else if (sgo.hasAttribute(attributeName))
       {
         if (attribute.isChangeOverTime())
         {
@@ -1401,10 +1385,10 @@ public class GeoObjectBusinessService extends RegistryLocalizedValueConverter im
   @Override
   public ServerParentTreeNode addParent(ServerGeoObjectIF sgo, ServerGeoObjectIF parent, ServerHierarchyType hierarchyType)
   {
-//    if (!hierarchyType.getUniversalType().equals(AllowedIn.CLASS))
-//    {
-      htService.validateUniversalRelationship(hierarchyType, sgo.getType(), parent.getType());
-//    }
+    // if (!hierarchyType.getUniversalType().equals(AllowedIn.CLASS))
+    // {
+    htService.validateUniversalRelationship(hierarchyType, sgo.getType(), parent.getType());
+    // }
 
     String edgeOid = null;
 
@@ -1695,19 +1679,24 @@ public class GeoObjectBusinessService extends RegistryLocalizedValueConverter im
           if (includeInherited && gotService.isRoot(parentType, ht))
           {
             // TODO: HEADS UP
-//            InheritedHierarchyAnnotation anno = InheritedHierarchyAnnotation.getByForHierarchical(ht.getHierarchicalRelationshipType());
-//
-//            if (anno != null)
-//            {
-//              HierarchicalRelationshipType hrtInherited = anno.getInheritedHierarchicalRelationshipType();
-//              ServerHierarchyType shtInherited = ServerHierarchyType.get(hrtInherited);
-//
-//              tnParent = internalGetParentGeoObjects(parent, parentTypes, recursive, includeInherited, shtInherited, date);
-//            }
-//            else
-//            {
-//              tnParent = internalGetParentGeoObjects(parent, parentTypes, recursive, includeInherited, ht, date);
-//            }
+            // InheritedHierarchyAnnotation anno =
+            // InheritedHierarchyAnnotation.getByForHierarchical(ht.getHierarchicalRelationshipType());
+            //
+            // if (anno != null)
+            // {
+            // HierarchicalRelationshipType hrtInherited =
+            // anno.getInheritedHierarchicalRelationshipType();
+            // ServerHierarchyType shtInherited =
+            // ServerHierarchyType.get(hrtInherited);
+            //
+            // tnParent = internalGetParentGeoObjects(parent, parentTypes,
+            // recursive, includeInherited, shtInherited, date);
+            // }
+            // else
+            // {
+            // tnParent = internalGetParentGeoObjects(parent, parentTypes,
+            // recursive, includeInherited, ht, date);
+            // }
             tnParent = null;
           }
           else
