@@ -7,6 +7,7 @@ import com.runwaysdk.dataaccess.MdAttributeDAOIF;
 import com.runwaysdk.dataaccess.MdVertexDAOIF;
 import com.runwaysdk.dataaccess.metadata.MdAttributeConcreteDAO;
 import com.runwaysdk.dataaccess.metadata.MdAttributeTermDAO;
+import com.runwaysdk.dataaccess.metadata.MdAttributeTermDAO;
 import com.runwaysdk.dataaccess.metadata.MdBusinessDAO;
 import com.runwaysdk.dataaccess.metadata.graph.MdVertexDAO;
 import com.runwaysdk.dataaccess.transaction.Transaction;
@@ -36,17 +37,30 @@ public class AttributeTermType extends AttributeTermTypeBase
     // Create the root term node for this attribute
     this.setRootTerm(TermConverter.buildIfNotExistAttribute(type, this.getCode(), type.getRootTerm()));
 
-    super.apply();
-
     if (!this.getIsChangeOverTime())
     {
-      // Create the MdAttribute on the MdVertex
-      MdAttributeTermDAO mdAttribute = MdAttributeTermDAO.newInstance();
+      MdAttributeTermDAO mdAttribute = null;
+
+      // Create the value vertex class
+      if (this.isNew() && !this.isAppliedToDb())
+      {
+        // Create the MdAttribute on the MdVertex
+        mdAttribute = MdAttributeTermDAO.newInstance();
+      }
+      else
+      {
+        // Update the precision and scale of the value attribute
+        MdVertexDAOIF mdVertex = MdVertexDAO.get(this.getGeoObjectType().getMdVertexOid());
+
+        mdAttribute = (MdAttributeTermDAO) mdVertex.definesAttribute(this.getCode()).getBusinessDAO();
+      }
 
       populate(mdAttribute);
 
       mdAttribute.apply();
     }
+
+    super.apply();
   }
 
   @Override

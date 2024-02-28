@@ -46,47 +46,72 @@ public class AttributeClassificationType extends AttributeClassificationTypeBase
   @Transaction
   public void apply()
   {
-    // Create the value vertex class
-    if (this.isNew() && !this.isAppliedToDb())
+    if (!this.getIsChangeOverTime())
     {
-      String tableName = GraphTableUtil.generateTableName(PREFIX, "_classification");
+      MdAttributeClassificationDAO mdAttribute = null;
 
-      MdVertexDAOIF superVertex = MdVertexDAO.getMdVertexDAO(AttributeBasicValue.CLASS);
-
-      MdVertexDAO mdVertex = MdVertexDAO.newInstance();
-      mdVertex.setValue(MdVertexInfo.PACKAGE, RegistryConstants.UNIVERSAL_GRAPH_PACKAGE + ".value");
-      mdVertex.setValue(MdVertexInfo.NAME, tableName);
-      mdVertex.setValue(MdVertexInfo.ENABLE_CHANGE_OVER_TIME, MdAttributeBooleanInfo.FALSE);
-      mdVertex.setValue(MdVertexInfo.GENERATE_SOURCE, MdAttributeBooleanInfo.FALSE);
-      mdVertex.setValue(MdVertexInfo.DB_CLASS_NAME, tableName);
-      mdVertex.setValue(MdVertexInfo.SUPER_MD_VERTEX, superVertex.getOid());
-      mdVertex.apply();
-
-      // Create the value attribute
-      MdAttributeClassificationDAO mdAttribute = MdAttributeClassificationDAO.newInstance();
-      mdAttribute.setValue(MdAttributeClassificationInfo.DEFINING_MD_CLASS, mdVertex.getOid());
-      mdAttribute.setValue(MdAttributeClassificationInfo.NAME, VALUE);
-      mdAttribute.setStructValue(MdAttributeClassificationInfo.DISPLAY_LABEL, MdAttributeLocalInfo.DEFAULT_LOCALE, "Value");
-      mdAttribute.setValue(MdAttributeClassificationInfo.REQUIRED, MdAttributeBooleanInfo.TRUE);
-      mdAttribute.setValue(MdAttributeClassificationInfo.REFERENCE_MD_CLASSIFICATION, this.getMdClassificationOid());
-
-      if (!StringUtils.isBlank(this.getObjectValue(ROOTTERM)))
+      // Create the value vertex class
+      if (this.isNew() && !this.isAppliedToDb())
       {
-        mdAttribute.setValue(MdAttributeClassificationInfo.ROOT, this.getObjectValue(ROOTTERM));
+        // Create the MdAttribute on the MdVertex
+        mdAttribute = MdAttributeClassificationDAO.newInstance();
+      }
+      else
+      {
+        // Update the precision and scale of the value attribute
+        MdVertexDAOIF mdVertex = MdVertexDAO.get(this.getGeoObjectType().getMdVertexOid());
+
+        mdAttribute = (MdAttributeClassificationDAO) mdVertex.definesAttribute(this.getCode()).getBusinessDAO();
       }
 
-      mdAttribute.apply();
+      populate(mdAttribute);
 
-      this.setValueVertexId(mdVertex.getOid());
+      mdAttribute.apply();
     }
     else
     {
-      // Update the precision and scale of the value attribute
-      MdVertexDAOIF mdVertex = MdVertexDAO.get(this.getValueVertexOid());
+      // Create the value vertex class
+      if (this.isNew() && !this.isAppliedToDb())
+      {
+        String tableName = GraphTableUtil.generateTableName(PREFIX, "_classification");
 
-      MdAttributeClassificationDAO mdAttribute = (MdAttributeClassificationDAO) mdVertex.definesAttribute(VALUE).getBusinessDAO();
-      mdAttribute.setValue(MdAttributeClassificationInfo.ROOT, this.getObjectValue(ROOTTERM));
-      mdAttribute.apply();
+        MdVertexDAOIF superVertex = MdVertexDAO.getMdVertexDAO(AttributeBasicValue.CLASS);
+
+        MdVertexDAO mdVertex = MdVertexDAO.newInstance();
+        mdVertex.setValue(MdVertexInfo.PACKAGE, RegistryConstants.UNIVERSAL_GRAPH_PACKAGE + ".value");
+        mdVertex.setValue(MdVertexInfo.NAME, tableName);
+        mdVertex.setValue(MdVertexInfo.ENABLE_CHANGE_OVER_TIME, MdAttributeBooleanInfo.FALSE);
+        mdVertex.setValue(MdVertexInfo.GENERATE_SOURCE, MdAttributeBooleanInfo.FALSE);
+        mdVertex.setValue(MdVertexInfo.DB_CLASS_NAME, tableName);
+        mdVertex.setValue(MdVertexInfo.SUPER_MD_VERTEX, superVertex.getOid());
+        mdVertex.apply();
+
+        // Create the value attribute
+        MdAttributeClassificationDAO mdAttribute = MdAttributeClassificationDAO.newInstance();
+        mdAttribute.setValue(MdAttributeClassificationInfo.DEFINING_MD_CLASS, mdVertex.getOid());
+        mdAttribute.setValue(MdAttributeClassificationInfo.NAME, VALUE);
+        mdAttribute.setStructValue(MdAttributeClassificationInfo.DISPLAY_LABEL, MdAttributeLocalInfo.DEFAULT_LOCALE, "Value");
+        mdAttribute.setValue(MdAttributeClassificationInfo.REQUIRED, MdAttributeBooleanInfo.TRUE);
+        mdAttribute.setValue(MdAttributeClassificationInfo.REFERENCE_MD_CLASSIFICATION, this.getMdClassificationOid());
+
+        if (!StringUtils.isBlank(this.getObjectValue(ROOTTERM)))
+        {
+          mdAttribute.setValue(MdAttributeClassificationInfo.ROOT, this.getObjectValue(ROOTTERM));
+        }
+
+        mdAttribute.apply();
+
+        this.setValueVertexId(mdVertex.getOid());
+      }
+      else
+      {
+        // Update the precision and scale of the value attribute
+        MdVertexDAOIF mdVertex = MdVertexDAO.get(this.getValueVertexOid());
+
+        MdAttributeClassificationDAO mdAttribute = (MdAttributeClassificationDAO) mdVertex.definesAttribute(VALUE).getBusinessDAO();
+        mdAttribute.setValue(MdAttributeClassificationInfo.ROOT, this.getObjectValue(ROOTTERM));
+        mdAttribute.apply();
+      }
     }
 
     super.apply();

@@ -38,43 +38,69 @@ public class AttributeDoubleType extends AttributeDoubleTypeBase
   @Transaction
   public void apply()
   {
-    // Create the value vertex class
-    if (this.isNew() && !this.isAppliedToDb())
+    if (!this.getIsChangeOverTime())
     {
-      String tableName = GraphTableUtil.generateTableName(PREFIX, "_double");
+      MdAttributeDoubleDAO mdAttribute = null;
 
-      MdVertexDAOIF superVertex = MdVertexDAO.getMdVertexDAO(AttributeBasicValue.CLASS);
+      // Create the value vertex class
+      if (this.isNew() && !this.isAppliedToDb())
+      {
+        // Create the MdAttribute on the MdVertex
+        mdAttribute = MdAttributeDoubleDAO.newInstance();
+      }
+      else
+      {
+        // Update the precision and scale of the value attribute
+        MdVertexDAOIF mdVertex = MdVertexDAO.get(this.getGeoObjectType().getMdVertexOid());
 
-      MdVertexDAO mdVertex = MdVertexDAO.newInstance();
-      mdVertex.setValue(MdVertexInfo.PACKAGE, RegistryConstants.UNIVERSAL_GRAPH_PACKAGE + ".value");
-      mdVertex.setValue(MdVertexInfo.NAME, tableName);
-      mdVertex.setValue(MdVertexInfo.ENABLE_CHANGE_OVER_TIME, MdAttributeBooleanInfo.FALSE);
-      mdVertex.setValue(MdVertexInfo.GENERATE_SOURCE, MdAttributeBooleanInfo.FALSE);
-      mdVertex.setValue(MdVertexInfo.DB_CLASS_NAME, tableName);
-      mdVertex.setValue(MdVertexInfo.SUPER_MD_VERTEX, superVertex.getOid());
-      mdVertex.apply();
+        mdAttribute = (MdAttributeDoubleDAO) mdVertex.definesAttribute(this.getCode()).getBusinessDAO();
+      }
 
-      // Create the value attribute
-      MdAttributeDoubleDAO mdAttribute = MdAttributeDoubleDAO.newInstance();
-      mdAttribute.setValue(MdAttributeDoubleInfo.DEFINING_MD_CLASS, mdVertex.getOid());
-      mdAttribute.setValue(MdAttributeDoubleInfo.NAME, VALUE);
-      mdAttribute.setStructValue(MdAttributeDoubleInfo.DISPLAY_LABEL, MdAttributeLocalInfo.DEFAULT_LOCALE, "Value");
-      mdAttribute.setValue(MdAttributeDoubleInfo.LENGTH, getPrecision());
-      mdAttribute.setValue(MdAttributeDoubleInfo.DECIMAL, getScale());
-      mdAttribute.setValue(MdAttributeDoubleInfo.REQUIRED, MdAttributeBooleanInfo.TRUE);
+      populate(mdAttribute);
+
       mdAttribute.apply();
-
-      this.setValueVertexId(mdVertex.getOid());
     }
     else
     {
-      // Update the precision and scale of the value attribute
-      MdVertexDAOIF mdVertex = MdVertexDAO.get(this.getValueVertexOid());
 
-      MdAttributeDoubleDAO mdAttribute = (MdAttributeDoubleDAO) mdVertex.definesAttribute(VALUE).getBusinessDAO();
-      mdAttribute.setValue(MdAttributeDoubleInfo.LENGTH, getPrecision());
-      mdAttribute.setValue(MdAttributeDoubleInfo.DECIMAL, getScale());
-      mdAttribute.apply();
+      // Create the value vertex class
+      if (this.isNew() && !this.isAppliedToDb())
+      {
+        String tableName = GraphTableUtil.generateTableName(PREFIX, "_double");
+
+        MdVertexDAOIF superVertex = MdVertexDAO.getMdVertexDAO(AttributeBasicValue.CLASS);
+
+        MdVertexDAO mdVertex = MdVertexDAO.newInstance();
+        mdVertex.setValue(MdVertexInfo.PACKAGE, RegistryConstants.UNIVERSAL_GRAPH_PACKAGE + ".value");
+        mdVertex.setValue(MdVertexInfo.NAME, tableName);
+        mdVertex.setValue(MdVertexInfo.ENABLE_CHANGE_OVER_TIME, MdAttributeBooleanInfo.FALSE);
+        mdVertex.setValue(MdVertexInfo.GENERATE_SOURCE, MdAttributeBooleanInfo.FALSE);
+        mdVertex.setValue(MdVertexInfo.DB_CLASS_NAME, tableName);
+        mdVertex.setValue(MdVertexInfo.SUPER_MD_VERTEX, superVertex.getOid());
+        mdVertex.apply();
+
+        // Create the value attribute
+        MdAttributeDoubleDAO mdAttribute = MdAttributeDoubleDAO.newInstance();
+        mdAttribute.setValue(MdAttributeDoubleInfo.DEFINING_MD_CLASS, mdVertex.getOid());
+        mdAttribute.setValue(MdAttributeDoubleInfo.NAME, VALUE);
+        mdAttribute.setStructValue(MdAttributeDoubleInfo.DISPLAY_LABEL, MdAttributeLocalInfo.DEFAULT_LOCALE, "Value");
+        mdAttribute.setValue(MdAttributeDoubleInfo.LENGTH, getPrecision());
+        mdAttribute.setValue(MdAttributeDoubleInfo.DECIMAL, getScale());
+        mdAttribute.setValue(MdAttributeDoubleInfo.REQUIRED, MdAttributeBooleanInfo.TRUE);
+        mdAttribute.apply();
+
+        this.setValueVertexId(mdVertex.getOid());
+      }
+      else
+      {
+        // Update the precision and scale of the value attribute
+        MdVertexDAOIF mdVertex = MdVertexDAO.get(this.getValueVertexOid());
+
+        MdAttributeDoubleDAO mdAttribute = (MdAttributeDoubleDAO) mdVertex.definesAttribute(VALUE).getBusinessDAO();
+        mdAttribute.setValue(MdAttributeDoubleInfo.LENGTH, getPrecision());
+        mdAttribute.setValue(MdAttributeDoubleInfo.DECIMAL, getScale());
+        mdAttribute.apply();
+      }
     }
 
     super.apply();

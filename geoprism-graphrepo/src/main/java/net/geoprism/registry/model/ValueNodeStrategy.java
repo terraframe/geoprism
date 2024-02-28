@@ -97,15 +97,18 @@ public class ValueNodeStrategy extends AbstractValueStrategy implements ValueStr
   @Override
   public <T> T getValue(VertexObject vertex, Map<String, AttributeState> valueNodeMap, Date date)
   {
-    AttributeState state = getState(valueNodeMap);
-
-    Optional<VertexObject> optional = state.stream().filter(node -> {
-      return ( getStartDate(node).before(date) || getStartDate(node).equals(date) ) && ( getEndDate(node).after(date) || getEndDate(node).equals(date) );
-    }).findFirst();
-
-    if (optional.isPresent())
+    if (date != null)
     {
-      return getNodeValue(optional.get());
+      AttributeState state = getState(valueNodeMap);
+
+      Optional<VertexObject> optional = state.stream().filter(node -> {
+        return ( getStartDate(node).before(date) || getStartDate(node).equals(date) ) && ( getEndDate(node).after(date) || getEndDate(node).equals(date) );
+      }).findFirst();
+
+      if (optional.isPresent())
+      {
+        return getNodeValue(optional.get());
+      }
     }
 
     return null;

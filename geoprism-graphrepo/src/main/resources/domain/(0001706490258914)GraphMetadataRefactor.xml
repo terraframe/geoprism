@@ -78,7 +78,7 @@
         <attributes>
           <integer name="precision" label="Precision" required="true"  />          
           <integer name="scale" label="Scale" required="true"  />          
-          <reference name="valueVertex" label="Value Vertex" required="true" type="com.runwaysdk.system.metadata.MdVertex"/>          
+          <reference name="valueVertex" label="Value Vertex" required="false" type="com.runwaysdk.system.metadata.MdVertex"/>          
         </attributes>
       </mdVertex>    
       <mdVertex name="net.geoprism.registry.graph.AttributeLocalType" extends="net.geoprism.registry.graph.AttributeType" label="Attribute Local Type">
@@ -94,7 +94,7 @@
         <attributes>
           <reference name="mdClassification" type="com.runwaysdk.system.metadata.MdClassification" label="MdClassification" required="true"/>          
           <text name="rootTerm" label="Root Term" required="false"/>  
-          <reference name="valueVertex" label="Value Vertex" required="true" type="com.runwaysdk.system.metadata.MdVertex"/>                            
+          <reference name="valueVertex" label="Value Vertex" required="false" type="com.runwaysdk.system.metadata.MdVertex"/>                            
         </attributes>
       </mdVertex>    
       

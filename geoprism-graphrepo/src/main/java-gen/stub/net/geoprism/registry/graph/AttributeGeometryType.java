@@ -4,6 +4,7 @@ import org.commongeoregistry.adapter.metadata.AttributeType;
 
 import com.runwaysdk.dataaccess.MdVertexDAOIF;
 import com.runwaysdk.dataaccess.metadata.graph.MdVertexDAO;
+import com.runwaysdk.dataaccess.transaction.Transaction;
 import com.runwaysdk.system.gis.geo.GeometryType;
 
 import net.geoprism.registry.model.ValueNodeStrategy;
@@ -21,12 +22,24 @@ public class AttributeGeometryType extends AttributeGeometryTypeBase
   }
 
   @Override
+  @Transaction
+  public void apply()
+  {
+    if (!this.getIsChangeOverTime())
+    {
+      throw new UnsupportedOperationException();
+    }
+
+    super.apply();
+  }
+
+  @Override
   public AttributeType toDTO()
   {
     org.commongeoregistry.adapter.metadata.AttributeGeometryType dto = new org.commongeoregistry.adapter.metadata.AttributeGeometryType(this.getCode(), getLocalizedLabel(), getLocalizedDescription(), isAppliedToDb(), isNew(), isAppliedToDb());
-    
+
     this.populate(dto);
-    
+
     return dto;
   }
 

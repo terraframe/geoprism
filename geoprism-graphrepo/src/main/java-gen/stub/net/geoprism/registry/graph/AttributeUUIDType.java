@@ -26,18 +26,30 @@ public class AttributeUUIDType extends AttributeUUIDTypeBase
   @Transaction
   public void apply()
   {
-    super.apply();
-
     if (!this.getIsChangeOverTime())
     {
-      // Create the MdAttribute on the MdVertex
-      MdAttributeUUIDDAO mdAttribute = MdAttributeUUIDDAO.newInstance();
+      MdAttributeUUIDDAO mdAttribute = null;
+
+      // Create the value vertex class
+      if (this.isNew() && !this.isAppliedToDb())
+      {
+        // Create the MdAttribute on the MdVertex
+        mdAttribute = MdAttributeUUIDDAO.newInstance();
+      }
+      else
+      {
+        // Update the precision and scale of the value attribute
+        MdVertexDAOIF mdVertex = MdVertexDAO.get(this.getGeoObjectType().getMdVertexOid());
+
+        mdAttribute = (MdAttributeUUIDDAO) mdVertex.definesAttribute(this.getCode()).getBusinessDAO();
+      }
 
       populate(mdAttribute);
 
       mdAttribute.apply();
-
     }
+
+    super.apply();
   }
 
   @Override

@@ -26,18 +26,30 @@ public class AttributeLongType extends AttributeLongTypeBase
   @Transaction
   public void apply()
   {
-    super.apply();
-
     if (!this.getIsChangeOverTime())
     {
-      // Create the MdAttribute on the MdVertex
-      MdAttributeLongDAO mdAttribute = MdAttributeLongDAO.newInstance();
+      MdAttributeLongDAO mdAttribute = null;
+
+      // Create the value vertex class
+      if (this.isNew() && !this.isAppliedToDb())
+      {
+        // Create the MdAttribute on the MdVertex
+        mdAttribute = MdAttributeLongDAO.newInstance();
+      }
+      else
+      {
+        // Update the precision and scale of the value attribute
+        MdVertexDAOIF mdVertex = MdVertexDAO.get(this.getGeoObjectType().getMdVertexOid());
+
+        mdAttribute = (MdAttributeLongDAO) mdVertex.definesAttribute(this.getCode()).getBusinessDAO();
+      }
 
       populate(mdAttribute);
 
       mdAttribute.apply();
-
     }
+
+    super.apply();
   }
 
   @Override
