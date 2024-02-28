@@ -53,6 +53,7 @@ import com.runwaysdk.dataaccess.DuplicateDataException;
 import com.runwaysdk.dataaccess.MdAttributeConcreteDAOIF;
 import com.runwaysdk.dataaccess.MdClassDAOIF;
 import com.runwaysdk.dataaccess.attributes.AttributeValueException;
+import com.runwaysdk.dataaccess.metadata.DuplicateAttributeDefinitionException;
 import com.runwaysdk.dataaccess.metadata.graph.MdVertexDAO;
 import com.runwaysdk.dataaccess.transaction.Transaction;
 import com.runwaysdk.session.Session;
@@ -298,7 +299,7 @@ public class GeoObjectTypeBusinessService implements GeoObjectTypeBusinessServic
   public List<ServerGeoObjectType> getTypeAncestors(ServerGeoObjectType sgot, ServerHierarchyType hierarchyType, Boolean includeInheritedTypes)
   {
     List<ServerGeoObjectType> ancestors = new LinkedList<ServerGeoObjectType>();
-    
+
     List<ServerGeoObjectType> list = hierarchyType.getAncestors(sgot);
     ancestors.addAll(list);
 
@@ -770,6 +771,12 @@ public class GeoObjectTypeBusinessService implements GeoObjectTypeBusinessServic
   @Transaction
   public net.geoprism.registry.graph.AttributeType createAttributeTypeFromDTO(ServerGeoObjectType type, AttributeType dto)
   {
+    if (type.getAttributeMap().containsKey(dto.getName()))
+    {
+      // TODO: Change exception type
+      throw new UnsupportedOperationException();
+    }
+
     net.geoprism.registry.graph.AttributeType attributeType = null;
 
     if (dto.getType().equals(AttributeCharacterType.TYPE))
