@@ -39,7 +39,7 @@ public class GeoObjectType extends GeoObjectTypeBase
   public void delete()
   {
     // Delete all attributes types
-    this.getAttributes().stream().forEach(attributeType -> attributeType.delete());
+    this.getAttributes(false).stream().forEach(attributeType -> attributeType.delete());
 
     MdVertex mdVertex = this.getMdVertex();
 
@@ -83,6 +83,12 @@ public class GeoObjectType extends GeoObjectTypeBase
 
   public List<AttributeType> getAttributes()
   {
+    return this.getAttributes(true);
+  }
+
+  public List<AttributeType> getAttributes(boolean includeSuperTypeAttributes)
+  {
+    GeoObjectType superType = this.getSuperType();
     MdVertexDAOIF mdVertexDAO = MdVertexDAO.getMdVertexDAO(AttributeType.CLASS);
     MdAttributeDAOIF mdAttribute = mdVertexDAO.definesAttribute(AttributeType.GEOOBJECTTYPE);
 
@@ -90,8 +96,18 @@ public class GeoObjectType extends GeoObjectTypeBase
     statement.append("SELECT FROM " + mdVertexDAO.getDBClassName());
     statement.append(" WHERE " + mdAttribute.getColumnName() + ".oid = :geoObjectType");
 
+    if (includeSuperTypeAttributes && superType != null)
+    {
+      statement.append(" OR " + mdAttribute.getColumnName() + ".oid = :superType");
+    }
+
     GraphQuery<AttributeType> query = new GraphQuery<AttributeType>(statement.toString());
     query.setParameter("geoObjectType", this.getOid());
+
+    if (includeSuperTypeAttributes && superType != null)
+    {
+      query.setParameter("superType", superType.getOid());
+    }
 
     return query.getResults();
   }

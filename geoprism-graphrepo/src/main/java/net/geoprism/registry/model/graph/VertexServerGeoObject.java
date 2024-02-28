@@ -763,47 +763,21 @@ public class VertexServerGeoObject extends AbstractServerGeoObject implements Se
     return this.getValueLocalized(DefaultAttribute.DISPLAY_LABEL.getName());
   }
 
+  public LocalizedValue getDisplayLabel(Date date)
+  {
+    return this.getValueLocalized(DefaultAttribute.DISPLAY_LABEL.getName(), date);
+  }
+
   public LocalizedValue getValueLocalized(String attributeName)
   {
-    GraphObjectDAO embeddedObjectDAO = null;
-
     if (this.date == null)
     {
-      embeddedObjectDAO = (GraphObjectDAO) this.getMostRecentValue(attributeName);
+      return (LocalizedValue) this.getMostRecentValue(attributeName);
     }
     else
     {
-      GraphObject graphObject = vertex.getEmbeddedComponent(attributeName, this.date);
-
-      if (graphObject != null)
-      {
-        embeddedObjectDAO = (GraphObjectDAO) graphObject.getGraphObjectDAO();
-      }
+      return this.getValue(attributeName, this.date);
     }
-
-    if (embeddedObjectDAO == null)
-    {
-      return new LocalizedValue(null, new HashMap<String, String>());
-    }
-
-    return RegistryLocalizedValueConverter.convert(embeddedObjectDAO);
-  }
-
-  public LocalizedValue getDisplayLabel(Date date)
-  {
-    if (date == null)
-    {
-      GraphObjectDAO embeddedObjectDAO = (GraphObjectDAO) this.getMostRecentValue(DefaultAttribute.DISPLAY_LABEL.getName());
-
-      if (embeddedObjectDAO == null)
-      {
-        return new LocalizedValue(null, new HashMap<String, String>());
-      }
-
-      return RegistryLocalizedValueConverter.convert(embeddedObjectDAO);
-    }
-
-    return this.getValueLocalized(DefaultAttribute.DISPLAY_LABEL.getName(), date);
   }
 
   public LocalizedValue getValueLocalized(String attributeName, Date date)
@@ -1072,13 +1046,14 @@ public class VertexServerGeoObject extends AbstractServerGeoObject implements Se
   @Override
   public Boolean getInvalid()
   {
-    return (Boolean) this.getValue(DefaultAttribute.INVALID.getName());
+    Boolean value = this.getValue(DefaultAttribute.INVALID.getName());
+    return value;
   }
 
   @Override
   public void setInvalid(Boolean invalid)
   {
-    this.vertex.setValue(DefaultAttribute.INVALID.getName(), invalid);
+    this.setValue(DefaultAttribute.INVALID.getName(), invalid);
   }
 
   @Override

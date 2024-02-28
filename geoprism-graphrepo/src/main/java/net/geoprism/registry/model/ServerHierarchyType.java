@@ -28,10 +28,13 @@ import org.commongeoregistry.adapter.dataaccess.LocalizedValue;
 import org.commongeoregistry.adapter.metadata.HierarchyType;
 
 import com.runwaysdk.business.graph.GraphQuery;
+import com.runwaysdk.dataaccess.MdAttributeDAOIF;
 import com.runwaysdk.dataaccess.MdClassDAOIF;
 import com.runwaysdk.dataaccess.MdEdgeDAOIF;
+import com.runwaysdk.dataaccess.MdVertexDAOIF;
 import com.runwaysdk.dataaccess.metadata.MdClassDAO;
 import com.runwaysdk.dataaccess.metadata.graph.MdEdgeDAO;
+import com.runwaysdk.dataaccess.metadata.graph.MdVertexDAO;
 import com.runwaysdk.dataaccess.transaction.Transaction;
 import com.runwaysdk.session.Session;
 
@@ -55,12 +58,12 @@ public class ServerHierarchyType extends CachableObjectWrapper<HierarchicalRelat
   {
     super(hierarchicalRelationship);
   }
-  
+
   @Override
   public void markAsDirty()
   {
     super.markAsDirty();
-    
+
     this.dto = null;
   }
 
@@ -335,6 +338,21 @@ public class ServerHierarchyType extends CachableObjectWrapper<HierarchicalRelat
   public static List<ServerHierarchyType> getAll()
   {
     return ServiceFactory.getMetadataCache().getAllHierarchyTypes();
+  }
+
+  public static Long getCountForOrganization(ServerOrganization organization)
+  {
+    MdVertexDAOIF mdVertex = MdVertexDAO.getMdVertexDAO(HierarchicalRelationshipType.CLASS);
+    MdAttributeDAOIF mdAttribute = mdVertex.definesAttribute(HierarchicalRelationshipType.ORGANIZATION);
+
+    StringBuilder statement = new StringBuilder();
+    statement.append("SELECT COUNT(*) FROM " + mdVertex.getDBClassName());
+    statement.append(" WHERE " + mdAttribute.getColumnName() + " = :organization");
+
+    GraphQuery<Long> query = new GraphQuery<Long>(statement.toString());
+    query.setParameter("organization", organization.getGraphOrganization().getRID());
+
+    return query.getSingleResult();
   }
 
 }
