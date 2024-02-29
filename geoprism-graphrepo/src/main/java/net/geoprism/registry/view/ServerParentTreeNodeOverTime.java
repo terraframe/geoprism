@@ -3,18 +3,18 @@
  *
  * This file is part of Geoprism(tm).
  *
- * Geoprism(tm) is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
+ * Geoprism(tm) is free software: you can redistribute it and/or modify it under
+ * the terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation, either version 3 of the License, or (at your option) any
+ * later version.
  *
- * Geoprism(tm) is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
+ * Geoprism(tm) is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with Geoprism(tm).  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with Geoprism(tm). If not, see <http://www.gnu.org/licenses/>.
  */
 package net.geoprism.registry.view;
 
@@ -46,8 +46,7 @@ import com.google.gson.JsonParseException;
 import com.runwaysdk.dataaccess.ProgrammingErrorException;
 
 import net.geoprism.registry.DateFormatter;
-import net.geoprism.registry.HierarchicalRelationshipType;
-import net.geoprism.registry.InheritedHierarchyAnnotation;
+import net.geoprism.registry.graph.InheritedHierarchyAnnotation;
 import net.geoprism.registry.model.ServerGeoObjectIF;
 import net.geoprism.registry.model.ServerGeoObjectType;
 import net.geoprism.registry.model.ServerHierarchyType;
@@ -61,30 +60,30 @@ import net.geoprism.registry.service.request.ServiceFactory;
 
 public class ServerParentTreeNodeOverTime
 {
-  public static final String JSON_HIERARCHY_CODE = "code";
-  
-  public static final String JSON_HIERARCHY_LABEL = "label";
-  
-  public static final String JSON_HIERARCHY_TYPES = "types";
-  
-  public static final String JSON_HIERARCHY_ENTRIES = "entries";
-  
-  public static final String JSON_TYPE_CODE = "code";
-  
-  public static final String JSON_TYPE_LABEL = "label";
-  
-  public static final String JSON_TYPE_INHERITED = "inherited";
-  
-  public static final String JSON_ENTRY_STARTDATE = "startDate";
-  
-  public static final String JSON_ENTRY_ENDDATE = "endDate";
-  
-  public static final String JSON_ENTRY_PARENTS = "parents";
-  
+  public static final String JSON_HIERARCHY_CODE         = "code";
+
+  public static final String JSON_HIERARCHY_LABEL        = "label";
+
+  public static final String JSON_HIERARCHY_TYPES        = "types";
+
+  public static final String JSON_HIERARCHY_ENTRIES      = "entries";
+
+  public static final String JSON_TYPE_CODE              = "code";
+
+  public static final String JSON_TYPE_LABEL             = "label";
+
+  public static final String JSON_TYPE_INHERITED         = "inherited";
+
+  public static final String JSON_ENTRY_STARTDATE        = "startDate";
+
+  public static final String JSON_ENTRY_ENDDATE          = "endDate";
+
+  public static final String JSON_ENTRY_PARENTS          = "parents";
+
   public static final String JSON_ENTRY_PARENT_GEOOBJECT = "geoObject";
-  
-  public static final String JSON_ENTRY_PARENT_TEXT = "text";
-  
+
+  public static final String JSON_ENTRY_PARENT_TEXT      = "text";
+
   private static class Hierarchy
   {
     private ServerHierarchyType        type;
@@ -122,7 +121,7 @@ public class ServerParentTreeNodeOverTime
     this.type = type;
     this.hierarchies = new TreeMap<String, ServerParentTreeNodeOverTime.Hierarchy>();
   }
-  
+
   public void add(ServerHierarchyType type)
   {
     if (!this.hierarchies.containsKey(type.getCode()))
@@ -196,7 +195,7 @@ public class ServerParentTreeNodeOverTime
   public boolean isSame(ServerParentTreeNodeOverTime other, ServerGeoObjectIF exclude)
   {
     Set<Entry<String, Hierarchy>> entries = other.hierarchies.entrySet();
-    
+
     for (Entry<String, Hierarchy> entry : entries)
     {
       Hierarchy hierarchy = entry.getValue();
@@ -250,24 +249,22 @@ public class ServerParentTreeNodeOverTime
           JsonObject pObject = new JsonObject();
           pObject.addProperty(JSON_TYPE_CODE, pType.getCode());
           pObject.addProperty(JSON_TYPE_LABEL, pType.getLabel().getValue());
-          
+
           if (inherited != ht)
           {
             pObject.addProperty(JSON_TYPE_INHERITED, inherited.getCode());
           }
 
           rTypes.add(pObject);
-          
+
           if (ServiceFactory.getBean(GeoObjectTypeBusinessServiceIF.class).isRoot(pType, inherited))
           {
-            // TODO: HEADS UP
-//            InheritedHierarchyAnnotation anno = InheritedHierarchyAnnotation.getByForHierarchical(ht.getHierarchicalRelationshipType());
-//            
-//            if (anno != null)
-//            {
-//              HierarchicalRelationshipType hrtInherited = anno.getInheritedHierarchicalRelationshipType();
-//              inherited = ServerHierarchyType.get(hrtInherited);
-//            }
+            InheritedHierarchyAnnotation anno = InheritedHierarchyAnnotation.getByForHierarchical(ht.getObject());
+
+            if (anno != null)
+            {
+              inherited = ServerHierarchyType.get(anno.getInheritedHierarchyCode());
+            }
           }
         }
       }
@@ -297,7 +294,7 @@ public class ServerParentTreeNodeOverTime
 
               JsonObject pObject = new JsonObject();
               pObject.add(JSON_ENTRY_PARENT_GEOOBJECT, geoObject.toJSON());
-              
+
               LocalizedValue label = sGeoObject.getDisplayLabel();
               if (label != null)
               {
@@ -322,7 +319,7 @@ public class ServerParentTreeNodeOverTime
         }
 
         object.add(JSON_ENTRY_PARENTS, pArray);
-        
+
         object.addProperty("oid", node.getOid());
 
         entries.add(object);
@@ -339,12 +336,12 @@ public class ServerParentTreeNodeOverTime
 
     return response;
   }
-  
+
   public static SimpleDateFormat getDateFormat()
   {
     SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
     format.setTimeZone(DateFormatter.SYSTEM_TIMEZONE);
-    
+
     return format;
   }
 
@@ -365,12 +362,12 @@ public class ServerParentTreeNodeOverTime
     {
       this.type = type;
     }
-    
+
     @Override
     public ServerParentTreeNodeOverTime deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException
     {
       JsonArray array = json.getAsJsonArray();
-      
+
       SimpleDateFormat format = getDateFormat();
 
       final ServerParentTreeNodeOverTime node = new ServerParentTreeNodeOverTime(type);
@@ -412,30 +409,30 @@ public class ServerParentTreeNodeOverTime
 
       return node;
     }
-    
+
     protected ServerParentTreeNode parseParent(final ServerHierarchyType ht, final JsonArray types, final JsonObject parents, final Date startDate, final Date endDate, final JsonDeserializationContext context)
     {
       for (int k = ( types.size() - 1 ); k >= 0; k--)
       {
         final JsonObject type = types.get(k).getAsJsonObject();
         final String code = type.get(JSON_TYPE_CODE).getAsString();
-        
+
         if (parents.has(code))
         {
           final JsonObject parent = parents.get(code).getAsJsonObject();
-  
+
           if (parent.has(JSON_ENTRY_PARENT_GEOOBJECT) && !parent.get(JSON_ENTRY_PARENT_GEOOBJECT).isJsonNull())
           {
             final JsonObject go = parent.get(JSON_ENTRY_PARENT_GEOOBJECT).getAsJsonObject();
-  
+
             ServerGeoObjectIF pSGO = deserializeGeoObject(go, code, context);
-            
+
             String oid = null;
             if (parent.has("oid"))
             {
               oid = parent.get("oid").getAsString();
             }
-  
+
             return new ServerParentTreeNode(pSGO, ht, startDate, endDate, oid);
           }
         }
@@ -443,13 +440,13 @@ public class ServerParentTreeNodeOverTime
 
       return null;
     }
-    
+
     protected ServerGeoObjectIF deserializeGeoObject(JsonObject go, String goTypeCode, final JsonDeserializationContext context)
     {
       GeoObject geoObject = context.deserialize(go, GeoObject.class);
-      
+
       final ServerGeoObjectIF pSGO = new GeoObjectBusinessService(new AllowAllGeoObjectPermissionService()).getGeoObjectByCode(geoObject.getCode(), goTypeCode);
-      
+
       return pSGO;
     }
   }

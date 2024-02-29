@@ -1,6 +1,5 @@
 package net.geoprism.registry.graph;
 
-import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -48,7 +47,6 @@ public class HierarchicalRelationshipType extends HierarchicalRelationshipTypeBa
     return this.getCode();
   }
 
-  @Transaction
   public void update(HierarchyType dto)
   {
     RegistryLocalizedValueConverter.populate(this, HierarchicalRelationshipType.LABEL, dto.getLabel());
@@ -90,17 +88,15 @@ public class HierarchicalRelationshipType extends HierarchicalRelationshipTypeBa
     MdEdge objectEdge = this.getObjectEdge();
     MdEdge definitionEdge = this.getDefinitionEdge();
 
-    // TODO: HEADS UP
-    // /*
-    // * Delete all inherited hierarchies
-    // */
-    // List<? extends InheritedHierarchyAnnotation> annotations =
-    // InheritedHierarchyAnnotation.getByRelationship(this);
-    //
-    // for (InheritedHierarchyAnnotation annotation : annotations)
-    // {
-    // annotation.delete();
-    // }
+    /*
+     * Delete all inherited hierarchies
+     */
+    List<InheritedHierarchyAnnotation> annotations = InheritedHierarchyAnnotation.getByRelationship(this);
+
+    for (InheritedHierarchyAnnotation annotation : annotations)
+    {
+      annotation.delete();
+    }
 
     super.delete();
 
@@ -170,27 +166,6 @@ public class HierarchicalRelationshipType extends HierarchicalRelationshipTypeBa
     dto.setUseConstraints(this.getUseConstraints());
 
     return dto;
-  }
-
-  public static List<HierarchicalRelationshipType> getInheritedTypes()
-  {
-    // TODO: HEADS UP
-    // QueryFactory factory = new QueryFactory();
-    //
-    // InheritedHierarchyAnnotationQuery ihaQuery = new
-    // InheritedHierarchyAnnotationQuery(factory);
-    //
-    // HierarchicalRelationshipTypeQuery query = new
-    // HierarchicalRelationshipTypeQuery(factory);
-    // query.WHERE(query.getOid().EQ(ihaQuery.getInheritedHierarchicalRelationshipType().getOid()));
-    //
-    // try (OIterator<? extends HierarchicalRelationshipType> it =
-    // query.getIterator())
-    // {
-    // return new LinkedList<HierarchicalRelationshipType>(it.getAll());
-    // }
-
-    return new LinkedList<HierarchicalRelationshipType>();
   }
 
   public static List<HierarchicalRelationshipType> getAll()

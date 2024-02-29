@@ -30,8 +30,8 @@ import com.runwaysdk.dataaccess.transaction.Transaction;
 import com.runwaysdk.system.metadata.MdBusiness;
 import com.runwaysdk.system.metadata.MdClass;
 
-import net.geoprism.registry.InheritedHierarchyAnnotation;
 import net.geoprism.registry.graph.HierarchicalRelationshipType;
+import net.geoprism.registry.graph.InheritedHierarchyAnnotation;
 import net.geoprism.registry.model.ServerGeoObjectType;
 import net.geoprism.registry.model.ServerHierarchyType;
 import net.geoprism.registry.permission.PermissionContext;
@@ -52,10 +52,8 @@ public interface GeoObjectTypeBusinessServiceIF
    */
   public boolean isRoot(ServerGeoObjectType sgot, ServerHierarchyType sType);
 
-  @Transaction
   public InheritedHierarchyAnnotation setInheritedHierarchy(ServerGeoObjectType sgot, ServerHierarchyType forHierarchy, ServerHierarchyType inheritedHierarchy);
 
-  @Transaction
   public void removeInheritedHierarchy(ServerHierarchyType forHierarchy);
 
   public List<ServerHierarchyType> getHierarchies(ServerGeoObjectType sgot);

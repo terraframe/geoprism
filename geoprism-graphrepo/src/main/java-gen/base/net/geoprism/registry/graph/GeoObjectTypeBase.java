@@ -1,6 +1,6 @@
 package net.geoprism.registry.graph;
 
-@com.runwaysdk.business.ClassSignature(hash = -530058519)
+@com.runwaysdk.business.ClassSignature(hash = -1921414278)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -11,6 +11,7 @@ package net.geoprism.registry.graph;
 public abstract class GeoObjectTypeBase extends net.geoprism.registry.graph.BaseGeoObjectType
 {
   public final static String CLASS = "net.geoprism.registry.graph.GeoObjectType";
+  public final static java.lang.String DBCLASSNAME = "dbClassName";
   public final static java.lang.String DESCRIPTION = "description";
   public final static java.lang.String GEOMETRYTYPE = "geometryType";
   public final static java.lang.String ISABSTRACT = "isAbstract";
@@ -22,11 +23,27 @@ public abstract class GeoObjectTypeBase extends net.geoprism.registry.graph.Base
   public final static java.lang.String ROOTTERM = "rootTerm";
   public final static java.lang.String SUPERTYPE = "superType";
   @SuppressWarnings("unused")
-  private static final long serialVersionUID = -530058519;
+  private static final long serialVersionUID = -1921414278;
   
   public GeoObjectTypeBase()
   {
     super();
+  }
+  
+  public String getDbClassName()
+  {
+    return (String) this.getObjectValue(DBCLASSNAME);
+  }
+  
+  public static com.runwaysdk.dataaccess.MdAttributeCharacterDAOIF getDbClassNameMd()
+  {
+    com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(net.geoprism.registry.graph.GeoObjectType.CLASS);
+    return (com.runwaysdk.dataaccess.MdAttributeCharacterDAOIF)mdClassIF.definesAttribute(DBCLASSNAME);
+  }
+  
+  public void setDbClassName(String value)
+  {
+    this.setValue(DBCLASSNAME, value);
   }
   
   public com.runwaysdk.ComponentIF getDescription()

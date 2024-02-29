@@ -33,6 +33,7 @@ import net.geoprism.registry.Organization;
 import net.geoprism.registry.OrganizationQuery;
 import net.geoprism.registry.UndirectedGraphType;
 import net.geoprism.registry.graph.HierarchicalRelationshipType;
+import net.geoprism.registry.graph.InheritedHierarchyAnnotation;
 import net.geoprism.registry.model.ServerElement;
 import net.geoprism.registry.model.ServerGeoObjectType;
 import net.geoprism.registry.model.ServerHierarchyType;
@@ -84,7 +85,7 @@ public class GraphRepoService implements GraphRepoServiceIF
     // We must build the hierarchy types which are inherited first
     // Otherwise you will end up with a NPE when building the hierarchies
     // which inherit the inherited hierarchy if it hasn't been built
-    HierarchicalRelationshipType.getInheritedTypes().forEach(relationship -> {
+    InheritedHierarchyAnnotation.getInheritedTypes().forEach(relationship -> {
       ServerHierarchyType ht = hierarchyService.get(relationship, false);
 
       ServiceFactory.getMetadataCache().addHierarchyType(ht);

@@ -89,6 +89,7 @@ import net.geoprism.registry.etl.export.GeoObjectJsonExporter;
 import net.geoprism.registry.etl.upload.ClassifierCache;
 import net.geoprism.registry.graph.GeoVertex;
 import net.geoprism.registry.graph.HierarchicalRelationshipType;
+import net.geoprism.registry.graph.InheritedHierarchyAnnotation;
 import net.geoprism.registry.io.TermValueException;
 import net.geoprism.registry.model.BusinessObject;
 import net.geoprism.registry.model.Classification;
@@ -1408,6 +1409,12 @@ public class GeoObjectBusinessService extends RegistryLocalizedValueConverter im
 
   private static ServerChildTreeNode internalGetChildGeoObjects(ServerGeoObjectIF parent, String[] childrenTypes, Boolean recursive, ServerHierarchyType htIn, Date date)
   {
+    /*
+     * TRAVERSE OUT('has_value') FROM ( SELECT out FROM ( SELECT
+     * EXPAND(outE()[in.@class = 'fastp_rovince_private' OR in.@class =
+     * 'fastp_rovince']) FROM #694:0 ) WHERE @class IN (select dbClassName from
+     * hierarchical_relationship_t1) )
+     */
     ServerChildTreeNode tnRoot = new ServerChildTreeNode(parent, htIn, date, null, null);
 
     Map<String, Object> parameters = new HashedMap<String, Object>();
@@ -1564,25 +1571,18 @@ public class GeoObjectBusinessService extends RegistryLocalizedValueConverter im
         {
           if (includeInherited && gotService.isRoot(parentType, ht))
           {
-            // TODO: HEADS UP
-            // InheritedHierarchyAnnotation anno =
-            // InheritedHierarchyAnnotation.getByForHierarchical(ht.getHierarchicalRelationshipType());
-            //
-            // if (anno != null)
-            // {
-            // HierarchicalRelationshipType hrtInherited =
-            // anno.getInheritedHierarchicalRelationshipType();
-            // ServerHierarchyType shtInherited =
-            // ServerHierarchyType.get(hrtInherited);
-            //
-            // tnParent = internalGetParentGeoObjects(parent, parentTypes,
-            // recursive, includeInherited, shtInherited, date);
-            // }
-            // else
-            // {
-            // tnParent = internalGetParentGeoObjects(parent, parentTypes,
-            // recursive, includeInherited, ht, date);
-            // }
+            InheritedHierarchyAnnotation anno = InheritedHierarchyAnnotation.getByForHierarchical(ht.getObject());
+
+            if (anno != null)
+            {
+              ServerHierarchyType shtInherited = ServerHierarchyType.get(anno.getInheritedHierarchyCode());
+
+              tnParent = internalGetParentGeoObjects(parent, parentTypes, recursive, includeInherited, shtInherited, date);
+            }
+            else
+            {
+              tnParent = internalGetParentGeoObjects(parent, parentTypes, recursive, includeInherited, ht, date);
+            }
             tnParent = null;
           }
           else

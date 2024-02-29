@@ -19,6 +19,7 @@
           <graphReference name="organization" label="Organization" type="net.geoprism.registry.graph.GraphOrganization" />
           <reference name="mdVertex" label="MdVertex" type="com.runwaysdk.system.metadata.MdVertex" />
           <reference name="rootTerm" label="Root Term" required="false" type="net.geoprism.ontology.Classifier"  />                
+          <char name="dbClassName" label="DB Class Name" required="true" size="255"  />          
         </attributes>
       </mdVertex>    
       
@@ -38,7 +39,8 @@
           <text name="useConstraints" label="Use Constraints" />         
           <text name="disclaimer" label="Disclaimer" />
           <text name="phoneNumber" label="Telephone number" />
-          <text name="email" label="Email address" />             
+          <text name="email" label="Email address" />        
+          <char name="dbClassName" label="DB Class Name" required="true" size="255"  />                         
         </attributes>
       </mdVertex>    
       
@@ -185,12 +187,16 @@
 
       <mdEdge name="net.geoprism.registry.graph.HasGeometry" label="Has Geometry" parent="net.geoprism.registry.graph.GeoVertex" child="net.geoprism.registry.graph.AttributeGeometryValue" generateSource="false">
       </mdEdge>  
+      
+      <mdVertex name="net.geoprism.registry.graph.InheritedHierarchyAnnotation" label="Virtual Hierarchy Annotation" generateController="false">
+        <attributes>
+          <graphReference name="geoObjectType" type="net.geoprism.registry.graph.GeoObjectType" required="true" label="Geo Object Type" />
+          <graphReference name="inheritedHierarchy" type="net.geoprism.registry.graph.HierarchicalRelationshipType" required="true" label="Inherited Hierarchy" />
+          <graphReference name="forHierarchy" type="net.geoprism.registry.graph.HierarchicalRelationshipType" required="true" label="For Hierarchy" />
+        </attributes>
+      </mdVertex>
+      
 
-<!-- 
-      <object key="ROOT" type="net.geoprism.registry.graph.BaseGeoObjectType">
-        <attribute name="code" value="ROOT" />
-      </object>                
- -->      
     </create>
     
     <permissions>
@@ -283,6 +289,9 @@
           <mdBusinessPermission type="net.geoprism.registry.graph.HasGeometry">
             <operation name="ALL" />
           </mdBusinessPermission>
+          <mdBusinessPermission type="net.geoprism.registry.graph.InheritedHierarchyAnnotation">
+            <operation name="ALL" />
+          </mdBusinessPermission>
         </grant>
       </role>
       
@@ -291,6 +300,8 @@
   </doIt>
   <undoIt>
     <delete>
+      <object type="com.runwaysdk.system.metadata.MdVertex" key="net.geoprism.registry.graph.InheritedHierarchyAnnotation" />
+      
       <object type="com.runwaysdk.system.metadata.MdEdge" key="net.geoprism.registry.graph.HasGeometry" />
       <object type="com.runwaysdk.system.metadata.MdEdge" key="net.geoprism.registry.graph.HasValue" />
     
