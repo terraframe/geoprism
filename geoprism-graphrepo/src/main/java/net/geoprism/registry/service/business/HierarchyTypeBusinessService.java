@@ -18,12 +18,15 @@
  */
 package net.geoprism.registry.service.business;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
+import org.apache.commons.lang3.StringUtils;
 import org.commongeoregistry.adapter.metadata.GeoObjectType;
 import org.commongeoregistry.adapter.metadata.HierarchyNode;
 import org.commongeoregistry.adapter.metadata.HierarchyType;
@@ -58,13 +61,17 @@ import net.geoprism.registry.AbstractParentException;
 import net.geoprism.registry.CodeLengthException;
 import net.geoprism.registry.DuplicateHierarchyTypeException;
 import net.geoprism.registry.RegistryConstants;
+import net.geoprism.registry.RootNodeCannotBeInheritedException;
 import net.geoprism.registry.command.CacheEventType;
 import net.geoprism.registry.command.HierarchicalRelationshipTypeCacheEventCommand;
 import net.geoprism.registry.conversion.LocalizedValueConverter;
 import net.geoprism.registry.geoobjecttype.AssignPublicChildOfPrivateType;
+import net.geoprism.registry.graph.CantRemoveInheritedGOT;
 import net.geoprism.registry.graph.GeoObjectTypeAlreadyInHierarchyException;
 import net.geoprism.registry.graph.GeoVertex;
 import net.geoprism.registry.graph.HierarchicalRelationshipType;
+import net.geoprism.registry.graph.InheritedHierarchyAnnotation;
+import net.geoprism.registry.model.RootGeoObjectType;
 import net.geoprism.registry.model.ServerGeoObjectIF;
 import net.geoprism.registry.model.ServerGeoObjectType;
 import net.geoprism.registry.model.ServerHierarchyType;
@@ -124,11 +131,6 @@ public class HierarchyTypeBusinessService implements HierarchyTypeBusinessServic
 
   public void addToHierarchy(ServerHierarchyType sht, ServerGeoObjectType parentType, ServerGeoObjectType childType)
   {
-    this.addToHierarchy(sht, parentType, childType, true);
-  }
-
-  public void addToHierarchy(ServerHierarchyType sht, ServerGeoObjectType parentType, ServerGeoObjectType childType, boolean refresh)
-  {
     if (parentType.getIsAbstract())
     {
       AbstractParentException exception = new AbstractParentException();
@@ -170,22 +172,11 @@ public class HierarchyTypeBusinessService implements HierarchyTypeBusinessServic
     }
 
     sht.addToHierarchy(parentType, childType);
-
-    // No exceptions thrown. Refresh the HierarchyType object to include the new
-    // relationships.
-    if (refresh)
-    {
-      this.refresh(sht);
-    }
   }
 
   public void removeChild(ServerHierarchyType sht, ServerGeoObjectType parentType, ServerGeoObjectType childType, boolean migrateChildren)
   {
     this.removeFromHierarchy(sht, parentType, childType, migrateChildren);
-
-    // No exceptions thrown. Refresh the HierarchyType object to include the new
-    // relationships.
-    this.refresh(sht);
   }
 
   public List<ServerGeoObjectType> getAllTypes(ServerHierarchyType sht)
@@ -204,24 +195,18 @@ public class HierarchyTypeBusinessService implements HierarchyTypeBusinessServic
     java.util.Optional<ServerGeoObjectType> rootOfHierarchy = types.stream().findFirst();
     if (rootOfHierarchy.isPresent() && includeInherited)
     {
-      // TODO: HEADS UP
-      // ServerGeoObjectType rootType = rootOfHierarchy.get();
-      //
-      // InheritedHierarchyAnnotation anno =
-      // InheritedHierarchyAnnotation.get(rootType,
-      // sht);
-      //
-      // if (anno != null)
-      // {
-      // HierarchicalRelationshipType hrt =
-      // anno.getInheritedHierarchicalRelationshipType();
-      // ServerHierarchyType sht2 = ServerHierarchyType.get(hrt);
-      //
-      // List<ServerGeoObjectType> inheritedTypes =
-      // typeService.getTypeAncestors(rootType, sht2, true);
-      //
-      // types.addAll(0, inheritedTypes);
-      // }
+      ServerGeoObjectType rootType = rootOfHierarchy.get();
+
+      InheritedHierarchyAnnotation anno = InheritedHierarchyAnnotation.get(rootType.getType(), sht.getObject());
+
+      if (anno != null)
+      {
+        ServerHierarchyType sht2 = ServerHierarchyType.get(anno.getInheritedHierarchyCode());
+
+        List<ServerGeoObjectType> inheritedTypes = typeService.getTypeAncestors(rootType, sht2, true);
+
+        types.addAll(0, inheritedTypes);
+      }
     }
 
     return types;
@@ -328,37 +313,32 @@ public class HierarchyTypeBusinessService implements HierarchyTypeBusinessServic
 
     for (ServerGeoObjectType geoObjectType : types)
     {
-      // TODO: HEADS UP
-      // ServerHierarchyType inheritedHierarchy =
-      // typeService.getInheritedHierarchy(geoObjectType,
-      // sht);
-      //
-      // if (inheritedHierarchy != null)
-      // {
-      // List<ServerGeoObjectType> ancestors =
-      // typeService.getTypeAncestors(geoObjectType, inheritedHierarchy, true);
-      // Collections.reverse(ancestors);
-      //
-      // HierarchyNode child = new HierarchyNode(geoObjectType.toDTO(), null);
-      // HierarchyNode root = child;
-      //
-      // for (ServerGeoObjectType ancestor : ancestors)
-      // {
-      // HierarchyNode cNode = new HierarchyNode(ancestor.toDTO(),
-      // inheritedHierarchy.getCode());
-      // cNode.addChild(root);
-      //
-      // root = cNode;
-      // }
-      // buildHierarchy(sht, child, geoObjectType);
-      // rootGeoObjectTypes.add(root);
-      // }
-      // else
-      // {
-      // HierarchyNode node = new HierarchyNode(geoObjectType.toDTO());
-      // node = buildHierarchy(sht, node, geoObjectType);
-      // rootGeoObjectTypes.add(node);
-      // }
+      ServerHierarchyType inheritedHierarchy = typeService.getInheritedHierarchy(geoObjectType, sht);
+
+      if (inheritedHierarchy != null)
+      {
+        List<ServerGeoObjectType> ancestors = typeService.getTypeAncestors(geoObjectType, inheritedHierarchy, true);
+        Collections.reverse(ancestors);
+
+        HierarchyNode child = new HierarchyNode(geoObjectType.toDTO(), null);
+        HierarchyNode root = child;
+
+        for (ServerGeoObjectType ancestor : ancestors)
+        {
+          HierarchyNode cNode = new HierarchyNode(ancestor.toDTO(), inheritedHierarchy.getCode());
+          cNode.addChild(root);
+
+          root = cNode;
+        }
+        buildHierarchy(sht, child, geoObjectType);
+        rootGeoObjectTypes.add(root);
+      }
+      else
+      {
+        HierarchyNode node = new HierarchyNode(geoObjectType.toDTO());
+        node = buildHierarchy(sht, node, geoObjectType);
+        rootGeoObjectTypes.add(node);
+      }
 
     }
 
@@ -440,6 +420,7 @@ public class HierarchyTypeBusinessService implements HierarchyTypeBusinessServic
       hierarchicalRelationship.setObjectEdge(objectEdge);
       hierarchicalRelationship.setDefinitionEdge(defitionEdge);
       hierarchicalRelationship.setOrganization(organization.getGraphOrganization());
+      hierarchicalRelationship.setDbClassName(objectEdge.getDbClassName());
       hierarchicalRelationship.apply();
 
       ServerHierarchyType sht = this.get(hierarchicalRelationship);
@@ -632,70 +613,59 @@ public class HierarchyTypeBusinessService implements HierarchyTypeBusinessServic
   protected void removeFromHierarchy(ServerHierarchyType sht, ServerGeoObjectType parentType, ServerGeoObjectType childType, boolean migrateChildren)
   {
 
-    // TODO: Heads up
-    // List<? extends InheritedHierarchyAnnotation> annotations =
-    // InheritedHierarchyAnnotation.getByInheritedHierarchy(childType,
-    // sht);
-    //
-    // if (annotations.size() > 0)
-    // {
-    // List<String> codes = new ArrayList<String>();
-    //
-    // for (InheritedHierarchyAnnotation annot : annotations)
-    // {
-    // String code =
-    // ServerHierarchyType.buildHierarchyKeyFromMdTermRelUniversal(annot.getForHierarchy().getKey());
-    // codes.add(code);
-    // }
-    //
-    // CantRemoveInheritedGOT ex = new CantRemoveInheritedGOT();
-    // ex.setGotCode(childType.getCode());
-    // ex.setHierCode(sht.getCode());
-    // ex.setInheritedHierarchyList(StringUtils.join(codes, ", "));
-    // throw ex;
-    //
-    // }
+    List<? extends InheritedHierarchyAnnotation> annotations = InheritedHierarchyAnnotation.getByInheritedHierarchy(childType, sht);
+
+    if (annotations.size() > 0)
+    {
+      List<String> codes = new ArrayList<String>();
+
+      for (InheritedHierarchyAnnotation annot : annotations)
+      {
+        codes.add(annot.getForHierarchyCode());
+      }
+
+      CantRemoveInheritedGOT ex = new CantRemoveInheritedGOT();
+      ex.setGotCode(childType.getCode());
+      ex.setHierCode(sht.getCode());
+      ex.setInheritedHierarchyList(StringUtils.join(codes, ", "));
+      throw ex;
+
+    }
 
     // If the child type is the root of the hierarchy then determine if
     // removing it will push up a child node to the root which is used in an
     // inherited hierarchy. If so we must prevent this, because the inherited
     // hierarchy model assumes that the inherited node is not the root of the
     // inherited hierarchy.
-    // TODO: HEADS UP
-    // if (parentType instanceof RootGeoObjectType)
-    // {
-    // List<ServerGeoObjectType> children = typeService.getChildren(childType,
-    // sht);
-    //
-    // if (children.size() == 1)
-    // {
-    // ServerGeoObjectType nextRoot = children.get(0);
-    //
-    // List<? extends InheritedHierarchyAnnotation> results =
-    // InheritedHierarchyAnnotation.getByInheritedHierarchy(nextRoot,
-    // sht);
-    //
-    // if (results.size() > 0)
-    // {
-    // throw new RootNodeCannotBeInheritedException("Cannot remove the root
-    // Geo-Object Type of a hierarchy if the new root Geo-Object Type is
-    // inherited by another hierarchy");
-    // }
-    // }
-    // }
+    if (parentType instanceof RootGeoObjectType)
+    {
+      List<ServerGeoObjectType> children = typeService.getChildren(childType, sht);
+
+      if (children.size() == 1)
+      {
+        ServerGeoObjectType nextRoot = children.get(0);
+
+        List<? extends InheritedHierarchyAnnotation> results = InheritedHierarchyAnnotation.getByInheritedHierarchy(nextRoot, sht);
+
+        if (results.size() > 0)
+        {
+          throw new RootNodeCannotBeInheritedException("Cannot remove the root Geo-Object Type of a hierarchy if the new root Geo-Object Type is inherited by another hierarchy");
+        }
+      }
+    }
 
     sht.removeFromHierarchy(parentType, childType, migrateChildren);
 
     objectService.removeAllEdges(sht, childType);
 
-    // InheritedHierarchyAnnotation annotation =
-    // InheritedHierarchyAnnotation.get(childType,
-    // sht);
-    //
-    // if (annotation != null)
-    // {
-    // annotation.delete();
-    // }
+    InheritedHierarchyAnnotation annotation = InheritedHierarchyAnnotation.get(childType, sht);
+
+    if (annotation != null)
+    {
+      annotation.delete();
+    }
+
+    new HierarchicalRelationshipTypeCacheEventCommand(sht, CacheEventType.UPDATE).doIt();
   }
 
   public List<ServerGeoObjectType> getDirectRootNodes(ServerHierarchyType sht)

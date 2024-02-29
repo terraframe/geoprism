@@ -18,6 +18,7 @@ import com.runwaysdk.dataaccess.transaction.Transaction;
 import com.runwaysdk.system.gis.geo.GeometryType;
 import com.runwaysdk.system.metadata.MdVertex;
 
+import net.geoprism.ontology.Classifier;
 import net.geoprism.registry.conversion.GeometryTypeFactory;
 import net.geoprism.registry.conversion.RegistryLocalizedValueConverter;
 import net.geoprism.registry.service.request.ServiceFactory;
@@ -49,6 +50,19 @@ public class GeoObjectType extends GeoObjectTypeBase
     {
       mdVertex.delete();
     }
+  }
+
+  @Override
+  public Classifier getRootTerm()
+  {
+    String oid = this.getObjectValue(GeoObjectType.ROOTTERM);
+
+    if (!StringUtils.isBlank(oid))
+    {
+      return Classifier.get(oid);
+    }
+
+    return null;
   }
 
   @Override

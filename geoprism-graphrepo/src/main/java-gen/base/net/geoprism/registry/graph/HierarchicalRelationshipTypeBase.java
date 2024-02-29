@@ -1,6 +1,6 @@
 package net.geoprism.registry.graph;
 
-@com.runwaysdk.business.ClassSignature(hash = 798406710)
+@com.runwaysdk.business.ClassSignature(hash = 757410567)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -16,6 +16,7 @@ public abstract class HierarchicalRelationshipTypeBase extends com.runwaysdk.bus
   public final static java.lang.String ACKNOWLEDGEMENT = "acknowledgement";
   public final static java.lang.String CODE = "code";
   public final static java.lang.String CONTACT = "contact";
+  public final static java.lang.String DBCLASSNAME = "dbClassName";
   public final static java.lang.String DEFINITIONEDGE = "definitionEdge";
   public final static java.lang.String DESCRIPTION = "description";
   public final static java.lang.String DISCLAIMER = "disclaimer";
@@ -29,7 +30,7 @@ public abstract class HierarchicalRelationshipTypeBase extends com.runwaysdk.bus
   public final static java.lang.String SEQ = "seq";
   public final static java.lang.String USECONSTRAINTS = "useConstraints";
   @SuppressWarnings("unused")
-  private static final long serialVersionUID = 798406710;
+  private static final long serialVersionUID = 757410567;
   
   public HierarchicalRelationshipTypeBase()
   {
@@ -114,6 +115,22 @@ public abstract class HierarchicalRelationshipTypeBase extends com.runwaysdk.bus
   public void setContact(String value)
   {
     this.setValue(CONTACT, value);
+  }
+  
+  public String getDbClassName()
+  {
+    return (String) this.getObjectValue(DBCLASSNAME);
+  }
+  
+  public static com.runwaysdk.dataaccess.MdAttributeCharacterDAOIF getDbClassNameMd()
+  {
+    com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(net.geoprism.registry.graph.HierarchicalRelationshipType.CLASS);
+    return (com.runwaysdk.dataaccess.MdAttributeCharacterDAOIF)mdClassIF.definesAttribute(DBCLASSNAME);
+  }
+  
+  public void setDbClassName(String value)
+  {
+    this.setValue(DBCLASSNAME, value);
   }
   
   public com.runwaysdk.system.metadata.MdEdge getDefinitionEdge()

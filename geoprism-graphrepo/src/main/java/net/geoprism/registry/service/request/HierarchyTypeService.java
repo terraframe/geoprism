@@ -298,10 +298,7 @@ public class HierarchyTypeService implements HierarchyTypeServiceIF
 
     ServiceFactory.getGeoObjectTypeRelationshipPermissionService().enforceCanAddChild(forHierarchy, null, childType);
 
-    ServerGeoObjectType type = ServerGeoObjectType.get(geoObjectTypeCode);
-
     gotServ.removeInheritedHierarchy(forHierarchy);
-    service.refresh(forHierarchy);
 
     return service.toHierarchyType(forHierarchy);
   }

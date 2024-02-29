@@ -47,6 +47,7 @@ import net.geoprism.registry.graph.GeoObjectType;
 import net.geoprism.registry.graph.HierarchicalRelationshipType;
 import net.geoprism.registry.model.graph.GraphStrategy;
 import net.geoprism.registry.model.graph.ServerHierarchyStrategy;
+import net.geoprism.registry.service.business.HierarchyTypeBusinessServiceIF;
 import net.geoprism.registry.service.permission.HierarchyTypePermissionServiceIF;
 import net.geoprism.registry.service.request.ServiceFactory;
 
@@ -88,6 +89,9 @@ public class ServerHierarchyType extends CachableObjectWrapper<HierarchicalRelat
 
     this.setObject(type);
     this.dto = null;
+    
+    // TODO: There has to be a better way to do this
+    ServiceFactory.getBean(HierarchyTypeBusinessServiceIF.class).refresh(this);
   }
 
   public org.commongeoregistry.adapter.metadata.HierarchyType toDTO()
@@ -200,9 +204,12 @@ public class ServerHierarchyType extends CachableObjectWrapper<HierarchicalRelat
     return this.getObjectEdge();
   }
 
+  @Transaction
   public void addToHierarchy(ServerGeoObjectType parentType, ServerGeoObjectType childType)
   {
     parentType.getObject().addChild(childType.getObject(), this.getDefinitionEdge()).apply();
+    
+    new HierarchicalRelationshipTypeCacheEventCommand(this, CacheEventType.UPDATE).doIt();
   }
 
   public List<ServerGeoObjectType> getChildren(ServerGeoObjectType parent)
