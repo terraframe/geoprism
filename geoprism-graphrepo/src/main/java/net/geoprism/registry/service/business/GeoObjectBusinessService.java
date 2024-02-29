@@ -97,6 +97,7 @@ import net.geoprism.registry.model.ClassificationType;
 import net.geoprism.registry.model.GeoObjectMetadata;
 import net.geoprism.registry.model.GeoObjectTypeMetadata;
 import net.geoprism.registry.model.LocationInfo;
+import net.geoprism.registry.model.LocationInfoHolder;
 import net.geoprism.registry.model.ServerChildTreeNode;
 import net.geoprism.registry.model.ServerGeoObjectIF;
 import net.geoprism.registry.model.ServerGeoObjectType;
@@ -1953,50 +1954,44 @@ public class GeoObjectBusinessService extends RegistryLocalizedValueConverter im
   {
     TreeMap<String, LocationInfo> map = new TreeMap<String, LocationInfo>();
 
-    // TODO: HEADS UP
-    // GraphQuery<Map<String, Object>> query = buildAncestorSelectQueryFast(sgo,
-    // hierarchy, parents);
-    //
-    // List<Map<String, Object>> results = query.getResults();
-    //
-    // if (results.size() <= 1)
-    // {
-    // return map;
-    // }
-    //
-    // results.remove(0); // First result is the child object
-    //
-    // results.forEach(result -> {
-    // String clazz = (String) result.get("cl");
-    // String code = (String) result.get("code");
-    //
-    // List<Map<String, Object>> displayLabelRaw = (List<Map<String, Object>>)
-    // result.get("label");
-    //
-    // LocalizedValue localized =
-    // RegistryLocalizedValueConverter.convert(displayLabelRaw, sgo.getDate());
-    //
-    // ServerGeoObjectType type = null;
-    // for (ServerGeoObjectType parent : parents)
-    // {
-    // if (parent.getMdVertex().getDBClassName().equals(clazz))
-    // {
-    // type = parent;
-    // }
-    // }
-    //
-    // if (type != null && localized != null)
-    // {
-    // LocationInfoHolder holder = new LocationInfoHolder(code, localized,
-    // type);
-    // map.put(type.getUniversal().getKey(), holder);
-    // }
-    // else
-    // {
-    // logger.error("Could not find [" + clazz + "] or the localized value was
-    // null.");
-    // }
-    // });
+    GraphQuery<Map<String, Object>> query = buildAncestorSelectQueryFast(sgo, hierarchy, parents);
+
+    List<Map<String, Object>> results = query.getResults();
+
+    if (results.size() <= 1)
+    {
+      return map;
+    }
+
+    results.remove(0); // First result is the child object
+
+    results.forEach(result -> {
+      String clazz = (String) result.get("cl");
+      String code = (String) result.get("code");
+
+      List<Map<String, Object>> displayLabelRaw = (List<Map<String, Object>>) result.get("label");
+
+      LocalizedValue localized = RegistryLocalizedValueConverter.convert(displayLabelRaw, sgo.getDate());
+
+      ServerGeoObjectType type = null;
+      for (ServerGeoObjectType parent : parents)
+      {
+        if (parent.getMdVertex().getDBClassName().equals(clazz))
+        {
+          type = parent;
+        }
+      }
+
+      if (type != null && localized != null)
+      {
+        LocationInfoHolder holder = new LocationInfoHolder(code, localized, type);
+        map.put(type.getCode(), holder);
+      }
+      else
+      {
+        logger.error("Could not find [" + clazz + "] or the localized value was null.");
+      }
+    });
 
     return map;
   }
