@@ -1108,7 +1108,120 @@ public class VertexServerGeoObject extends AbstractServerGeoObject implements Se
   {
     return this.getGraphParents(type, recursive, date, null, null, null);
   }
+  
+  public static JsonArray getGeoObjectSuggestions(String text, String typeCode, String parentCode, String parentTypeCode, String hierarchyCode, Date startDate, Date endDate)
+  {
+    final ServerGeoObjectType type = ServerGeoObjectType.get(typeCode);
+    
 
+    ServerHierarchyType ht = hierarchyCode != null ? ServerHierarchyType.get(hierarchyCode) : null;
+
+    final ServerGeoObjectType parentType = ServerGeoObjectType.get(parentTypeCode);
+
+    StringBuilder statement = new StringBuilder();
+    statement.append("SELECT @class as clazz, @rid, oid, uid, code");
+    
+    if (startDate != null && endDate != null)
+    {
+      statement.append(", last(out('has_value')[attributeName = 'displayLabel'][(:startDate BETWEEN startDate AND endDate)].defaultLocale) AS label");
+      statement.append(", last(out('has_value')[attributeName = 'displayLabel'][(:startDate BETWEEN startDate AND endDate)].startDate) AS labelStartDate");
+      statement.append(", last(out('has_value')[attributeName = 'displayLabel'][(:startDate BETWEEN startDate AND endDate)].endDate) AS labelEndDate");
+      statement.append(", last(out('has_value')[attributeName = 'exists'][(:startDate BETWEEN startDate AND endDate)].startDate) AS existStartDate");
+      statement.append(", last(out('has_value')[attributeName = 'exists'][(:startDate BETWEEN startDate AND endDate)].endDate) AS existEndDate");
+      statement.append(", last(out('has_value')[attributeName = 'exists'][(:startDate BETWEEN startDate AND endDate)].value) AS existValue");
+    }
+    else
+    {
+      statement.append(", last(out('has_value')[attributeName = 'displayLabel'].defaultLocale) AS label");
+      statement.append(", last(out('has_value')[attributeName = 'exists'].value) AS existValue");
+    }
+    
+    statement.append(" FROM " + type.getMdVertex().getDBClassName() + " WHERE ");
+    
+    statement.append("invalid=false");
+    
+    // Must be a child of parent type
+    if (parentTypeCode != null && parentTypeCode.length() > 0)
+    {
+      StringBuilder parentCondition = new StringBuilder();
+
+      parentCondition.append("(@rid in ( TRAVERSE outE('" + ht.getObjectEdge().getDBClassName() + "')");
+
+      if (startDate != null && endDate != null)
+      {
+        parentCondition.append("[(:startDate BETWEEN startDate AND endDate) AND (:endDate BETWEEN startDate AND endDate)]");
+      }
+
+      parentCondition.append(".inV() FROM (select from " + parentType.getMdVertex().getDBClassName() + " where code='" + parentCode + "') )) ");
+
+      statement.append(" AND " + parentCondition.toString());
+    }
+    
+    statement = new StringBuilder("SELECT * FROM (" + statement.toString() + ") WHERE ");
+    
+    List<String> conditions = new ArrayList<String>();
+    
+    conditions.add("existValue=true");
+    if (startDate != null && endDate != null)
+    {
+      conditions.add(":startDate BETWEEN labelStartDate AND labelEndDate");
+      conditions.add(":startDate BETWEEN existStartDate AND existEndDate");
+      conditions.add(":endDate BETWEEN existStartDate AND existEndDate");
+    }
+    
+    if (text != null && text.length() > 0)
+    {
+      // TODO : Coalesce?
+      conditions.add("(label.toLowerCase() LIKE '%' + :text + '%' OR code.toLowerCase() LIKE '%' + :text + '%')");
+    }
+    
+    statement.append(StringUtils.join(conditions, " AND "));
+
+    statement.append(" ORDER BY defaultLocale ASC LIMIT 10");
+
+    GraphQuery<VertexObject> query = new GraphQuery<VertexObject>(statement.toString());
+
+    if (startDate != null && endDate != null)
+    {
+      query.setParameter("startDate", startDate);
+      query.setParameter("endDate", endDate);
+    }
+
+    if (text != null)
+    {
+      query.setParameter("text", text.toLowerCase().trim());
+    }
+    else
+    {
+      query.setParameter("text", null);
+    }
+
+    @SuppressWarnings("unchecked")
+    List<HashMap<String, Object>> results = (List<HashMap<String, Object>>) ( (Object) query.getResults() );
+
+    JsonArray array = new JsonArray();
+
+    for (HashMap<String, Object> row : results)
+    {
+      ServerGeoObjectType rowType = ServerGeoObjectType.get((MdVertexDAOIF) MdGraphClassDAO.getMdGraphClassByTableName((String) row.get("clazz")));
+
+      if (ServiceFactory.getGeoObjectPermissionService().canRead(rowType.getOrganization().getCode(), rowType))
+      {
+        JsonObject result = new JsonObject();
+        result.addProperty("id", (String) row.get("oid"));
+        result.addProperty("name", (String) row.get("label"));
+        result.addProperty(GeoObject.CODE, (String) row.get("code"));
+        result.addProperty(GeoObject.UID, (String) row.get("uid"));
+        result.addProperty("typeCode", rowType.getCode());
+
+        array.add(result);
+      }
+    }
+
+    return array;
+  }
+
+  /*
   public static JsonArray getGeoObjectSuggestions(String text, String typeCode, String parentCode, String parentTypeCode, String hierarchyCode, Date startDate, Date endDate)
   {
     final ServerGeoObjectType type = ServerGeoObjectType.get(typeCode);
@@ -1125,16 +1238,8 @@ public class VertexServerGeoObject extends AbstractServerGeoObject implements Se
     statement.append("let $dateLabel = first(displayLabel_cot");
     if (startDate != null && endDate != null)
     {
-      statement.append("[(:startDate BETWEEN startDate AND endDate)]"); // Intentionally
-                                                                        // do
-                                                                        // not
-                                                                        // filter
-                                                                        // on
-                                                                        // end
-                                                                        // date
-                                                                        // as
-                                                                        // per
-                                                                        // #913
+      // Intentionally do not filter on end date as per #913
+      statement.append("[(:startDate BETWEEN startDate AND endDate)]");
     }
     statement.append("), ");
     statement.append("$filteredLabel = " + AbstractVertexRestriction.localize("$dateLabel.value") + " ");
@@ -1167,16 +1272,8 @@ public class VertexServerGeoObject extends AbstractServerGeoObject implements Se
 
       if (startDate != null && endDate != null)
       {
-        textCondition.append("  (:startDate BETWEEN startDate AND endDate) AND "); // Intentionally
-                                                                                   // do
-                                                                                   // not
-                                                                                   // filter
-                                                                                   // on
-                                                                                   // end
-                                                                                   // date
-                                                                                   // as
-                                                                                   // per
-                                                                                   // #913
+        // Intentionally do not filter on end date as per #913
+        textCondition.append("  (:startDate BETWEEN startDate AND endDate) AND ");
       }
 
       textCondition.append(AbstractVertexRestriction.localize("value") + ".toLowerCase() LIKE '%' + :text + '%'");
@@ -1252,6 +1349,7 @@ public class VertexServerGeoObject extends AbstractServerGeoObject implements Se
 
     return array;
   }
+  */
 
   public static boolean hasDuplicateLabel(Date date, String typeCode, String code, String label)
   {
