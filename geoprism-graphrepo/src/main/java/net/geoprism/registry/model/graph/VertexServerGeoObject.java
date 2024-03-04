@@ -554,18 +554,6 @@ public class VertexServerGeoObject extends AbstractServerGeoObject implements Se
     return this.vertex.getOid();
   }
 
-  @SuppressWarnings("unchecked")
-  @Override
-  public List<? extends MdAttributeConcreteDAOIF> getMdAttributeDAOs()
-  {
-    return (List<? extends MdAttributeConcreteDAOIF>) this.vertex.getMdAttributeDAOs();
-  }
-
-  public MdAttributeConcreteDAOIF getMdAttributeDAO(String name)
-  {
-    return this.vertex.getMdAttributeDAO(name);
-  }
-
   @Override
   public boolean isModified(String attributeName)
   {

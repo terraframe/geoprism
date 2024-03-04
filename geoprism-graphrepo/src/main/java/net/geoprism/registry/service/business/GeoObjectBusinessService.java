@@ -97,6 +97,7 @@ import net.geoprism.registry.model.ClassificationType;
 import net.geoprism.registry.model.GeoObjectMetadata;
 import net.geoprism.registry.model.GeoObjectTypeMetadata;
 import net.geoprism.registry.model.LocationInfo;
+import net.geoprism.registry.model.LocationInfoHolder;
 import net.geoprism.registry.model.ServerChildTreeNode;
 import net.geoprism.registry.model.ServerGeoObjectIF;
 import net.geoprism.registry.model.ServerGeoObjectType;
@@ -368,9 +369,9 @@ public class GeoObjectBusinessService extends RegistryLocalizedValueConverter im
 
   @SuppressWarnings("unchecked")
   @Override
-  public void populate(ServerGeoObjectIF sgo, GeoObject geoObject, Date startDate, Date endDate)
+  public void populate(ServerGeoObjectIF sgo, GeoObject dto, Date startDate, Date endDate)
   {
-    Map<String, AttributeType> attributes = geoObject.getType().getAttributeMap();
+    Map<String, AttributeType> attributes = dto.getType().getAttributeMap();
     attributes.forEach((attributeName, attribute) -> {
       if (attributeName.equals(DefaultAttribute.INVALID.getName()) || attributeName.equals(DefaultAttribute.EXISTS.getName()) || attributeName.equals(DefaultAttribute.DISPLAY_LABEL.getName()) || attributeName.equals(DefaultAttribute.CODE.getName()) || attributeName.equals(DefaultAttribute.UID.getName()) || attributeName.equals(GeoVertex.LASTUPDATEDATE) || attributeName.equals(GeoVertex.CREATEDATE) || attributeName.equals(DefaultAttribute.ALT_IDS.getName()))
       {
@@ -380,7 +381,7 @@ public class GeoObjectBusinessService extends RegistryLocalizedValueConverter im
       {
         if (attribute instanceof AttributeTermType)
         {
-          Iterator<String> it = (Iterator<String>) geoObject.getValue(attributeName);
+          Iterator<String> it = (Iterator<String>) dto.getValue(attributeName);
 
           if (it.hasNext())
           {
@@ -401,7 +402,7 @@ public class GeoObjectBusinessService extends RegistryLocalizedValueConverter im
         }
         else if (attribute instanceof AttributeClassificationType)
         {
-          String value = (String) geoObject.getValue(attributeName);
+          String value = (String) dto.getValue(attributeName);
 
           if (value != null)
           {
@@ -416,7 +417,7 @@ public class GeoObjectBusinessService extends RegistryLocalizedValueConverter im
         }
         else
         {
-          Object value = geoObject.getValue(attributeName);
+          Object value = dto.getValue(attributeName);
 
           // if (value != null)
           // {
@@ -428,17 +429,24 @@ public class GeoObjectBusinessService extends RegistryLocalizedValueConverter im
           // endDate);
           // }
 
-          sgo.setValue(attributeName, value, startDate, endDate);
+          // TODO: HEADS UP - IS THIS CHECK CORRECT
+          // It doesn't make sense to support NULL values with change over time
+          // entries. Just change the period of validity to not include the time
+          // where the value would be null
+          if (value != null || !attribute.isChangeOverTime())
+          {
+            sgo.setValue(attributeName, value, startDate, endDate);
+          }
         }
       }
     });
 
-    sgo.setInvalid(geoObject.getInvalid());
-    sgo.setUid(geoObject.getUid());
-    sgo.setCode(geoObject.getCode());
-    sgo.setExists(geoObject.getExists(), startDate, endDate);
-    sgo.setDisplayLabel(geoObject.getDisplayLabel(), startDate, endDate);
-    sgo.setGeometry(geoObject.getGeometry(), startDate, endDate);
+    sgo.setInvalid(dto.getInvalid());
+    sgo.setUid(dto.getUid());
+    sgo.setCode(dto.getCode());
+    sgo.setExists(dto.getExists(), startDate, endDate);
+    sgo.setDisplayLabel(dto.getDisplayLabel(), startDate, endDate);
+    sgo.setGeometry(dto.getGeometry(), startDate, endDate);
   }
 
   @SuppressWarnings("unchecked")
@@ -1953,50 +1961,44 @@ public class GeoObjectBusinessService extends RegistryLocalizedValueConverter im
   {
     TreeMap<String, LocationInfo> map = new TreeMap<String, LocationInfo>();
 
-    // TODO: HEADS UP
-    // GraphQuery<Map<String, Object>> query = buildAncestorSelectQueryFast(sgo,
-    // hierarchy, parents);
-    //
-    // List<Map<String, Object>> results = query.getResults();
-    //
-    // if (results.size() <= 1)
-    // {
-    // return map;
-    // }
-    //
-    // results.remove(0); // First result is the child object
-    //
-    // results.forEach(result -> {
-    // String clazz = (String) result.get("cl");
-    // String code = (String) result.get("code");
-    //
-    // List<Map<String, Object>> displayLabelRaw = (List<Map<String, Object>>)
-    // result.get("label");
-    //
-    // LocalizedValue localized =
-    // RegistryLocalizedValueConverter.convert(displayLabelRaw, sgo.getDate());
-    //
-    // ServerGeoObjectType type = null;
-    // for (ServerGeoObjectType parent : parents)
-    // {
-    // if (parent.getMdVertex().getDBClassName().equals(clazz))
-    // {
-    // type = parent;
-    // }
-    // }
-    //
-    // if (type != null && localized != null)
-    // {
-    // LocationInfoHolder holder = new LocationInfoHolder(code, localized,
-    // type);
-    // map.put(type.getUniversal().getKey(), holder);
-    // }
-    // else
-    // {
-    // logger.error("Could not find [" + clazz + "] or the localized value was
-    // null.");
-    // }
-    // });
+    GraphQuery<Map<String, Object>> query = buildAncestorSelectQueryFast(sgo, hierarchy, parents);
+
+    List<Map<String, Object>> results = query.getResults();
+
+    if (results.size() <= 1)
+    {
+      return map;
+    }
+
+    results.remove(0); // First result is the child object
+
+    results.forEach(result -> {
+      String clazz = (String) result.get("cl");
+      String code = (String) result.get("code");
+
+      List<Map<String, Object>> displayLabelRaw = (List<Map<String, Object>>) result.get("label");
+
+      LocalizedValue localized = RegistryLocalizedValueConverter.convert(displayLabelRaw, sgo.getDate());
+
+      ServerGeoObjectType type = null;
+      for (ServerGeoObjectType parent : parents)
+      {
+        if (parent.getMdVertex().getDBClassName().equals(clazz))
+        {
+          type = parent;
+        }
+      }
+
+      if (type != null && localized != null)
+      {
+        LocationInfoHolder holder = new LocationInfoHolder(code, localized, type);
+        map.put(type.getCode(), holder);
+      }
+      else
+      {
+        logger.error("Could not find [" + clazz + "] or the localized value was null.");
+      }
+    });
 
     return map;
   }

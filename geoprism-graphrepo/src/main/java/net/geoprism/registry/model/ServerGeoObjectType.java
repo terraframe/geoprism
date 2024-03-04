@@ -76,12 +76,12 @@ public class ServerGeoObjectType extends CachableObjectWrapper<BaseGeoObjectType
 
     return this.attributes;
   }
-  
+
   @Override
   public void markAsDirty()
   {
     super.markAsDirty();
-    
+
     this.dto = null;
   }
 
@@ -92,6 +92,11 @@ public class ServerGeoObjectType extends CachableObjectWrapper<BaseGeoObjectType
 
     this.setObject(type);
     this.attributes = type.getAttributeMap();
+    this.dto = null;
+  }
+
+  public void refreshDTO()
+  {
     this.dto = null;
   }
 
@@ -132,7 +137,7 @@ public class ServerGeoObjectType extends CachableObjectWrapper<BaseGeoObjectType
 
   public LocalizedValue getLabel()
   {
-    return LocalizedValueConverter.convert(this.getObject().getEmbeddedComponent(GeoObjectType.LABEL));
+    return LocalizedValueConverter.convert(this.getObject().getEmbeddedComponent(GeoObjectType.DISPLAYLABEL));
   }
 
   public LocalizedValue getDescription()

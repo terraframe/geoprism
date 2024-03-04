@@ -1,7 +1,12 @@
 package net.geoprism.registry.model;
 
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -64,23 +69,20 @@ public class ValueNodeStrategy extends AbstractValueStrategy implements ValueStr
   public void setValue(VertexObject vertex, Map<String, AttributeState> valueNodeMap, Object value, Date startDate, Date endDate)
   {
     AttributeState state = getState(valueNodeMap);
+    VertexObject node = this.createNode(value, startDate, endDate);
+    
+    this.add(state, node, false);    
+  }
 
-    state.stream().filter(node -> {
-      return getStartDate(node).equals(startDate) && getEndDate(node).equals(endDate);
-    }).findFirst().ifPresentOrElse(node -> {
-      // Update the existing node
-      setNodeValue(node, value);
-    }, () -> {
-      // If not create a new node
-      VertexObject node = new VertexObject(nodeVertex.definesType());
-      node.setValue(AttributeValue.ATTRIBUTENAME, this.getType().getCode());
-      node.setValue(AttributeValue.STARTDATE, startDate);
-      node.setValue(AttributeValue.ENDDATE, endDate);
+  protected VertexObject createNode(Object value, Date startDate, Date endDate)
+  {
+    VertexObject node = new VertexObject(nodeVertex.definesType());
+    node.setValue(AttributeValue.ATTRIBUTENAME, this.getType().getCode());
+    node.setValue(AttributeValue.STARTDATE, startDate);
+    node.setValue(AttributeValue.ENDDATE, endDate);
 
-      setNodeValue(node, value);
-
-      state.add(node);
-    });
+    setNodeValue(node, value);
+    return node;
   }
 
   protected void setNodeValue(VertexObject node, Object value)
@@ -133,7 +135,7 @@ public class ValueNodeStrategy extends AbstractValueStrategy implements ValueStr
   @Override
   public void setValuesOverTime(VertexObject vertex, Map<String, AttributeState> valueNodeMap, ValueOverTimeCollection collection)
   {
-    // First delete all state which do not exist in the collection
+    // First delete all values which do not exist in the collection
     AttributeState state = getState(valueNodeMap);
 
     state.stream().filter(node -> {
@@ -146,6 +148,198 @@ public class ValueNodeStrategy extends AbstractValueStrategy implements ValueStr
     }).forEach(node -> state.delete(node));
 
     collection.forEach(vot -> this.setValue(vertex, valueNodeMap, vot.getValue(), vot.getStartDate(), vot.getEndDate()));
+  }
+
+  private boolean add(AttributeState state, VertexObject vot, boolean updateOnCollision)
+  {
+    boolean skip = this.replaceExistingValues(state, vot);
+
+    if (!skip)
+    {
+
+      // TODO: HEADS UP
+      // // Check if the value needs to be overwritten
+      // if (updateOnCollision && !success && this.values.remove(vot))
+      // {
+      // success = this.values.add(vot);
+      // }
+
+      return state.add(vot);
+    }
+    else
+    {
+      return false;
+    }
+  }
+
+  private boolean replaceExistingValues(AttributeState state, VertexObject inVot)
+  {
+    Date startDate = inVot.getObjectValue(AttributeValue.STARTDATE);
+    Date endDate = inVot.getObjectValue(AttributeValue.ENDDATE);
+
+    boolean skip = true;
+    
+    if (startDate != null && endDate != null)
+    {
+      skip = false;
+
+      Iterator<VertexObject> it = state.iterator();
+      LocalDate iStartDate = startDate.toInstant().atZone(ZoneId.of("Z")).toLocalDate();
+      LocalDate iEndDate = endDate.toInstant().atZone(ZoneId.of("Z")).toLocalDate();
+
+      List<VertexObject> segments = new LinkedList<VertexObject>();
+
+      while (it.hasNext())
+      {
+        VertexObject vot = it.next();
+
+        Date vStartDate = vot.getObjectValue(AttributeValue.STARTDATE);
+        Date vEndDate = vot.getObjectValue(AttributeValue.ENDDATE);
+        LocalDate vLocalStartDate = vStartDate.toInstant().atZone(ZoneId.of("Z")).toLocalDate();
+        LocalDate vLocalEndDate = vEndDate.toInstant().atZone(ZoneId.of("Z")).toLocalDate();
+
+        // Remove the entry completely if its a subset of the startDate and
+        // endDate range
+        if (isAfterOrEqual(vLocalStartDate, iStartDate) && isBeforeOrEqual(vLocalEndDate, iEndDate))
+        {
+          state.delete(vot);
+
+          it.remove();
+        }
+
+        // If the entry is extends after the end date then move the start
+        // date of the entry to the end of the clear range
+        else if (isAfterOrEqual(vLocalStartDate, iStartDate) && vLocalEndDate.isAfter(iEndDate) && isAfterOrEqual(iEndDate, vLocalStartDate))
+        {
+          Object existingValue = this.getNodeValue(vot);
+          Object newValue = this.getNodeValue(inVot);
+
+          if (this.areValuesEqual(existingValue, newValue))
+          {
+            inVot.setValue(AttributeValue.ENDDATE, vEndDate);
+
+            state.delete(vot);
+
+            it.remove();
+          }
+          else
+          {
+            vot.setValue(AttributeValue.STARTDATE, this.calculateDatePlusOneDay(endDate));
+          }
+        }
+
+        // If the entry is extends before the start date then move the end
+        // date of the entry to the start of the clear range
+        else if (vLocalStartDate.isBefore(iStartDate) && isBeforeOrEqual(vLocalEndDate, iEndDate) && isBeforeOrEqual(iStartDate, vLocalEndDate))
+        {
+          Object existingValue = this.getNodeValue(vot);
+          Object newValue = this.getNodeValue(inVot);
+
+          if (this.areValuesEqual(existingValue, newValue))
+          {
+            inVot.setValue(AttributeValue.STARTDATE, vStartDate);
+
+            state.delete(vot);
+
+            it.remove();
+          }
+          else
+          {
+            vot.setValue(AttributeValue.ENDDATE, this.calculateDateMinusOneDay(startDate));
+          }
+        }
+
+        // The incoming range is completely covered by the existing range
+        else if (vLocalStartDate.isBefore(iStartDate) && vLocalEndDate.isAfter(iEndDate))
+        {
+          Object existingValue = this.getNodeValue(vot);
+          Object newValue = this.getNodeValue(inVot);
+
+          if (this.areValuesEqual(existingValue, newValue))
+          {
+            skip = true;
+          }
+          else
+          {
+            state.delete(vot);
+
+            it.remove();
+
+            segments.add(this.createNode(existingValue, vStartDate, this.calculateDateMinusOneDay(startDate)));
+            segments.add(this.createNode(existingValue, this.calculateDatePlusOneDay(endDate), vEndDate));
+          }
+        }
+      }
+
+      for (VertexObject vot : segments)
+      {
+        state.add(vot);
+      }
+    }
+
+    return skip;
+  }
+
+  private boolean areValuesEqual(Object val1, Object val2)
+  {
+    if (val1 == null && val2 == null)
+    {
+      return true;
+    }
+    else if (val1 == null || val2 == null)
+    {
+      return false;
+    }
+
+    // TODO: HEADS UP
+//    if (val1 instanceof Iterator<?> && val2 instanceof Iterator<?>)
+//    {
+//      ArrayList<Object> val1s = toList((Iterator<?>) val1);
+//      ArrayList<Object> val2s = toList((Iterator<?>) val2);
+//
+//      if (val1s.size() != val2s.size())
+//      {
+//        return false;
+//      }
+//
+//      for (int i = 0; i < val1s.size(); ++i)
+//      {
+//        if (!areValuesEqual(val1s.get(i), val2s.get(i)))
+//        {
+//          return false;
+//        }
+//      }
+//
+//      return true;
+//    }
+    
+      return val1.equals(val2);
+  }
+
+  private boolean isAfterOrEqual(LocalDate date1, LocalDate date2)
+  {
+    return date1.isAfter(date2) || date2.isEqual(date1);
+  }
+
+  private boolean isBeforeOrEqual(LocalDate date1, LocalDate date2)
+  {
+    return date1.isBefore(date2) || date2.isEqual(date1);
+  }
+
+  private Date calculateDateMinusOneDay(Date source)
+  {
+    LocalDate localEnd = source.toInstant().atZone(ZoneId.of("Z")).toLocalDate().minusDays(1);
+    Instant instant = localEnd.atStartOfDay().atZone(ZoneId.of("Z")).toInstant();
+
+    return Date.from(instant);
+  }
+
+  private Date calculateDatePlusOneDay(Date source)
+  {
+    LocalDate localEnd = source.toInstant().atZone(ZoneId.of("Z")).toLocalDate().plusDays(1);
+    Instant instant = localEnd.atStartOfDay().atZone(ZoneId.of("Z")).toInstant();
+
+    return Date.from(instant);
   }
 
 }

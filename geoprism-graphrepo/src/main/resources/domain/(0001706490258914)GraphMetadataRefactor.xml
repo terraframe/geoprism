@@ -10,7 +10,7 @@
       <mdVertex name="net.geoprism.registry.graph.GeoObjectType" extends="net.geoprism.registry.graph.BaseGeoObjectType" label="GeoObjectType">
         <attributes>
           <char name="geometryType" label="Geometry Type" required="true" size="255"  />          
-          <localCharEmbedded name="label" label="Label" required="true" />        
+          <localCharEmbedded name="displayLabel" label="Label" required="true" />        
           <localCharEmbedded name="description" label="Description" />        
           <boolean name="isGeometryEditable" label="Is Geometry Editable" />
           <boolean name="isAbstract" label="Is Abstract" />
@@ -26,7 +26,7 @@
       <mdVertex name="net.geoprism.registry.graph.HierarchicalRelationshipType" label="Hierarchical Relationship" generateController="false">
         <attributes>
           <char name="code" size="255" required="true" indexType="unique index" label="Code" />
-          <localCharEmbedded name="label" label="Label" required="true" />        
+          <localCharEmbedded name="displayLabel" label="Label" required="true" />        
           <localCharEmbedded name="description" label="Description" />        
           <graphReference name="organization" label="Organization" type="net.geoprism.registry.graph.GraphOrganization" />
           <reference name="definitionEdge" type="com.runwaysdk.system.metadata.MdEdge" required="true" label="DefinitionEdge" />          

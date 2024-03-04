@@ -3,18 +3,18 @@
  *
  * This file is part of Geoprism(tm).
  *
- * Geoprism(tm) is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
+ * Geoprism(tm) is free software: you can redistribute it and/or modify it under
+ * the terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation, either version 3 of the License, or (at your option) any
+ * later version.
  *
- * Geoprism(tm) is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
+ * Geoprism(tm) is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with Geoprism(tm).  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with Geoprism(tm). If not, see <http://www.gnu.org/licenses/>.
  */
 package net.geoprism.registry.service.business;
 
@@ -25,19 +25,29 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import org.apache.commons.lang.StringUtils;
+import org.commongeoregistry.adapter.Term;
 import org.commongeoregistry.adapter.constants.DefaultAttribute;
 import org.commongeoregistry.adapter.dataaccess.LocalizedValue;
+import org.commongeoregistry.adapter.metadata.AttributeBooleanType;
+import org.commongeoregistry.adapter.metadata.AttributeCharacterType;
+import org.commongeoregistry.adapter.metadata.AttributeClassificationType;
+import org.commongeoregistry.adapter.metadata.AttributeDateType;
+import org.commongeoregistry.adapter.metadata.AttributeFloatType;
+import org.commongeoregistry.adapter.metadata.AttributeIntegerType;
 import org.commongeoregistry.adapter.metadata.AttributeLocalType;
+import org.commongeoregistry.adapter.metadata.AttributeTermType;
 import org.commongeoregistry.adapter.metadata.AttributeType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+import com.runwaysdk.business.BusinessFacade;
 import com.runwaysdk.constants.IndexTypes;
 import com.runwaysdk.constants.MdAttributeBooleanInfo;
 import com.runwaysdk.constants.MdAttributeCharacterInfo;
 import com.runwaysdk.constants.MdAttributeConcreteInfo;
+import com.runwaysdk.constants.MdAttributeDoubleInfo;
 import com.runwaysdk.constants.MdAttributeLocalInfo;
 import com.runwaysdk.constants.graph.MdEdgeInfo;
 import com.runwaysdk.constants.graph.MdVertexInfo;
@@ -45,10 +55,12 @@ import com.runwaysdk.dataaccess.MdAttributeConcreteDAOIF;
 import com.runwaysdk.dataaccess.MdAttributeDAOIF;
 import com.runwaysdk.dataaccess.MdAttributeMultiTermDAOIF;
 import com.runwaysdk.dataaccess.MdAttributeTermDAOIF;
+import com.runwaysdk.dataaccess.MdClassDAOIF;
 import com.runwaysdk.dataaccess.MdEdgeDAOIF;
 import com.runwaysdk.dataaccess.MdVertexDAOIF;
 import com.runwaysdk.dataaccess.cache.DataNotFoundException;
 import com.runwaysdk.dataaccess.metadata.MdAttributeCharacterDAO;
+import com.runwaysdk.dataaccess.metadata.MdAttributeConcreteDAO;
 import com.runwaysdk.dataaccess.metadata.graph.MdEdgeDAO;
 import com.runwaysdk.dataaccess.metadata.graph.MdVertexDAO;
 import com.runwaysdk.dataaccess.transaction.Transaction;
@@ -58,7 +70,21 @@ import com.runwaysdk.localization.SupportedLocaleIF;
 import com.runwaysdk.query.OIterator;
 import com.runwaysdk.query.QueryFactory;
 import com.runwaysdk.session.Session;
+import com.runwaysdk.system.metadata.MdAttributeBoolean;
+import com.runwaysdk.system.metadata.MdAttributeCharacter;
+import com.runwaysdk.system.metadata.MdAttributeClassification;
+import com.runwaysdk.system.metadata.MdAttributeConcrete;
+import com.runwaysdk.system.metadata.MdAttributeDateTime;
+import com.runwaysdk.system.metadata.MdAttributeDouble;
+import com.runwaysdk.system.metadata.MdAttributeIndices;
+import com.runwaysdk.system.metadata.MdAttributeLocalCharacterEmbedded;
+import com.runwaysdk.system.metadata.MdAttributeLocalText;
+import com.runwaysdk.system.metadata.MdAttributeLong;
+import com.runwaysdk.system.metadata.MdAttributeTerm;
+import com.runwaysdk.system.metadata.MdBusiness;
+import com.runwaysdk.system.metadata.MdClass;
 import com.runwaysdk.system.metadata.MdEdge;
+import com.runwaysdk.system.metadata.MdGraphClass;
 import com.runwaysdk.system.metadata.MdVertex;
 
 import net.geoprism.ontology.Classifier;
@@ -69,9 +95,13 @@ import net.geoprism.registry.BusinessTypeQuery;
 import net.geoprism.registry.CodeLengthException;
 import net.geoprism.registry.Organization;
 import net.geoprism.registry.RegistryConstants;
+import net.geoprism.registry.conversion.RegistryAttributeTypeConverter;
 import net.geoprism.registry.conversion.RegistryLocalizedValueConverter;
 import net.geoprism.registry.conversion.TermConverter;
 import net.geoprism.registry.graph.GeoVertex;
+import net.geoprism.registry.model.Classification;
+import net.geoprism.registry.model.ClassificationType;
+import net.geoprism.registry.model.GeoObjectMetadata;
 import net.geoprism.registry.model.ServerOrganization;
 import net.geoprism.registry.query.graph.BusinessObjectPageQuery;
 import net.geoprism.registry.service.permission.PermissionServiceIF;
@@ -86,6 +116,9 @@ public class BusinessTypeBusinessService implements BusinessTypeBusinessServiceI
   private ClassificationTypeBusinessServiceIF cTypeService;
 
   @Autowired
+  private ClassificationBusinessServiceIF     cService;
+
+  @Autowired
   private GeoObjectTypeBusinessServiceIF      typeService;
 
   @Autowired
@@ -95,11 +128,9 @@ public class BusinessTypeBusinessService implements BusinessTypeBusinessServiceI
   @Transaction
   public void delete(BusinessType type)
   {
-    // TODO: HEADS UP
-    
-//    // Delete the term root
-//    Classifier classRootTerm = TermConverter.buildIfNotExistGeoObjectTypeClassifier(type.getMdVertex());
-//    classRootTerm.delete();
+    // Delete the term root
+    Classifier classRootTerm = TermConverter.buildIfNotExistGeoObjectTypeClassifier(type);
+    classRootTerm.delete();
 
     MdVertex mdVertex = type.getMdVertex();
     MdEdge mdEdge = type.getMdEdge();
@@ -113,19 +144,16 @@ public class BusinessTypeBusinessService implements BusinessTypeBusinessServiceI
   @Override
   public AttributeType createAttributeType(BusinessType type, AttributeType attributeType)
   {
-//    MdAttributeConcrete mdAttribute = this.typeService.createAttributeTypeFromDTO(type.getMdVertex(), attributeType);
-//
-//    // Refresh the users session
-//    if (Session.getCurrentSession() != null)
-//    {
-//      // Refresh the users session
-//      ( (Session) Session.getCurrentSession() ).reloadPermissions();
-//    }
-//
-//    return new RegistryAttributeTypeConverter().build(MdAttributeConcreteDAO.get(mdAttribute.getOid()));
-    
-    // TODO: HEADS UP
-    return null;
+    MdAttributeConcrete mdAttribute = this.createMdAttributeFromAttributeType(type, attributeType);
+
+    // Refresh the users session
+    if (Session.getCurrentSession() != null)
+    {
+      // Refresh the users session
+      ( (Session) Session.getCurrentSession() ).reloadPermissions();
+    }
+
+    return new RegistryAttributeTypeConverter().build(MdAttributeConcreteDAO.get(mdAttribute.getOid()));
   }
 
   @Override
@@ -156,11 +184,9 @@ public class BusinessTypeBusinessService implements BusinessTypeBusinessServiceI
   @Override
   public AttributeType updateAttributeType(BusinessType type, AttributeType attrType)
   {
-//    MdAttributeConcrete mdAttribute = this.typeService.updateAttributeTypeFromDTO(type.getMdVertex(), attrType);
-//    return new RegistryAttributeTypeConverter().build(MdAttributeConcreteDAO.get(mdAttribute.getOid()));
-    
-    // TODO: HEADS UP
-    return null;
+    MdAttributeConcrete mdAttribute = this.updateMdAttributeFromAttributeType(type, attrType);
+
+    return new RegistryAttributeTypeConverter().build(MdAttributeConcreteDAO.get(mdAttribute.getOid()));
   }
 
   @Override
@@ -566,6 +592,217 @@ public class BusinessTypeBusinessService implements BusinessTypeBusinessServiceI
       {
         return it.next();
       }
+    }
+
+    return null;
+  }
+
+  private MdAttributeConcreteDAOIF getMdAttribute(MdClass mdClass, String attributeName)
+  {
+    MdClassDAOIF mdClassDAO = (MdClassDAOIF) BusinessFacade.getEntityDAO(mdClass);
+
+    return (MdAttributeConcreteDAOIF) mdClassDAO.definesAttribute(attributeName);
+  }
+
+  @Transaction
+  private MdAttributeConcrete createMdAttributeFromAttributeType(BusinessType type, AttributeType attributeType)
+  {
+    MdVertex mdClass = type.getMdVertex();
+
+    MdAttributeConcrete mdAttribute = null;
+
+    if (attributeType.getType().equals(AttributeCharacterType.TYPE))
+    {
+      mdAttribute = new MdAttributeCharacter();
+      MdAttributeCharacter mdAttributeCharacter = (MdAttributeCharacter) mdAttribute;
+      mdAttributeCharacter.setDatabaseSize(MdAttributeCharacterInfo.MAX_CHARACTER_SIZE);
+    }
+    else if (attributeType.getType().equals(AttributeDateType.TYPE))
+    {
+      mdAttribute = new MdAttributeDateTime();
+    }
+    else if (attributeType.getType().equals(AttributeIntegerType.TYPE))
+    {
+      mdAttribute = new MdAttributeLong();
+    }
+    else if (attributeType.getType().equals(AttributeFloatType.TYPE))
+    {
+      AttributeFloatType attributeFloatType = (AttributeFloatType) attributeType;
+
+      mdAttribute = new MdAttributeDouble();
+      mdAttribute.setValue(MdAttributeDoubleInfo.LENGTH, Integer.toString(attributeFloatType.getPrecision()));
+      mdAttribute.setValue(MdAttributeDoubleInfo.DECIMAL, Integer.toString(attributeFloatType.getScale()));
+    }
+    else if (attributeType.getType().equals(AttributeTermType.TYPE))
+    {
+      mdAttribute = new MdAttributeTerm();
+      MdAttributeTerm mdAttributeTerm = (MdAttributeTerm) mdAttribute;
+
+      MdBusiness classifierMdBusiness = MdBusiness.getMdBusiness(Classifier.CLASS);
+      mdAttributeTerm.setMdBusiness(classifierMdBusiness);
+      // TODO implement support for multi-term
+      // mdAttribute = new MdAttributeMultiTerm();
+      // MdAttributeMultiTerm mdAttributeMultiTerm =
+      // (MdAttributeMultiTerm)mdAttribute;
+      //
+      // MdBusiness classifierMdBusiness =
+      // MdBusiness.getMdBusiness(Classifier.CLASS);
+      // mdAttributeMultiTerm.setMdBusiness(classifierMdBusiness);
+    }
+    else if (attributeType.getType().equals(AttributeClassificationType.TYPE))
+    {
+      AttributeClassificationType attributeClassificationType = (AttributeClassificationType) attributeType;
+      String classificationTypeCode = attributeClassificationType.getClassificationType();
+
+      ClassificationType classificationType = this.cTypeService.getByCode(classificationTypeCode);
+
+      mdAttribute = new MdAttributeClassification();
+      MdAttributeClassification mdAttributeTerm = (MdAttributeClassification) mdAttribute;
+      mdAttributeTerm.setReferenceMdClassification(classificationType.getMdClassificationObject());
+
+      Term root = attributeClassificationType.getRootTerm();
+
+      if (root != null)
+      {
+        Classification classification = this.cService.get(classificationType, root.getCode());
+
+        if (classification == null)
+        {
+          net.geoprism.registry.DataNotFoundException ex = new net.geoprism.registry.DataNotFoundException();
+          ex.setTypeLabel(classificationType.getDisplayLabel().getValue());
+          ex.setDataIdentifier(root.getCode());
+          ex.setAttributeLabel(GeoObjectMetadata.get().getAttributeDisplayLabel(DefaultAttribute.CODE.getName()));
+
+          throw ex;
+        }
+
+        mdAttributeTerm.setValue(MdAttributeClassification.ROOT, classification.getOid());
+      }
+    }
+    else if (attributeType.getType().equals(AttributeBooleanType.TYPE))
+    {
+      mdAttribute = new MdAttributeBoolean();
+    }
+    else if (attributeType.getType().equals(AttributeLocalType.TYPE))
+    {
+      if (mdClass instanceof MdGraphClass)
+      {
+        mdAttribute = new MdAttributeLocalCharacterEmbedded();
+      }
+      else
+      {
+        mdAttribute = new MdAttributeLocalText();
+      }
+    }
+    else
+    {
+      throw new UnsupportedOperationException();
+    }
+
+    mdAttribute.setAttributeName(attributeType.getName());
+    mdAttribute.setValue(MdAttributeConcreteInfo.REQUIRED, Boolean.toString(attributeType.isRequired()));
+
+    if (attributeType.isUnique())
+    {
+      mdAttribute.addIndexType(MdAttributeIndices.UNIQUE_INDEX);
+    }
+
+    RegistryLocalizedValueConverter.populate(mdAttribute.getDisplayLabel(), attributeType.getLabel());
+    RegistryLocalizedValueConverter.populate(mdAttribute.getDescription(), attributeType.getDescription());
+
+    mdAttribute.setDefiningMdClass(mdClass);
+    mdAttribute.apply();
+
+    if (attributeType.getType().equals(AttributeTermType.TYPE))
+    {
+      MdAttributeTerm mdAttributeTerm = (MdAttributeTerm) mdAttribute;
+
+      // Build the parent class term root if it does not exist.
+      Classifier classTerm = TermConverter.buildIfNotExistGeoObjectTypeClassifier(type);
+
+      // Create the root term node for this attribute
+      Classifier attributeTermRoot = TermConverter.buildIfNotExistAttribute(type, mdAttributeTerm.getAttributeName(), classTerm);
+
+      // Make this the root term of the multi-attribute
+      attributeTermRoot.addClassifierTermAttributeRoots(mdAttributeTerm).apply();
+
+      AttributeTermType attributeTermType = (AttributeTermType) attributeType;
+
+      LocalizedValue label = RegistryLocalizedValueConverter.convertNoAutoCoalesce(attributeTermRoot.getDisplayLabel());
+
+      org.commongeoregistry.adapter.Term term = new org.commongeoregistry.adapter.Term(attributeTermRoot.getClassifierId(), label, new LocalizedValue(""));
+      attributeTermType.setRootTerm(term);
+    }
+    return mdAttribute;
+  }
+
+  @Transaction
+  private MdAttributeConcrete updateMdAttributeFromAttributeType(BusinessType type, AttributeType attributeType)
+  {
+    MdVertex mdClass = type.getMdVertex();
+
+    MdAttributeConcreteDAOIF mdAttributeConcreteDAOIF = getMdAttribute(mdClass, attributeType.getName());
+
+    if (mdAttributeConcreteDAOIF != null)
+    {
+      // Get the type safe version
+      MdAttributeConcrete mdAttribute = (MdAttributeConcrete) BusinessFacade.get(mdAttributeConcreteDAOIF);
+      mdAttribute.lock();
+
+      try
+      {
+        // The name cannot be updated
+        // mdAttribute.setAttributeName(attributeType.getName());
+        RegistryLocalizedValueConverter.populate(mdAttribute.getDisplayLabel(), attributeType.getLabel());
+        RegistryLocalizedValueConverter.populate(mdAttribute.getDescription(), attributeType.getDescription());
+
+        if (attributeType instanceof AttributeFloatType)
+        {
+          // Refresh the terms
+          AttributeFloatType attributeFloatType = (AttributeFloatType) attributeType;
+
+          mdAttribute.setValue(MdAttributeDoubleInfo.LENGTH, Integer.toString(attributeFloatType.getPrecision()));
+          mdAttribute.setValue(MdAttributeDoubleInfo.DECIMAL, Integer.toString(attributeFloatType.getScale()));
+        }
+        else if (attributeType instanceof AttributeClassificationType)
+        {
+          MdAttributeClassification mdAttributeTerm = (MdAttributeClassification) mdAttribute;
+
+          AttributeClassificationType attributeClassificationType = (AttributeClassificationType) attributeType;
+          String classificationTypeCode = attributeClassificationType.getClassificationType();
+
+          ClassificationType classificationType = this.cTypeService.getByCode(classificationTypeCode);
+
+          Term root = attributeClassificationType.getRootTerm();
+
+          if (root != null)
+          {
+            Classification classification = this.cService.get(classificationType, root.getCode());
+
+            mdAttributeTerm.setValue(MdAttributeClassification.ROOT, classification.getOid());
+          }
+        }
+
+        mdAttribute.apply();
+      }
+      finally
+      {
+        mdAttribute.unlock();
+      }
+
+      if (attributeType instanceof AttributeTermType)
+      {
+        // Refresh the terms
+        AttributeTermType attributeTermType = (AttributeTermType) attributeType;
+
+        org.commongeoregistry.adapter.Term getRootTerm = attributeTermType.getRootTerm();
+        String classifierKey = TermConverter.buildClassifierKeyFromTermCode(getRootTerm.getCode());
+
+        TermConverter termBuilder = new TermConverter(classifierKey);
+        attributeTermType.setRootTerm(termBuilder.build());
+      }
+
+      return mdAttribute;
     }
 
     return null;

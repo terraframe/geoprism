@@ -1,12 +1,14 @@
 package net.geoprism.registry.graph;
 
+import java.util.List;
+
+import org.commongeoregistry.adapter.Term;
 import org.commongeoregistry.adapter.metadata.AttributeType;
 
 import com.runwaysdk.constants.MdAttributeTermInfo;
 import com.runwaysdk.dataaccess.MdAttributeDAOIF;
 import com.runwaysdk.dataaccess.MdVertexDAOIF;
 import com.runwaysdk.dataaccess.metadata.MdAttributeConcreteDAO;
-import com.runwaysdk.dataaccess.metadata.MdAttributeTermDAO;
 import com.runwaysdk.dataaccess.metadata.MdAttributeTermDAO;
 import com.runwaysdk.dataaccess.metadata.MdBusinessDAO;
 import com.runwaysdk.dataaccess.metadata.graph.MdVertexDAO;
@@ -97,7 +99,7 @@ public class AttributeTermType extends AttributeTermTypeBase
   {
     super.populate(dto);
 
-    ( (org.commongeoregistry.adapter.metadata.AttributeTermType) dto ).setRootTerm(TermConverter.buildTermFromClassifier(this.getRootTerm()));
+    ( (org.commongeoregistry.adapter.metadata.AttributeTermType) dto ).setRootTerm(getRootClassifier());
   }
 
   @Override
@@ -121,6 +123,16 @@ public class AttributeTermType extends AttributeTermTypeBase
     {
       return new ValueNodeStrategy(this, MdVertexDAO.getMdVertexDAO(AttributeTermValue.CLASS), AttributeTermValue.VALUE);
     }
+  }
+
+  protected Term getRootClassifier()
+  {
+    return TermConverter.buildTermFromClassifier(this.getRootTerm());
+  }
+
+  public List<Term> getTerms()
+  {
+    return this.getRootClassifier().getChildren();
   }
 
 }

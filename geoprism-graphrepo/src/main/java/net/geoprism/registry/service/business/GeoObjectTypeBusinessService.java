@@ -94,12 +94,6 @@ public class GeoObjectTypeBusinessService implements GeoObjectTypeBusinessServic
   @Autowired
   private HierarchyTypeBusinessServiceIF      htServ;
 
-  @Autowired
-  private ClassificationTypeBusinessServiceIF cTypeService;
-
-  @Autowired
-  private ClassificationBusinessServiceIF     cService;
-
   @Override
   public List<ServerGeoObjectType> getSubtypes(ServerGeoObjectType type)
   {
@@ -181,7 +175,7 @@ public class GeoObjectTypeBusinessService implements GeoObjectTypeBusinessServic
     annotation.setInheritedHierarchy(ihrt);
     annotation.setForHierarchy(fhrt);
     annotation.apply();
-    
+
     new HierarchicalRelationshipTypeCacheEventCommand(forHierarchy, CacheEventType.UPDATE).doIt();
 
     return annotation;
@@ -196,7 +190,7 @@ public class GeoObjectTypeBusinessService implements GeoObjectTypeBusinessServic
     if (annotation != null)
     {
       annotation.delete();
-      
+
       new HierarchicalRelationshipTypeCacheEventCommand(forHierarchy, CacheEventType.UPDATE).doIt();
     }
   }
@@ -210,10 +204,10 @@ public class GeoObjectTypeBusinessService implements GeoObjectTypeBusinessServic
   {
     List<ServerHierarchyType> hierarchies = new LinkedList<ServerHierarchyType>();
 
-    List<ServerHierarchyType> hierarchyTypes = ServiceFactory.getMetadataCache().getAllHierarchyTypes();
-
-    for (ServerHierarchyType hierarchyType : hierarchyTypes)
-    {
+    // Hack to only get the ServerHierarchyType that are in the database and not
+    // in the cache. They are never different in the course of normal usage,
+    // just in the test setup
+    HierarchicalRelationshipType.getAll().stream().map(t -> ServerHierarchyType.get(t.getCode())).forEach(hierarchyType -> {
       ServerOrganization org = hierarchyType.getOrganization();
 
       if (ServiceFactory.getHierarchyPermissionService().canRead(org.getCode()))
@@ -233,7 +227,7 @@ public class GeoObjectTypeBusinessService implements GeoObjectTypeBusinessServic
         }
 
       }
-    }
+    });
 
     if (includeFromSuperType)
     {
@@ -623,7 +617,7 @@ public class GeoObjectTypeBusinessService implements GeoObjectTypeBusinessServic
     // roles specified on the super type.
     if (type.getSuperType() == null)
     {
-      String organizationCode = type.getOrganization().getCode();
+      String organizationCode = type.getOrganizationCode();
 
       String geoObjectTypeCode = type.getCode();
 
@@ -742,7 +736,7 @@ public class GeoObjectTypeBusinessService implements GeoObjectTypeBusinessServic
     if (type.getAttributeMap().containsKey(dto.getName()))
     {
       // TODO: Change exception type
-      throw new UnsupportedOperationException();
+      throw new UnsupportedOperationException("Duplicate attribute");
     }
 
     net.geoprism.registry.graph.AttributeType attributeType = null;
@@ -927,7 +921,7 @@ public class GeoObjectTypeBusinessService implements GeoObjectTypeBusinessServic
 
     if (codes == null || codes.length == 0)
     {
-      gots = ServiceFactory.getMetadataCache().getAllGeoObjectTypes();
+      gots = new LinkedList<>(ServiceFactory.getMetadataCache().getAllGeoObjectTypes());
     }
     else
     {

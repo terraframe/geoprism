@@ -20,10 +20,12 @@ import com.runwaysdk.system.metadata.MdVertex;
 
 import net.geoprism.ontology.Classifier;
 import net.geoprism.registry.conversion.GeometryTypeFactory;
+import net.geoprism.registry.conversion.LocalizedValueConverter;
 import net.geoprism.registry.conversion.RegistryLocalizedValueConverter;
+import net.geoprism.registry.model.ServerElement;
 import net.geoprism.registry.service.request.ServiceFactory;
 
-public class GeoObjectType extends GeoObjectTypeBase
+public class GeoObjectType extends GeoObjectTypeBase implements ServerElement
 {
   public static final String ROOT             = "ROOT";
 
@@ -33,6 +35,11 @@ public class GeoObjectType extends GeoObjectTypeBase
   public GeoObjectType()
   {
     super();
+  }
+
+  public LocalizedValue getLabel()
+  {
+    return LocalizedValueConverter.convert(this.getEmbeddedComponent(GeoObjectType.DISPLAYLABEL));
   }
 
   @Override
@@ -234,7 +241,7 @@ public class GeoObjectType extends GeoObjectTypeBase
     this.setIsAbstract(dto.getIsAbstract());
     this.setGeometryType(geometryType.getEnumName());
 
-    RegistryLocalizedValueConverter.populate(this, GeoObjectType.LABEL, dto.getLabel());
+    RegistryLocalizedValueConverter.populate(this, GeoObjectType.DISPLAYLABEL, dto.getLabel());
     RegistryLocalizedValueConverter.populate(this, GeoObjectType.DESCRIPTION, dto.getDescription());
   }
 
@@ -250,7 +257,7 @@ public class GeoObjectType extends GeoObjectTypeBase
 
     org.commongeoregistry.adapter.constants.GeometryType cgrGeometryType = GeometryTypeFactory.get(geoPrismgeometryType);
 
-    LocalizedValue label = RegistryLocalizedValueConverter.convert(this.getEmbeddedComponent(GeoObjectType.LABEL));
+    LocalizedValue label = RegistryLocalizedValueConverter.convert(this.getEmbeddedComponent(GeoObjectType.DISPLAYLABEL));
     LocalizedValue description = RegistryLocalizedValueConverter.convert(this.getEmbeddedComponent(GeoObjectType.DESCRIPTION));
 
     GraphOrganization organization = this.getOrganization();
@@ -262,7 +269,9 @@ public class GeoObjectType extends GeoObjectTypeBase
     org.commongeoregistry.adapter.metadata.GeoObjectType dto = new org.commongeoregistry.adapter.metadata.GeoObjectType(this.getCode(), cgrGeometryType, label, description, this.getIsGeometryEditable(), orgCode, ServiceFactory.getAdapter());
     dto.setIsAbstract(this.getIsAbstract());
 
-    this.getAttributeMap().forEach((attributeName, attributeType) -> {
+    // TODO: HEADS UP - Verify that the attribute geometry type should not be
+    // included as an attribute
+    this.getAttributes().stream().filter(attributeType -> ! ( attributeType instanceof AttributeGeometryType )).forEach(attributeType -> {
       dto.addAttribute(attributeType.toDTO());
     });
 

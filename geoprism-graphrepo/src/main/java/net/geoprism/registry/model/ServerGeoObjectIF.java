@@ -87,8 +87,6 @@ public interface ServerGeoObjectIF
 
   public LocalizedValue getDisplayLabel();
 
-  public List<? extends MdAttributeConcreteDAOIF> getMdAttributeDAOs();
-
   public String bbox(Date date);
 
   public void setDate(Date date);
