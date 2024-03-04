@@ -369,9 +369,9 @@ public class GeoObjectBusinessService extends RegistryLocalizedValueConverter im
 
   @SuppressWarnings("unchecked")
   @Override
-  public void populate(ServerGeoObjectIF sgo, GeoObject geoObject, Date startDate, Date endDate)
+  public void populate(ServerGeoObjectIF sgo, GeoObject dto, Date startDate, Date endDate)
   {
-    Map<String, AttributeType> attributes = geoObject.getType().getAttributeMap();
+    Map<String, AttributeType> attributes = dto.getType().getAttributeMap();
     attributes.forEach((attributeName, attribute) -> {
       if (attributeName.equals(DefaultAttribute.INVALID.getName()) || attributeName.equals(DefaultAttribute.EXISTS.getName()) || attributeName.equals(DefaultAttribute.DISPLAY_LABEL.getName()) || attributeName.equals(DefaultAttribute.CODE.getName()) || attributeName.equals(DefaultAttribute.UID.getName()) || attributeName.equals(GeoVertex.LASTUPDATEDATE) || attributeName.equals(GeoVertex.CREATEDATE) || attributeName.equals(DefaultAttribute.ALT_IDS.getName()))
       {
@@ -381,7 +381,7 @@ public class GeoObjectBusinessService extends RegistryLocalizedValueConverter im
       {
         if (attribute instanceof AttributeTermType)
         {
-          Iterator<String> it = (Iterator<String>) geoObject.getValue(attributeName);
+          Iterator<String> it = (Iterator<String>) dto.getValue(attributeName);
 
           if (it.hasNext())
           {
@@ -402,7 +402,7 @@ public class GeoObjectBusinessService extends RegistryLocalizedValueConverter im
         }
         else if (attribute instanceof AttributeClassificationType)
         {
-          String value = (String) geoObject.getValue(attributeName);
+          String value = (String) dto.getValue(attributeName);
 
           if (value != null)
           {
@@ -417,7 +417,7 @@ public class GeoObjectBusinessService extends RegistryLocalizedValueConverter im
         }
         else
         {
-          Object value = geoObject.getValue(attributeName);
+          Object value = dto.getValue(attributeName);
 
           // if (value != null)
           // {
@@ -429,17 +429,24 @@ public class GeoObjectBusinessService extends RegistryLocalizedValueConverter im
           // endDate);
           // }
 
-          sgo.setValue(attributeName, value, startDate, endDate);
+          // TODO: HEADS UP - IS THIS CHECK CORRECT
+          // It doesn't make sense to support NULL values with change over time
+          // entries. Just change the period of validity to not include the time
+          // where the value would be null
+          if (value != null || !attribute.isChangeOverTime())
+          {
+            sgo.setValue(attributeName, value, startDate, endDate);
+          }
         }
       }
     });
 
-    sgo.setInvalid(geoObject.getInvalid());
-    sgo.setUid(geoObject.getUid());
-    sgo.setCode(geoObject.getCode());
-    sgo.setExists(geoObject.getExists(), startDate, endDate);
-    sgo.setDisplayLabel(geoObject.getDisplayLabel(), startDate, endDate);
-    sgo.setGeometry(geoObject.getGeometry(), startDate, endDate);
+    sgo.setInvalid(dto.getInvalid());
+    sgo.setUid(dto.getUid());
+    sgo.setCode(dto.getCode());
+    sgo.setExists(dto.getExists(), startDate, endDate);
+    sgo.setDisplayLabel(dto.getDisplayLabel(), startDate, endDate);
+    sgo.setGeometry(dto.getGeometry(), startDate, endDate);
   }
 
   @SuppressWarnings("unchecked")
