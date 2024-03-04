@@ -14,6 +14,11 @@ public abstract class CachableObjectWrapper<T>
   {
     this();
     this.object = object;
+
+    if (this.object == null)
+    {
+      throw new UnsupportedOperationException();
+    }
   }
 
   public void markAsDirty()

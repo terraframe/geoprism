@@ -1,6 +1,6 @@
 package net.geoprism.registry.graph;
 
-@com.runwaysdk.business.ClassSignature(hash = -1921414278)
+@com.runwaysdk.business.ClassSignature(hash = -1856327530)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -13,17 +13,17 @@ public abstract class GeoObjectTypeBase extends net.geoprism.registry.graph.Base
   public final static String CLASS = "net.geoprism.registry.graph.GeoObjectType";
   public final static java.lang.String DBCLASSNAME = "dbClassName";
   public final static java.lang.String DESCRIPTION = "description";
+  public final static java.lang.String DISPLAYLABEL = "displayLabel";
   public final static java.lang.String GEOMETRYTYPE = "geometryType";
   public final static java.lang.String ISABSTRACT = "isAbstract";
   public final static java.lang.String ISGEOMETRYEDITABLE = "isGeometryEditable";
   public final static java.lang.String ISPRIVATE = "isPrivate";
-  public final static java.lang.String LABEL = "label";
   public final static java.lang.String MDVERTEX = "mdVertex";
   public final static java.lang.String ORGANIZATION = "organization";
   public final static java.lang.String ROOTTERM = "rootTerm";
   public final static java.lang.String SUPERTYPE = "superType";
   @SuppressWarnings("unused")
-  private static final long serialVersionUID = -1921414278;
+  private static final long serialVersionUID = -1856327530;
   
   public GeoObjectTypeBase()
   {
@@ -60,6 +60,22 @@ public abstract class GeoObjectTypeBase extends net.geoprism.registry.graph.Base
   public void setDescription(com.runwaysdk.ComponentIF value)
   {
     this.setValue(DESCRIPTION, value);
+  }
+  
+  public com.runwaysdk.ComponentIF getDisplayLabel()
+  {
+    return (com.runwaysdk.ComponentIF) this.getObjectValue(DISPLAYLABEL);
+  }
+  
+  public static com.runwaysdk.dataaccess.MdAttributeDAOIF getDisplayLabelMd()
+  {
+    com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(net.geoprism.registry.graph.GeoObjectType.CLASS);
+    return (com.runwaysdk.dataaccess.MdAttributeDAOIF)mdClassIF.definesAttribute(DISPLAYLABEL);
+  }
+  
+  public void setDisplayLabel(com.runwaysdk.ComponentIF value)
+  {
+    this.setValue(DISPLAYLABEL, value);
   }
   
   public String getGeometryType()
@@ -124,22 +140,6 @@ public abstract class GeoObjectTypeBase extends net.geoprism.registry.graph.Base
   public void setIsPrivate(Boolean value)
   {
     this.setValue(ISPRIVATE, value);
-  }
-  
-  public com.runwaysdk.ComponentIF getLabel()
-  {
-    return (com.runwaysdk.ComponentIF) this.getObjectValue(LABEL);
-  }
-  
-  public static com.runwaysdk.dataaccess.MdAttributeDAOIF getLabelMd()
-  {
-    com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(net.geoprism.registry.graph.GeoObjectType.CLASS);
-    return (com.runwaysdk.dataaccess.MdAttributeDAOIF)mdClassIF.definesAttribute(LABEL);
-  }
-  
-  public void setLabel(com.runwaysdk.ComponentIF value)
-  {
-    this.setValue(LABEL, value);
   }
   
   public com.runwaysdk.system.metadata.MdVertex getMdVertex()

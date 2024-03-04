@@ -94,12 +94,6 @@ public class GeoObjectTypeBusinessService implements GeoObjectTypeBusinessServic
   @Autowired
   private HierarchyTypeBusinessServiceIF      htServ;
 
-  @Autowired
-  private ClassificationTypeBusinessServiceIF cTypeService;
-
-  @Autowired
-  private ClassificationBusinessServiceIF     cService;
-
   @Override
   public List<ServerGeoObjectType> getSubtypes(ServerGeoObjectType type)
   {
@@ -927,7 +921,7 @@ public class GeoObjectTypeBusinessService implements GeoObjectTypeBusinessServic
 
     if (codes == null || codes.length == 0)
     {
-      gots = ServiceFactory.getMetadataCache().getAllGeoObjectTypes();
+      gots = new LinkedList<>(ServiceFactory.getMetadataCache().getAllGeoObjectTypes());
     }
     else
     {

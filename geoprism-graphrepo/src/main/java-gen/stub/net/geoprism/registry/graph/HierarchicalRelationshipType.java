@@ -30,10 +30,15 @@ public class HierarchicalRelationshipType extends HierarchicalRelationshipTypeBa
     super();
   }
 
+  public String getOrganizationOid()
+  {
+    return (String) this.getObjectValue(HierarchicalRelationshipType.ORGANIZATION);
+  }
+
   @Override
   public GraphOrganization getOrganization()
   {
-    return GraphOrganization.get((String) this.getObjectValue(HierarchicalRelationshipType.ORGANIZATION));
+    return GraphOrganization.get(getOrganizationOid());
   }
 
   protected MdEdgeDAOIF getDefinitionEdgeDAO()
@@ -49,7 +54,7 @@ public class HierarchicalRelationshipType extends HierarchicalRelationshipTypeBa
 
   public void update(HierarchyType dto)
   {
-    RegistryLocalizedValueConverter.populate(this, HierarchicalRelationshipType.LABEL, dto.getLabel());
+    RegistryLocalizedValueConverter.populate(this, HierarchicalRelationshipType.DISPLAYLABEL, dto.getLabel());
     RegistryLocalizedValueConverter.populate(this, HierarchicalRelationshipType.DESCRIPTION, dto.getDescription());
 
     this.setAbstractDescription(dto.getAbstractDescription());
@@ -121,14 +126,18 @@ public class HierarchicalRelationshipType extends HierarchicalRelationshipTypeBa
 
   public String getOrganizationCode()
   {
-    MdVertexDAOIF mdVertexDAO = MdVertexDAO.getMdVertexDAO(CLASS);
-    MdAttributeDAOIF mdAttribute = mdVertexDAO.definesAttribute(HierarchicalRelationshipType.ORGANIZATION);
+    // Minor optimization to just get the code from the organization table
+    // instead of deserializing the entire organization object
+    MdVertexDAOIF mdVertexDAO = MdVertexDAO.getMdVertexDAO(GraphOrganization.CLASS);
+    MdAttributeDAOIF mdAttribute = mdVertexDAO.definesAttribute(GraphOrganization.CODE);
 
     StringBuilder statement = new StringBuilder();
-    statement.append("SELECT " + mdAttribute.getColumnName() + ".code FROM :rid");
+    statement.append("SELECT " + mdAttribute.getColumnName());
+    statement.append(" FROM " + mdVertexDAO.getDBClassName());
+    statement.append(" WHERE oid = :oid");
 
     GraphQuery<String> query = new GraphQuery<String>(statement.toString());
-    query.setParameter("rid", this.getRID());
+    query.setParameter("oid", this.getOrganizationOid());
 
     return query.getSingleResult();
   }
@@ -136,7 +145,7 @@ public class HierarchicalRelationshipType extends HierarchicalRelationshipTypeBa
   public void fromDTO(HierarchyType dto)
   {
     this.setCode(dto.getCode());
-    LocalizedValueConverter.populate(this, HierarchicalRelationshipType.LABEL, dto.getLabel());
+    LocalizedValueConverter.populate(this, HierarchicalRelationshipType.DISPLAYLABEL, dto.getLabel());
     LocalizedValueConverter.populate(this, HierarchicalRelationshipType.DESCRIPTION, dto.getDescription());
     this.setAbstractDescription(dto.getAbstractDescription());
     this.setAcknowledgement(dto.getAcknowledgement());
@@ -151,8 +160,8 @@ public class HierarchicalRelationshipType extends HierarchicalRelationshipTypeBa
 
   public HierarchyType toDTO()
   {
-    LocalizedValue label = LocalizedValueConverter.convert(this.getEmbeddedComponent(LABEL));
-    LocalizedValue description = LocalizedValueConverter.convert(this.getEmbeddedComponent(DESCRIPTION));
+    LocalizedValue label = LocalizedValueConverter.convert(this.getEmbeddedComponent(HierarchicalRelationshipType.DISPLAYLABEL));
+    LocalizedValue description = LocalizedValueConverter.convert(this.getEmbeddedComponent(HierarchicalRelationshipType.DESCRIPTION));
 
     final HierarchyType dto = new HierarchyType(this.getCode(), label, description, this.getOrganizationCode());
     dto.setAbstractDescription(this.getAbstractDescription());

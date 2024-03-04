@@ -1,6 +1,6 @@
 package net.geoprism.registry.graph;
 
-@com.runwaysdk.business.ClassSignature(hash = 757410567)
+@com.runwaysdk.business.ClassSignature(hash = -390352493)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -20,8 +20,8 @@ public abstract class HierarchicalRelationshipTypeBase extends com.runwaysdk.bus
   public final static java.lang.String DEFINITIONEDGE = "definitionEdge";
   public final static java.lang.String DESCRIPTION = "description";
   public final static java.lang.String DISCLAIMER = "disclaimer";
+  public final static java.lang.String DISPLAYLABEL = "displayLabel";
   public final static java.lang.String EMAIL = "email";
-  public final static java.lang.String LABEL = "label";
   public final static java.lang.String OBJECTEDGE = "objectEdge";
   public final static java.lang.String OID = "oid";
   public final static java.lang.String ORGANIZATION = "organization";
@@ -30,7 +30,7 @@ public abstract class HierarchicalRelationshipTypeBase extends com.runwaysdk.bus
   public final static java.lang.String SEQ = "seq";
   public final static java.lang.String USECONSTRAINTS = "useConstraints";
   @SuppressWarnings("unused")
-  private static final long serialVersionUID = 757410567;
+  private static final long serialVersionUID = -390352493;
   
   public HierarchicalRelationshipTypeBase()
   {
@@ -198,6 +198,22 @@ public abstract class HierarchicalRelationshipTypeBase extends com.runwaysdk.bus
     this.setValue(DISCLAIMER, value);
   }
   
+  public com.runwaysdk.ComponentIF getDisplayLabel()
+  {
+    return (com.runwaysdk.ComponentIF) this.getObjectValue(DISPLAYLABEL);
+  }
+  
+  public static com.runwaysdk.dataaccess.MdAttributeDAOIF getDisplayLabelMd()
+  {
+    com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(net.geoprism.registry.graph.HierarchicalRelationshipType.CLASS);
+    return (com.runwaysdk.dataaccess.MdAttributeDAOIF)mdClassIF.definesAttribute(DISPLAYLABEL);
+  }
+  
+  public void setDisplayLabel(com.runwaysdk.ComponentIF value)
+  {
+    this.setValue(DISPLAYLABEL, value);
+  }
+  
   public String getEmail()
   {
     return (String) this.getObjectValue(EMAIL);
@@ -212,22 +228,6 @@ public abstract class HierarchicalRelationshipTypeBase extends com.runwaysdk.bus
   public void setEmail(String value)
   {
     this.setValue(EMAIL, value);
-  }
-  
-  public com.runwaysdk.ComponentIF getLabel()
-  {
-    return (com.runwaysdk.ComponentIF) this.getObjectValue(LABEL);
-  }
-  
-  public static com.runwaysdk.dataaccess.MdAttributeDAOIF getLabelMd()
-  {
-    com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(net.geoprism.registry.graph.HierarchicalRelationshipType.CLASS);
-    return (com.runwaysdk.dataaccess.MdAttributeDAOIF)mdClassIF.definesAttribute(LABEL);
-  }
-  
-  public void setLabel(com.runwaysdk.ComponentIF value)
-  {
-    this.setValue(LABEL, value);
   }
   
   public com.runwaysdk.system.metadata.MdEdge getObjectEdge()

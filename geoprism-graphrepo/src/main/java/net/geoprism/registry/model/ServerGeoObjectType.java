@@ -132,7 +132,7 @@ public class ServerGeoObjectType extends CachableObjectWrapper<BaseGeoObjectType
 
   public LocalizedValue getLabel()
   {
-    return LocalizedValueConverter.convert(this.getObject().getEmbeddedComponent(GeoObjectType.LABEL));
+    return LocalizedValueConverter.convert(this.getObject().getEmbeddedComponent(GeoObjectType.DISPLAYLABEL));
   }
 
   public LocalizedValue getDescription()

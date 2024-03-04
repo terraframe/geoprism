@@ -21,6 +21,7 @@ package net.geoprism.registry.model;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -36,6 +37,7 @@ import com.runwaysdk.dataaccess.metadata.MdClassDAO;
 import com.runwaysdk.dataaccess.metadata.graph.MdEdgeDAO;
 import com.runwaysdk.dataaccess.metadata.graph.MdVertexDAO;
 import com.runwaysdk.dataaccess.transaction.Transaction;
+import com.runwaysdk.dataaccess.transaction.TransactionState;
 import com.runwaysdk.session.Session;
 
 import net.geoprism.registry.DataNotFoundException;
@@ -43,6 +45,7 @@ import net.geoprism.registry.Organization;
 import net.geoprism.registry.command.CacheEventType;
 import net.geoprism.registry.command.HierarchicalRelationshipTypeCacheEventCommand;
 import net.geoprism.registry.conversion.RegistryLocalizedValueConverter;
+import net.geoprism.registry.graph.BaseGeoObjectType;
 import net.geoprism.registry.graph.GeoObjectType;
 import net.geoprism.registry.graph.HierarchicalRelationshipType;
 import net.geoprism.registry.model.graph.GraphStrategy;
@@ -89,7 +92,7 @@ public class ServerHierarchyType extends CachableObjectWrapper<HierarchicalRelat
 
     this.setObject(type);
     this.dto = null;
-    
+
     // TODO: There has to be a better way to do this
     ServiceFactory.getBean(HierarchyTypeBusinessServiceIF.class).refresh(this);
   }
@@ -156,7 +159,7 @@ public class ServerHierarchyType extends CachableObjectWrapper<HierarchicalRelat
 
   public LocalizedValue getLabel()
   {
-    return RegistryLocalizedValueConverter.convert(this.getObject().getEmbeddedComponent(HierarchicalRelationshipType.LABEL));
+    return RegistryLocalizedValueConverter.convert(this.getObject().getEmbeddedComponent(HierarchicalRelationshipType.DISPLAYLABEL));
   }
 
   public LocalizedValue getDescription()
@@ -208,7 +211,7 @@ public class ServerHierarchyType extends CachableObjectWrapper<HierarchicalRelat
   public void addToHierarchy(ServerGeoObjectType parentType, ServerGeoObjectType childType)
   {
     parentType.getObject().addChild(childType.getObject(), this.getDefinitionEdge()).apply();
-    
+
     new HierarchicalRelationshipTypeCacheEventCommand(this, CacheEventType.UPDATE).doIt();
   }
 
@@ -229,6 +232,8 @@ public class ServerHierarchyType extends CachableObjectWrapper<HierarchicalRelat
 
   public List<ServerGeoObjectType> getRootNodes()
   {
+    BaseGeoObjectType root = RootGeoObjectType.INSTANCE.getObject();
+    
     // We only need the code because we want to use the cached
     // ServerGeoObjectType instead of creating a new one
     StringBuilder statement = new StringBuilder();
@@ -237,7 +242,7 @@ public class ServerHierarchyType extends CachableObjectWrapper<HierarchicalRelat
     statement.append(")");
 
     GraphQuery<String> query = new GraphQuery<String>(statement.toString());
-    query.setParameter("rid", RootGeoObjectType.INSTANCE.getObject().getRID());
+    query.setParameter("rid", root.getRID());
 
     return query.getResults().stream().filter(code -> !code.equals(GeoObjectType.ROOT)).map(code -> ServerGeoObjectType.get(code)).collect(Collectors.toList());
   }
@@ -287,8 +292,27 @@ public class ServerHierarchyType extends CachableObjectWrapper<HierarchicalRelat
     }
   }
 
+  @SuppressWarnings("unchecked")
   public static ServerHierarchyType get(String hierarchyTypeCode)
   {
+    TransactionState state = TransactionState.getCurrentTransactionState();
+
+    if (state != null)
+    {
+      Object transactionCache = state.getTransactionObject("transaction-state");
+
+      if (transactionCache != null)
+      {
+        Map<String, ServerElement> cache = (Map<String, ServerElement>) transactionCache;
+        ServerElement element = cache.get(hierarchyTypeCode);
+
+        if (element != null && element instanceof ServerHierarchyType)
+        {
+          return (ServerHierarchyType) element;
+        }
+      }
+    }
+
     Optional<ServerHierarchyType> hierarchyType = ServiceFactory.getMetadataCache().getHierachyType(hierarchyTypeCode);
 
     if (!hierarchyType.isPresent())

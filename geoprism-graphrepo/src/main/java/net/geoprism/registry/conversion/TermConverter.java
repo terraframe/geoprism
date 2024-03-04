@@ -3,18 +3,18 @@
  *
  * This file is part of Geoprism(tm).
  *
- * Geoprism(tm) is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
+ * Geoprism(tm) is free software: you can redistribute it and/or modify it under
+ * the terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation, either version 3 of the License, or (at your option) any
+ * later version.
  *
- * Geoprism(tm) is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
+ * Geoprism(tm) is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with Geoprism(tm).  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with Geoprism(tm). If not, see <http://www.gnu.org/licenses/>.
  */
 package net.geoprism.registry.conversion;
 
@@ -35,7 +35,7 @@ import com.runwaysdk.system.metadata.MdBusiness;
 import net.geoprism.ontology.Classifier;
 import net.geoprism.ontology.ClassifierIsARelationship;
 import net.geoprism.registry.RegistryConstants;
-import net.geoprism.registry.graph.GeoObjectType;
+import net.geoprism.registry.model.ServerElement;
 import net.geoprism.registry.model.ServerGeoObjectType;
 import net.geoprism.registry.model.ServerOrganization;
 import net.geoprism.registry.service.permission.GeoObjectTypePermissionServiceIF;
@@ -135,7 +135,7 @@ public class TermConverter
    * @return {@link Classifier} object as a parent of terms that pertain to the
    *         given {@link MdBusiness}.
    */
-  public static Classifier buildIfNotExistGeoObjectTypeClassifier(GeoObjectType type)
+  public static Classifier buildIfNotExistGeoObjectTypeClassifier(ServerElement type)
   {
     String classTermKey = buildRootClassKey(type.getCode());
 
@@ -147,6 +147,10 @@ public class TermConverter
     }
     catch (DataNotFoundException e)
     {
+      LocalizedValue label = type.getLabel();
+      String value = label.getValue(LocalizedValue.DEFAULT_LOCALE);
+      value = value != null ? value : "Type Root";
+      
       String classifierId = buildRootClassClassifierId(type.getCode());
 
       classTerm = new Classifier();
@@ -154,8 +158,8 @@ public class TermConverter
       classTerm.setClassifierPackage(RegistryConstants.REGISTRY_PACKAGE);
       // This will set the value of the display label to the locale of the user
       // performing the action.
-      classTerm.getDisplayLabel().setValue(type.getEmbeddedValue(GeoObjectType.LABEL, LocalizedValue.DEFAULT_LOCALE));
-      classTerm.getDisplayLabel().setDefaultValue(type.getEmbeddedValue(GeoObjectType.LABEL, LocalizedValue.DEFAULT_LOCALE));
+      classTerm.getDisplayLabel().setValue(value);
+      classTerm.getDisplayLabel().setDefaultValue(value);
       classTerm.apply();
 
       Classifier rootClassTerm = Classifier.getByKey(RegistryConstants.TERM_CLASS);
@@ -180,7 +184,7 @@ public class TermConverter
    * @return {@link Classifier} object as a parent of terms that pertain to the
    *         given {@link MdBusiness}.
    */
-  public static Classifier buildIfNotExistAttribute(GeoObjectType type, String mdAttributeTermOrMultiName, Classifier parent)
+  public static Classifier buildIfNotExistAttribute(ServerElement type, String mdAttributeTermOrMultiName, Classifier parent)
   {
     String attributeTermKey = buildtAtttributeKey(type.getCode(), mdAttributeTermOrMultiName);
 
@@ -192,6 +196,10 @@ public class TermConverter
     }
     catch (DataNotFoundException e)
     {
+      LocalizedValue typeLabel = type.getLabel();
+      String value = typeLabel.getValue(LocalizedValue.DEFAULT_LOCALE);
+      value = value != null ? value : "Attribute Root";
+
       String classifierId = buildtAtttributeClassifierId(type.getCode(), mdAttributeTermOrMultiName);
 
       attributeTerm = new Classifier();
@@ -199,8 +207,8 @@ public class TermConverter
       attributeTerm.setClassifierPackage(RegistryConstants.REGISTRY_PACKAGE);
       // This will set the value of the display label to the locale of the user
       // performing the action.
-      attributeTerm.getDisplayLabel().setValue(type.getEmbeddedValue(GeoObjectType.LABEL, LocalizedValue.DEFAULT_LOCALE));
-      attributeTerm.getDisplayLabel().setDefaultValue(type.getEmbeddedValue(GeoObjectType.LABEL, LocalizedValue.DEFAULT_LOCALE));
+      attributeTerm.getDisplayLabel().setValue(value);
+      attributeTerm.getDisplayLabel().setDefaultValue(value);
       attributeTerm.apply();
 
       if (parent != null)
