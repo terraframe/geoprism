@@ -121,6 +121,13 @@ public class AttributeClassificationType extends AttributeClassificationTypeBase
   @Transaction
   public void delete()
   {
+    if (!this.getIsChangeOverTime())
+    {
+      // Update the precision and scale of the value attribute
+      MdVertexDAO mdVertex = MdVertexDAO.get(this.getGeoObjectType().getMdVertexOid()).getBusinessDAO();
+      mdVertex.delete();
+    }
+
     MdVertex mdVertex = this.getValueVertex();
 
     super.delete();
@@ -180,6 +187,23 @@ public class AttributeClassificationType extends AttributeClassificationTypeBase
   }
 
   @Override
+  protected void populate(AttributeType dto)
+  {
+    super.populate(dto);
+
+    ClassificationType type = this.getClassificationType();
+    Classification root = this.getRootClassification();
+
+    org.commongeoregistry.adapter.metadata.AttributeClassificationType attributeType = (org.commongeoregistry.adapter.metadata.AttributeClassificationType) dto;
+    attributeType.setClassificationType(type.getType());
+
+    if (root != null)
+    {
+      attributeType.setRootTerm(root.toTerm());
+    }
+  }
+
+  @Override
   public AttributeType toDTO()
   {
     org.commongeoregistry.adapter.metadata.AttributeClassificationType dto = new org.commongeoregistry.adapter.metadata.AttributeClassificationType(this.getCode(), getLocalizedLabel(), getLocalizedDescription(), isAppliedToDb(), isNew(), isAppliedToDb());
@@ -202,4 +226,29 @@ public class AttributeClassificationType extends AttributeClassificationTypeBase
     }
   }
 
+  public ClassificationType getClassificationType()
+  {
+    ClassificationTypeBusinessServiceIF typeService = ServiceFactory.getBean(ClassificationTypeBusinessServiceIF.class);
+
+    return typeService.get(this.getMdClassificationOid());
+  }
+
+  public Classification getRootClassification()
+  {
+    return getRootClassification(getClassificationType());
+  }
+
+  protected Classification getRootClassification(ClassificationType type)
+  {
+    String oid = this.getRootTerm();
+
+    if (!StringUtils.isBlank(oid))
+    {
+      ClassificationBusinessServiceIF service = ServiceFactory.getBean(ClassificationBusinessServiceIF.class);
+
+      return service.getByOid(type, oid);
+    }
+
+    return null;
+  }
 }
