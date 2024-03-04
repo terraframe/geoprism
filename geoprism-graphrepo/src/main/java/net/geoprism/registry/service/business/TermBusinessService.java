@@ -3,39 +3,31 @@
  *
  * This file is part of Geoprism(tm).
  *
- * Geoprism(tm) is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
+ * Geoprism(tm) is free software: you can redistribute it and/or modify it under
+ * the terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation, either version 3 of the License, or (at your option) any
+ * later version.
  *
- * Geoprism(tm) is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
+ * Geoprism(tm) is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with Geoprism(tm).  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with Geoprism(tm). If not, see <http://www.gnu.org/licenses/>.
  */
 package net.geoprism.registry.service.business;
 
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Optional;
-
 import org.commongeoregistry.adapter.Term;
 import org.commongeoregistry.adapter.dataaccess.LocalizedValue;
-import org.commongeoregistry.adapter.metadata.AttributeTermType;
 import org.springframework.stereotype.Service;
 
-import com.runwaysdk.query.OIterator;
-import com.runwaysdk.system.metadata.MdAttributeConcrete;
-import com.runwaysdk.system.metadata.MdAttributeMultiTerm;
-import com.runwaysdk.system.metadata.MdAttributeTerm;
+import com.runwaysdk.dataaccess.transaction.Transaction;
 
 import net.geoprism.ontology.Classifier;
+import net.geoprism.registry.command.CacheEventType;
+import net.geoprism.registry.command.GeoObjectTypeCacheEventCommand;
 import net.geoprism.registry.conversion.TermConverter;
-import net.geoprism.registry.model.ServerGeoObjectType;
-import net.geoprism.registry.service.request.ServiceFactory;
 
 @Service
 public class TermBusinessService implements TermBusinessServiceIF
@@ -48,31 +40,32 @@ public class TermBusinessService implements TermBusinessServiceIF
 
     TermConverter termBuilder = new TermConverter(classifier.getKeyName());
 
-    Term returnTerm = termBuilder.build();
+    // TODO: Optimize so the entire cache doesn't need to be rebuilt
+    // Just the geo object type whichs terms were updated
+    // We don't
+    new GeoObjectTypeCacheEventCommand(null, CacheEventType.VIEW).doIt();
 
-    List<MdAttributeConcrete> mdAttrList = this.findRootClassifier(classifier);
-    this.refreshAttributeTermTypeInCache(mdAttrList);
-
-    return returnTerm;
+    return termBuilder.build();
   }
 
   @Override
+  @Transaction
   public Term updateTerm(String parentTermCode, String termCode, LocalizedValue value)
   {
     Classifier classifier = TermConverter.updateClassifier(parentTermCode, termCode, value);
 
     TermConverter termBuilder = new TermConverter(classifier.getKeyName());
 
-    Term returnTerm = termBuilder.build();
+    // TODO: Optimize so the entire cache doesn't need to be rebuilt
+    // Just the geo object type whichs terms were updated
+    // We don't
+    new GeoObjectTypeCacheEventCommand(null, CacheEventType.VIEW).doIt();
 
-    List<MdAttributeConcrete> mdAttrList = this.findRootClassifier(classifier);
-
-    this.refreshAttributeTermTypeInCache(mdAttrList);
-
-    return returnTerm;
+    return termBuilder.build();
   }
 
   @Override
+  @Transaction
   public void deleteTerm(Term parent, String termCode)
   {
     String parentClassifierKey = TermConverter.buildClassifierKeyFromTermCode(parent.getCode());
@@ -82,72 +75,12 @@ public class TermBusinessService implements TermBusinessServiceIF
     String classifierKey = Classifier.buildKey(parentClassifier.getKey(), termCode);
 
     Classifier classifier = Classifier.getByKey(classifierKey);
-
-    List<MdAttributeConcrete> mdAttrList = this.findRootClassifier(classifier);
-
     classifier.delete();
 
-    this.refreshAttributeTermTypeInCache(mdAttrList);
-  }
-
-  /**
-   * Returns the {@link AttributeTermType}s that use the given term.
-   * 
-   * @param term
-   * @return
-   */
-  private void refreshAttributeTermTypeInCache(List<MdAttributeConcrete> mdAttrList)
-  {
-    for (MdAttributeConcrete mdAttribute : mdAttrList)
-    {
-      String geoObjectTypeCode = mdAttribute.getDefiningMdClass().getTypeName();
-
-      Optional<ServerGeoObjectType> optional = ServiceFactory.getMetadataCache().getGeoObjectType(geoObjectTypeCode);
-
-      if (optional.isPresent())
-      {
-        ServerGeoObjectType geoObjectType = optional.get();
-
-        // TODO: HEADS UP
-//        AttributeType attributeType = new RegistryAttributeTypeConverter().build((MdAttributeConcreteDAOIF) BusinessFacade.getEntityDAO(mdAttribute));
-//
-//        geoObjectType.getType().addAttribute(attributeType);
-//
-//        ServiceFactory.getMetadataCache().addGeoObjectType(geoObjectType);
-      }
-    }
-  }
-
-  private List<MdAttributeConcrete> findRootClassifier(Classifier classifier)
-  {
-    List<MdAttributeConcrete> mdAttributeList = new LinkedList<MdAttributeConcrete>();
-
-    return this.findRootClassifier(classifier, mdAttributeList);
-  }
-
-  private List<MdAttributeConcrete> findRootClassifier(Classifier classifier, List<MdAttributeConcrete> mdAttributeList)
-  {
-    // Is this a root term for an {@link MdAttributeTerm}
-    OIterator<? extends MdAttributeTerm> attrTerm = classifier.getAllClassifierTermAttributeRoots();
-    for (MdAttributeTerm mdAttributeTerm : attrTerm)
-    {
-      mdAttributeList.add(mdAttributeTerm);
-    }
-
-    OIterator<? extends MdAttributeMultiTerm> attrMultiTerm = classifier.getAllClassifierMultiTermAttributeRoots();
-    for (MdAttributeMultiTerm mdAttributeMultiTerm : attrMultiTerm)
-    {
-      mdAttributeList.add(mdAttributeMultiTerm);
-    }
-
-    // Traverse up the tree
-    OIterator<? extends Classifier> parentTerms = classifier.getAllIsAParent();
-    for (Classifier parent : parentTerms)
-    {
-      return this.findRootClassifier(parent, mdAttributeList);
-    }
-
-    return mdAttributeList;
+    // TODO: Optimize so the entire cache doesn't need to be rebuilt
+    // Just the geo object type whichs terms were updated
+    // We don't
+    new GeoObjectTypeCacheEventCommand(null, CacheEventType.VIEW).doIt();
   }
 
 }

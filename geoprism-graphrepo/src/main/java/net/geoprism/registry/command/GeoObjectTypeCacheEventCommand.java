@@ -35,6 +35,10 @@ public class GeoObjectTypeCacheEventCommand extends AbstractCacheCommand impleme
       // embedded in the HierarchyType
       ServiceFactory.getGraphRepoService().refreshMetadataCache();
     }
+    else if (this.getEventType().equals(CacheEventType.VIEW))
+    {
+      ServiceFactory.getMetadataCache().getAllGeoObjectTypes().stream().forEach(type -> type.refreshDTO());
+    }
   }
 
   private void refreshCache(ServerGeoObjectType type)
