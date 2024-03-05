@@ -1,6 +1,7 @@
 package net.geoprism.registry.model.graph;
 
-import com.runwaysdk.dataaccess.cache.ObjectCache;
+import com.runwaysdk.query.QueryFactory;
+import com.runwaysdk.system.metadata.MdGraphClassQuery;
 
 public class GraphTableUtil
 {
@@ -15,7 +16,7 @@ public class GraphTableUtil
       name = name.substring(0, 25);
     }
 
-    while (ObjectCache.hasClassByTableName(name))
+    while (isAlreadyUsed(name))
     {
       count++;
 
@@ -28,6 +29,14 @@ public class GraphTableUtil
     }
 
     return name;
+  }
+
+  protected static boolean isAlreadyUsed(String dbClassName)
+  {
+    MdGraphClassQuery query = new MdGraphClassQuery(new QueryFactory());
+    query.WHERE(query.getDbClassName().EQ(dbClassName));
+
+    return query.getCount() > 0;
   }
 
 }
