@@ -1132,8 +1132,8 @@ public class VertexServerGeoObject extends AbstractServerGeoObject implements Se
     }
     else
     {
-      statement.append(", last(out('has_value')[attributeName = 'displayLabel'].defaultLocale) AS label");
-      statement.append(", last(out('has_value')[attributeName = 'exists'].value) AS existValue");
+      statement.append(", last(out('has_value')[attributeName = 'displayLabel'][startDate = max($current.out('has_value')[attributeName = 'displayLabel'].startDate)].defaultLocale) AS label");
+      statement.append(", last(out('has_value')[attributeName = 'exists'][startDate = max($current.out('has_value')[attributeName = 'displayLabel'].startDate)].value) AS existValue");
     }
     
     statement.append(" FROM " + type.getMdVertex().getDBClassName() + " WHERE ");
