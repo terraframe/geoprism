@@ -22,7 +22,7 @@ public class RepoLocalizationService extends LocalizationService
 {
 
   @Transaction
-  protected SupportedLocaleIF installLocale(LocaleView view)
+  public SupportedLocaleIF installLocale(LocaleView view)
   {
     SupportedLocaleIF supportedLocale = (SupportedLocale) com.runwaysdk.localization.LocalizationFacade.install(view.getLocale());
 
@@ -52,7 +52,7 @@ public class RepoLocalizationService extends LocalizationService
   }
 
   @Transaction
-  protected void uninstallLocale(LocaleView view)
+  public void uninstallLocale(LocaleView view)
   {
     com.runwaysdk.localization.LocalizationFacade.uninstall(view.getLocale());
 
