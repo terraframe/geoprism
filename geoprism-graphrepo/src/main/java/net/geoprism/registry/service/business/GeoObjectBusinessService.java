@@ -1678,7 +1678,8 @@ public class GeoObjectBusinessService extends RegistryLocalizedValueConverter im
         tnRoot.setEndDate(endDate);
         tnRoot.setOid(oid);
 
-        VertexServerGeoObject parent = new VertexServerGeoObject(parentType, parentVertex, new TreeMap<>(), date);
+        // TODO: HEADS UP - Refactor query to get edge, parent, and attribute nodes in a single query????
+        ServerGeoObjectIF parent = this.getGeoObjectByCode((String) parentVertex.getObjectValue(DefaultAttribute.CODE.getName()), parentType);
 
         ServerParentTreeNode tnParent;
 
@@ -1686,26 +1687,18 @@ public class GeoObjectBusinessService extends RegistryLocalizedValueConverter im
         {
           if (includeInherited && gotService.isRoot(parentType, ht))
           {
-            // TODO: HEADS UP
-            // InheritedHierarchyAnnotation anno =
-            // InheritedHierarchyAnnotation.getByForHierarchical(ht.getHierarchicalRelationshipType());
-            //
-            // if (anno != null)
-            // {
-            // HierarchicalRelationshipType hrtInherited =
-            // anno.getInheritedHierarchicalRelationshipType();
-            // ServerHierarchyType shtInherited =
-            // ServerHierarchyType.get(hrtInherited);
-            //
-            // tnParent = internalGetParentGeoObjects(parent, parentTypes,
-            // recursive, includeInherited, shtInherited, date);
-            // }
-            // else
-            // {
-            // tnParent = internalGetParentGeoObjects(parent, parentTypes,
-            // recursive, includeInherited, ht, date);
-            // }
-            tnParent = null;
+            InheritedHierarchyAnnotation anno = InheritedHierarchyAnnotation.getByForHierarchical(ht);
+
+            if (anno != null)
+            {
+              ServerHierarchyType shtInherited = ServerHierarchyType.get(anno.getInheritedHierarchyCode());
+
+              tnParent = internalGetParentGeoObjects(parent, parentTypes, recursive, includeInherited, shtInherited, date);
+            }
+            else
+            {
+              tnParent = internalGetParentGeoObjects(parent, parentTypes, recursive, includeInherited, ht, date);
+            }
           }
           else
           {

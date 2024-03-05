@@ -62,17 +62,14 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.runwaysdk.Pair;
 import com.runwaysdk.business.graph.EdgeObject;
-import com.runwaysdk.business.graph.GraphObject;
 import com.runwaysdk.business.graph.GraphQuery;
 import com.runwaysdk.business.graph.VertexObject;
 import com.runwaysdk.constants.ElementInfo;
 import com.runwaysdk.constants.MdAttributeLocalInfo;
-import com.runwaysdk.dataaccess.MdAttributeConcreteDAOIF;
 import com.runwaysdk.dataaccess.MdAttributeDAOIF;
 import com.runwaysdk.dataaccess.MdVertexDAOIF;
 import com.runwaysdk.dataaccess.ProgrammingErrorException;
 import com.runwaysdk.dataaccess.graph.GraphDBService;
-import com.runwaysdk.dataaccess.graph.GraphObjectDAO;
 import com.runwaysdk.dataaccess.graph.VertexObjectDAO;
 import com.runwaysdk.dataaccess.graph.attributes.ValueOverTime;
 import com.runwaysdk.dataaccess.graph.attributes.ValueOverTimeCollection;
@@ -91,7 +88,6 @@ import net.geoprism.ontology.Classifier;
 import net.geoprism.registry.DateFormatter;
 import net.geoprism.registry.GeometrySizeException;
 import net.geoprism.registry.GeometryTypeException;
-import net.geoprism.registry.RegistryConstants;
 import net.geoprism.registry.conversion.RegistryLocalizedValueConverter;
 import net.geoprism.registry.geoobject.ValueOutOfRangeException;
 import net.geoprism.registry.graph.AttributeLocalType;
@@ -109,7 +105,6 @@ import net.geoprism.registry.model.ServerGeoObjectIF;
 import net.geoprism.registry.model.ServerGeoObjectType;
 import net.geoprism.registry.model.ServerGraphNode;
 import net.geoprism.registry.model.ServerHierarchyType;
-import net.geoprism.registry.query.graph.AbstractVertexRestriction;
 import net.geoprism.registry.service.request.ServiceFactory;
 
 public class VertexServerGeoObject extends AbstractServerGeoObject implements ServerGeoObjectIF, LocationInfo, VertexComponent
@@ -453,42 +448,6 @@ public class VertexServerGeoObject extends AbstractServerGeoObject implements Se
     return lv.getValue(locale);
   }
 
-  public String getGeometryAttributeName()
-  {
-    GeometryType geometryType = this.type.getGeometryType();
-
-    if (geometryType.equals(GeometryType.LINE))
-    {
-      return GeoVertex.GEOLINE;
-    }
-    else if (geometryType.equals(GeometryType.MULTILINE))
-    {
-      return GeoVertex.GEOMULTILINE;
-    }
-    else if (geometryType.equals(GeometryType.POINT))
-    {
-      return GeoVertex.GEOPOINT;
-    }
-    else if (geometryType.equals(GeometryType.MULTIPOINT))
-    {
-      return GeoVertex.GEOMULTIPOINT;
-    }
-    else if (geometryType.equals(GeometryType.POLYGON))
-    {
-      return GeoVertex.GEOPOLYGON;
-    }
-    else if (geometryType.equals(GeometryType.MULTIPOLYGON))
-    {
-      return GeoVertex.GEOMULTIPOLYGON;
-    }
-    else if (geometryType.equals(GeometryType.MIXED))
-    {
-      return GeoVertex.SHAPE;
-    }
-
-    throw new UnsupportedOperationException("Unsupported geometry type [" + geometryType.name() + "]");
-  }
-
   public Map<String, ServerHierarchyType> getHierarchyTypeMap(String[] relationshipTypes)
   {
     throw new UnsupportedOperationException();
@@ -587,10 +546,10 @@ public class VertexServerGeoObject extends AbstractServerGeoObject implements Se
 
       Object value = !attributeType.getIsChangeOverTime() ? attributeType.getStrategy().getValue(vertex, valueNodeMap, null) : this.getMostRecentValue(attributeName);
 
-      // if (value != null && attributeType instanceof AttributeTermType)
-      // {
-      // return (T) Classifier.get((String) value);
-      // }
+      if (value != null && attributeType instanceof AttributeTermType)
+      {
+        return (T) Classifier.get((String) value);
+      }
 
       return (T) value;
     }
@@ -608,10 +567,10 @@ public class VertexServerGeoObject extends AbstractServerGeoObject implements Se
     {
       Object value = at.getStrategy().getValue(this.vertex, this.valueNodeMap, date);
 
-      // if (value != null && at instanceof AttributeTermType)
-      // {
-      // return (T) Classifier.get((String) value);
-      // }
+      if (value != null && at instanceof AttributeTermType)
+      {
+        return (T) Classifier.get((String) value);
+      }
 
       return (T) value;
     }
@@ -1108,11 +1067,10 @@ public class VertexServerGeoObject extends AbstractServerGeoObject implements Se
   {
     return this.getGraphParents(type, recursive, date, null, null, null);
   }
-  
+
   public static JsonArray getGeoObjectSuggestions(String text, String typeCode, String parentCode, String parentTypeCode, String hierarchyCode, Date startDate, Date endDate)
   {
     final ServerGeoObjectType type = ServerGeoObjectType.get(typeCode);
-    
 
     ServerHierarchyType ht = hierarchyCode != null ? ServerHierarchyType.get(hierarchyCode) : null;
 
@@ -1120,7 +1078,7 @@ public class VertexServerGeoObject extends AbstractServerGeoObject implements Se
 
     StringBuilder statement = new StringBuilder();
     statement.append("SELECT @class as clazz, @rid, oid, uid, code");
-    
+
     if (startDate != null && endDate != null)
     {
       statement.append(", last(out('has_value')[attributeName = 'displayLabel'][(:startDate BETWEEN startDate AND endDate)].defaultLocale) AS label");
@@ -1135,11 +1093,11 @@ public class VertexServerGeoObject extends AbstractServerGeoObject implements Se
       statement.append(", last(out('has_value')[attributeName = 'displayLabel'][startDate = max($current.out('has_value')[attributeName = 'displayLabel'].startDate)].defaultLocale) AS label");
       statement.append(", last(out('has_value')[attributeName = 'exists'][startDate = max($current.out('has_value')[attributeName = 'displayLabel'].startDate)].value) AS existValue");
     }
-    
+
     statement.append(" FROM " + type.getMdVertex().getDBClassName() + " WHERE ");
-    
+
     statement.append("invalid=false");
-    
+
     // Must be a child of parent type
     if (parentTypeCode != null && parentTypeCode.length() > 0)
     {
@@ -1156,11 +1114,11 @@ public class VertexServerGeoObject extends AbstractServerGeoObject implements Se
 
       statement.append(" AND " + parentCondition.toString());
     }
-    
+
     statement = new StringBuilder("SELECT * FROM (" + statement.toString() + ") WHERE ");
-    
+
     List<String> conditions = new ArrayList<String>();
-    
+
     conditions.add("existValue=true");
     if (startDate != null && endDate != null)
     {
@@ -1168,13 +1126,13 @@ public class VertexServerGeoObject extends AbstractServerGeoObject implements Se
       conditions.add(":startDate BETWEEN existStartDate AND existEndDate");
       conditions.add(":endDate BETWEEN existStartDate AND existEndDate");
     }
-    
+
     if (text != null && text.length() > 0)
     {
       // TODO : Coalesce?
       conditions.add("(label.toLowerCase() LIKE '%' + :text + '%' OR code.toLowerCase() LIKE '%' + :text + '%')");
     }
-    
+
     statement.append(StringUtils.join(conditions, " AND "));
 
     statement.append(" ORDER BY defaultLocale ASC LIMIT 10");
@@ -1222,134 +1180,113 @@ public class VertexServerGeoObject extends AbstractServerGeoObject implements Se
   }
 
   /*
-  public static JsonArray getGeoObjectSuggestions(String text, String typeCode, String parentCode, String parentTypeCode, String hierarchyCode, Date startDate, Date endDate)
-  {
-    final ServerGeoObjectType type = ServerGeoObjectType.get(typeCode);
-
-    ServerHierarchyType ht = hierarchyCode != null ? ServerHierarchyType.get(hierarchyCode) : null;
-
-    final ServerGeoObjectType parentType = ServerGeoObjectType.get(parentTypeCode);
-
-    List<String> conditions = new ArrayList<String>();
-
-    StringBuilder statement = new StringBuilder();
-    statement.append("select $filteredLabel,@class as clazz,* from " + type.getMdVertex().getDBClassName() + " ");
-
-    statement.append("let $dateLabel = first(displayLabel_cot");
-    if (startDate != null && endDate != null)
-    {
-      // Intentionally do not filter on end date as per #913
-      statement.append("[(:startDate BETWEEN startDate AND endDate)]");
-    }
-    statement.append("), ");
-    statement.append("$filteredLabel = " + AbstractVertexRestriction.localize("$dateLabel.value") + " ");
-
-    statement.append("where ");
-
-    // Must be a child of parent type
-    if (parentTypeCode != null && parentTypeCode.length() > 0)
-    {
-      StringBuilder parentCondition = new StringBuilder();
-
-      parentCondition.append("(@rid in ( TRAVERSE outE('" + ht.getObjectEdge().getDBClassName() + "')");
-
-      if (startDate != null && endDate != null)
-      {
-        parentCondition.append("[(:startDate BETWEEN startDate AND endDate) AND (:endDate BETWEEN startDate AND endDate)]");
-      }
-
-      parentCondition.append(".inV() FROM (select from " + parentType.getMdVertex().getDBClassName() + " where code='" + parentCode + "') )) ");
-
-      conditions.add(parentCondition.toString());
-    }
-
-    // Must have display label we expect
-    if (text != null && text.length() > 0)
-    {
-      StringBuilder textCondition = new StringBuilder();
-
-      textCondition.append("(displayLabel_cot CONTAINS (");
-
-      if (startDate != null && endDate != null)
-      {
-        // Intentionally do not filter on end date as per #913
-        textCondition.append("  (:startDate BETWEEN startDate AND endDate) AND ");
-      }
-
-      textCondition.append(AbstractVertexRestriction.localize("value") + ".toLowerCase() LIKE '%' + :text + '%'");
-      textCondition.append(")");
-
-      textCondition.append(" OR code.toLowerCase() LIKE '%' + :text + '%')");
-
-      conditions.add(textCondition.toString());
-    }
-
-    // Must not be invalid
-    conditions.add("invalid=false");
-
-    // Must exist at date
-    {
-      StringBuilder existCondition = new StringBuilder();
-
-      existCondition.append("(exists_cot CONTAINS (");
-
-      if (startDate != null && endDate != null)
-      {
-        existCondition.append("  (:startDate BETWEEN startDate AND endDate) AND (:endDate BETWEEN startDate AND endDate) AND ");
-      }
-
-      existCondition.append("value=true");
-      existCondition.append("))");
-
-      conditions.add(existCondition.toString());
-    }
-
-    statement.append(StringUtils.join(conditions, " AND "));
-
-    statement.append(" ORDER BY $filteredLabel ASC LIMIT 10");
-
-    GraphQuery<VertexObject> query = new GraphQuery<VertexObject>(statement.toString());
-
-    if (startDate != null && endDate != null)
-    {
-      query.setParameter("startDate", startDate);
-      query.setParameter("endDate", endDate);
-    }
-
-    if (text != null)
-    {
-      query.setParameter("text", text.toLowerCase().trim());
-    }
-    else
-    {
-      query.setParameter("text", null);
-    }
-
-    @SuppressWarnings("unchecked")
-    List<HashMap<String, Object>> results = (List<HashMap<String, Object>>) ( (Object) query.getResults() );
-
-    JsonArray array = new JsonArray();
-
-    for (HashMap<String, Object> row : results)
-    {
-      ServerGeoObjectType rowType = ServerGeoObjectType.get((MdVertexDAOIF) MdGraphClassDAO.getMdGraphClassByTableName((String) row.get("clazz")));
-
-      if (ServiceFactory.getGeoObjectPermissionService().canRead(rowType.getOrganization().getCode(), rowType))
-      {
-        JsonObject result = new JsonObject();
-        result.addProperty("id", (String) row.get("oid"));
-        result.addProperty("name", (String) row.get("$filteredLabel"));
-        result.addProperty(GeoObject.CODE, (String) row.get("code"));
-        result.addProperty(GeoObject.UID, (String) row.get("uid"));
-        result.addProperty("typeCode", rowType.getCode());
-
-        array.add(result);
-      }
-    }
-
-    return array;
-  }
-  */
+   * public static JsonArray getGeoObjectSuggestions(String text, String
+   * typeCode, String parentCode, String parentTypeCode, String hierarchyCode,
+   * Date startDate, Date endDate) { final ServerGeoObjectType type =
+   * ServerGeoObjectType.get(typeCode);
+   * 
+   * ServerHierarchyType ht = hierarchyCode != null ?
+   * ServerHierarchyType.get(hierarchyCode) : null;
+   * 
+   * final ServerGeoObjectType parentType =
+   * ServerGeoObjectType.get(parentTypeCode);
+   * 
+   * List<String> conditions = new ArrayList<String>();
+   * 
+   * StringBuilder statement = new StringBuilder();
+   * statement.append("select $filteredLabel,@class as clazz,* from " +
+   * type.getMdVertex().getDBClassName() + " ");
+   * 
+   * statement.append("let $dateLabel = first(displayLabel_cot"); if (startDate
+   * != null && endDate != null) { // Intentionally do not filter on end date as
+   * per #913 statement.append("[(:startDate BETWEEN startDate AND endDate)]");
+   * } statement.append("), "); statement.append("$filteredLabel = " +
+   * AbstractVertexRestriction.localize("$dateLabel.value") + " ");
+   * 
+   * statement.append("where ");
+   * 
+   * // Must be a child of parent type if (parentTypeCode != null &&
+   * parentTypeCode.length() > 0) { StringBuilder parentCondition = new
+   * StringBuilder();
+   * 
+   * parentCondition.append("(@rid in ( TRAVERSE outE('" +
+   * ht.getObjectEdge().getDBClassName() + "')");
+   * 
+   * if (startDate != null && endDate != null) { parentCondition.
+   * append("[(:startDate BETWEEN startDate AND endDate) AND (:endDate BETWEEN startDate AND endDate)]"
+   * ); }
+   * 
+   * parentCondition.append(".inV() FROM (select from " +
+   * parentType.getMdVertex().getDBClassName() + " where code='" + parentCode +
+   * "') )) ");
+   * 
+   * conditions.add(parentCondition.toString()); }
+   * 
+   * // Must have display label we expect if (text != null && text.length() > 0)
+   * { StringBuilder textCondition = new StringBuilder();
+   * 
+   * textCondition.append("(displayLabel_cot CONTAINS (");
+   * 
+   * if (startDate != null && endDate != null) { // Intentionally do not filter
+   * on end date as per #913
+   * textCondition.append("  (:startDate BETWEEN startDate AND endDate) AND ");
+   * }
+   * 
+   * textCondition.append(AbstractVertexRestriction.localize("value") +
+   * ".toLowerCase() LIKE '%' + :text + '%'"); textCondition.append(")");
+   * 
+   * textCondition.append(" OR code.toLowerCase() LIKE '%' + :text + '%')");
+   * 
+   * conditions.add(textCondition.toString()); }
+   * 
+   * // Must not be invalid conditions.add("invalid=false");
+   * 
+   * // Must exist at date { StringBuilder existCondition = new StringBuilder();
+   * 
+   * existCondition.append("(exists_cot CONTAINS (");
+   * 
+   * if (startDate != null && endDate != null) { existCondition.
+   * append("  (:startDate BETWEEN startDate AND endDate) AND (:endDate BETWEEN startDate AND endDate) AND "
+   * ); }
+   * 
+   * existCondition.append("value=true"); existCondition.append("))");
+   * 
+   * conditions.add(existCondition.toString()); }
+   * 
+   * statement.append(StringUtils.join(conditions, " AND "));
+   * 
+   * statement.append(" ORDER BY $filteredLabel ASC LIMIT 10");
+   * 
+   * GraphQuery<VertexObject> query = new
+   * GraphQuery<VertexObject>(statement.toString());
+   * 
+   * if (startDate != null && endDate != null) { query.setParameter("startDate",
+   * startDate); query.setParameter("endDate", endDate); }
+   * 
+   * if (text != null) { query.setParameter("text", text.toLowerCase().trim());
+   * } else { query.setParameter("text", null); }
+   * 
+   * @SuppressWarnings("unchecked") List<HashMap<String, Object>> results =
+   * (List<HashMap<String, Object>>) ( (Object) query.getResults() );
+   * 
+   * JsonArray array = new JsonArray();
+   * 
+   * for (HashMap<String, Object> row : results) { ServerGeoObjectType rowType =
+   * ServerGeoObjectType.get((MdVertexDAOIF)
+   * MdGraphClassDAO.getMdGraphClassByTableName((String) row.get("clazz")));
+   * 
+   * if (ServiceFactory.getGeoObjectPermissionService().canRead(rowType.
+   * getOrganization().getCode(), rowType)) { JsonObject result = new
+   * JsonObject(); result.addProperty("id", (String) row.get("oid"));
+   * result.addProperty("name", (String) row.get("$filteredLabel"));
+   * result.addProperty(GeoObject.CODE, (String) row.get("code"));
+   * result.addProperty(GeoObject.UID, (String) row.get("uid"));
+   * result.addProperty("typeCode", rowType.getCode());
+   * 
+   * array.add(result); } }
+   * 
+   * return array; }
+   */
 
   public static boolean hasDuplicateLabel(Date date, String typeCode, String code, String label)
   {
