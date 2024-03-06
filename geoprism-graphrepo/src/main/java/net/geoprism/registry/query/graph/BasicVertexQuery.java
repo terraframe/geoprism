@@ -22,11 +22,16 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.TreeMap;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 import com.runwaysdk.business.graph.GraphQuery;
 import com.runwaysdk.business.graph.VertexObject;
+import com.runwaysdk.dataaccess.MdVertexDAOIF;
+import com.runwaysdk.dataaccess.metadata.graph.MdVertexDAO;
 
+import net.geoprism.registry.graph.AttributeValue;
+import net.geoprism.registry.graph.GeoVertex;
 import net.geoprism.registry.model.EdgeConstant;
 import net.geoprism.registry.model.ServerGeoObjectIF;
 import net.geoprism.registry.model.ServerGeoObjectType;
@@ -119,9 +124,8 @@ public class BasicVertexQuery
     {
       statement.append(" LIMIT " + this.limit);
     }
-    
+
     statement.append(")");
-    
 
     return new GraphQuery<VertexObject>(statement.toString(), parameters);
   }
@@ -145,12 +149,11 @@ public class BasicVertexQuery
   {
     GraphQuery<VertexObject> query = this.getQuery();
 
-    VertexObject vertex = query.getSingleResult();
+    List<ServerGeoObjectIF> results = processResults(query.getResults());
 
-    if (vertex != null)
+    if (results.size() > 0)
     {
-      // TODO: HEADS UP
-      return new VertexServerGeoObject(type, vertex, new TreeMap<>(), this.date);
+      return results.get(0);
     }
 
     return null;
@@ -158,23 +161,61 @@ public class BasicVertexQuery
 
   public List<ServerGeoObjectIF> getResults()
   {
-    List<ServerGeoObjectIF> list = new LinkedList<ServerGeoObjectIF>();
     GraphQuery<VertexObject> query = this.getQuery();
 
     List<VertexObject> results = query.getResults();
-    
 
-    for (VertexObject result : results)
-    {
-      // TODO: HEADS UP
-      list.add(new VertexServerGeoObject(type, result, new HashMap<>(), this.date));
-    }
-
-    return list;
+    return processResults(results);
   }
 
   public Long getCount()
   {
     return this.getCountQuery().getSingleResult();
   }
+
+  protected List<ServerGeoObjectIF> processResults(List<VertexObject> results)
+  {
+    VertexObject current = null;
+    List<VertexObject> currentAttributes = new LinkedList<>();
+
+    MdVertexDAOIF mdGeoVertex = MdVertexDAO.getMdVertexDAO(GeoVertex.CLASS);
+
+    List<ServerGeoObjectIF> list = new LinkedList<ServerGeoObjectIF>();
+
+    for (VertexObject result : results)
+    {
+      MdVertexDAOIF mdClass = (MdVertexDAOIF) result.getMdClass();
+      List<? extends MdVertexDAOIF> superClasses = mdClass.getSuperClasses();
+
+      if (superClasses.contains(mdGeoVertex))
+      {
+        if (current != null)
+        {
+          Map<String, List<VertexObject>> nodeMap = currentAttributes.stream().collect(Collectors.groupingBy(v -> {
+            return (String) v.getObjectValue(AttributeValue.ATTRIBUTENAME);
+          }));
+
+          list.add(new VertexServerGeoObject(type, current, nodeMap, this.date));
+        }
+
+        current = result;
+        currentAttributes = new LinkedList<>();
+      }
+      else
+      {
+        currentAttributes.add(result);
+      }
+    }
+
+    if (current != null)
+    {
+      Map<String, List<VertexObject>> nodeMap = currentAttributes.stream().collect(Collectors.groupingBy(v -> {
+        return (String) v.getObjectValue(AttributeValue.ATTRIBUTENAME);
+      }));
+
+      list.add(new VertexServerGeoObject(type, current, nodeMap, this.date));
+    }
+    return list;
+  }
+
 }

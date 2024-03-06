@@ -195,7 +195,7 @@ public class AttributeClassificationType extends AttributeClassificationTypeBase
     Classification root = this.getRootClassification();
 
     org.commongeoregistry.adapter.metadata.AttributeClassificationType attributeType = (org.commongeoregistry.adapter.metadata.AttributeClassificationType) dto;
-    attributeType.setClassificationType(type.getType());
+    attributeType.setClassificationType(type.getCode());
 
     if (root != null)
     {

@@ -9,6 +9,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.commongeoregistry.adapter.constants.DefaultAttribute;
 
@@ -72,8 +73,8 @@ public class ValueNodeStrategy extends AbstractValueStrategy implements ValueStr
   {
     AttributeState state = getState(valueNodeMap);
     VertexObject node = this.createNode(value, startDate, endDate);
-    
-    this.add(state, node, false);    
+
+    this.add(state, node, false);
   }
 
   protected VertexObject createNode(Object value, Date startDate, Date endDate)
@@ -144,22 +145,35 @@ public class ValueNodeStrategy extends AbstractValueStrategy implements ValueStr
     return collection;
   }
 
+  /**
+   * This method assumes that the collection has already resolved all overlaps
+   * and that it completely replaces the existing entries
+   */
   @Override
   public void setValuesOverTime(VertexObject vertex, Map<String, AttributeState> valueNodeMap, ValueOverTimeCollection collection)
   {
-    // First delete all values which do not exist in the collection
+    // First delete all values which do not exist in the vot collection
     AttributeState state = getState(valueNodeMap);
 
     state.stream().filter(node -> {
-      final Date startDate = getStartDate(node);
-      final Date endDate = getEndDate(node);
-
       return !collection.stream().anyMatch(vot -> {
-        return startDate.equals(vot.getStartDate()) && endDate.equals(vot.getEndDate());
+        return node.getOid().equals(vot.getOid());
       });
-    }).forEach(node -> state.delete(node));
+    }).collect(Collectors.toList()).forEach(node -> state.delete(node));
 
-    collection.forEach(vot -> this.setValue(vertex, valueNodeMap, vot.getValue(), vot.getStartDate(), vot.getEndDate()));
+    collection.forEach(vot -> {
+      state.stream().filter(node -> vot.getOid().equals(node.getOid())).findAny().ifPresentOrElse(node -> {
+        // Update the corresponding existing node if it exists for this vot
+        node.setValue(AttributeValue.STARTDATE, vot.getStartDate());
+        node.setValue(AttributeValue.ENDDATE, vot.getEndDate());
+
+        this.setNodeValue(node, vot.getValue());
+
+      }, () -> {
+        // No existing node corresponds to the vot, create a new one
+        state.add(this.createNode(vot.getValue(), vot.getStartDate(), vot.getEndDate()));
+      });
+    });
   }
 
   private boolean add(AttributeState state, VertexObject vot, boolean updateOnCollision)
@@ -190,7 +204,7 @@ public class ValueNodeStrategy extends AbstractValueStrategy implements ValueStr
     Date endDate = inVot.getObjectValue(AttributeValue.ENDDATE);
 
     boolean skip = true;
-    
+
     if (startDate != null && endDate != null)
     {
       skip = false;
@@ -304,28 +318,28 @@ public class ValueNodeStrategy extends AbstractValueStrategy implements ValueStr
     }
 
     // TODO: HEADS UP
-//    if (val1 instanceof Iterator<?> && val2 instanceof Iterator<?>)
-//    {
-//      ArrayList<Object> val1s = toList((Iterator<?>) val1);
-//      ArrayList<Object> val2s = toList((Iterator<?>) val2);
-//
-//      if (val1s.size() != val2s.size())
-//      {
-//        return false;
-//      }
-//
-//      for (int i = 0; i < val1s.size(); ++i)
-//      {
-//        if (!areValuesEqual(val1s.get(i), val2s.get(i)))
-//        {
-//          return false;
-//        }
-//      }
-//
-//      return true;
-//    }
-    
-      return val1.equals(val2);
+    // if (val1 instanceof Iterator<?> && val2 instanceof Iterator<?>)
+    // {
+    // ArrayList<Object> val1s = toList((Iterator<?>) val1);
+    // ArrayList<Object> val2s = toList((Iterator<?>) val2);
+    //
+    // if (val1s.size() != val2s.size())
+    // {
+    // return false;
+    // }
+    //
+    // for (int i = 0; i < val1s.size(); ++i)
+    // {
+    // if (!areValuesEqual(val1s.get(i), val2s.get(i)))
+    // {
+    // return false;
+    // }
+    // }
+    //
+    // return true;
+    // }
+
+    return val1.equals(val2);
   }
 
   private boolean isAfterOrEqual(LocalDate date1, LocalDate date2)
