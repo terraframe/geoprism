@@ -70,7 +70,6 @@ import com.runwaysdk.dataaccess.graph.attributes.ValueOverTime;
 import com.runwaysdk.dataaccess.graph.attributes.ValueOverTimeCollection;
 import com.runwaysdk.dataaccess.transaction.Transaction;
 import com.runwaysdk.system.AbstractClassification;
-import com.runwaysdk.system.gis.geo.Universal;
 
 import net.geoprism.dashboard.GeometryUpdateException;
 import net.geoprism.ontology.Classifier;
@@ -983,60 +982,51 @@ public class GeoObjectBusinessService extends RegistryLocalizedValueConverter im
 
     List<ServerHierarchyType> hierarchyTypes = ServiceFactory.getMetadataCache().getAllHierarchyTypes();
     JsonArray hierarchies = new JsonArray();
-    Universal root = Universal.getRoot();
 
     for (ServerHierarchyType sType : hierarchyTypes)
     {
       if (ServiceFactory.getHierarchyPermissionService().canWrite(sType.getOrganization().getCode()))
       {
+        // Note: Ordered ancestors always includes self
+        List<ServerGeoObjectType> pTypes = sType.getAncestors(geoObjectType);
 
-        // TODO: HEADS UP
+        ParentTreeNode ptnAncestors = getParentGeoObjects(sgo, sType, null, true, true, date).toNode(true);
 
-        // // Note: Ordered ancestors always includes self
-        // Collection<?> uniParents = GeoEntityUtil.getOrderedAncestors(root,
-        // geoObjectType.getUniversal(), sType.getUniversalType());
-        //
-        // ParentTreeNode ptnAncestors = getParentGeoObjects(sgo, sType, null,
-        // true, true, date).toNode(true);
-        //
-        // if (uniParents.size() > 1)
-        // {
-        // JsonObject object = new JsonObject();
-        // object.addProperty("code", sType.getCode());
-        // object.addProperty("label", sType.getDisplayLabel().getValue());
-        //
-        // JsonArray pArray = new JsonArray();
-        //
-        // for (Object parent : uniParents)
-        // {
-        // ServerGeoObjectType pType = ServerGeoObjectType.get((Universal)
-        // parent);
-        //
-        // if (!pType.getCode().equals(geoObjectType.getCode()))
-        // {
-        // JsonObject pObject = new JsonObject();
-        // pObject.addProperty("code", pType.getCode());
-        // pObject.addProperty("label", pType.getLabel().getValue());
-        //
-        // List<ParentTreeNode> ptns =
-        // ptnAncestors.findParentOfType(pType.getCode());
-        // for (ParentTreeNode ptn : ptns)
-        // {
-        // if (ptn.getHierachyType().getCode().equals(sType.getCode()))
-        // {
-        // pObject.add("ptn", ptn.toJSON());
-        // break; // TODO Sibling ancestors
-        // }
-        // }
-        //
-        // pArray.add(pObject);
-        // }
-        // }
-        //
-        // object.add("parents", pArray);
-        //
-        // hierarchies.add(object);
-        // }
+        if (pTypes.size() > 1)
+        {
+          JsonObject object = new JsonObject();
+          object.addProperty("code", sType.getCode());
+          object.addProperty("label", sType.getLabel().getValue());
+
+          JsonArray pArray = new JsonArray();
+
+          for (ServerGeoObjectType pType : pTypes)
+          {
+
+            if (!pType.getCode().equals(geoObjectType.getCode()))
+            {
+              JsonObject pObject = new JsonObject();
+              pObject.addProperty("code", pType.getCode());
+              pObject.addProperty("label", pType.getLabel().getValue());
+
+              List<ParentTreeNode> ptns = ptnAncestors.findParentOfType(pType.getCode());
+              for (ParentTreeNode ptn : ptns)
+              {
+                if (ptn.getHierachyType().getCode().equals(sType.getCode()))
+                {
+                  pObject.add("ptn", ptn.toJSON());
+                  break; // TODO Sibling ancestors
+                }
+              }
+
+              pArray.add(pObject);
+            }
+          }
+
+          object.add("parents", pArray);
+
+          hierarchies.add(object);
+        }
       }
     }
 
@@ -1124,18 +1114,6 @@ public class GeoObjectBusinessService extends RegistryLocalizedValueConverter im
 
           for (ValueOverTime vot : votc)
           {
-            // if (attributeName.equals(DefaultAttribute.STATUS.getName()))
-            // {
-            // Term statusTerm =
-            // ServiceFactory.getConversionService().geoObjectStatusToTerm(this.getStatus(vot.getStartDate()));
-            //
-            // ValueOverTimeDTO votDTO = new ValueOverTimeDTO(vot.getOid(),
-            // vot.getStartDate(), vot.getEndDate(), votcDTO);
-            // votDTO.setValue(statusTerm.getCode());
-            // votcDTO.add(votDTO);
-            // }
-            // else
-            // {
             Object value = vot.getValue();
 
             if (value != null)
@@ -1282,9 +1260,6 @@ public class GeoObjectBusinessService extends RegistryLocalizedValueConverter im
     if (generateUid && sgo.isNew())// && !vertex.isAppliedToDB())
     {
       geoObj.setUid(UUID.randomUUID().toString());
-
-      // geoObj.setStatus(ServiceFactory.getAdapter().getMetadataCache().getTerm(DefaultTerms.GeoObjectStatusTerm.NEW.code).get(),
-      // this.date, this.date);
     }
     else
     {
@@ -1571,7 +1546,10 @@ public class GeoObjectBusinessService extends RegistryLocalizedValueConverter im
         ServerHierarchyType ht = ServerHierarchyType.get(mdEdge);
         ServerGeoObjectType parentType = ServerGeoObjectType.get(mdVertex);
 
-        VertexServerGeoObject parent = new VertexServerGeoObject(parentType, parentVertex, new TreeMap<>(), date);
+        // TODO: HEADS UP
+//        VertexServerGeoObject parent = new VertexServerGeoObject(parentType, parentVertex, new TreeMap<>(), date);
+        ServerGeoObjectIF parent = this.getGeoObject(parentVertex.getObjectValue(DefaultAttribute.UID.getName()), parentType.getCode());
+        parent.setDate(date);        
 
         ServerParentTreeNode tnParent;
 
@@ -1678,7 +1656,8 @@ public class GeoObjectBusinessService extends RegistryLocalizedValueConverter im
         tnRoot.setEndDate(endDate);
         tnRoot.setOid(oid);
 
-        // TODO: HEADS UP - Refactor query to get edge, parent, and attribute nodes in a single query????
+        // TODO: HEADS UP - Refactor query to get edge, parent, and attribute
+        // nodes in a single query????
         ServerGeoObjectIF parent = this.getGeoObjectByCode((String) parentVertex.getObjectValue(DefaultAttribute.CODE.getName()), parentType);
 
         ServerParentTreeNode tnParent;

@@ -20,6 +20,7 @@ package org.commongeoregistry.adapter.metadata;
 
 import java.io.Serializable;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -456,7 +457,7 @@ public class GeoObjectType implements Serializable
    */
   public Map<String, AttributeType> getAttributeMap()
   {
-    return this.attributeMap;
+    return Collections.unmodifiableMap(this.attributeMap);
   }
 
   /**
