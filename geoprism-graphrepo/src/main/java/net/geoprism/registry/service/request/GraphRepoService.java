@@ -78,7 +78,7 @@ public class GraphRepoService implements GraphRepoServiceIF
   {
     ServiceFactory.getMetadataCache().rebuild();
 
-    ServerGeoObjectType.getAll().stream().forEach(type -> {
+    ServerGeoObjectType.getAllFromDatabase().stream().forEach(type -> {
       ServiceFactory.getMetadataCache().addGeoObjectType(type);
     });
 

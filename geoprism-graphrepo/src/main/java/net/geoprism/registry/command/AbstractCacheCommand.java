@@ -4,7 +4,8 @@ import com.runwaysdk.dataaccess.Command;
 
 public abstract class AbstractCacheCommand implements Command
 {
-  private CacheEventType eventType;
+
+  private CacheEventType     eventType;
 
   public AbstractCacheCommand(CacheEventType eventType)
   {
