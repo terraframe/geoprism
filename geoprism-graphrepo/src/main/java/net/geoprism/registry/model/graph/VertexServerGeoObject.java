@@ -74,8 +74,8 @@ import com.runwaysdk.dataaccess.graph.VertexObjectDAO;
 import com.runwaysdk.dataaccess.graph.attributes.ValueOverTime;
 import com.runwaysdk.dataaccess.graph.attributes.ValueOverTimeCollection;
 import com.runwaysdk.dataaccess.metadata.graph.MdGraphClassDAO;
+import com.runwaysdk.dataaccess.metadata.graph.MdVertexDAO;
 import com.runwaysdk.dataaccess.transaction.Transaction;
-import com.runwaysdk.gis.dataaccess.metadata.graph.MdGeoVertexDAO;
 import com.runwaysdk.localization.LocalizationFacade;
 import com.runwaysdk.query.QueryFactory;
 import com.runwaysdk.session.Session;
@@ -957,9 +957,7 @@ public class VertexServerGeoObject extends AbstractServerGeoObject implements Se
 
     MdVertex mdVertex = mvq.getIterator().getAll().get(0);
 
-    ServerGeoObjectType foundType = ServerGeoObjectType.get(MdGeoVertexDAO.get(mdVertex.getOid()));
-
-    return foundType;
+    return ServerGeoObjectType.get(MdVertexDAO.get(mdVertex.getOid()));
   }
 
   public static boolean isCodeAttribute(MdAttributeDAOIF attr)

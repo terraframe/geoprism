@@ -299,6 +299,11 @@ public class ServerHierarchyType extends CachableObjectWrapper<HierarchicalRelat
 
   public static ServerHierarchyType get(String hierarchyTypeCode)
   {
+    return get(hierarchyTypeCode, true);
+  }
+
+  public static ServerHierarchyType get(String hierarchyTypeCode, boolean throwOnNull)
+  {
     ServerElement element = TransactionCacheFacade.get(hierarchyTypeCode);
 
     if (element != null && element instanceof ServerHierarchyType)
@@ -308,7 +313,7 @@ public class ServerHierarchyType extends CachableObjectWrapper<HierarchicalRelat
 
     Optional<ServerHierarchyType> hierarchyType = ServiceFactory.getMetadataCache().getHierachyType(hierarchyTypeCode);
 
-    if (!hierarchyType.isPresent())
+    if (!hierarchyType.isPresent() && throwOnNull)
     {
       MdClassDAOIF mdClassDAO = MdClassDAO.getMdClassDAO(HierarchicalRelationshipType.CLASS);
       Locale locale = Session.getCurrentLocale();
@@ -321,7 +326,7 @@ public class ServerHierarchyType extends CachableObjectWrapper<HierarchicalRelat
       throw ex;
     }
 
-    return hierarchyType.get();
+    return hierarchyType.orElse(null);
   }
 
   public static ServerHierarchyType get(HierarchyType hierarchyType)

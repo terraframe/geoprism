@@ -538,7 +538,7 @@ public class HierarchyTypeBusinessService implements HierarchyTypeBusinessServic
   @Override
   public ServerHierarchyType get(String code)
   {
-    return ServiceFactory.getMetadataCache().getHierachyType(code).orElse(null);
+    return ServerHierarchyType.get(code);
   }
 
   public ServerHierarchyType get(HierarchicalRelationshipType hierarchicalRelationship)

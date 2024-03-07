@@ -60,15 +60,15 @@ public class AttributeGeometryType extends AttributeGeometryTypeBase
   {
     if (this.getGeometryType().equals(GeometryType.POINT.name()) || this.getGeometryType().equals(GeometryType.MULTIPOINT.name()))
     {
-      return MdVertexDAO.getMdVertexDAO(AttributePointValue.CLASS);
+      return MdVertexDAO.getMdVertexDAO(AttributeMultiPointValue.CLASS);
     }
     else if (this.getGeometryType().equals(GeometryType.LINE.name()) || this.getGeometryType().equals(GeometryType.MULTILINE.name()))
     {
-      return MdVertexDAO.getMdVertexDAO(AttributeLineValue.CLASS);
+      return MdVertexDAO.getMdVertexDAO(AttributeMultiLineValue.CLASS);
     }
     else if (this.getGeometryType().equals(GeometryType.POLYGON.name()) || this.getGeometryType().equals(GeometryType.MULTIPOLYGON.name()))
     {
-      return MdVertexDAO.getMdVertexDAO(AttributePolygonValue.CLASS);
+      return MdVertexDAO.getMdVertexDAO(AttributeMultiPolygonValue.CLASS);
     }
     else if (this.getGeometryType().equals(GeometryType.SHAPE.name()))
     {

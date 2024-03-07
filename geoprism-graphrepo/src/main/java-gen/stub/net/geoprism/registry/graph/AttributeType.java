@@ -61,7 +61,7 @@ public abstract class AttributeType extends AttributeTypeBase
 
     if (this.getUnique())
     {
-      mdAttribute.addItem(MdAttributeConcreteInfo.INDEX_TYPE, IndexTypes.NON_UNIQUE_INDEX.getOid());
+      mdAttribute.addItem(MdAttributeConcreteInfo.INDEX_TYPE, IndexTypes.UNIQUE_INDEX.getOid());
     }
   }
 

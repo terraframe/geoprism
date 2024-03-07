@@ -161,17 +161,17 @@
         <attributes>
         </attributes>
       </mdVertex>    
-      <mdVertex name="net.geoprism.registry.graph.AttributePointValue" extends="net.geoprism.registry.graph.AttributeGeometryValue" label="Attribute Point Value">
+      <mdVertex name="net.geoprism.registry.graph.AttributeMultiPointValue" extends="net.geoprism.registry.graph.AttributeGeometryValue" label="Attribute Point Value">
         <attributes>
           <multipoint name="value" label="Value" required="true" dimension="2" srid="4326"  />          
         </attributes>
       </mdVertex>    
-      <mdVertex name="net.geoprism.registry.graph.AttributePolygonValue" extends="net.geoprism.registry.graph.AttributeGeometryValue" label="Attribute Polygon Value">
+      <mdVertex name="net.geoprism.registry.graph.AttributeMultiPolygonValue" extends="net.geoprism.registry.graph.AttributeGeometryValue" label="Attribute Polygon Value">
         <attributes>
           <multipolygon name="value" label="Value" required="true" dimension="2" srid="4326" />          
         </attributes>
       </mdVertex>    
-      <mdVertex name="net.geoprism.registry.graph.AttributeLineValue" extends="net.geoprism.registry.graph.AttributeGeometryValue" label="Attribute Line Value">
+      <mdVertex name="net.geoprism.registry.graph.AttributeMultiLineValue" extends="net.geoprism.registry.graph.AttributeGeometryValue" label="Attribute Line Value">
         <attributes>
           <multilinestring name="value" label="Value" required="true" dimension="2" srid="4326"  />          
         </attributes>
@@ -271,13 +271,13 @@
           <mdBusinessPermission type="net.geoprism.registry.graph.AttributeGeometryValue">
             <operation name="ALL" />
           </mdBusinessPermission>
-          <mdBusinessPermission type="net.geoprism.registry.graph.AttributePointValue">
+          <mdBusinessPermission type="net.geoprism.registry.graph.AttributeMultiPointValue">
             <operation name="ALL" />
           </mdBusinessPermission>
-          <mdBusinessPermission type="net.geoprism.registry.graph.AttributePolygonValue">
+          <mdBusinessPermission type="net.geoprism.registry.graph.AttributeMultiPolygonValue">
             <operation name="ALL" />
           </mdBusinessPermission>
-          <mdBusinessPermission type="net.geoprism.registry.graph.AttributeLineValue">
+          <mdBusinessPermission type="net.geoprism.registry.graph.AttributeMultiLineValue">
             <operation name="ALL" />
           </mdBusinessPermission>
           <mdBusinessPermission type="net.geoprism.registry.graph.AttributeShapeValue">
@@ -306,9 +306,9 @@
       <object type="com.runwaysdk.system.metadata.MdEdge" key="net.geoprism.registry.graph.HasValue" />
     
       <object type="com.runwaysdk.system.metadata.MdVertex" key="net.geoprism.registry.graph.AttributeShapeValue" />
-      <object type="com.runwaysdk.system.metadata.MdVertex" key="net.geoprism.registry.graph.AttributeLineValue" />
-      <object type="com.runwaysdk.system.metadata.MdVertex" key="net.geoprism.registry.graph.AttributePolygonValue" />
-      <object type="com.runwaysdk.system.metadata.MdVertex" key="net.geoprism.registry.graph.AttributePointValue" />
+      <object type="com.runwaysdk.system.metadata.MdVertex" key="net.geoprism.registry.graph.AttributeMultiLineValue" />
+      <object type="com.runwaysdk.system.metadata.MdVertex" key="net.geoprism.registry.graph.AttributeMultiPolygonValue" />
+      <object type="com.runwaysdk.system.metadata.MdVertex" key="net.geoprism.registry.graph.AttributeMultiPointValue" />
       <object type="com.runwaysdk.system.metadata.MdVertex" key="net.geoprism.registry.graph.AttributeGeometryValue" />
       <object type="com.runwaysdk.system.metadata.MdVertex" key="net.geoprism.registry.graph.AttributeTermValue" />
       <object type="com.runwaysdk.system.metadata.MdVertex" key="net.geoprism.registry.graph.AttributeLocalValue" />
@@ -334,8 +334,6 @@
       <object type="com.runwaysdk.system.metadata.MdVertex" key="net.geoprism.registry.graph.HierarchicalRelationshipType" />
       <object type="com.runwaysdk.system.metadata.MdVertex" key="net.geoprism.registry.graph.GeoObjectType" />      
       <object type="com.runwaysdk.system.metadata.MdVertex" key="net.geoprism.registry.graph.BaseGeoObjectType" />      
-      
-      
     </delete>
   </undoIt>
 </version>
