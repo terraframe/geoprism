@@ -38,6 +38,7 @@ import com.runwaysdk.dataaccess.metadata.graph.MdVertexDAO;
 import com.runwaysdk.dataaccess.transaction.TransactionState;
 import com.runwaysdk.system.gis.geo.Universal;
 
+import net.geoprism.registry.cache.TransactionCacheFacade;
 import net.geoprism.registry.conversion.LocalizedValueConverter;
 import net.geoprism.registry.graph.AttributeType;
 import net.geoprism.registry.graph.BaseGeoObjectType;
@@ -247,13 +248,6 @@ public class ServerGeoObjectType extends CachableObjectWrapper<BaseGeoObjectType
     return GeoObjectTypeMetadata.sGetClassDisplayLabel() + " : " + this.getCode();
   }
 
-  public static List<ServerGeoObjectType> getAll()
-  {
-    List<GeoObjectType> results = GeoObjectType.getAll();
-
-    return results.stream().map(t -> new ServerGeoObjectType(t)).collect(Collectors.toList());
-  }
-
   public static ServerGeoObjectType get(MdVertexDAOIF mdVertex)
   {
     MdVertexDAOIF metadata = MdVertexDAO.getMdVertexDAO(GeoObjectType.CLASS);
@@ -275,12 +269,23 @@ public class ServerGeoObjectType extends CachableObjectWrapper<BaseGeoObjectType
     return null;
   }
 
+  public static List<ServerGeoObjectType> getAllFromDatabase()
+  {
+    List<GeoObjectType> results = GeoObjectType.getAll();
+
+    return results.stream().map(t -> new ServerGeoObjectType(t)).collect(Collectors.toList());
+  }
+
+  public static List<ServerGeoObjectType> getAll()
+  {
+    return ServiceFactory.getMetadataCache().getAllGeoObjectTypes();
+  }
+
   public static ServerGeoObjectType get(String code)
   {
     return ServerGeoObjectType.get(code, false);
   }
 
-  @SuppressWarnings("unchecked")
   public static ServerGeoObjectType get(String code, boolean nullIfNotFound)
   {
     if (code == null || code.equals(Universal.ROOT))
@@ -288,22 +293,11 @@ public class ServerGeoObjectType extends CachableObjectWrapper<BaseGeoObjectType
       return RootGeoObjectType.INSTANCE;
     }
 
-    TransactionState state = TransactionState.getCurrentTransactionState();
+    ServerElement element = TransactionCacheFacade.get(code);
 
-    if (state != null)
+    if (element != null && element instanceof ServerGeoObjectType)
     {
-      Object transactionCache = state.getTransactionObject("transaction-state");
-
-      if (transactionCache != null)
-      {
-        Map<String, ServerElement> cache = (Map<String, ServerElement>) transactionCache;
-        ServerElement element = cache.get(code);
-
-        if (element != null && element instanceof ServerGeoObjectType)
-        {
-          return (ServerGeoObjectType) element;
-        }
-      }
+      return (ServerGeoObjectType) element;
     }
 
     Optional<ServerGeoObjectType> geoObjectType = ServiceFactory.getMetadataCache().getGeoObjectType(code);
@@ -331,50 +325,25 @@ public class ServerGeoObjectType extends CachableObjectWrapper<BaseGeoObjectType
     return getFromCache(code);
   }
 
-  @SuppressWarnings("unchecked")
   public static ServerGeoObjectType getByOid(String oid)
   {
-    TransactionState state = TransactionState.getCurrentTransactionState();
+    ServerElement element = TransactionCacheFacade.get(oid);
 
-    if (state != null)
+    if (element != null && element instanceof ServerGeoObjectType)
     {
-      Object transactionCache = state.getTransactionObject("transaction-state");
-
-      if (transactionCache != null)
-      {
-        Map<String, ServerElement> cache = (Map<String, ServerElement>) transactionCache;
-
-        Optional<ServerGeoObjectType> optional = cache.values().stream().filter(e -> e instanceof ServerGeoObjectType).map(e -> (ServerGeoObjectType) e).filter(e -> e.getOid().equals(oid)).findFirst();
-
-        if (optional.isPresent())
-        {
-          return optional.get();
-        }
-      }
+      return (ServerGeoObjectType) element;
     }
 
     return ServiceFactory.getMetadataCache().getGeoObjectTypeByOid(oid).orElseThrow(() -> new ProgrammingErrorException("Unknown Geo Object Type with oid [" + oid + "]"));
   }
 
-  @SuppressWarnings("unchecked")
   private static ServerGeoObjectType getFromCache(String code)
   {
-    TransactionState state = TransactionState.getCurrentTransactionState();
+    ServerElement element = TransactionCacheFacade.get(code);
 
-    if (state != null)
+    if (element != null && element instanceof ServerGeoObjectType)
     {
-      Object transactionCache = state.getTransactionObject("transaction-state");
-
-      if (transactionCache != null)
-      {
-        Map<String, ServerElement> cache = (Map<String, ServerElement>) transactionCache;
-        ServerElement element = cache.get(code);
-
-        if (element != null && element instanceof ServerGeoObjectType)
-        {
-          return (ServerGeoObjectType) element;
-        }
-      }
+      return (ServerGeoObjectType) element;
     }
 
     return ServiceFactory.getMetadataCache().getGeoObjectType(code).get();

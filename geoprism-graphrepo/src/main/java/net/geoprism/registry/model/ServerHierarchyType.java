@@ -21,7 +21,6 @@ package net.geoprism.registry.model;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -37,11 +36,11 @@ import com.runwaysdk.dataaccess.metadata.MdClassDAO;
 import com.runwaysdk.dataaccess.metadata.graph.MdEdgeDAO;
 import com.runwaysdk.dataaccess.metadata.graph.MdVertexDAO;
 import com.runwaysdk.dataaccess.transaction.Transaction;
-import com.runwaysdk.dataaccess.transaction.TransactionState;
 import com.runwaysdk.session.Session;
 
 import net.geoprism.registry.DataNotFoundException;
 import net.geoprism.registry.Organization;
+import net.geoprism.registry.cache.TransactionCacheFacade;
 import net.geoprism.registry.command.CacheEventType;
 import net.geoprism.registry.command.HierarchicalRelationshipTypeCacheEventCommand;
 import net.geoprism.registry.conversion.RegistryLocalizedValueConverter;
@@ -61,6 +60,12 @@ public class ServerHierarchyType extends CachableObjectWrapper<HierarchicalRelat
   public ServerHierarchyType(HierarchicalRelationshipType hierarchicalRelationship)
   {
     super(hierarchicalRelationship);
+  }
+
+  @Override
+  public String getOid()
+  {
+    return this.getObject().getOid();
   }
 
   @Override
@@ -233,7 +238,7 @@ public class ServerHierarchyType extends CachableObjectWrapper<HierarchicalRelat
   public List<ServerGeoObjectType> getRootNodes()
   {
     BaseGeoObjectType root = RootGeoObjectType.INSTANCE.getObject();
-    
+
     // We only need the code because we want to use the cached
     // ServerGeoObjectType instead of creating a new one
     StringBuilder statement = new StringBuilder();
@@ -292,25 +297,13 @@ public class ServerHierarchyType extends CachableObjectWrapper<HierarchicalRelat
     }
   }
 
-  @SuppressWarnings("unchecked")
   public static ServerHierarchyType get(String hierarchyTypeCode)
   {
-    TransactionState state = TransactionState.getCurrentTransactionState();
+    ServerElement element = TransactionCacheFacade.get(hierarchyTypeCode);
 
-    if (state != null)
+    if (element != null && element instanceof ServerHierarchyType)
     {
-      Object transactionCache = state.getTransactionObject("transaction-state");
-
-      if (transactionCache != null)
-      {
-        Map<String, ServerElement> cache = (Map<String, ServerElement>) transactionCache;
-        ServerElement element = cache.get(hierarchyTypeCode);
-
-        if (element != null && element instanceof ServerHierarchyType)
-        {
-          return (ServerHierarchyType) element;
-        }
-      }
+      return (ServerHierarchyType) element;
     }
 
     Optional<ServerHierarchyType> hierarchyType = ServiceFactory.getMetadataCache().getHierachyType(hierarchyTypeCode);

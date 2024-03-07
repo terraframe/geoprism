@@ -3,18 +3,19 @@
  *
  * This file is part of Common Geo Registry Adapter(tm).
  *
- * Common Geo Registry Adapter(tm) is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
+ * Common Geo Registry Adapter(tm) is free software: you can redistribute it
+ * and/or modify it under the terms of the GNU Lesser General Public License as
+ * published by the Free Software Foundation, either version 3 of the License,
+ * or (at your option) any later version.
  *
- * Common Geo Registry Adapter(tm) is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
+ * Common Geo Registry Adapter(tm) is distributed in the hope that it will be
+ * useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser
+ * General Public License for more details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with Common Geo Registry Adapter(tm).  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with Common Geo Registry Adapter(tm). If not, see
+ * <http://www.gnu.org/licenses/>.
  */
 package org.commongeoregistry.adapter;
 
@@ -31,6 +32,7 @@ import org.commongeoregistry.adapter.id.AdapterIdServiceIF;
 import org.commongeoregistry.adapter.id.EmptyIdCacheException;
 import org.commongeoregistry.adapter.metadata.GeoObjectType;
 import org.commongeoregistry.adapter.metadata.MetadataCache;
+import org.commongeoregistry.adapter.metadata.MetadataCacheIF;
 
 public abstract class RegistryAdapter implements Serializable
 {
@@ -39,18 +41,23 @@ public abstract class RegistryAdapter implements Serializable
    */
   private static final long  serialVersionUID = -5085432383838987882L;
 
-  private MetadataCache      metadataCache;
+  private MetadataCacheIF    metadataCache;
 
   private AdapterIdServiceIF idService;
 
   public RegistryAdapter(AdapterIdServiceIF idService)
   {
-    this.metadataCache = new MetadataCache(this);
+    this(idService, new MetadataCache());
+  }
+
+  public RegistryAdapter(AdapterIdServiceIF idService, MetadataCacheIF metadataCache)
+  {
+    this.metadataCache = metadataCache;
     this.metadataCache.rebuild();
     this.idService = idService;
   }
 
-  public MetadataCache getMetadataCache()
+  public MetadataCacheIF getMetadataCache()
   {
     return this.metadataCache;
   }
@@ -73,22 +80,25 @@ public abstract class RegistryAdapter implements Serializable
   }
 
   /**
-   * Creates a new local {@link GeoObject} instance of the given type. If genId is true and the
-   * local id cache is empty, an EmptyIdCacheException is thrown.
+   * Creates a new local {@link GeoObject} instance of the given type. If genId
+   * is true and the local id cache is empty, an EmptyIdCacheException is
+   * thrown.
    * 
    * @param geoObjectTypeCode
-   * @param genId Whether or not this GeoObject should be given a new id from the id cache.
+   * @param genId
+   *          Whether or not this GeoObject should be given a new id from the id
+   *          cache.
    * @return a new local {@link GeoObject} instance of the given type.
    */
   public GeoObject newGeoObjectInstance(String geoObjectTypeCode, boolean genId) throws EmptyIdCacheException
   {
     Optional<GeoObjectType> opGOT = this.getMetadataCache().getGeoObjectType(geoObjectTypeCode);
-    
+
     if (!opGOT.isPresent())
     {
       throw new GeoObjectTypeNotFoundException(geoObjectTypeCode);
     }
-    
+
     GeoObjectType geoObjectType = opGOT.get();
 
     Map<String, Attribute> attributeMap = GeoObject.buildAttributeMap(geoObjectType);
@@ -99,7 +109,7 @@ public abstract class RegistryAdapter implements Serializable
     // geoObject.getAttribute(DefaultAttribute.TYPE.getName()).setValue(geoObjectTypeCode);
 
     geoObject.getAttribute(DefaultAttribute.EXISTS.getName()).setValue(true);
-    
+
     geoObject.getAttribute(DefaultAttribute.INVALID.getName()).setValue(false);
 
     if (genId)
@@ -110,10 +120,10 @@ public abstract class RegistryAdapter implements Serializable
 
     return geoObject;
   }
-  
+
   /**
-   * Creates a new local {@link GeoObjectOverTime} instance of the given type. If the
-   * local id cache is empty, an EmptyIdCacheException is thrown.
+   * Creates a new local {@link GeoObjectOverTime} instance of the given type.
+   * If the local id cache is empty, an EmptyIdCacheException is thrown.
    * 
    * @param geoObjectTypeCode
    * @return a new local {@link GeoObjectOverTime} instance of the given type.
@@ -122,19 +132,22 @@ public abstract class RegistryAdapter implements Serializable
   {
     return newGeoObjectOverTimeInstance(geoObjectTypeCode, true);
   }
-  
+
   /**
-   * Creates a new local {@link GeoObjectOverTime} instance of the given type. If genId is true and the
-   * local id cache is empty, an EmptyIdCacheException is thrown.
+   * Creates a new local {@link GeoObjectOverTime} instance of the given type.
+   * If genId is true and the local id cache is empty, an EmptyIdCacheException
+   * is thrown.
    * 
    * @param geoObjectTypeCode
-   * @param genId Whether or not this {@link GeoObjectOverTime} should be given a new id from the id cache.
+   * @param genId
+   *          Whether or not this {@link GeoObjectOverTime} should be given a
+   *          new id from the id cache.
    * @return a new local {@link GeoObjectOverTime} instance of the given type.
    */
   public GeoObjectOverTime newGeoObjectOverTimeInstance(String geoObjectTypeCode, boolean genId) throws EmptyIdCacheException
   {
     final Date createDate = new Date();
-    
+
     GeoObjectType geoObjectType = this.getMetadataCache().getGeoObjectType(geoObjectTypeCode).get();
 
     Map<String, ValueOverTimeCollectionDTO> votAttributeMap = GeoObjectOverTime.buildVotAttributeMap(geoObjectType);
@@ -144,7 +157,7 @@ public abstract class RegistryAdapter implements Serializable
 
     // Set some default values
     // geoObject.getAttribute(DefaultAttribute.TYPE.getName()).setValue(geoObjectTypeCode);
-    
+
     geoObject.setInvalid(false);
 
     if (genId)

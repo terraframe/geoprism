@@ -22,6 +22,8 @@ import org.commongeoregistry.adapter.dataaccess.LocalizedValue;
 
 public interface ServerElement
 {
+  public String getOid();
+
   public String getCode();
 
   public LocalizedValue getLabel();

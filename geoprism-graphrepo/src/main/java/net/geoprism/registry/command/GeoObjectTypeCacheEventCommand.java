@@ -2,6 +2,7 @@ package net.geoprism.registry.command;
 
 import com.runwaysdk.dataaccess.Command;
 
+import net.geoprism.registry.cache.TransactionCacheFacade;
 import net.geoprism.registry.model.ServerGeoObjectType;
 import net.geoprism.registry.service.request.ServiceFactory;
 
@@ -14,6 +15,11 @@ public class GeoObjectTypeCacheEventCommand extends AbstractCacheCommand impleme
     super(eventType);
 
     this.type = type;
+
+    if (this.getEventType().equals(CacheEventType.CREATE) || this.getEventType().equals(CacheEventType.UPDATE))
+    {
+      TransactionCacheFacade.put(this.type);
+    }
   }
 
   @Override

@@ -921,7 +921,7 @@ public class GeoObjectTypeBusinessService implements GeoObjectTypeBusinessServic
 
     if (codes == null || codes.length == 0)
     {
-      gots = new LinkedList<>(ServiceFactory.getMetadataCache().getAllGeoObjectTypes());
+      gots = new LinkedList<>(ServerGeoObjectType.getAll());
     }
     else
     {
@@ -929,20 +929,7 @@ public class GeoObjectTypeBusinessService implements GeoObjectTypeBusinessServic
 
       for (int i = 0; i < codes.length; ++i)
       {
-        Optional<ServerGeoObjectType> optional = ServiceFactory.getMetadataCache().getGeoObjectType(codes[i]);
-
-        if (optional.isPresent())
-        {
-          gots.add(optional.get());
-        }
-        else
-        {
-          net.geoprism.registry.DataNotFoundException ex = new net.geoprism.registry.DataNotFoundException();
-          ex.setTypeLabel(GeoObjectTypeMetadata.sGetClassDisplayLabel());
-          ex.setDataIdentifier(codes[i]);
-          ex.setAttributeLabel(GeoObjectTypeMetadata.getAttributeDisplayLabel(DefaultAttribute.CODE.getName()));
-          throw ex;
-        }
+        gots.add(ServerGeoObjectType.get(codes[i], false));
       }
     }
 

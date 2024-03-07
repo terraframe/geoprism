@@ -73,8 +73,11 @@ public class ServerMetadataCache extends ServerOrganizationCache
 
   public void addGeoObjectType(ServerGeoObjectType geoObjectType)
   {
-    this.geoGeoObjectTypeCodeMap.put(geoObjectType.getCode(), geoObjectType);
-    this.geoGeoObjectTypeOidMap.put(geoObjectType.getOid(), geoObjectType);
+    String code = geoObjectType.getCode();
+    String oid = geoObjectType.getOid();
+    
+    this.geoGeoObjectTypeCodeMap.put(code, geoObjectType);
+    this.geoGeoObjectTypeOidMap.put(oid, geoObjectType);
 
     getAdapter().getMetadataCache().addGeoObjectType(geoObjectType.toDTO());
   }

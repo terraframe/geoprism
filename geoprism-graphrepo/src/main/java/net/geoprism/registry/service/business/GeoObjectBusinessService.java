@@ -918,7 +918,7 @@ public class GeoObjectBusinessService extends RegistryLocalizedValueConverter im
         {
           if (attribute instanceof AttributeTermType)
           {
-            Classifier classifier = Classifier.get((String) value);
+            Classifier classifier = (Classifier) value;
 
             try
             {
