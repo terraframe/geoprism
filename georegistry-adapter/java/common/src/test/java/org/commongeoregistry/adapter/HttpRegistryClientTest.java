@@ -35,7 +35,7 @@ import org.commongeoregistry.adapter.http.HttpResponse;
 import org.commongeoregistry.adapter.http.ServerResponseException;
 import org.commongeoregistry.adapter.metadata.GeoObjectType;
 import org.commongeoregistry.adapter.metadata.HierarchyType;
-import org.commongeoregistry.adapter.metadata.MetadataCache;
+import org.commongeoregistry.adapter.metadata.MetadataCacheIF;
 import org.commongeoregistry.adapter.metadata.MetadataFactory;
 import org.junit.Assert;
 import org.junit.Test;
@@ -88,7 +88,7 @@ public class HttpRegistryClientTest
     /*
      * Validate response
      */
-    MetadataCache cache = client.getMetadataCache();
+    MetadataCacheIF cache = client.getMetadataCache();
     Optional<GeoObjectType> optional = cache.getGeoObjectType(state.getCode());
 
     Assert.assertTrue(optional.isPresent());
