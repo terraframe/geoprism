@@ -68,6 +68,7 @@ import com.runwaysdk.dataaccess.MdEdgeDAOIF;
 import com.runwaysdk.dataaccess.MdVertexDAOIF;
 import com.runwaysdk.dataaccess.graph.attributes.ValueOverTime;
 import com.runwaysdk.dataaccess.graph.attributes.ValueOverTimeCollection;
+import com.runwaysdk.dataaccess.metadata.graph.MdVertexDAO;
 import com.runwaysdk.dataaccess.transaction.Transaction;
 import com.runwaysdk.system.AbstractClassification;
 
@@ -86,6 +87,7 @@ import net.geoprism.registry.conversion.VertexGeoObjectStrategy;
 import net.geoprism.registry.etl.export.GeoObjectExportFormat;
 import net.geoprism.registry.etl.export.GeoObjectJsonExporter;
 import net.geoprism.registry.etl.upload.ClassifierCache;
+import net.geoprism.registry.graph.AttributeValue;
 import net.geoprism.registry.graph.GeoVertex;
 import net.geoprism.registry.graph.HierarchicalRelationshipType;
 import net.geoprism.registry.graph.InheritedHierarchyAnnotation;
@@ -1389,27 +1391,47 @@ public class GeoObjectBusinessService extends RegistryLocalizedValueConverter im
 
     return node;
   }
-
-  private static ServerChildTreeNode internalGetChildGeoObjects(ServerGeoObjectIF parent, String[] childrenTypes, Boolean recursive, ServerHierarchyType htIn, Date date)
+  
+  private ServerChildTreeNode internalGetChildGeoObjects(ServerGeoObjectIF parent, String[] childrenTypes, Boolean recursive, ServerHierarchyType htIn, Date date)
   {
-    /*
-     * TRAVERSE OUT('has_value') FROM ( SELECT out FROM ( SELECT
-     * EXPAND(outE()[in.@class = 'fastp_rovince_private' OR in.@class =
-     * 'fastp_rovince']) FROM #694:0 ) WHERE @class IN (select dbClassName from
-     * hierarchical_relationship_t1) )
-     */
+    if (htIn != null)
+    {
+      return internalGetChildGeoObjectsForHierarchy(parent, childrenTypes, recursive, htIn, date);
+    }
+    else
+    {
+      Iterator<ServerHierarchyType> it = gotService.getHierarchies(parent.getType()).iterator();
+      
+      if (!it.hasNext()) { return new ServerChildTreeNode(parent, htIn, date, null, null); }
+      
+      ServerChildTreeNode ctn = internalGetChildGeoObjectsForHierarchy(parent, childrenTypes, recursive, it.next(), date);
+      
+      while (it.hasNext())
+      {
+        ServerChildTreeNode next = internalGetChildGeoObjectsForHierarchy(parent, childrenTypes, recursive, it.next(), date);
+        
+        for (ServerChildTreeNode child : next.getChildren())
+        {
+          ctn.addChild(child);
+        }
+      }
+      
+      return ctn;
+    }
+  }
+
+  private ServerChildTreeNode internalGetChildGeoObjectsForHierarchy(ServerGeoObjectIF parent, String[] childrenTypes, Boolean recursive, ServerHierarchyType htIn, Date date)
+  {
     ServerChildTreeNode tnRoot = new ServerChildTreeNode(parent, htIn, date, null, null);
 
     Map<String, Object> parameters = new HashedMap<String, Object>();
     parameters.put("rid", parent.getVertex().getRID());
 
     StringBuilder statement = new StringBuilder();
+    statement.append("TRAVERSE OUT('has_value', 'has_geometry') FROM ( SELECT in FROM (");
     statement.append("SELECT EXPAND(outE(");
 
-    if (htIn != null)
-    {
-      statement.append("'" + htIn.getObjectEdge().getDBClassName() + "'");
-    }
+    statement.append("'" + htIn.getObjectEdge().getDBClassName() + "'");
     statement.append(")");
 
     if (childrenTypes != null && childrenTypes.length > 0)
@@ -1435,42 +1457,96 @@ public class GeoObjectBusinessService extends RegistryLocalizedValueConverter im
     }
 
     statement.append(") FROM :rid");
+    statement.append("))");
 
-    GraphQuery<EdgeObject> query = new GraphQuery<EdgeObject>(statement.toString(), parameters);
+    GraphQuery<VertexObject> query = new GraphQuery<VertexObject>(statement.toString(), parameters);
 
-    List<EdgeObject> edges = query.getResults();
+    List<VertexObject> vertexes = query.getResults();
+    
+    List<ServerGeoObjectIF> children = processResults(vertexes, date);
 
-    for (EdgeObject edge : edges)
+    for (ServerGeoObjectIF child : children)
     {
-      MdEdgeDAOIF mdEdge = (MdEdgeDAOIF) edge.getMdClass();
+      ServerChildTreeNode tnChild;
 
-      if (HierarchicalRelationshipType.isEdgeAHierarchyType(mdEdge))
+      if (recursive)
       {
-        VertexObject childVertex = edge.getChild();
-
-        MdVertexDAOIF mdVertex = (MdVertexDAOIF) childVertex.getMdClass();
-
-        ServerHierarchyType ht = ServerHierarchyType.get(mdEdge);
-        ServerGeoObjectType childType = ServerGeoObjectType.get(mdVertex);
-
-        VertexServerGeoObject child = new VertexServerGeoObject(childType, childVertex, new TreeMap<>(), date);
-
-        ServerChildTreeNode tnChild;
-
-        if (recursive)
-        {
-          tnChild = internalGetChildGeoObjects(child, childrenTypes, recursive, ht, date);
-        }
-        else
-        {
-          tnChild = new ServerChildTreeNode(child, ht, date, null, edge.getOid());
-        }
-
-        tnRoot.addChild(tnChild);
+        tnChild = internalGetChildGeoObjects(child, childrenTypes, recursive, htIn, date);
       }
+      else
+      {
+        tnChild = new ServerChildTreeNode(child, htIn, date, null, child.getRunwayId());
+      }
+
+      tnRoot.addChild(tnChild);
     }
 
     return tnRoot;
+  }
+  
+  /**
+   * WIP method from Smethie
+   * @param results
+   * @return
+   */
+  protected List<ServerGeoObjectIF> processResults(List<VertexObject> results, Date date)
+  {
+    VertexObject current = null;
+    List<VertexObject> currentAttributes = new LinkedList<>();
+    MdVertexDAOIF mdGeoVertex = MdVertexDAO.getMdVertexDAO(GeoVertex.CLASS);
+    List<ServerGeoObjectIF> list = new LinkedList<ServerGeoObjectIF>();
+    
+    for (VertexObject result : results)
+    {
+      MdVertexDAOIF mdClass = (MdVertexDAOIF) result.getMdClass();
+      List<? extends MdVertexDAOIF> superClasses = mdClass.getSuperClasses();
+      if (superClasses.contains(mdGeoVertex))
+      {
+        if (current != null)
+        {
+          MdVertexDAOIF mdVertex = (MdVertexDAOIF) current.getMdClass();
+          ServerGeoObjectType type = ServerGeoObjectType.get(mdVertex);
+          
+          Map<String, List<VertexObject>> nodeMap = currentAttributes.stream().collect(Collectors.groupingBy(v -> {
+            return (String) v.getObjectValue(AttributeValue.ATTRIBUTENAME);
+          }));
+          
+          VertexServerGeoObject vsgo = new VertexServerGeoObject(type, current, nodeMap, date);
+          if (vsgo.getGeometry() == null)
+          {
+            Geometry geom = vsgo.getGeometry();
+            throw new RuntimeException("");
+          }
+          list.add(vsgo);
+        }
+        current = result;
+        currentAttributes = new LinkedList<>();
+      }
+      else
+      {
+        currentAttributes.add(result);
+      }
+    }
+    
+    if (current != null)
+    {
+      MdVertexDAOIF mdVertex = (MdVertexDAOIF) current.getMdClass();
+      ServerGeoObjectType type = ServerGeoObjectType.get(mdVertex);
+      
+      Map<String, List<VertexObject>> nodeMap = currentAttributes.stream().collect(Collectors.groupingBy(v -> {
+        return (String) v.getObjectValue(AttributeValue.ATTRIBUTENAME);
+      }));
+      
+      VertexServerGeoObject vsgo = new VertexServerGeoObject(type, current, nodeMap, date);
+      if (vsgo.getGeometry() == null)
+      {
+        Geometry geom = vsgo.getGeometry();
+        throw new RuntimeException("");
+      }
+      list.add(vsgo);
+    }
+    
+    return list;
   }
 
   protected ServerParentTreeNode internalGetParentGeoObjects(ServerGeoObjectIF child, String[] parentTypes, boolean recursive, boolean includeInherited, ServerHierarchyType htIn, Date date)

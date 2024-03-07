@@ -11,6 +11,8 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import org.commongeoregistry.adapter.constants.DefaultAttribute;
+
 import com.runwaysdk.business.graph.VertexObject;
 import com.runwaysdk.dataaccess.MdVertexDAOIF;
 import com.runwaysdk.dataaccess.graph.attributes.ValueOverTime;
@@ -102,13 +104,14 @@ public class ValueNodeStrategy extends AbstractValueStrategy implements ValueStr
     return getState(valueNodeMap).isModified();
   }
 
+  @SuppressWarnings("unchecked")
   @Override
   public <T> T getValue(VertexObject vertex, Map<String, AttributeState> valueNodeMap, Date date)
   {
+    AttributeState state = getState(valueNodeMap);
+    
     if (date != null)
     {
-      AttributeState state = getState(valueNodeMap);
-
       Optional<VertexObject> optional = state.stream().filter(node -> {
         return ( getStartDate(node).before(date) || getStartDate(node).equals(date) ) && ( getEndDate(node).after(date) || getEndDate(node).equals(date) );
       }).findFirst();
@@ -116,6 +119,15 @@ public class ValueNodeStrategy extends AbstractValueStrategy implements ValueStr
       if (optional.isPresent())
       {
         return getNodeValue(optional.get());
+      }
+    }
+    else
+    {
+      ValueOverTimeCollection votc = this.getValueOverTimeCollection(vertex, valueNodeMap);
+      
+      if (votc.size() > 0)
+      {
+        return (T) votc.last().getValue();
       }
     }
 
