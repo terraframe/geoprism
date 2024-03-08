@@ -483,7 +483,6 @@ public class GeoObjectBusinessService extends RegistryLocalizedValueConverter im
       // }
       else if (sgo.hasAttribute(attributeName))
       {
-        sgo.getValuesOverTime(attributeName).clear();
         ValueOverTimeCollectionDTO collection = goTime.getAllValues(attributeName);
 
         ValueOverTimeCollection c = new ValueOverTimeCollection();
@@ -1391,7 +1390,7 @@ public class GeoObjectBusinessService extends RegistryLocalizedValueConverter im
 
     return node;
   }
-  
+
   private ServerChildTreeNode internalGetChildGeoObjects(ServerGeoObjectIF parent, String[] childrenTypes, Boolean recursive, ServerHierarchyType htIn, Date date)
   {
     if (htIn != null)
@@ -1401,21 +1400,24 @@ public class GeoObjectBusinessService extends RegistryLocalizedValueConverter im
     else
     {
       Iterator<ServerHierarchyType> it = gotService.getHierarchies(parent.getType()).iterator();
-      
-      if (!it.hasNext()) { return new ServerChildTreeNode(parent, htIn, date, null, null); }
-      
+
+      if (!it.hasNext())
+      {
+        return new ServerChildTreeNode(parent, htIn, date, null, null);
+      }
+
       ServerChildTreeNode ctn = internalGetChildGeoObjectsForHierarchy(parent, childrenTypes, recursive, it.next(), date);
-      
+
       while (it.hasNext())
       {
         ServerChildTreeNode next = internalGetChildGeoObjectsForHierarchy(parent, childrenTypes, recursive, it.next(), date);
-        
+
         for (ServerChildTreeNode child : next.getChildren())
         {
           ctn.addChild(child);
         }
       }
-      
+
       return ctn;
     }
   }
@@ -1462,13 +1464,14 @@ public class GeoObjectBusinessService extends RegistryLocalizedValueConverter im
     GraphQuery<VertexObject> query = new GraphQuery<VertexObject>(statement.toString(), parameters);
 
     List<VertexObject> vertexes = query.getResults();
-    
+
     List<ServerGeoObjectIF> children = processResults(vertexes, date);
 
     for (ServerGeoObjectIF child : children)
     {
-      if (child.getRunwayId().equals(parent.getRunwayId())) continue;
-      
+      if (child.getRunwayId().equals(parent.getRunwayId()))
+        continue;
+
       ServerChildTreeNode tnChild;
 
       if (recursive)
@@ -1485,15 +1488,15 @@ public class GeoObjectBusinessService extends RegistryLocalizedValueConverter im
 
     return tnRoot;
   }
-  
-  // TODO : Convert this method into a utility method? 
+
+  // TODO : Convert this method into a utility method?
   protected List<ServerGeoObjectIF> processResults(List<VertexObject> results, Date date)
   {
     VertexObject current = null;
     List<VertexObject> currentAttributes = new LinkedList<>();
     MdVertexDAOIF mdGeoVertex = MdVertexDAO.getMdVertexDAO(GeoVertex.CLASS);
     List<ServerGeoObjectIF> list = new LinkedList<ServerGeoObjectIF>();
-    
+
     for (VertexObject result : results)
     {
       MdVertexDAOIF mdClass = (MdVertexDAOIF) result.getMdClass();
@@ -1504,11 +1507,11 @@ public class GeoObjectBusinessService extends RegistryLocalizedValueConverter im
         {
           MdVertexDAOIF mdVertex = (MdVertexDAOIF) current.getMdClass();
           ServerGeoObjectType type = ServerGeoObjectType.get(mdVertex);
-          
+
           Map<String, List<VertexObject>> nodeMap = currentAttributes.stream().collect(Collectors.groupingBy(v -> {
             return (String) v.getObjectValue(AttributeValue.ATTRIBUTENAME);
           }));
-          
+
           VertexServerGeoObject vsgo = new VertexServerGeoObject(type, current, nodeMap, date);
           list.add(vsgo);
         }
@@ -1520,23 +1523,23 @@ public class GeoObjectBusinessService extends RegistryLocalizedValueConverter im
         currentAttributes.add(result);
       }
     }
-    
+
     if (current != null)
     {
       MdVertexDAOIF mdVertex = (MdVertexDAOIF) current.getMdClass();
       ServerGeoObjectType type = ServerGeoObjectType.get(mdVertex);
-      
+
       Map<String, List<VertexObject>> nodeMap = currentAttributes.stream().collect(Collectors.groupingBy(v -> {
         return (String) v.getObjectValue(AttributeValue.ATTRIBUTENAME);
       }));
-      
+
       VertexServerGeoObject vsgo = new VertexServerGeoObject(type, current, nodeMap, date);
       list.add(vsgo);
     }
-    
+
     return list;
   }
-  
+
   private ServerParentTreeNode internalGetParentGeoObjects(ServerGeoObjectIF child, String[] parentTypes, boolean recursive, boolean includeInherited, ServerHierarchyType htIn, Date date)
   {
     if (htIn != null)
@@ -1546,21 +1549,24 @@ public class GeoObjectBusinessService extends RegistryLocalizedValueConverter im
     else
     {
       Iterator<ServerHierarchyType> it = gotService.getHierarchies(child.getType()).iterator();
-      
-      if (!it.hasNext()) { return new ServerParentTreeNode(child, htIn, date, null, null); }
-      
+
+      if (!it.hasNext())
+      {
+        return new ServerParentTreeNode(child, htIn, date, null, null);
+      }
+
       ServerParentTreeNode ctn = internalGetParentGeoObjectsForHierarchy(child, parentTypes, recursive, includeInherited, it.next(), date);
-      
+
       while (it.hasNext())
       {
         ServerParentTreeNode next = internalGetParentGeoObjectsForHierarchy(child, parentTypes, recursive, includeInherited, it.next(), date);
-        
+
         for (ServerParentTreeNode parent : next.getParents())
         {
           ctn.addParent(parent);
         }
       }
-      
+
       return ctn;
     }
   }
@@ -1626,13 +1632,14 @@ public class GeoObjectBusinessService extends RegistryLocalizedValueConverter im
     GraphQuery<VertexObject> query = new GraphQuery<VertexObject>(statement.toString(), parameters);
 
     List<VertexObject> vertexes = query.getResults();
-    
+
     List<ServerGeoObjectIF> parents = processResults(vertexes, date);
 
     for (ServerGeoObjectIF parent : parents)
     {
-      if (child.getRunwayId().equals(parent.getRunwayId())) continue;
-      
+      if (child.getRunwayId().equals(parent.getRunwayId()))
+        continue;
+
       ServerParentTreeNode tnParent;
 
       if (recursive)
@@ -1964,10 +1971,24 @@ public class GeoObjectBusinessService extends RegistryLocalizedValueConverter im
       }
     }
 
+    // TODO: HEADS UP - Handle multiple locales
     String dbClassName = sgo.getMdClass().getDBClassName();
 
     StringBuilder statement = new StringBuilder();
-    statement.append("SELECT @class AS cl, " + DefaultAttribute.CODE.getName() + " AS code, " + DefaultAttribute.DISPLAY_LABEL.getName() + "_cot AS label FROM (");
+    statement.append("SELECT ");
+    statement.append("@class AS cl, ");
+    statement.append(DefaultAttribute.CODE.getName() + " AS code, ");
+    
+    if (sgo.getDate() != null)
+    {
+      statement.append("  first(out('has_value')[attributeName = 'displayLabel' AND :date BETWEEN startDate AND endDate]).defaultLocale AS label ");
+    }
+    else
+    {
+      statement.append("  first(out('has_value')[attributeName = 'displayLabel']).defaultLocale AS label ");
+    }
+    
+    statement.append("FROM (");
 
     for (ServerHierarchyType hier : inheritancePath)
     {
@@ -1990,11 +2011,11 @@ public class GeoObjectBusinessService extends RegistryLocalizedValueConverter im
 
     if (sgo.getDate() != null)
     {
-      statement.append(") WHERE exists_cot CONTAINS (value=true AND :date BETWEEN startDate AND endDate)");
+      statement.append(") WHERE out('has_value')[attributeName = 'exists' AND value = true AND :date BETWEEN startDate AND endDate].size() > 0");
     }
     else
     {
-      statement.append(") WHERE exists_cot CONTAINS (value=true)");
+      statement.append(") WHERE out('has_value')[attributeName = 'exists' AND value = true].size() > 0");
     }
 
     GraphQuery<Map<String, Object>> query = new GraphQuery<Map<String, Object>>(statement.toString());
@@ -2029,9 +2050,13 @@ public class GeoObjectBusinessService extends RegistryLocalizedValueConverter im
       String clazz = (String) result.get("cl");
       String code = (String) result.get("code");
 
-      List<Map<String, Object>> displayLabelRaw = (List<Map<String, Object>>) result.get("label");
-
-      LocalizedValue localized = RegistryLocalizedValueConverter.convert(displayLabelRaw, sgo.getDate());
+      // TODO: HEADS UP - Handle multiple locales
+//      List<Map<String, Object>> displayLabelRaw = (List<Map<String, Object>>) result.get("label");
+//
+//      LocalizedValue localized = RegistryLocalizedValueConverter.convert(displayLabelRaw, sgo.getDate());
+      String defaultLabel = (String) result.get("label");
+      LocalizedValue localized = new LocalizedValue( defaultLabel);
+      localized.setValue(LocalizedValue.DEFAULT_LOCALE, defaultLabel);
 
       ServerGeoObjectType type = null;
       for (ServerGeoObjectType parent : parents)
