@@ -1463,7 +1463,7 @@ public class GeoObjectBusinessService extends RegistryLocalizedValueConverter im
 
     List<VertexObject> vertexes = query.getResults();
     
-    List<ServerGeoObjectIF> children = processResults(vertexes, date);
+    List<ServerGeoObjectIF> children = constructGeoObjectsFromQueryResults(vertexes, date);
 
     for (ServerGeoObjectIF child : children)
     {
@@ -1486,8 +1486,7 @@ public class GeoObjectBusinessService extends RegistryLocalizedValueConverter im
     return tnRoot;
   }
   
-  // TODO : Convert this method into a utility method? 
-  protected List<ServerGeoObjectIF> processResults(List<VertexObject> results, Date date)
+  public static List<ServerGeoObjectIF> constructGeoObjectsFromQueryResults(List<VertexObject> results, Date date)
   {
     VertexObject current = null;
     List<VertexObject> currentAttributes = new LinkedList<>();
@@ -1627,7 +1626,7 @@ public class GeoObjectBusinessService extends RegistryLocalizedValueConverter im
 
     List<VertexObject> vertexes = query.getResults();
     
-    List<ServerGeoObjectIF> parents = processResults(vertexes, date);
+    List<ServerGeoObjectIF> parents = constructGeoObjectsFromQueryResults(vertexes, date);
 
     for (ServerGeoObjectIF parent : parents)
     {
