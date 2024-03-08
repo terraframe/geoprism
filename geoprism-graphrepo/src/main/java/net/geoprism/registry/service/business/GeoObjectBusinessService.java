@@ -1579,7 +1579,7 @@ public class GeoObjectBusinessService extends RegistryLocalizedValueConverter im
     parameters.put("rid", child.getVertex().getRID());
 
     StringBuilder statement = new StringBuilder();
-    statement.append("TRAVERSE OUT('has_value', 'has_geometry') FROM ( SELECT in FROM (");
+    statement.append("TRAVERSE OUT('has_value', 'has_geometry') FROM ( SELECT out FROM (");
     statement.append("SELECT EXPAND( inE(");
 
     if (htIn != null)
@@ -1658,7 +1658,6 @@ public class GeoObjectBusinessService extends RegistryLocalizedValueConverter im
           {
             tnParent = internalGetParentGeoObjectsForHierarchy(parent, parentTypes, recursive, includeInherited, htIn, date);
           }
-          tnParent = null;
         }
         else
         {
@@ -1667,7 +1666,7 @@ public class GeoObjectBusinessService extends RegistryLocalizedValueConverter im
       }
       else
       {
-        tnParent = new ServerParentTreeNode(child, htIn, date, null, child.getRunwayId());
+        tnParent = new ServerParentTreeNode(parent, htIn, date, null, child.getRunwayId());
       }
 
       tnRoot.addParent(tnParent);
