@@ -28,6 +28,7 @@ import java.util.Collection;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -40,7 +41,6 @@ import java.util.stream.Collectors;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.commongeoregistry.adapter.constants.DefaultAttribute;
-import org.commongeoregistry.adapter.constants.GeometryType;
 import org.commongeoregistry.adapter.dataaccess.GeoObject;
 import org.commongeoregistry.adapter.dataaccess.LocalizedValue;
 import org.commongeoregistry.adapter.dataaccess.ValueOverTimeDTO;
@@ -48,12 +48,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.locationtech.jts.geom.Envelope;
 import org.locationtech.jts.geom.Geometry;
-import org.locationtech.jts.geom.LineString;
-import org.locationtech.jts.geom.MultiLineString;
-import org.locationtech.jts.geom.MultiPoint;
-import org.locationtech.jts.geom.MultiPolygon;
-import org.locationtech.jts.geom.Point;
-import org.locationtech.jts.geom.Polygon;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -83,16 +77,14 @@ import com.runwaysdk.system.gis.geo.GeoEntity;
 import com.runwaysdk.system.metadata.MdVertex;
 import com.runwaysdk.system.metadata.MdVertexQuery;
 
-import net.geoprism.configuration.GeoprismProperties;
 import net.geoprism.ontology.Classifier;
 import net.geoprism.registry.DateFormatter;
-import net.geoprism.registry.GeometrySizeException;
-import net.geoprism.registry.GeometryTypeException;
 import net.geoprism.registry.conversion.RegistryLocalizedValueConverter;
 import net.geoprism.registry.geoobject.ValueOutOfRangeException;
 import net.geoprism.registry.graph.AttributeLocalType;
 import net.geoprism.registry.graph.AttributeTermType;
 import net.geoprism.registry.graph.AttributeType;
+import net.geoprism.registry.graph.AttributeValue;
 import net.geoprism.registry.graph.GeoVertex;
 import net.geoprism.registry.graph.GeoVertexSynonym;
 import net.geoprism.registry.model.AbstractServerGeoObject;
@@ -275,20 +267,6 @@ public class VertexServerGeoObject extends AbstractServerGeoObject implements Se
   @Override
   public void setGeometry(Geometry geometry, Date startDate, Date endDate)
   {
-    if (geometry != null && geometry.getNumPoints() > GeoprismProperties.getMaxNumberOfPoints())
-    {
-      throw new GeometrySizeException();
-    }
-
-    if (!this.isValidGeometry(geometry))
-    {
-      GeometryTypeException ex = new GeometryTypeException();
-      ex.setActualType(geometry.getGeometryType());
-      ex.setExpectedType(this.getType().getGeometryType().name());
-
-      throw ex;
-    }
-
     this.type.getAttribute(DefaultAttribute.GEOMETRY.getName()).ifPresent( ( attr -> {
       attr.getStrategy().setValue(this.vertex, this.valueNodeMap, geometry, startDate, endDate);
     } ));
@@ -456,43 +434,6 @@ public class VertexServerGeoObject extends AbstractServerGeoObject implements Se
   public MdVertexDAOIF getMdClass()
   {
     return (MdVertexDAOIF) this.vertex.getMdClass();
-  }
-
-  public boolean isValidGeometry(Geometry geometry)
-  {
-    if (geometry != null)
-    {
-      GeometryType type = this.type.getGeometryType();
-
-      if (type.equals(GeometryType.LINE) && ! ( geometry instanceof LineString ))
-      {
-        return false;
-      }
-      else if (type.equals(GeometryType.MULTILINE) && ! ( geometry instanceof MultiLineString ))
-      {
-        return false;
-      }
-      else if (type.equals(GeometryType.POINT) && ! ( geometry instanceof Point ))
-      {
-        return false;
-      }
-      else if (type.equals(GeometryType.MULTIPOINT) && ! ( geometry instanceof MultiPoint ))
-      {
-        return false;
-      }
-      else if (type.equals(GeometryType.POLYGON) && ! ( geometry instanceof Polygon ))
-      {
-        return false;
-      }
-      else if (type.equals(GeometryType.MULTIPOLYGON) && ! ( geometry instanceof MultiPolygon ))
-      {
-        return false;
-      }
-
-      return true;
-    }
-
-    return true;
   }
 
   @Override
@@ -1338,5 +1279,56 @@ public class VertexServerGeoObject extends AbstractServerGeoObject implements Se
 
     return query.getSingleResult() > 0;
   }
+
+  public static List<ServerGeoObjectIF> processTraverseResults(List<VertexObject> results, Date date)
+  {
+    VertexObject current = null;
+    List<VertexObject> currentAttributes = new LinkedList<>();
+    MdVertexDAOIF mdGeoVertex = MdVertexDAO.getMdVertexDAO(GeoVertex.CLASS);
+    List<ServerGeoObjectIF> list = new LinkedList<ServerGeoObjectIF>();
+
+    for (VertexObject result : results)
+    {
+      MdVertexDAOIF mdClass = (MdVertexDAOIF) result.getMdClass();
+      List<? extends MdVertexDAOIF> superClasses = mdClass.getSuperClasses();
+      if (superClasses.contains(mdGeoVertex))
+      {
+        if (current != null)
+        {
+          MdVertexDAOIF mdVertex = (MdVertexDAOIF) current.getMdClass();
+          ServerGeoObjectType type = ServerGeoObjectType.get(mdVertex);
+
+          Map<String, List<VertexObject>> nodeMap = currentAttributes.stream().collect(Collectors.groupingBy(v -> {
+            return (String) v.getObjectValue(AttributeValue.ATTRIBUTENAME);
+          }));
+
+          VertexServerGeoObject vsgo = new VertexServerGeoObject(type, current, nodeMap, date);
+          list.add(vsgo);
+        }
+        current = result;
+        currentAttributes = new LinkedList<>();
+      }
+      else
+      {
+        currentAttributes.add(result);
+      }
+    }
+
+    if (current != null)
+    {
+      MdVertexDAOIF mdVertex = (MdVertexDAOIF) current.getMdClass();
+      ServerGeoObjectType type = ServerGeoObjectType.get(mdVertex);
+
+      Map<String, List<VertexObject>> nodeMap = currentAttributes.stream().collect(Collectors.groupingBy(v -> {
+        return (String) v.getObjectValue(AttributeValue.ATTRIBUTENAME);
+      }));
+
+      VertexServerGeoObject vsgo = new VertexServerGeoObject(type, current, nodeMap, date);
+      list.add(vsgo);
+    }
+
+    return list;
+  }
+
 
 }

@@ -18,6 +18,7 @@
  */
 package net.geoprism.registry.model;
 
+import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -32,6 +33,7 @@ import org.commongeoregistry.adapter.metadata.CustomSerializer;
 
 import com.google.gson.JsonObject;
 import com.runwaysdk.business.graph.GraphQuery;
+import com.runwaysdk.business.graph.VertexObject;
 import com.runwaysdk.dataaccess.MdVertexDAOIF;
 import com.runwaysdk.dataaccess.ProgrammingErrorException;
 import com.runwaysdk.dataaccess.metadata.graph.MdVertexDAO;
@@ -41,8 +43,11 @@ import com.runwaysdk.system.gis.geo.Universal;
 import net.geoprism.registry.cache.TransactionCacheFacade;
 import net.geoprism.registry.conversion.LocalizedValueConverter;
 import net.geoprism.registry.graph.AttributeType;
+import net.geoprism.registry.graph.AttributeValue;
 import net.geoprism.registry.graph.BaseGeoObjectType;
 import net.geoprism.registry.graph.GeoObjectType;
+import net.geoprism.registry.graph.GeoVertex;
+import net.geoprism.registry.model.graph.VertexServerGeoObject;
 import net.geoprism.registry.service.request.ServiceFactory;
 
 public class ServerGeoObjectType extends CachableObjectWrapper<BaseGeoObjectType> implements ServerElement
@@ -371,5 +376,4 @@ public class ServerGeoObjectType extends CachableObjectWrapper<BaseGeoObjectType
     List<String> codes = this.getType().getSubTypeCodes();
     return codes.stream().map(code -> ServerGeoObjectType.get(code)).collect(Collectors.toList());
   }
-
 }

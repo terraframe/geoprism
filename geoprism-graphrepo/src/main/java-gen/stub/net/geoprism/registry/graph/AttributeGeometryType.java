@@ -7,7 +7,7 @@ import com.runwaysdk.dataaccess.metadata.graph.MdVertexDAO;
 import com.runwaysdk.dataaccess.transaction.Transaction;
 import com.runwaysdk.system.gis.geo.GeometryType;
 
-import net.geoprism.registry.model.ValueNodeStrategy;
+import net.geoprism.registry.model.GeometryValueNodeStrategy;
 import net.geoprism.registry.model.ValueStrategy;
 import net.geoprism.registry.model.VertexValueStrategy;
 
@@ -52,7 +52,7 @@ public class AttributeGeometryType extends AttributeGeometryTypeBase
     }
     else
     {
-      return new ValueNodeStrategy(this, getGeometryMdVertex(), AttributeGeometryValue.VALUE);
+      return new GeometryValueNodeStrategy(this, getGeometryMdVertex(), AttributeGeometryValue.VALUE);
     }
   }
 
