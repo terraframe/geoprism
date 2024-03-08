@@ -41,7 +41,6 @@ import java.util.stream.Collectors;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.commongeoregistry.adapter.constants.DefaultAttribute;
-import org.commongeoregistry.adapter.constants.GeometryType;
 import org.commongeoregistry.adapter.dataaccess.GeoObject;
 import org.commongeoregistry.adapter.dataaccess.LocalizedValue;
 import org.commongeoregistry.adapter.dataaccess.ValueOverTimeDTO;
@@ -49,12 +48,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.locationtech.jts.geom.Envelope;
 import org.locationtech.jts.geom.Geometry;
-import org.locationtech.jts.geom.LineString;
-import org.locationtech.jts.geom.MultiLineString;
-import org.locationtech.jts.geom.MultiPoint;
-import org.locationtech.jts.geom.MultiPolygon;
-import org.locationtech.jts.geom.Point;
-import org.locationtech.jts.geom.Polygon;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -84,11 +77,8 @@ import com.runwaysdk.system.gis.geo.GeoEntity;
 import com.runwaysdk.system.metadata.MdVertex;
 import com.runwaysdk.system.metadata.MdVertexQuery;
 
-import net.geoprism.configuration.GeoprismProperties;
 import net.geoprism.ontology.Classifier;
 import net.geoprism.registry.DateFormatter;
-import net.geoprism.registry.GeometrySizeException;
-import net.geoprism.registry.GeometryTypeException;
 import net.geoprism.registry.conversion.RegistryLocalizedValueConverter;
 import net.geoprism.registry.geoobject.ValueOutOfRangeException;
 import net.geoprism.registry.graph.AttributeLocalType;
@@ -277,20 +267,6 @@ public class VertexServerGeoObject extends AbstractServerGeoObject implements Se
   @Override
   public void setGeometry(Geometry geometry, Date startDate, Date endDate)
   {
-    if (geometry != null && geometry.getNumPoints() > GeoprismProperties.getMaxNumberOfPoints())
-    {
-      throw new GeometrySizeException();
-    }
-
-    if (!this.isValidGeometry(geometry))
-    {
-      GeometryTypeException ex = new GeometryTypeException();
-      ex.setActualType(geometry.getGeometryType());
-      ex.setExpectedType(this.getType().getGeometryType().name());
-
-      throw ex;
-    }
-
     this.type.getAttribute(DefaultAttribute.GEOMETRY.getName()).ifPresent( ( attr -> {
       attr.getStrategy().setValue(this.vertex, this.valueNodeMap, geometry, startDate, endDate);
     } ));
@@ -458,43 +434,6 @@ public class VertexServerGeoObject extends AbstractServerGeoObject implements Se
   public MdVertexDAOIF getMdClass()
   {
     return (MdVertexDAOIF) this.vertex.getMdClass();
-  }
-
-  public boolean isValidGeometry(Geometry geometry)
-  {
-    if (geometry != null)
-    {
-      GeometryType type = this.type.getGeometryType();
-
-      if (type.equals(GeometryType.LINE) && ! ( geometry instanceof LineString ))
-      {
-        return false;
-      }
-      else if (type.equals(GeometryType.MULTILINE) && ! ( geometry instanceof MultiLineString ))
-      {
-        return false;
-      }
-      else if (type.equals(GeometryType.POINT) && ! ( geometry instanceof Point ))
-      {
-        return false;
-      }
-      else if (type.equals(GeometryType.MULTIPOINT) && ! ( geometry instanceof MultiPoint ))
-      {
-        return false;
-      }
-      else if (type.equals(GeometryType.POLYGON) && ! ( geometry instanceof Polygon ))
-      {
-        return false;
-      }
-      else if (type.equals(GeometryType.MULTIPOLYGON) && ! ( geometry instanceof MultiPolygon ))
-      {
-        return false;
-      }
-
-      return true;
-    }
-
-    return true;
   }
 
   @Override
