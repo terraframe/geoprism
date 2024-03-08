@@ -68,7 +68,6 @@ import com.runwaysdk.dataaccess.MdEdgeDAOIF;
 import com.runwaysdk.dataaccess.MdVertexDAOIF;
 import com.runwaysdk.dataaccess.graph.attributes.ValueOverTime;
 import com.runwaysdk.dataaccess.graph.attributes.ValueOverTimeCollection;
-import com.runwaysdk.dataaccess.metadata.graph.MdVertexDAO;
 import com.runwaysdk.dataaccess.transaction.Transaction;
 import com.runwaysdk.system.AbstractClassification;
 
@@ -87,7 +86,6 @@ import net.geoprism.registry.conversion.VertexGeoObjectStrategy;
 import net.geoprism.registry.etl.export.GeoObjectExportFormat;
 import net.geoprism.registry.etl.export.GeoObjectJsonExporter;
 import net.geoprism.registry.etl.upload.ClassifierCache;
-import net.geoprism.registry.graph.AttributeValue;
 import net.geoprism.registry.graph.GeoVertex;
 import net.geoprism.registry.graph.HierarchicalRelationshipType;
 import net.geoprism.registry.graph.InheritedHierarchyAnnotation;
@@ -95,6 +93,7 @@ import net.geoprism.registry.io.TermValueException;
 import net.geoprism.registry.model.BusinessObject;
 import net.geoprism.registry.model.Classification;
 import net.geoprism.registry.model.ClassificationType;
+import net.geoprism.registry.model.EdgeConstant;
 import net.geoprism.registry.model.GeoObjectMetadata;
 import net.geoprism.registry.model.GeoObjectTypeMetadata;
 import net.geoprism.registry.model.LocationInfo;
@@ -1489,55 +1488,9 @@ public class GeoObjectBusinessService extends RegistryLocalizedValueConverter im
     return tnRoot;
   }
 
-  // TODO : Convert this method into a utility method?
   protected List<ServerGeoObjectIF> processResults(List<VertexObject> results, Date date)
   {
-    VertexObject current = null;
-    List<VertexObject> currentAttributes = new LinkedList<>();
-    MdVertexDAOIF mdGeoVertex = MdVertexDAO.getMdVertexDAO(GeoVertex.CLASS);
-    List<ServerGeoObjectIF> list = new LinkedList<ServerGeoObjectIF>();
-
-    for (VertexObject result : results)
-    {
-      MdVertexDAOIF mdClass = (MdVertexDAOIF) result.getMdClass();
-      List<? extends MdVertexDAOIF> superClasses = mdClass.getSuperClasses();
-      if (superClasses.contains(mdGeoVertex))
-      {
-        if (current != null)
-        {
-          MdVertexDAOIF mdVertex = (MdVertexDAOIF) current.getMdClass();
-          ServerGeoObjectType type = ServerGeoObjectType.get(mdVertex);
-
-          Map<String, List<VertexObject>> nodeMap = currentAttributes.stream().collect(Collectors.groupingBy(v -> {
-            return (String) v.getObjectValue(AttributeValue.ATTRIBUTENAME);
-          }));
-
-          VertexServerGeoObject vsgo = new VertexServerGeoObject(type, current, nodeMap, date);
-          list.add(vsgo);
-        }
-        current = result;
-        currentAttributes = new LinkedList<>();
-      }
-      else
-      {
-        currentAttributes.add(result);
-      }
-    }
-
-    if (current != null)
-    {
-      MdVertexDAOIF mdVertex = (MdVertexDAOIF) current.getMdClass();
-      ServerGeoObjectType type = ServerGeoObjectType.get(mdVertex);
-
-      Map<String, List<VertexObject>> nodeMap = currentAttributes.stream().collect(Collectors.groupingBy(v -> {
-        return (String) v.getObjectValue(AttributeValue.ATTRIBUTENAME);
-      }));
-
-      VertexServerGeoObject vsgo = new VertexServerGeoObject(type, current, nodeMap, date);
-      list.add(vsgo);
-    }
-
-    return list;
+    return VertexServerGeoObject.processTraverseResults(results, date);
   }
 
   private ServerParentTreeNode internalGetParentGeoObjects(ServerGeoObjectIF child, String[] parentTypes, boolean recursive, boolean includeInherited, ServerHierarchyType htIn, Date date)
@@ -1950,7 +1903,7 @@ public class GeoObjectBusinessService extends RegistryLocalizedValueConverter im
    *          The parent types, sorted from the top to the bottom
    * @return
    */
-  private GraphQuery<Map<String, Object>> buildAncestorSelectQueryFast(ServerGeoObjectIF sgo, ServerHierarchyType hierarchy, List<ServerGeoObjectType> parents)
+  private List<ServerGeoObjectIF> buildAncestorSelectQueryFast(ServerGeoObjectIF sgo, ServerHierarchyType hierarchy, List<ServerGeoObjectType> parents)
   {
     LinkedList<ServerHierarchyType> inheritancePath = new LinkedList<ServerHierarchyType>();
     inheritancePath.add(hierarchy);
@@ -1970,24 +1923,10 @@ public class GeoObjectBusinessService extends RegistryLocalizedValueConverter im
       }
     }
 
-    // TODO: HEADS UP - Handle multiple locales
-    String dbClassName = sgo.getMdClass().getDBClassName();
-
+    // We only care about the code and the display label attributes
     StringBuilder statement = new StringBuilder();
-    statement.append("SELECT ");
-    statement.append("@class AS cl, ");
-    statement.append(DefaultAttribute.CODE.getName() + " AS code, ");
-    
-    if (sgo.getDate() != null)
-    {
-      statement.append("  first(out('has_value')[attributeName = 'displayLabel' AND :date BETWEEN startDate AND endDate]).defaultLocale AS label ");
-    }
-    else
-    {
-      statement.append("  first(out('has_value')[attributeName = 'displayLabel']).defaultLocale AS label ");
-    }
-    
-    statement.append("FROM (");
+    statement.append("TRAVERSE out('" + EdgeConstant.HAS_VALUE.getDBClassName() + "')[attributeName = 'displayLabel'] FROM (");    
+    statement.append("SELECT FROM (");
 
     for (ServerHierarchyType hier : inheritancePath)
     {
@@ -2001,7 +1940,7 @@ public class GeoObjectBusinessService extends RegistryLocalizedValueConverter im
       }
     }
 
-    statement.append("SELECT FROM " + dbClassName + " WHERE @rid=:rid");
+    statement.append("SELECT FROM " + sgo.getType().getDBClassName() + " WHERE @rid=:rid");
 
     for (ServerHierarchyType hier : inheritancePath)
     {
@@ -2010,33 +1949,33 @@ public class GeoObjectBusinessService extends RegistryLocalizedValueConverter im
 
     if (sgo.getDate() != null)
     {
-      statement.append(") WHERE out('has_value')[attributeName = 'exists' AND value = true AND :date BETWEEN startDate AND endDate].size() > 0");
+      statement.append(") WHERE out('" + EdgeConstant.HAS_VALUE.getDBClassName() + "')[attributeName = 'exists' AND value = true AND :date BETWEEN startDate AND endDate].size() > 0");
     }
     else
     {
-      statement.append(") WHERE out('has_value')[attributeName = 'exists' AND value = true].size() > 0");
+      statement.append(") WHERE out('" + EdgeConstant.HAS_VALUE.getDBClassName() + "')[attributeName = 'exists' AND value = true].size() > 0");
     }
-
-    GraphQuery<Map<String, Object>> query = new GraphQuery<Map<String, Object>>(statement.toString());
+    
+    statement.append(")");
+    
+    GraphQuery<VertexObject> query = new GraphQuery<VertexObject>(statement.toString());
     query.setParameter("rid", sgo.getVertex().getRID());
-
+    
     if (sgo.getDate() != null)
     {
       query.setParameter("date", sgo.getDate());
     }
 
-    return query;
+
+    return VertexServerGeoObject.processTraverseResults(query.getResults(), sgo.getDate());
   }
 
   @Override
-  @SuppressWarnings("unchecked")
   public Map<String, LocationInfo> getAncestorMap(ServerGeoObjectIF sgo, ServerHierarchyType hierarchy, List<ServerGeoObjectType> parents)
   {
     TreeMap<String, LocationInfo> map = new TreeMap<String, LocationInfo>();
 
-    GraphQuery<Map<String, Object>> query = buildAncestorSelectQueryFast(sgo, hierarchy, parents);
-
-    List<Map<String, Object>> results = query.getResults();
+    List<ServerGeoObjectIF> results = buildAncestorSelectQueryFast(sgo, hierarchy, parents);
 
     if (results.size() <= 1)
     {
@@ -2046,21 +1985,14 @@ public class GeoObjectBusinessService extends RegistryLocalizedValueConverter im
     results.remove(0); // First result is the child object
 
     results.forEach(result -> {
-      String clazz = (String) result.get("cl");
-      String code = (String) result.get("code");
 
-      // TODO: HEADS UP - Handle multiple locales
-//      List<Map<String, Object>> displayLabelRaw = (List<Map<String, Object>>) result.get("label");
-//
-//      LocalizedValue localized = RegistryLocalizedValueConverter.convert(displayLabelRaw, sgo.getDate());
-      String defaultLabel = (String) result.get("label");
-      LocalizedValue localized = new LocalizedValue( defaultLabel);
-      localized.setValue(LocalizedValue.DEFAULT_LOCALE, defaultLabel);
-
+      LocalizedValue localized = result.getDisplayLabel();
+ 
       ServerGeoObjectType type = null;
+      
       for (ServerGeoObjectType parent : parents)
       {
-        if (parent.getMdVertex().getDBClassName().equals(clazz))
+        if (parent.getMdVertex().getDBClassName().equals(result.getType().getDBClassName()))
         {
           type = parent;
         }
@@ -2068,12 +2000,12 @@ public class GeoObjectBusinessService extends RegistryLocalizedValueConverter im
 
       if (type != null && localized != null)
       {
-        LocationInfoHolder holder = new LocationInfoHolder(code, localized, type);
+        LocationInfoHolder holder = new LocationInfoHolder(result.getCode(), localized, type);
         map.put(type.getCode(), holder);
       }
       else
       {
-        logger.error("Could not find [" + clazz + "] or the localized value was null.");
+        logger.error("Could not find [" + sgo.getType().getDBClassName() + "] or the localized value was null.");
       }
     });
 

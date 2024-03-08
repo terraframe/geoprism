@@ -28,6 +28,7 @@ import java.util.Collection;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -93,6 +94,7 @@ import net.geoprism.registry.geoobject.ValueOutOfRangeException;
 import net.geoprism.registry.graph.AttributeLocalType;
 import net.geoprism.registry.graph.AttributeTermType;
 import net.geoprism.registry.graph.AttributeType;
+import net.geoprism.registry.graph.AttributeValue;
 import net.geoprism.registry.graph.GeoVertex;
 import net.geoprism.registry.graph.GeoVertexSynonym;
 import net.geoprism.registry.model.AbstractServerGeoObject;
@@ -1338,5 +1340,56 @@ public class VertexServerGeoObject extends AbstractServerGeoObject implements Se
 
     return query.getSingleResult() > 0;
   }
+
+  public static List<ServerGeoObjectIF> processTraverseResults(List<VertexObject> results, Date date)
+  {
+    VertexObject current = null;
+    List<VertexObject> currentAttributes = new LinkedList<>();
+    MdVertexDAOIF mdGeoVertex = MdVertexDAO.getMdVertexDAO(GeoVertex.CLASS);
+    List<ServerGeoObjectIF> list = new LinkedList<ServerGeoObjectIF>();
+
+    for (VertexObject result : results)
+    {
+      MdVertexDAOIF mdClass = (MdVertexDAOIF) result.getMdClass();
+      List<? extends MdVertexDAOIF> superClasses = mdClass.getSuperClasses();
+      if (superClasses.contains(mdGeoVertex))
+      {
+        if (current != null)
+        {
+          MdVertexDAOIF mdVertex = (MdVertexDAOIF) current.getMdClass();
+          ServerGeoObjectType type = ServerGeoObjectType.get(mdVertex);
+
+          Map<String, List<VertexObject>> nodeMap = currentAttributes.stream().collect(Collectors.groupingBy(v -> {
+            return (String) v.getObjectValue(AttributeValue.ATTRIBUTENAME);
+          }));
+
+          VertexServerGeoObject vsgo = new VertexServerGeoObject(type, current, nodeMap, date);
+          list.add(vsgo);
+        }
+        current = result;
+        currentAttributes = new LinkedList<>();
+      }
+      else
+      {
+        currentAttributes.add(result);
+      }
+    }
+
+    if (current != null)
+    {
+      MdVertexDAOIF mdVertex = (MdVertexDAOIF) current.getMdClass();
+      ServerGeoObjectType type = ServerGeoObjectType.get(mdVertex);
+
+      Map<String, List<VertexObject>> nodeMap = currentAttributes.stream().collect(Collectors.groupingBy(v -> {
+        return (String) v.getObjectValue(AttributeValue.ATTRIBUTENAME);
+      }));
+
+      VertexServerGeoObject vsgo = new VertexServerGeoObject(type, current, nodeMap, date);
+      list.add(vsgo);
+    }
+
+    return list;
+  }
+
 
 }
