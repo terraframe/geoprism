@@ -74,7 +74,7 @@ public class GeometryValueNodeStrategy extends ValueNodeStrategy
   }
 
   @Override
-  protected void setNodeValue(VertexObject node, Object value)
+  protected void setNodeValue(VertexObject node, Object value, Boolean validate)
   {
     if (value instanceof Geometry)
     {
@@ -96,6 +96,6 @@ public class GeometryValueNodeStrategy extends ValueNodeStrategy
       }
     }
 
-    super.setNodeValue(node, value);
+    super.setNodeValue(node, value, validate);
   }
 }

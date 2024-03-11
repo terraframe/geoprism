@@ -23,7 +23,7 @@ public class VertexValueStrategy extends AbstractValueStrategy implements ValueS
   }
 
   @Override
-  public void setValue(VertexObject vertex, Map<String, AttributeState> valueNodes, Object value, Date startDate, Date endDate)
+  public void setValue(VertexObject vertex, Map<String, AttributeState> valueNodeMap, Object value, Date startDate, Date endDate, boolean validate)
   {
     vertex.setValue(this.getType().getCode(), value);
   }

@@ -13,6 +13,8 @@ public interface ValueStrategy
 
   public void setValue(VertexObject vertex, Map<String, AttributeState> valueNodeMap, Object value, Date startDate, Date endDate);
 
+  public void setValue(VertexObject vertex, Map<String, AttributeState> valueNodeMap, Object value, Date startDate, Date endDate, boolean validate);
+
   public boolean isModified(VertexObject vertex, Map<String, AttributeState> valueNodeMap);
 
   public <T> T getValue(VertexObject vertex, Map<String, AttributeState> valueNodeMap, Date date);

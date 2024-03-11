@@ -18,9 +18,9 @@ public class LocalValueNodeStrategy extends ValueNodeStrategy implements ValueSt
   {
     super(type, nodeVertex, nodeAttribute);
   }
-
+  
   @Override
-  protected void setNodeValue(VertexObject node, Object value)
+  protected void setNodeValue(VertexObject node, Object value, Boolean validate)
   {
     if (value instanceof LocalizedValue)
     {

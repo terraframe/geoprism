@@ -9,6 +9,7 @@ import com.runwaysdk.constants.MdAttributeBooleanInfo;
 import com.runwaysdk.constants.MdAttributeClassificationInfo;
 import com.runwaysdk.constants.MdAttributeLocalInfo;
 import com.runwaysdk.constants.graph.MdVertexInfo;
+import com.runwaysdk.dataaccess.MdAttributeClassificationDAOIF;
 import com.runwaysdk.dataaccess.MdVertexDAOIF;
 import com.runwaysdk.dataaccess.metadata.MdAttributeClassificationDAO;
 import com.runwaysdk.dataaccess.metadata.MdAttributeConcreteDAO;
@@ -250,5 +251,13 @@ public class AttributeClassificationType extends AttributeClassificationTypeBase
     }
 
     return null;
+  }
+
+  public MdAttributeClassificationDAOIF getMdAttributeClassification()
+  {
+    MdVertexDAOIF mdVertex = MdVertexDAO.get(this.getGeoObjectType().getMdVertexOid());
+
+    return (MdAttributeClassificationDAOIF) mdVertex.definesAttribute(this.getCode());
+
   }
 }

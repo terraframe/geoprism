@@ -247,6 +247,74 @@ public class Classifier extends ClassifierBase
 
     return null;
   }
+  
+  /**
+   * Returns the <code>Classifier</code> object with a label or synonym that
+   * matches the given term. Searches all nodes that are children of the given
+   * attribute root nodes including the root nodes.
+   * 
+   * @param sfTermToMatch
+   * @param mdAttributeTermDAO
+   * @return the <code>Classifier</code> object with a label or synonym that
+   *         matches the given term.
+   */
+  public static Classifier findMatchingTerm(String sfTermToMatch, String rootTermOid)
+  {
+    String termId = null;
+
+    MdBusinessDAOIF mdBusiness = MdBusinessDAO.getMdBusinessDAO(CLASS);
+    MdAttributeLocalDAOIF mdAttributeLocal = (MdAttributeLocalDAOIF) mdBusiness.definesAttribute(DISPLAYLABEL);
+    MdLocalStructDAOIF mdStruct = mdAttributeLocal.getMdStructDAOIF();
+
+    StringBuilder sql = new StringBuilder();
+    sql.append("select t.oid AS oid");
+    sql.append(" FROM classifier_is_ar_elationship_a AS apt");
+    sql.append(" join classifier AS t ON t.oid = apt.child_term");
+    sql.append(" LEFT JOIN classifier_display_label AS tdl ON t.display_label = tdl.oid");
+    sql.append(" where apt.parent_term = '" + rootTermOid + "'");
+    sql.append(" AND (");
+    sql.append("  UPPER(" + localize(mdStruct, "tdl") + ") = UPPER('" + sfTermToMatch + "')");
+    sql.append("  OR t.classifier_id = '" + sfTermToMatch + "'");
+    sql.append(" )");
+    sql.append(" UNION");
+    sql.append(" SELECT DISTINCT t.oid AS oid");
+    sql.append(" FROM classifier_is_ar_elationship_a AS apt");
+    sql.append(" JOIN classifier AS t ON t.oid = apt.child_term");
+    sql.append(" JOIN classifier_has_synonym AS hs ON hs.parent_oid = t.oid");
+    sql.append(" JOIN classifier_synonym AS ts ON hs.child_oid = ts.oid");
+    sql.append(" LEFT JOIN classifier_synonym_display_lab AS tdl ON ts.display_label = tdl.oid");
+    sql.append(" where apt.parent_term = '" + rootTermOid + "'");
+    sql.append(" AND " + localize(mdStruct, "tdl") + " = '" + sfTermToMatch + "'");
+
+    try
+    {
+      ResultSet results = Database.query(sql.toString());
+
+      try
+      {
+        if (results.next())
+        {
+          termId = results.getString("oid");
+        }
+      }
+      finally
+      {
+        results.close();
+      }
+    }
+    catch (SQLException e)
+    {
+      throw new ProgrammingErrorException(e);
+    }
+
+    if (termId != null)
+    {
+      return Classifier.get(termId);
+    }
+
+    return null;
+  }
+
 
   public static String localize(MdLocalStructDAOIF mdLocalStruct, String prefix)
   {

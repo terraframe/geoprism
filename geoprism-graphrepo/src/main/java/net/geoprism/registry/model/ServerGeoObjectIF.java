@@ -19,7 +19,6 @@
 package net.geoprism.registry.model;
 
 import java.util.Date;
-import java.util.List;
 import java.util.SortedSet;
 
 import org.commongeoregistry.adapter.dataaccess.LocalizedValue;
@@ -27,7 +26,6 @@ import org.locationtech.jts.geom.Geometry;
 
 import com.runwaysdk.business.graph.EdgeObject;
 import com.runwaysdk.business.graph.VertexObject;
-import com.runwaysdk.dataaccess.MdAttributeConcreteDAOIF;
 import com.runwaysdk.dataaccess.MdGraphClassDAOIF;
 import com.runwaysdk.dataaccess.graph.attributes.ValueOverTimeCollection;
 
@@ -80,6 +78,8 @@ public interface ServerGeoObjectIF
   public void setValue(String attributeName, Object value);
 
   public void setValue(String attributeName, Object value, Date startDate, Date endDate);
+  
+  public void setValue(String attributeName, Object value, Date startDate, Date endDate, boolean validate);
 
   public void setDisplayLabel(LocalizedValue label);
 
@@ -130,5 +130,6 @@ public interface ServerGeoObjectIF
   public void apply();
 
   void delete();
+
 
 }

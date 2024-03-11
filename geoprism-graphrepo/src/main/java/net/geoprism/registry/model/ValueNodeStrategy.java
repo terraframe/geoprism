@@ -11,8 +11,6 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import org.commongeoregistry.adapter.constants.DefaultAttribute;
-
 import com.runwaysdk.business.graph.VertexObject;
 import com.runwaysdk.dataaccess.MdVertexDAOIF;
 import com.runwaysdk.dataaccess.graph.attributes.ValueOverTime;
@@ -69,31 +67,32 @@ public class ValueNodeStrategy extends AbstractValueStrategy implements ValueStr
   }
 
   @Override
-  public void setValue(VertexObject vertex, Map<String, AttributeState> valueNodeMap, Object value, Date startDate, Date endDate)
+  public void setValue(VertexObject vertex, Map<String, AttributeState> valueNodeMap, Object value, Date startDate, Date endDate, boolean validate)
   {
     // Can't set NULL values for value node objects
     // The period of validity should be changed or the node should be deleted
     if (value != null)
     {
       AttributeState state = getState(valueNodeMap);
-      VertexObject node = this.createNode(value, startDate, endDate);
+      VertexObject node = this.createNode(value, startDate, endDate, validate);
 
       this.add(state, node, false);
     }
   }
 
-  protected VertexObject createNode(Object value, Date startDate, Date endDate)
+  protected VertexObject createNode(Object value, Date startDate, Date endDate, Boolean validate)
   {
     VertexObject node = new VertexObject(nodeVertex.definesType());
     node.setValue(AttributeValue.ATTRIBUTENAME, this.getType().getCode());
     node.setValue(AttributeValue.STARTDATE, startDate);
     node.setValue(AttributeValue.ENDDATE, endDate);
 
-    setNodeValue(node, value);
+    setNodeValue(node, value, validate);
+
     return node;
   }
 
-  protected void setNodeValue(VertexObject node, Object value)
+  protected void setNodeValue(VertexObject node, Object value, Boolean validate)
   {
     node.setValue(nodeAttribute, value);
   }
@@ -109,7 +108,7 @@ public class ValueNodeStrategy extends AbstractValueStrategy implements ValueStr
   public <T> T getValue(VertexObject vertex, Map<String, AttributeState> valueNodeMap, Date date)
   {
     AttributeState state = getState(valueNodeMap);
-    
+
     if (date != null)
     {
       Optional<VertexObject> optional = state.stream().filter(node -> {
@@ -124,7 +123,7 @@ public class ValueNodeStrategy extends AbstractValueStrategy implements ValueStr
     else
     {
       ValueOverTimeCollection votc = this.getValueOverTimeCollection(vertex, valueNodeMap);
-      
+
       if (votc.size() > 0)
       {
         return (T) votc.last().getValue();
@@ -172,11 +171,11 @@ public class ValueNodeStrategy extends AbstractValueStrategy implements ValueStr
         node.setValue(AttributeValue.STARTDATE, vot.getStartDate());
         node.setValue(AttributeValue.ENDDATE, vot.getEndDate());
 
-        this.setNodeValue(node, vot.getValue());
+        this.setNodeValue(node, vot.getValue(), true);
 
       }, () -> {
         // No existing node corresponds to the vot, create a new one
-        state.add(this.createNode(vot.getValue(), vot.getStartDate(), vot.getEndDate()));
+        state.add(this.createNode(vot.getValue(), vot.getStartDate(), vot.getEndDate(), true));
       });
     });
   }
@@ -296,8 +295,8 @@ public class ValueNodeStrategy extends AbstractValueStrategy implements ValueStr
 
             it.remove();
 
-            segments.add(this.createNode(existingValue, vStartDate, this.calculateDateMinusOneDay(startDate)));
-            segments.add(this.createNode(existingValue, this.calculateDatePlusOneDay(endDate), vEndDate));
+            segments.add(this.createNode(existingValue, vStartDate, this.calculateDateMinusOneDay(startDate), true));
+            segments.add(this.createNode(existingValue, this.calculateDatePlusOneDay(endDate), vEndDate, true));
           }
         }
       }

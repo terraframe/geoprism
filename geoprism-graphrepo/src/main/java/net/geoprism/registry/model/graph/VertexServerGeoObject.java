@@ -412,10 +412,15 @@ public class VertexServerGeoObject extends AbstractServerGeoObject implements Se
   @Override
   public void setValue(String attributeName, Object value, Date startDate, Date endDate)
   {
+    this.setValue(attributeName, value, startDate, endDate, true);
+  }
+  
+  @Override
+  public void setValue(String attributeName, Object value, Date startDate, Date endDate, boolean validate)
+  {
     this.type.getAttribute(attributeName).ifPresent( ( attr -> {
-      attr.getStrategy().setValue(this.vertex, this.valueNodeMap, value, startDate, endDate);
+      attr.getStrategy().setValue(this.vertex, this.valueNodeMap, value, startDate, endDate, validate);
     } ));
-
   }
 
   @Override
@@ -1329,6 +1334,5 @@ public class VertexServerGeoObject extends AbstractServerGeoObject implements Se
 
     return list;
   }
-
 
 }
