@@ -1463,8 +1463,8 @@ public class GeoObjectBusinessService extends RegistryLocalizedValueConverter im
     GraphQuery<VertexObject> query = new GraphQuery<VertexObject>(statement.toString(), parameters);
 
     List<VertexObject> vertexes = query.getResults();
-
-    List<ServerGeoObjectIF> children = processResults(vertexes, date);
+    
+    List<ServerGeoObjectIF> children = constructGeoObjectsFromQueryResults(vertexes, date);
 
     for (ServerGeoObjectIF child : children)
     {
@@ -1487,8 +1487,8 @@ public class GeoObjectBusinessService extends RegistryLocalizedValueConverter im
 
     return tnRoot;
   }
-
-  protected List<ServerGeoObjectIF> processResults(List<VertexObject> results, Date date)
+  
+  public static List<ServerGeoObjectIF> constructGeoObjectsFromQueryResults(List<VertexObject> results, Date date)
   {
     return VertexServerGeoObject.processTraverseResults(results, date);
   }
@@ -1585,8 +1585,8 @@ public class GeoObjectBusinessService extends RegistryLocalizedValueConverter im
     GraphQuery<VertexObject> query = new GraphQuery<VertexObject>(statement.toString(), parameters);
 
     List<VertexObject> vertexes = query.getResults();
-
-    List<ServerGeoObjectIF> parents = processResults(vertexes, date);
+    
+    List<ServerGeoObjectIF> parents = constructGeoObjectsFromQueryResults(vertexes, date);
 
     for (ServerGeoObjectIF parent : parents)
     {
