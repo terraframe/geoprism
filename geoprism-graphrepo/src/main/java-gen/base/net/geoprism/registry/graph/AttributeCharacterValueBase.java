@@ -1,6 +1,6 @@
 package net.geoprism.registry.graph;
 
-@com.runwaysdk.business.ClassSignature(hash = -1129158913)
+@com.runwaysdk.business.ClassSignature(hash = -1205092811)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -13,7 +13,7 @@ public abstract class AttributeCharacterValueBase extends net.geoprism.registry.
   public final static String CLASS = "net.geoprism.registry.graph.AttributeCharacterValue";
   public final static java.lang.String VALUE = "value";
   @SuppressWarnings("unused")
-  private static final long serialVersionUID = -1129158913;
+  private static final long serialVersionUID = -1205092811;
   
   public AttributeCharacterValueBase()
   {
@@ -25,10 +25,10 @@ public abstract class AttributeCharacterValueBase extends net.geoprism.registry.
     return (String) this.getObjectValue(VALUE);
   }
   
-  public static com.runwaysdk.dataaccess.MdAttributeTextDAOIF getValueMd()
+  public static com.runwaysdk.dataaccess.MdAttributeCharacterDAOIF getValueMd()
   {
     com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(net.geoprism.registry.graph.AttributeCharacterValue.CLASS);
-    return (com.runwaysdk.dataaccess.MdAttributeTextDAOIF)mdClassIF.definesAttribute(VALUE);
+    return (com.runwaysdk.dataaccess.MdAttributeCharacterDAOIF)mdClassIF.definesAttribute(VALUE);
   }
   
   public void setValue(String value)

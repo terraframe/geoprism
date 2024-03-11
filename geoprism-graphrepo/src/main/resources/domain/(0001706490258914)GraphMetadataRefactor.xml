@@ -120,32 +120,32 @@
       </mdVertex>    
       <mdVertex name="net.geoprism.registry.graph.AttributeBooleanValue" extends="net.geoprism.registry.graph.AttributeBasicValue" label="Attribute Boolean Value">
         <attributes>
-          <boolean name="value" label="Value" required="true"  />          
+          <boolean name="value" label="Value" required="false"  />          
         </attributes>
       </mdVertex>    
       <mdVertex name="net.geoprism.registry.graph.AttributeCharacterValue" extends="net.geoprism.registry.graph.AttributeBasicValue" label="Attribute Character Value">
         <attributes>
-          <text name="value" label="Value" required="true"  />          
+          <char name="value" label="Value" required="false" size="4000"  />          
         </attributes>
       </mdVertex>    
       <mdVertex name="net.geoprism.registry.graph.AttributeDateValue" extends="net.geoprism.registry.graph.AttributeBasicValue" label="Attribute Date Value">
         <attributes>
-          <dateTime name="value" label="Value" required="true"  />          
+          <dateTime name="value" label="Value" required="false"  />          
         </attributes>
       </mdVertex>    
       <mdVertex name="net.geoprism.registry.graph.AttributeLongValue" extends="net.geoprism.registry.graph.AttributeBasicValue" label="Attribute Long Value">
         <attributes>
-          <long name="value" label="Value" required="true"  />          
+          <long name="value" label="Value" required="false"  />          
         </attributes>
       </mdVertex>    
       <mdVertex name="net.geoprism.registry.graph.AttributeLocalValue" extends="net.geoprism.registry.graph.AttributeBasicValue" label="Attribute Local Value">
         <attributes>
-          <text name="defaultLocale" label="Default Locale" required="true"  />          
+          <text name="defaultLocale" label="Default Locale" required="false"  />          
         </attributes>
       </mdVertex>    
       <mdVertex name="net.geoprism.registry.graph.AttributeTermValue" extends="net.geoprism.registry.graph.AttributeBasicValue" label="Attribute Term Value">
         <attributes>
-          <reference name="value" label="Value" required="true" type="net.geoprism.ontology.Classifier"  />          
+          <reference name="value" label="Value" required="false" type="net.geoprism.ontology.Classifier"  />          
         </attributes>
       </mdVertex>    
 <!--       
@@ -163,22 +163,22 @@
       </mdVertex>    
       <mdVertex name="net.geoprism.registry.graph.AttributeMultiPointValue" extends="net.geoprism.registry.graph.AttributeGeometryValue" label="Attribute Point Value">
         <attributes>
-          <multipoint name="value" label="Value" required="true" dimension="2" srid="4326"  />          
+          <multipoint name="value" label="Value" required="false" dimension="2" srid="4326"  />          
         </attributes>
       </mdVertex>    
       <mdVertex name="net.geoprism.registry.graph.AttributeMultiPolygonValue" extends="net.geoprism.registry.graph.AttributeGeometryValue" label="Attribute Polygon Value">
         <attributes>
-          <multipolygon name="value" label="Value" required="true" dimension="2" srid="4326" />          
+          <multipolygon name="value" label="Value" required="false" dimension="2" srid="4326" />          
         </attributes>
       </mdVertex>    
       <mdVertex name="net.geoprism.registry.graph.AttributeMultiLineValue" extends="net.geoprism.registry.graph.AttributeGeometryValue" label="Attribute Line Value">
         <attributes>
-          <multilinestring name="value" label="Value" required="true" dimension="2" srid="4326"  />          
+          <multilinestring name="value" label="Value" required="false" dimension="2" srid="4326"  />          
         </attributes>
       </mdVertex>    
       <mdVertex name="net.geoprism.registry.graph.AttributeShapeValue" extends="net.geoprism.registry.graph.AttributeGeometryValue" label="Attribute Shape Value">
         <attributes>
-          <shape name="value" label="Value" required="true" dimension="2" srid="4326"  />          
+          <shape name="value" label="Value" required="false" dimension="2" srid="4326"  />          
         </attributes>
       </mdVertex>    
       

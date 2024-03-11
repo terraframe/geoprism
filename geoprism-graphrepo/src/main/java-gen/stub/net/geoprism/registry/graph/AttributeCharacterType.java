@@ -2,9 +2,10 @@ package net.geoprism.registry.graph;
 
 import org.commongeoregistry.adapter.metadata.AttributeType;
 
+import com.runwaysdk.constants.MdAttributeCharacterInfo;
 import com.runwaysdk.dataaccess.MdAttributeDAOIF;
 import com.runwaysdk.dataaccess.MdVertexDAOIF;
-import com.runwaysdk.dataaccess.metadata.MdAttributeTextDAO;
+import com.runwaysdk.dataaccess.metadata.MdAttributeCharacterDAO;
 import com.runwaysdk.dataaccess.metadata.graph.MdVertexDAO;
 import com.runwaysdk.dataaccess.transaction.Transaction;
 
@@ -28,20 +29,21 @@ public class AttributeCharacterType extends AttributeCharacterTypeBase
   {
     if (!this.getIsChangeOverTime())
     {
-      MdAttributeTextDAO mdAttribute = null;
+      MdAttributeCharacterDAO mdAttribute = null;
 
       // Create the value vertex class
       if (this.isNew() && !this.isAppliedToDb())
       {
         // Create the MdAttribute on the MdVertex
-        mdAttribute = MdAttributeTextDAO.newInstance();
+        mdAttribute = MdAttributeCharacterDAO.newInstance();
+        mdAttribute.setValue(MdAttributeCharacterInfo.SIZE, MdAttributeCharacterInfo.MAX_CHARACTER_SIZE);
       }
       else
       {
         // Update the precision and scale of the value attribute
         MdVertexDAOIF mdVertex = MdVertexDAO.get(this.getGeoObjectType().getMdVertexOid());
 
-        mdAttribute = (MdAttributeTextDAO) mdVertex.definesAttribute(this.getCode()).getBusinessDAO();
+        mdAttribute = (MdAttributeCharacterDAO) mdVertex.definesAttribute(this.getCode()).getBusinessDAO();
       }
 
       populate(mdAttribute);
