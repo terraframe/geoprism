@@ -1,10 +1,15 @@
 package net.geoprism.registry.model;
 
 import java.util.Date;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 
 import com.runwaysdk.business.graph.VertexObject;
+import com.runwaysdk.dataaccess.MdAttributeDAOIF;
+import com.runwaysdk.dataaccess.MdVertexDAOIF;
 import com.runwaysdk.dataaccess.graph.attributes.ValueOverTimeCollection;
+import com.runwaysdk.dataaccess.metadata.graph.MdVertexDAO;
 
 import net.geoprism.registry.graph.AttributeType;
 
@@ -51,4 +56,16 @@ public class VertexValueStrategy extends AbstractValueStrategy implements ValueS
   {
     throw new UnsupportedOperationException();
   }
+
+  @Override
+  public List<MdAttributeDAOIF> getValueAttributes()
+  {
+    MdVertexDAOIF mdVertex = MdVertexDAO.get(this.getType().getGeoObjectType().getMdVertexOid());
+
+    List<MdAttributeDAOIF> list = new LinkedList<MdAttributeDAOIF>();
+    list.add(mdVertex.definesAttribute(this.getType().getCode()));
+
+    return list;
+  }
+
 }

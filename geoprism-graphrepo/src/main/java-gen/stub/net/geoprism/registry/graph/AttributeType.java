@@ -1,10 +1,14 @@
 package net.geoprism.registry.graph;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 import org.commongeoregistry.adapter.dataaccess.LocalizedValue;
 
 import com.runwaysdk.constants.IndexTypes;
 import com.runwaysdk.constants.MdAttributeBooleanInfo;
 import com.runwaysdk.constants.MdAttributeConcreteInfo;
+import com.runwaysdk.dataaccess.MdAttributeDAOIF;
 import com.runwaysdk.dataaccess.metadata.MdAttributeConcreteDAO;
 import com.runwaysdk.system.metadata.MdVertex;
 
@@ -42,9 +46,11 @@ public abstract class AttributeType extends AttributeTypeBase
   {
     return LocalizedValueConverter.convert(this.getEmbeddedComponent(DESCRIPTION));
   }
-  
+
   protected void populate(org.commongeoregistry.adapter.metadata.AttributeType dto)
   {
+    dto.setUnique(this.getUnique());
+    dto.setRequired(this.getRequired());
     dto.setIsChangeOverTime(this.getIsChangeOverTime());
   }
 
@@ -74,47 +80,16 @@ public abstract class AttributeType extends AttributeTypeBase
 
     LocalizedValueConverter.populate(this, AttributeType.LABEL, dto.getLabel());
     LocalizedValueConverter.populate(this, AttributeType.DESCRIPTION, dto.getDescription());
+  }
 
-    // TODO: HEADS UP
-    // if (dto instanceof AttributeClassificationType)
-    // {
-    // // Refresh the terms
-    // MdAttributeClassification mdAttributeTerm = (MdAttributeClassification)
-    // mdAttribute;
-    //
-    // AttributeClassificationType attributeClassificationType =
-    // (AttributeClassificationType) dto;
-    // String classificationTypeCode =
-    // attributeClassificationType.getClassificationType();
-    //
-    // ClassificationType classificationType =
-    // this.cTypeService.getByCode(classificationTypeCode);
-    //
-    // Term root = attributeClassificationType.getRootTerm();
-    //
-    // if (root != null)
-    // {
-    // Classification classification = this.cService.get(classificationType,
-    // root.getCode());
-    //
-    // mdAttributeTerm.setValue(MdAttributeClassification.ROOT,
-    // classification.getOid());
-    // }
-    // }
-    //
-    // if (dto instanceof AttributeTermType)
-    // {
-    // // Refresh the terms
-    // AttributeTermType attributeTermType = (AttributeTermType) dto;
-    //
-    // org.commongeoregistry.adapter.Term getRootTerm =
-    // attributeTermType.getRootTerm();
-    // String classifierKey =
-    // TermConverter.buildClassifierKeyFromTermCode(getRootTerm.getCode());
-    //
-    // TermConverter termBuilder = new TermConverter(classifierKey);
-    // attributeTermType.setRootTerm(termBuilder.build());
-    // }
+  public List<MdAttributeDAOIF> getValueAttributes()
+  {
+    return this.getStrategy().getValueAttributes();
+  }
+
+  public List<String> getColumnNames()
+  {
+    return this.getValueAttributes().stream().map(mdAttribute -> mdAttribute.getColumnName()).collect(Collectors.toList());
   }
 
 }

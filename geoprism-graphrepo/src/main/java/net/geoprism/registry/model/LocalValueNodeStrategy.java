@@ -1,11 +1,14 @@
 package net.geoprism.registry.model;
 
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Locale;
 import java.util.Set;
 
 import org.commongeoregistry.adapter.dataaccess.LocalizedValue;
 
 import com.runwaysdk.business.graph.VertexObject;
+import com.runwaysdk.dataaccess.MdAttributeDAOIF;
 import com.runwaysdk.dataaccess.MdVertexDAOIF;
 import com.runwaysdk.localization.LocalizationFacade;
 
@@ -18,7 +21,28 @@ public class LocalValueNodeStrategy extends ValueNodeStrategy implements ValueSt
   {
     super(type, nodeVertex, nodeAttribute);
   }
-  
+
+  @Override
+  public List<MdAttributeDAOIF> getValueAttributes()
+  {
+    List<MdAttributeDAOIF> list = new LinkedList<MdAttributeDAOIF>();
+    list.add(this.getNodeVertex().definesAttribute(LocalizedValue.DEFAULT_LOCALE));
+
+    Set<Locale> locales = LocalizationFacade.getInstalledLocales();
+
+    for (Locale locale : locales)
+    {
+      MdAttributeDAOIF mdAttribute = this.getNodeVertex().definesAttribute(locale.toString());
+
+      if (mdAttribute != null)
+      {
+        list.add(mdAttribute);
+      }
+    }
+
+    return list;
+  }
+
   @Override
   protected void setNodeValue(VertexObject node, Object value, Boolean validate)
   {

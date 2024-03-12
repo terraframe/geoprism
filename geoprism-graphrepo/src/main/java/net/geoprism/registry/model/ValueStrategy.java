@@ -1,9 +1,11 @@
 package net.geoprism.registry.model;
 
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 
 import com.runwaysdk.business.graph.VertexObject;
+import com.runwaysdk.dataaccess.MdAttributeDAOIF;
 import com.runwaysdk.dataaccess.graph.attributes.ValueOverTimeCollection;
 
 public interface ValueStrategy
@@ -22,4 +24,6 @@ public interface ValueStrategy
   public ValueOverTimeCollection getValueOverTimeCollection(VertexObject vertex, Map<String, AttributeState> valueNodeMap);
 
   public void setValuesOverTime(VertexObject vertex, Map<String, AttributeState> valueNodeMap, ValueOverTimeCollection collection);
+
+  public List<MdAttributeDAOIF> getValueAttributes();
 }

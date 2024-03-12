@@ -12,6 +12,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import com.runwaysdk.business.graph.VertexObject;
+import com.runwaysdk.dataaccess.MdAttributeDAOIF;
 import com.runwaysdk.dataaccess.MdVertexDAOIF;
 import com.runwaysdk.dataaccess.graph.attributes.ValueOverTime;
 import com.runwaysdk.dataaccess.graph.attributes.ValueOverTimeCollection;
@@ -36,6 +37,11 @@ public class ValueNodeStrategy extends AbstractValueStrategy implements ValueStr
 
     this.nodeVertex = nodeVertex;
     this.nodeAttribute = nodeAttribute;
+  }
+
+  protected MdVertexDAOIF getNodeVertex()
+  {
+    return nodeVertex;
   }
 
   private Date getEndDate(VertexObject node)
@@ -85,6 +91,15 @@ public class ValueNodeStrategy extends AbstractValueStrategy implements ValueStr
     setNodeValue(node, value, validate);
 
     return node;
+  }
+
+  @Override
+  public List<MdAttributeDAOIF> getValueAttributes()
+  {
+    List<MdAttributeDAOIF> list = new LinkedList<MdAttributeDAOIF>();
+    list.add(nodeVertex.definesAttribute(this.nodeAttribute));
+
+    return list;
   }
 
   protected void setNodeValue(VertexObject node, Object value, Boolean validate)
