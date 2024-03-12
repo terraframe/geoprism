@@ -3,37 +3,41 @@
  *
  * This file is part of Geoprism(tm).
  *
- * Geoprism(tm) is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
+ * Geoprism(tm) is free software: you can redistribute it and/or modify it under
+ * the terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation, either version 3 of the License, or (at your option) any
+ * later version.
  *
- * Geoprism(tm) is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
+ * Geoprism(tm) is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with Geoprism(tm).  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with Geoprism(tm). If not, see <http://www.gnu.org/licenses/>.
  */
 package net.geoprism.registry.query;
 
+import net.geoprism.registry.model.ServerGeoObjectType;
 import net.geoprism.registry.query.graph.VertexCodeRestriction;
 import net.geoprism.registry.query.graph.VertexGeoObjectQuery;
 import net.geoprism.registry.query.graph.VertexGeoObjectRestriction;
 
 public class ServerCodeRestriction implements ServerGeoObjectRestriction
 {
-  private String code;
+  private ServerGeoObjectType type;
 
-  public ServerCodeRestriction(String text)
+  private String              code;
+
+  public ServerCodeRestriction(ServerGeoObjectType type, String code)
   {
-    this.code = text;
+    this.type = type;
+    this.code = code;
   }
 
   @Override
   public VertexGeoObjectRestriction create(VertexGeoObjectQuery query)
   {
-    return new VertexCodeRestriction(this.code);
+    return new VertexCodeRestriction(this.type, this.code);
   }
 }

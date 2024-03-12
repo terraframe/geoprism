@@ -3,30 +3,30 @@
  *
  * This file is part of Geoprism(tm).
  *
- * Geoprism(tm) is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
+ * Geoprism(tm) is free software: you can redistribute it and/or modify it under
+ * the terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation, either version 3 of the License, or (at your option) any
+ * later version.
  *
- * Geoprism(tm) is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
+ * Geoprism(tm) is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with Geoprism(tm).  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with Geoprism(tm). If not, see <http://www.gnu.org/licenses/>.
  */
 package net.geoprism.registry.query.graph;
 
 import java.util.Date;
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.List;
-import java.util.TreeMap;
 
 import com.runwaysdk.business.graph.GraphQuery;
 import com.runwaysdk.business.graph.VertexObject;
+import com.runwaysdk.dataaccess.ProgrammingErrorException;
 
+import net.geoprism.registry.model.EdgeConstant;
 import net.geoprism.registry.model.ServerGeoObjectIF;
 import net.geoprism.registry.model.ServerGeoObjectType;
 import net.geoprism.registry.model.graph.VertexServerGeoObject;
@@ -90,7 +90,7 @@ public class VertexGeoObjectQuery implements ServerGeoObjectQuery
   {
     this.skip = skip;
   }
-  
+
   public Date getDate()
   {
     return date;
@@ -100,23 +100,22 @@ public class VertexGeoObjectQuery implements ServerGeoObjectQuery
   {
     HashMap<String, Object> parameters = new HashMap<String, Object>();
 
-    // MATCH {class: district0, as: location, where:
-    // (coalesce(displayLabel.defaultLocale) = 'Anlong
-    // Veaeng')}.in('located_in0'){as: parent, where: (@class='cambodia0'),
-    // while: ($depth < 6)} RETURN location, parent
-
     StringBuilder statement = new StringBuilder();
-    statement.append("MATCH { ");
-    statement.append("class: " + this.type.getMdVertex().getDBClassName());
-    statement.append(", as: location");
+    statement.append("TRAVERSE out('" + EdgeConstant.HAS_VALUE.getDBClassName() + "', '" + EdgeConstant.HAS_GEOMETRY.getDBClassName() + "') FROM (");
+    statement.append(" SELECT FROM ");
 
     if (this.restriction != null)
     {
-      this.restriction.create(this).restrict(statement, parameters);
+      VertexGeoObjectRestriction restriction = this.restriction.create(this);
+
+      restriction.restrict(statement, parameters);
+    }
+    else
+    {
+      statement.append(this.type.getMdVertex().getDBClassName());
     }
 
-    statement.append("} RETURN $elements");
-    statement.append(" ORDER BY location.code ASC");
+    statement.append(" ORDER BY code ASC");
 
     if (this.skip != null)
     {
@@ -128,6 +127,8 @@ public class VertexGeoObjectQuery implements ServerGeoObjectQuery
       statement.append(" LIMIT " + this.limit);
     }
 
+    statement.append(")");
+
     return new GraphQuery<VertexObject>(statement.toString(), parameters);
   }
 
@@ -136,16 +137,12 @@ public class VertexGeoObjectQuery implements ServerGeoObjectQuery
     HashMap<String, Object> parameters = new HashMap<String, Object>();
 
     StringBuilder statement = new StringBuilder();
-    statement.append("MATCH { ");
-    statement.append("class: " + this.type.getMdVertex().getDBClassName());
-    statement.append(", as: location");
+    statement.append(" SELECT COUNT(*) FROM " + this.type.getMdVertex().getDBClassName());
 
     if (this.restriction != null)
     {
       this.restriction.create(this).restrict(statement, parameters);
     }
-
-    statement.append("} RETURN count(location)");
 
     return new GraphQuery<Long>(statement.toString(), parameters);
   }
@@ -154,29 +151,29 @@ public class VertexGeoObjectQuery implements ServerGeoObjectQuery
   {
     GraphQuery<VertexObject> query = this.getQuery();
 
-    VertexObject vertex = query.getSingleResult();
+    List<ServerGeoObjectIF> results = VertexServerGeoObject.processTraverseResults(query.getResults(), this.date);
 
-    if (vertex != null)
+    if (results.size() == 0)
     {
-      return new VertexServerGeoObject(type, vertex, new TreeMap<>(), this.date);
+      return null;
     }
-
-    return null;
+    else if (results.size() == 1)
+    {
+      return results.get(0);
+    }
+    else
+    {
+      throw new ProgrammingErrorException("Multiple results were returned when only one is allowed");
+    }
   }
 
   public List<ServerGeoObjectIF> getResults()
   {
-    List<ServerGeoObjectIF> list = new LinkedList<ServerGeoObjectIF>();
     GraphQuery<VertexObject> query = this.getQuery();
 
     List<VertexObject> results = query.getResults();
 
-    for (VertexObject result : results)
-    {
-      list.add(new VertexServerGeoObject(type, result, new TreeMap<>(), this.date));
-    }
-
-    return list;
+    return VertexServerGeoObject.processTraverseResults(results, this.date);
   }
 
   public Long getCount()

@@ -3,18 +3,18 @@
  *
  * This file is part of Geoprism(tm).
  *
- * Geoprism(tm) is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
+ * Geoprism(tm) is free software: you can redistribute it and/or modify it under
+ * the terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation, either version 3 of the License, or (at your option) any
+ * later version.
  *
- * Geoprism(tm) is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
+ * Geoprism(tm) is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with Geoprism(tm).  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with Geoprism(tm). If not, see <http://www.gnu.org/licenses/>.
  */
 package net.geoprism.registry.query.graph;
 
@@ -62,45 +62,35 @@ public class VertexSynonymRestriction extends AbstractVertexRestriction implemen
   @Override
   public void restrict(StringBuilder statement, Map<String, Object> parameters)
   {
-    statement.append(",where: (code = :label");
-    statement.append(" OR displayLabel_cot CONTAINS (:date BETWEEN startDate AND endDate AND " + localize("value") + " = :label)");
-    statement.append(" OR out('geo_vertex_has_synonym').label CONTAINS :label)");
-
-    parameters.put("label", this.label);
-    parameters.put("date", this.date);
-
     if (this.parent != null && this.hierarchyType != null)
     {
       Set<String> edges = new TreeSet<String>();
-      edges.add(this.hierarchyType.getObjectEdge().getDBClassName());
+      edges.add("'" + this.hierarchyType.getObjectEdge().getDBClassName() + "'");
 
       ServerHierarchyType inheritedHierarchy = ServiceFactory.getBean(GeoObjectTypeBusinessServiceIF.class).findHierarchy(type, this.hierarchyType, this.parent.getType());
 
       if (inheritedHierarchy != null)
       {
-        edges.add(inheritedHierarchy.getObjectEdge().getDBClassName());
+        edges.add("'" + inheritedHierarchy.getObjectEdge().getDBClassName() + "'");
       }
 
-      statement.append("}.in(");
+      statement.append("( TRAVERSE OUT(" + String.join(",", edges) + ") FROM :rid )");
 
-      int i = 0;
-
-      for (String edge : edges)
-      {
-        if (i > 0)
-        {
-          statement.append(",");
-        }
-
-        statement.append("'" + edge + "'");
-
-        i++;
-      }
-
-      statement.append("){where: (uid=:uid), while: (true)");
-
-      parameters.put("uid", this.parent.getUid());
-
+      parameters.put("rid", this.parent.getVertex().getRID());
     }
+    else
+    {
+      statement.append(this.type.getMdVertex().getDBClassName());
+    }
+
+    statement.append(" WHERE (code = :label");
+    statement.append(" OR out('has_value')[attributeName = 'displayLabel' AND :date BETWEEN startDate AND endDate AND " + localize("value") + " = :label].size() > 0");
+    statement.append(" OR out('geo_vertex_has_synonym').label CONTAINS :label)");
+    statement.append(" AND @class = :class");
+
+    parameters.put("label", this.label);
+    parameters.put("date", this.date);
+    parameters.put("class", this.type.getDBClassName());
+
   }
 }
