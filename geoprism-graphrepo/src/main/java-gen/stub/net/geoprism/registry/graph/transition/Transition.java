@@ -28,6 +28,7 @@ import com.runwaysdk.dataaccess.MdVertexDAOIF;
 import com.runwaysdk.dataaccess.metadata.graph.MdVertexDAO;
 
 import net.geoprism.registry.conversion.VertexGeoObjectStrategy;
+import net.geoprism.registry.model.EdgeConstant;
 import net.geoprism.registry.model.ServerGeoObjectType;
 import net.geoprism.registry.model.graph.VertexServerGeoObject;
 import net.geoprism.registry.service.business.TransitionBusinessServiceIF;
@@ -117,7 +118,7 @@ public class Transition extends TransitionBase
     MdAttributeDAOIF mdAttribute = mdVertex.definesAttribute(attributeName);
 
     StringBuilder statement = new StringBuilder();
-    statement.append("TRAVERSE out('has_value', 'has_geometry') FROM (");
+    statement.append("TRAVERSE out('" + EdgeConstant.HAS_VALUE.getDBClassName() + "', '" + EdgeConstant.HAS_GEOMETRY.getDBClassName() + "') FROM (");
     statement.append(" SELECT expand(" + mdAttribute.getColumnName() + ")");
     statement.append("   FROM :parent");
     statement.append(")");
@@ -125,12 +126,7 @@ public class Transition extends TransitionBase
     GraphQuery<VertexObject> query = new GraphQuery<VertexObject>(statement.toString());
     query.setParameter("parent", this.getRID());
 
-    VertexObject vertex = query.getSingleResult();
-    MdVertexDAOIF geoVertex = (MdVertexDAOIF) vertex.getMdClass();
-
-    ServerGeoObjectType type = ServerGeoObjectType.get(geoVertex);
-
-    return new VertexServerGeoObject(type, vertex, new TreeMap<>());
+    return VertexServerGeoObject.processSingleResult(query.getResults(), null);
   }
 
   public static Transition apply(TransitionEvent event, int order, JsonObject object)

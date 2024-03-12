@@ -23,6 +23,7 @@ import org.commongeoregistry.adapter.RegistryAdapterServer;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 
+import net.geoprism.registry.cache.ServerAdapterCache;
 import net.geoprism.registry.cache.ServerMetadataCache;
 import net.geoprism.registry.service.permission.GeoObjectPermissionServiceIF;
 import net.geoprism.registry.service.permission.GeoObjectRelationshipPermissionServiceIF;
@@ -48,7 +49,7 @@ public class ServiceFactory implements CacheProviderIF
   {
     this.idService = new RegistryIdService();
 
-    this.adapter = new RegistryAdapterServer(this.idService);
+    this.adapter = new RegistryAdapterServer(this.idService, new ServerAdapterCache());
 
     this.metadataCache = new ServerMetadataCache(this.adapter);
     this.metadataCache.rebuild();

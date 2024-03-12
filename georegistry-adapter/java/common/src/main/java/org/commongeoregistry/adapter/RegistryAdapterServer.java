@@ -25,6 +25,7 @@ import org.commongeoregistry.adapter.id.AdapterIdServiceIF;
 import org.commongeoregistry.adapter.metadata.GeoObjectType;
 import org.commongeoregistry.adapter.metadata.HierarchyType;
 import org.commongeoregistry.adapter.metadata.MetadataCache;
+import org.commongeoregistry.adapter.metadata.MetadataCacheIF;
 
 /**
  * This class is used to manage the metadata and the {@link GeoObject}s that are managed by an implementation of 
@@ -42,11 +43,17 @@ public class RegistryAdapterServer extends RegistryAdapter
    * 
    */
   private static final long serialVersionUID = -3343727858910300438L;
-
+  
   public RegistryAdapterServer(AdapterIdServiceIF idService)
   {
-    super(idService);
+    this(idService, new MetadataCache());
   }
+
+  public RegistryAdapterServer(AdapterIdServiceIF idService, MetadataCacheIF metadataCache)
+  {
+    super(idService, metadataCache);
+  }
+
   
   /**
    * 

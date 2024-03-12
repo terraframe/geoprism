@@ -151,20 +151,7 @@ public class VertexGeoObjectQuery implements ServerGeoObjectQuery
   {
     GraphQuery<VertexObject> query = this.getQuery();
 
-    List<ServerGeoObjectIF> results = VertexServerGeoObject.processTraverseResults(query.getResults(), this.date);
-
-    if (results.size() == 0)
-    {
-      return null;
-    }
-    else if (results.size() == 1)
-    {
-      return results.get(0);
-    }
-    else
-    {
-      throw new ProgrammingErrorException("Multiple results were returned when only one is allowed");
-    }
+    return VertexServerGeoObject.processSingleResult(query.getResults(), this.date);
   }
 
   public List<ServerGeoObjectIF> getResults()

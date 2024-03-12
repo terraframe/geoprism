@@ -1285,12 +1285,13 @@ public class VertexServerGeoObject extends AbstractServerGeoObject implements Se
     return query.getSingleResult() > 0;
   }
 
-  public static List<ServerGeoObjectIF> processTraverseResults(List<VertexObject> results, Date date)
+  @SuppressWarnings("unchecked")
+  public static <T extends ServerGeoObjectIF> List<T> processTraverseResults(List<VertexObject> results, Date date)
   {
     VertexObject current = null;
     List<VertexObject> currentAttributes = new LinkedList<>();
     MdVertexDAOIF mdGeoVertex = MdVertexDAO.getMdVertexDAO(GeoVertex.CLASS);
-    List<ServerGeoObjectIF> list = new LinkedList<ServerGeoObjectIF>();
+    List<VertexServerGeoObject> list = new LinkedList<VertexServerGeoObject>();
 
     for (VertexObject result : results)
     {
@@ -1332,7 +1333,26 @@ public class VertexServerGeoObject extends AbstractServerGeoObject implements Se
       list.add(vsgo);
     }
 
-    return list;
+    return (List<T>) list;
+  }
+
+  @SuppressWarnings("unchecked")
+  public static <T extends ServerGeoObjectIF> T processSingleResult(List<VertexObject> list, Date date)
+  {
+    List<VertexServerGeoObject> results = VertexServerGeoObject.processTraverseResults(list, date);
+
+    if (results.size() == 0)
+    {
+      return null;
+    }
+    else if (results.size() == 1)
+    {
+      return (T) results.get(0);
+    }
+    else
+    {
+      throw new ProgrammingErrorException("Multiple results were returned when only one is allowed");
+    }
   }
 
 }
