@@ -734,72 +734,62 @@ public class GeoObjectBusinessService extends RegistryLocalizedValueConverter im
   @Override
   public List<VertexServerGeoObject> getAncestors(ServerGeoObjectIF sgo, ServerHierarchyType hierarchy, boolean includeNonExist, boolean includeInherited)
   {
-    List<VertexServerGeoObject> list = new LinkedList<VertexServerGeoObject>();
-
     if (includeInherited)
     {
       List<ServerGeoObjectType> typeAncestors = gotService.getTypeAncestors(sgo.getType(), hierarchy, true);
 
-      GraphQuery<VertexObject> query = buildAncestorVertexQueryFast(sgo, hierarchy, typeAncestors);
-
-      List<VertexObject> results = query.getResults();
-
-      results.forEach(result -> {
-        list.add(new VertexServerGeoObject(sgo.getType(), result, new TreeMap<>(), sgo.getDate()));
-      });
+      return buildAncestorVertexQueryFast(sgo, hierarchy, typeAncestors);
     }
     else
     {
-      GraphQuery<VertexObject> query = buildAncestorQuery(sgo, hierarchy, includeNonExist);
-
-      List<VertexObject> results = query.getResults();
-
-      results.forEach(result -> {
-        list.add(new VertexServerGeoObject(sgo.getType(), result, new TreeMap<>(), sgo.getDate()));
-      });
+      return buildAncestorQuery(sgo, hierarchy, includeNonExist);
     }
-
-    return list;
   }
 
-  protected GraphQuery<VertexObject> buildAncestorQuery(ServerGeoObjectIF sgo, ServerHierarchyType hierarchy, boolean includeNonExist)
+  protected List<VertexServerGeoObject> buildAncestorQuery(ServerGeoObjectIF sgo, ServerHierarchyType hierarchy, boolean includeNonExist)
   {
-    String dbClassName = sgo.getMdClass().getDBClassName();
-
     if (sgo.getDate() == null)
     {
       StringBuilder statement = new StringBuilder();
-      statement.append("MATCH ");
-      statement.append("{class:" + dbClassName + ", where: (@rid=:rid)}");
-      statement.append(".in('" + hierarchy.getObjectEdge().getDBClassName() + "')");
+      statement.append("TRAVERSE out('" + EdgeConstant.HAS_VALUE.getDBClassName() + "', '" + EdgeConstant.HAS_GEOMETRY.getDBClassName() + "') FROM (");
+      statement.append(" SELECT FROM (");
+      statement.append("   TRAVERSE in('" + hierarchy.getObjectEdge().getDBClassName() + "') FROM :rid");
+      statement.append(" )");
+      statement.append(" WHERE invalid = false");
 
-      String existCriteria = includeNonExist ? "" : "exists=true AND";
-      statement.append("{as: ancestor, where: (" + existCriteria + " invalid=false), while: (true)}");
+      if (!includeNonExist)
+      {
+        statement.append(" AND last(out('" + EdgeConstant.HAS_VALUE.getDBClassName() + "')[attributeName = 'exists']).value = true");
 
-      statement.append("RETURN $elements");
+      }
+      statement.append(")");
 
       GraphQuery<VertexObject> query = new GraphQuery<VertexObject>(statement.toString());
       query.setParameter("rid", sgo.getVertex().getRID());
 
-      return query;
+      return VertexServerGeoObject.processTraverseResults(query.getResults(), sgo.getDate());
     }
     else
     {
       StringBuilder statement = new StringBuilder();
-      statement.append("MATCH ");
-      statement.append("{class:" + dbClassName + ", where: (@rid=:rid)}");
-      statement.append(".(inE('" + hierarchy.getObjectEdge().getDBClassName() + "'){where: (:date BETWEEN startDate AND endDate)}.outV())");
+      statement.append("TRAVERSE out('" + EdgeConstant.HAS_VALUE.getDBClassName() + "', '" + EdgeConstant.HAS_GEOMETRY.getDBClassName() + "') FROM (");
+      statement.append(" SELECT FROM (");
+      statement.append("   TRAVERSE in('" + hierarchy.getObjectEdge().getDBClassName() + "')[:date BETWEEN startDate AND endDate] FROM :rid");
+      statement.append(" )");
+      statement.append(" WHERE invalid = false");
 
-      String existCriteria = includeNonExist ? "" : "AND exists_cot CONTAINS (value=true AND :date BETWEEN startDate AND endDate )";
-      statement.append("{as: ancestor, where: (invalid=false " + existCriteria + "), while: (true)}");
+      if (!includeNonExist)
+      {
+        statement.append(" AND last(out('" + EdgeConstant.HAS_VALUE.getDBClassName() + "')[attributeName = 'exists' AND :date BETWEEN startDate AND endDate]).value = true");
 
-      statement.append("RETURN $elements");
+      }
+      statement.append(")");
 
       GraphQuery<VertexObject> query = new GraphQuery<VertexObject>(statement.toString());
       query.setParameter("rid", sgo.getVertex().getRID());
       query.setParameter("date", sgo.getDate());
 
-      return query;
+      return VertexServerGeoObject.processTraverseResults(query.getResults(), sgo.getDate());
     }
   }
 
@@ -810,7 +800,7 @@ public class GeoObjectBusinessService extends RegistryLocalizedValueConverter im
    *          The parent types, sorted from the top to the bottom
    * @return
    */
-  private GraphQuery<VertexObject> buildAncestorVertexQueryFast(ServerGeoObjectIF sgo, ServerHierarchyType hierarchy, List<ServerGeoObjectType> parents)
+  private List<VertexServerGeoObject> buildAncestorVertexQueryFast(ServerGeoObjectIF sgo, ServerHierarchyType hierarchy, List<ServerGeoObjectType> parents)
   {
     LinkedList<ServerHierarchyType> inheritancePath = new LinkedList<ServerHierarchyType>();
     inheritancePath.add(hierarchy);
@@ -833,6 +823,7 @@ public class GeoObjectBusinessService extends RegistryLocalizedValueConverter im
     String dbClassName = sgo.getMdClass().getDBClassName();
 
     StringBuilder statement = new StringBuilder();
+    statement.append("TRAVERSE out('" + EdgeConstant.HAS_VALUE.getDBClassName() + "', '" + EdgeConstant.HAS_GEOMETRY.getDBClassName() + "') FROM (");
     statement.append("SELECT FROM (");
 
     for (ServerHierarchyType hier : inheritancePath)
@@ -856,12 +847,13 @@ public class GeoObjectBusinessService extends RegistryLocalizedValueConverter im
 
     if (sgo.getDate() != null)
     {
-      statement.append(") WHERE exists_cot CONTAINS (value=true AND :date BETWEEN startDate AND endDate)");
+      statement.append(") WHERE last(out('" + EdgeConstant.HAS_VALUE.getDBClassName() + "')[attributeName = 'exists' AND :date BETWEEN startDate AND endDate]).value = true");
     }
     else
     {
-      statement.append(") WHERE exists_cot CONTAINS (value=true)");
+      statement.append(") WHERE last(out('" + EdgeConstant.HAS_VALUE.getDBClassName() + "')).value = true");
     }
+    statement.append(")");
 
     GraphQuery<VertexObject> query = new GraphQuery<VertexObject>(statement.toString());
     query.setParameter("rid", sgo.getVertex().getRID());
@@ -871,7 +863,7 @@ public class GeoObjectBusinessService extends RegistryLocalizedValueConverter im
       query.setParameter("date", sgo.getDate());
     }
 
-    return query;
+    return VertexServerGeoObject.processTraverseResults(query.getResults(), sgo.getDate());
   }
 
   @Override

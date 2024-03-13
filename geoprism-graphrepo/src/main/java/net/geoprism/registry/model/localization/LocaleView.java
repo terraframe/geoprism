@@ -156,4 +156,13 @@ public class LocaleView
     return lv;
   }
   
+  public static LocaleView fromLocale(Locale locale)
+  {
+    LocaleView lv = new LocaleView();
+    lv.setLocale(locale);
+    lv.setLabel(new LocalizedValue(locale.toString()));
+    
+    return lv;
+  }
+  
 }
