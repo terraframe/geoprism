@@ -3,18 +3,18 @@
  *
  * This file is part of Geoprism(tm).
  *
- * Geoprism(tm) is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
+ * Geoprism(tm) is free software: you can redistribute it and/or modify it under
+ * the terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation, either version 3 of the License, or (at your option) any
+ * later version.
  *
- * Geoprism(tm) is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
+ * Geoprism(tm) is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with Geoprism(tm).  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with Geoprism(tm). If not, see <http://www.gnu.org/licenses/>.
  */
 package net.geoprism.registry.service.request;
 
@@ -96,7 +96,6 @@ public class HierarchyTypeService implements HierarchyTypeServiceIF
     return this.service.getHierarchiesForGeoObjectOverTime(code, typeCode);
   }
 
-
   /**
    * Returns the {@link HierarchyType}s with the given codes or all
    * {@link HierarchyType}s if no codes are provided.
@@ -127,7 +126,11 @@ public class HierarchyTypeService implements HierarchyTypeServiceIF
       Organization org = Organization.getByCode(type.getOrganizationCode());
 
       return ! ( ( context.equals(PermissionContext.READ) && !hierPermServ.canRead(org.getCode()) ) || ( context.equals(PermissionContext.WRITE) && !hierPermServ.canWrite(org.getCode()) ) );
-    }).filter(type -> service.hasVisibleRoot(type)).map(type -> service.toHierarchyType(type, false)).collect(Collectors.toList());
+    }).filter(type -> {
+      return service.hasVisibleRoot(type);
+    }).map(type -> {
+      return service.toHierarchyType(type, false);
+    }).collect(Collectors.toList());
 
     return hierarchies.toArray(new HierarchyType[hierarchies.size()]);
   }
@@ -148,8 +151,7 @@ public class HierarchyTypeService implements HierarchyTypeServiceIF
 
     ServerHierarchyType sType = service.createHierarchyType(hierarchyType);
 
-//    return ServiceFactory.getAdapter().getMetadataCache().getHierachyType(sType.getCode()).get();
-    
+
     return service.toHierarchyType(sType);
   }
 

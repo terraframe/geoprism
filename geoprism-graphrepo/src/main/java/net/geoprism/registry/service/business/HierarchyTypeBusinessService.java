@@ -219,9 +219,17 @@ public class HierarchyTypeBusinessService implements HierarchyTypeBusinessServic
 
   public HierarchyType toHierarchyType(ServerHierarchyType sht, boolean includePrivateTypes)
   {
-    HierarchyType dto = sht.toDTO();
+    // Do not add the root objects to the original dto because the options are
+    // different per user and permission context
+    HierarchyType dto = sht.toDTO().clone();
+    dto.clearRootGeoObjectTypes();
 
-    this.getRootGeoObjectTypes(sht, includePrivateTypes).forEach(rootType -> dto.addRootGeoObjects(rootType));
+    List<HierarchyNode> rootNodes = this.getRootGeoObjectTypes(sht, includePrivateTypes);
+
+    for (int i = 0; i < rootNodes.size(); i++)
+    {
+      dto.addRootGeoObjects(rootNodes.get(i));
+    }
 
     return dto;
   }

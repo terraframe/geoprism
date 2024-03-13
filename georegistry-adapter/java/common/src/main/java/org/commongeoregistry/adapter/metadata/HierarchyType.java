@@ -3,18 +3,19 @@
  *
  * This file is part of Common Geo Registry Adapter(tm).
  *
- * Common Geo Registry Adapter(tm) is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
+ * Common Geo Registry Adapter(tm) is free software: you can redistribute it
+ * and/or modify it under the terms of the GNU Lesser General Public License as
+ * published by the Free Software Foundation, either version 3 of the License,
+ * or (at your option) any later version.
  *
- * Common Geo Registry Adapter(tm) is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
+ * Common Geo Registry Adapter(tm) is distributed in the hope that it will be
+ * useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser
+ * General Public License for more details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with Common Geo Registry Adapter(tm).  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with Common Geo Registry Adapter(tm). If not, see
+ * <http://www.gnu.org/licenses/>.
  */
 package org.commongeoregistry.adapter.metadata;
 
@@ -38,7 +39,7 @@ import com.google.gson.JsonParser;
  * administrative.
  *
  */
-public class HierarchyType implements Serializable
+public class HierarchyType implements Serializable, Cloneable
 {
   /**
    * 
@@ -278,23 +279,25 @@ public class HierarchyType implements Serializable
   {
     return this.rootGeoObjectTypes;
   }
-  
+
   public Iterator<HierarchyNode> getAllNodesIterator()
   {
-    return this.getAllNodes().iterator(); // TODO : There's definitely a better way to do this but I don't really have time
+    return this.getAllNodes().iterator(); // TODO : There's definitely a better
+                                          // way to do this but I don't really
+                                          // have time
   }
-  
+
   public List<HierarchyNode> getAllNodes()
   {
     ArrayList<HierarchyNode> descends = new ArrayList<HierarchyNode>();
-    
+
     for (HierarchyNode child : this.getRootGeoObjectTypes())
     {
       descends.add(child);
-      
+
       descends.addAll(child.getAllDescendants());
     }
-    
+
     return descends;
   }
 
@@ -307,10 +310,34 @@ public class HierarchyType implements Serializable
   {
     this.rootGeoObjectTypes.add(hierarchyNode);
   }
-  
+
   public void clearRootGeoObjectTypes()
   {
     this.rootGeoObjectTypes.clear();
+  }
+
+  @Override
+  public HierarchyType clone()
+  {
+    try
+    {
+      return (HierarchyType) super.clone();
+    }
+    catch (CloneNotSupportedException e)
+    {
+      HierarchyType clone = new HierarchyType(this.code, this.label, this.description, this.organizationCode);
+      clone.setAbstractDescription(abstractDescription);
+      clone.setProgress(progress);
+      clone.setAcknowledgement(acknowledgement);
+      clone.setDisclaimer(disclaimer);
+      clone.setContact(contact);
+      clone.setPhoneNumber(phoneNumber);
+      clone.setEmail(email);
+      clone.setAccessConstraints(accessConstraints);
+      clone.setUseConstraints(useConstraints);
+      return clone;
+
+    }
   }
 
   public JsonObject toJSON()

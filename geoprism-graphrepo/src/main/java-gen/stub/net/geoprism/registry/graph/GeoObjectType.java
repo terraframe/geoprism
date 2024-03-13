@@ -268,6 +268,7 @@ public class GeoObjectType extends GeoObjectTypeBase implements ServerElement
 
     org.commongeoregistry.adapter.metadata.GeoObjectType dto = new org.commongeoregistry.adapter.metadata.GeoObjectType(this.getCode(), cgrGeometryType, label, description, this.getIsGeometryEditable(), orgCode, ServiceFactory.getAdapter());
     dto.setIsAbstract(this.getIsAbstract());
+    dto.setIsPrivate(this.getIsPrivate());
 
     // TODO: HEADS UP - Verify that the attribute geometry type should not be
     // included as an attribute
@@ -307,6 +308,11 @@ public class GeoObjectType extends GeoObjectTypeBase implements ServerElement
     query.setParameter("code", code);
 
     return query.getSingleResult();
+  }
+
+  public static void delete(String code)
+  {
+    getByCode(code).delete();
   }
 
 }
