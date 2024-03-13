@@ -76,9 +76,28 @@ public class ValueNodeStrategy extends AbstractValueStrategy implements ValueStr
   public void setValue(VertexObject vertex, Map<String, AttributeState> valueNodeMap, Object value, Date startDate, Date endDate, boolean validate)
   {
     AttributeState state = getState(valueNodeMap);
-    VertexObject node = this.createNode(value, startDate, endDate, validate);
 
-    this.add(state, node, false);
+    if (startDate != null && endDate != null)
+    {
+      VertexObject node = this.createNode(value, startDate, endDate, validate);
+
+      this.add(state, node, false);
+    }
+    else
+    {
+      // TODO: HEADS UP - Determine if we want to support the use case for
+      // setting values with no dates      
+      VertexObject last = state.last();
+
+      if (last != null)
+      {
+        this.setNodeValue(last, value, validate);
+      }
+      else
+      {
+        state.add(this.createNode(value, new Date(), ValueOverTime.INFINITY_END_DATE, validate));
+      }
+    }
   }
 
   protected VertexObject createNode(Object value, Date startDate, Date endDate, Boolean validate)

@@ -223,7 +223,9 @@ public class GeoObjectBusinessService extends RegistryLocalizedValueConverter im
       apply(geoObject, isImport);
 
       // Return the refreshed copy of the geoObject
-      return strategy.getGeoObjectByUid(geoObject.getUid());
+      ServerGeoObjectIF object = strategy.getGeoObjectByUid(geoObject.getUid());
+      object.setDate(startDate);
+      return object;
     }
     catch (DuplicateDataException e)
     {
@@ -1463,7 +1465,7 @@ public class GeoObjectBusinessService extends RegistryLocalizedValueConverter im
     GraphQuery<VertexObject> query = new GraphQuery<VertexObject>(statement.toString(), parameters);
 
     List<VertexObject> vertexes = query.getResults();
-    
+
     List<ServerGeoObjectIF> children = constructGeoObjectsFromQueryResults(vertexes, date);
 
     for (ServerGeoObjectIF child : children)
@@ -1487,7 +1489,7 @@ public class GeoObjectBusinessService extends RegistryLocalizedValueConverter im
 
     return tnRoot;
   }
-  
+
   public static List<ServerGeoObjectIF> constructGeoObjectsFromQueryResults(List<VertexObject> results, Date date)
   {
     return VertexServerGeoObject.processTraverseResults(results, date);
@@ -1585,7 +1587,7 @@ public class GeoObjectBusinessService extends RegistryLocalizedValueConverter im
     GraphQuery<VertexObject> query = new GraphQuery<VertexObject>(statement.toString(), parameters);
 
     List<VertexObject> vertexes = query.getResults();
-    
+
     List<ServerGeoObjectIF> parents = constructGeoObjectsFromQueryResults(vertexes, date);
 
     for (ServerGeoObjectIF parent : parents)
@@ -1925,7 +1927,7 @@ public class GeoObjectBusinessService extends RegistryLocalizedValueConverter im
 
     // We only care about the code and the display label attributes
     StringBuilder statement = new StringBuilder();
-    statement.append("TRAVERSE out('" + EdgeConstant.HAS_VALUE.getDBClassName() + "')[attributeName = 'displayLabel'] FROM (");    
+    statement.append("TRAVERSE out('" + EdgeConstant.HAS_VALUE.getDBClassName() + "')[attributeName = 'displayLabel'] FROM (");
     statement.append("SELECT FROM (");
 
     for (ServerHierarchyType hier : inheritancePath)
@@ -1955,17 +1957,16 @@ public class GeoObjectBusinessService extends RegistryLocalizedValueConverter im
     {
       statement.append(") WHERE out('" + EdgeConstant.HAS_VALUE.getDBClassName() + "')[attributeName = 'exists' AND value = true].size() > 0");
     }
-    
+
     statement.append(")");
-    
+
     GraphQuery<VertexObject> query = new GraphQuery<VertexObject>(statement.toString());
     query.setParameter("rid", sgo.getVertex().getRID());
-    
+
     if (sgo.getDate() != null)
     {
       query.setParameter("date", sgo.getDate());
     }
-
 
     return VertexServerGeoObject.processTraverseResults(query.getResults(), sgo.getDate());
   }
@@ -1987,9 +1988,9 @@ public class GeoObjectBusinessService extends RegistryLocalizedValueConverter im
     results.forEach(result -> {
 
       LocalizedValue localized = result.getDisplayLabel();
- 
+
       ServerGeoObjectType type = null;
-      
+
       for (ServerGeoObjectType parent : parents)
       {
         if (parent.getMdVertex().getDBClassName().equals(result.getType().getDBClassName()))

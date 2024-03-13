@@ -9,7 +9,9 @@ import com.runwaysdk.constants.MdAttributeBooleanInfo;
 import com.runwaysdk.constants.MdAttributeClassificationInfo;
 import com.runwaysdk.constants.MdAttributeLocalInfo;
 import com.runwaysdk.constants.graph.MdVertexInfo;
+import com.runwaysdk.dataaccess.BusinessDAO;
 import com.runwaysdk.dataaccess.MdAttributeClassificationDAOIF;
+import com.runwaysdk.dataaccess.MdAttributeDAOIF;
 import com.runwaysdk.dataaccess.MdVertexDAOIF;
 import com.runwaysdk.dataaccess.metadata.MdAttributeClassificationDAO;
 import com.runwaysdk.dataaccess.metadata.MdAttributeConcreteDAO;
@@ -125,17 +127,18 @@ public class AttributeClassificationType extends AttributeClassificationTypeBase
     if (!this.getIsChangeOverTime())
     {
       // Update the precision and scale of the value attribute
-      MdVertexDAO mdVertex = MdVertexDAO.get(this.getGeoObjectType().getMdVertexOid()).getBusinessDAO();
-      mdVertex.delete();
+      MdVertexDAOIF mdVertex = MdVertexDAO.get(this.getGeoObjectType().getMdVertexOid());
+      BusinessDAO mdAttribute = mdVertex.definesAttribute(this.getCode()).getBusinessDAO();
+      mdAttribute.delete();
     }
 
-    MdVertex mdVertex = this.getValueVertex();
+    MdVertexDAOIF mdVertex = MdVertexDAO.get(this.getValueVertexOid());
 
     super.delete();
 
     if (mdVertex != null)
     {
-      mdVertex.delete();
+      mdVertex.getBusinessDAO().delete();
     }
   }
 
