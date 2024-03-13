@@ -11,7 +11,6 @@ import com.runwaysdk.constants.MdAttributeLocalInfo;
 import com.runwaysdk.constants.graph.MdVertexInfo;
 import com.runwaysdk.dataaccess.BusinessDAO;
 import com.runwaysdk.dataaccess.MdAttributeClassificationDAOIF;
-import com.runwaysdk.dataaccess.MdAttributeDAOIF;
 import com.runwaysdk.dataaccess.MdVertexDAOIF;
 import com.runwaysdk.dataaccess.metadata.MdAttributeClassificationDAO;
 import com.runwaysdk.dataaccess.metadata.MdAttributeConcreteDAO;
@@ -132,13 +131,13 @@ public class AttributeClassificationType extends AttributeClassificationTypeBase
       mdAttribute.delete();
     }
 
-    MdVertexDAOIF mdVertex = MdVertexDAO.get(this.getValueVertexOid());
+    MdVertex mdVertex = this.getValueVertex();
 
     super.delete();
 
     if (mdVertex != null)
     {
-      mdVertex.getBusinessDAO().delete();
+      mdVertex.delete();
     }
   }
 
