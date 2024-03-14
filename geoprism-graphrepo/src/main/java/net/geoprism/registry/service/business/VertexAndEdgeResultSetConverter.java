@@ -533,7 +533,7 @@ public class VertexAndEdgeResultSetConverter extends ResultSetConverter
           }));
 
           VertexServerGeoObject vsgo = new VertexServerGeoObject(type, previous.goVertex, nodeMap, date);
-          list.add(new GeoObjectAndEdge(vsgo, result.edgeClass, result.edgeOid));
+          list.add(new GeoObjectAndEdge(vsgo, previous.edgeClass, previous.edgeOid));
         }
         currentAttributes = new LinkedList<>();
       }
