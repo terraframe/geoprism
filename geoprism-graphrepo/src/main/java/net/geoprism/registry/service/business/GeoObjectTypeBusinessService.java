@@ -28,7 +28,6 @@ import java.util.Set;
 import java.util.TreeSet;
 import java.util.stream.Collectors;
 
-import org.commongeoregistry.adapter.constants.DefaultAttribute;
 import org.commongeoregistry.adapter.metadata.AttributeBooleanType;
 import org.commongeoregistry.adapter.metadata.AttributeCharacterType;
 import org.commongeoregistry.adapter.metadata.AttributeClassificationType;
@@ -45,6 +44,7 @@ import org.springframework.stereotype.Service;
 
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import com.orientechnologies.orient.core.exception.OConcurrentModificationException;
 import com.runwaysdk.ComponentIF;
 import com.runwaysdk.business.BusinessFacade;
 import com.runwaysdk.business.rbac.Operation;
@@ -52,6 +52,7 @@ import com.runwaysdk.business.rbac.RoleDAO;
 import com.runwaysdk.dataaccess.DuplicateDataException;
 import com.runwaysdk.dataaccess.MdAttributeConcreteDAOIF;
 import com.runwaysdk.dataaccess.MdClassDAOIF;
+import com.runwaysdk.dataaccess.ProgrammingErrorException;
 import com.runwaysdk.dataaccess.attributes.AttributeValueException;
 import com.runwaysdk.dataaccess.metadata.graph.MdVertexDAO;
 import com.runwaysdk.dataaccess.transaction.Transaction;
@@ -75,7 +76,6 @@ import net.geoprism.registry.conversion.TermConverter;
 import net.geoprism.registry.graph.GeoVertexType;
 import net.geoprism.registry.graph.HierarchicalRelationshipType;
 import net.geoprism.registry.graph.InheritedHierarchyAnnotation;
-import net.geoprism.registry.model.GeoObjectTypeMetadata;
 import net.geoprism.registry.model.ServerGeoObjectType;
 import net.geoprism.registry.model.ServerHierarchyType;
 import net.geoprism.registry.model.ServerOrganization;
@@ -86,13 +86,13 @@ import net.geoprism.registry.service.request.ServiceFactory;
 public class GeoObjectTypeBusinessService implements GeoObjectTypeBusinessServiceIF
 {
   @Autowired
-  private TransitionEventBusinessServiceIF    tranEventServ;
+  private TransitionEventBusinessServiceIF tranEventServ;
 
   @Autowired
-  private TransitionBusinessServiceIF         tranServ;
+  private TransitionBusinessServiceIF      tranServ;
 
   @Autowired
-  private HierarchyTypeBusinessServiceIF      htServ;
+  private HierarchyTypeBusinessServiceIF   htServ;
 
   @Override
   public List<ServerGeoObjectType> getSubtypes(ServerGeoObjectType type)
@@ -554,7 +554,40 @@ public class GeoObjectTypeBusinessService implements GeoObjectTypeBusinessServic
   {
     ServiceFactory.getGeoObjectTypePermissionService().enforceCanDelete(type.getOrganizationCode(), type, type.getIsPrivate());
 
-    this.deleteInTransaction(type);
+//    /*
+//     * In a multi-threaded import it is likely to get an
+//     * OCurrentModificationException because adding a link to the parent geo
+//     * object adds a pointer to the parent vertex and causes an optimistic lock
+//     * check on the parent vertex. So if multiple geo-objects are assigned to
+//     * the same parent at the same time the system will throw a
+//     * OConcurrentModificationException. Retry the commit again.
+//     */
+//    for (int i = 0; i < 100; i++)
+//    {
+//      try
+//      {
+        this.deleteInTransaction(type);
+//
+//        break;
+//      }
+//      catch (ProgrammingErrorException e)
+//      {
+//        if (! ( e.getCause() instanceof OConcurrentModificationException ))
+//        {
+//          throw e;
+//        }
+//        else
+//        {
+//          try
+//          {
+//            Thread.sleep(100);
+//          }
+//          catch (InterruptedException e1)
+//          {
+//          }
+//        }
+//      }
+//    }
 
     Session session = (Session) Session.getCurrentSession();
 

@@ -368,7 +368,7 @@ public class ServerGeoObjectType extends CachableObjectWrapper<BaseGeoObjectType
 
   public void delete()
   {
-    this.getObject().delete();
+    GeoObjectType.delete(this.getCode());
   }
 
   public List<ServerGeoObjectType> getSubTypes()

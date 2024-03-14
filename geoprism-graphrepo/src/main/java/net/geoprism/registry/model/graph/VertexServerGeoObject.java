@@ -168,7 +168,7 @@ public class VertexServerGeoObject extends AbstractServerGeoObject implements Se
 
       // TODO: HEADS UP: Handle rollback of object on persist failure
       // Only clear the state after the transaction has passed
-//      state.clear();
+      // state.clear();
     });
 
   }
@@ -182,7 +182,7 @@ public class VertexServerGeoObject extends AbstractServerGeoObject implements Se
 
       // TODO: HEADS UP: Handle rollback of object on persist failure
       // Only clear the state after the transaction has passed
-//      state.clear();
+      // state.clear();
     });
 
     this.vertex.delete();
@@ -414,7 +414,7 @@ public class VertexServerGeoObject extends AbstractServerGeoObject implements Se
   {
     this.setValue(attributeName, value, startDate, endDate, true);
   }
-  
+
   @Override
   public void setValue(String attributeName, Object value, Date startDate, Date endDate, boolean validate)
   {
@@ -500,6 +500,11 @@ public class VertexServerGeoObject extends AbstractServerGeoObject implements Se
       return (T) value;
     }
 
+    if (isSystemAttribute(attributeName))
+    {
+      return this.vertex.getObjectValue(attributeName);
+    }
+
     return null;
   }
 
@@ -521,7 +526,23 @@ public class VertexServerGeoObject extends AbstractServerGeoObject implements Se
       return (T) value;
     }
 
+    if (isSystemAttribute(attributeName))
+    {
+      return this.vertex.getObjectValue(attributeName);
+    }
+
     return null;
+  }
+
+  private boolean isSystemAttribute(String attributeName)
+  {
+    // Attributes created by the runway that do not have actual attribute type metadata
+    return this.vertex.hasAttribute(attributeName) && 
+        (
+            attributeName.equals(DefaultAttribute.CREATE_DATE.getName())
+            || attributeName.equals(DefaultAttribute.LAST_UPDATE_DATE.getName())
+            || attributeName.equals(DefaultAttribute.SEQUENCE.getName())
+        );
   }
 
   @Override

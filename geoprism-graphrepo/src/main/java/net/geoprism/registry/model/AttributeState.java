@@ -65,7 +65,7 @@ public class AttributeState
 
     return this.values.add(node);
   }
-  
+
   void delete(VertexObject node)
   {
     this.isModified = true;
@@ -108,7 +108,11 @@ public class AttributeState
   {
     return new LinkedList<VertexObject>(this.values).iterator();
   }
-  
+
+  VertexObject last()
+  {
+    return this.values.size() > 0 ? this.values.last() : null;
+  }
 
   Stream<VertexObject> stream()
   {
