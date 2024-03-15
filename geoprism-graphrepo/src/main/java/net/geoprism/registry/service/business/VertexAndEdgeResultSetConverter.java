@@ -21,6 +21,7 @@ import com.orientechnologies.orient.core.record.OElement;
 import com.orientechnologies.orient.core.record.ORecord;
 import com.orientechnologies.orient.core.record.OVertex;
 import com.orientechnologies.orient.core.record.impl.OBlob;
+import com.orientechnologies.orient.core.record.impl.OVertexDocument;
 import com.orientechnologies.orient.core.serialization.OSerializableStream;
 import com.orientechnologies.orient.core.sql.executor.OResult;
 import com.orientechnologies.orient.core.storage.OStorage.LOCKING_STRATEGY;
@@ -107,6 +108,12 @@ public class VertexAndEdgeResultSetConverter extends ResultSetConverter
     @Override
     public ORID getIdentity()
     {
+      if (propertyPrefix != null)
+      {
+        OVertexDocument doc = (OVertexDocument) getProperty("@rid");
+        return doc.getIdentity();
+      }
+      
       return oelement.getIdentity();
     }
 
@@ -402,6 +409,12 @@ public class VertexAndEdgeResultSetConverter extends ResultSetConverter
     @Override
     public Optional<ORID> getIdentity()
     {
+      if (propertyPrefix != null)
+      {
+        OVertexDocument doc = (OVertexDocument) getProperty("@rid");
+        return Optional.of(doc.getIdentity());
+      }
+      
       return oresult.getIdentity();
     }
 
@@ -514,27 +527,21 @@ public class VertexAndEdgeResultSetConverter extends ResultSetConverter
   {
     VertexAndEdge previous = null;
     List<VertexObject> currentAttributes = new LinkedList<>();
-    MdVertexDAOIF mdGeoVertex = MdVertexDAO.getMdVertexDAO(GeoVertex.CLASS);
     List<GeoObjectAndEdge> list = new LinkedList<GeoObjectAndEdge>();
 
     for (VertexAndEdge result : results)
     {
-      MdVertexDAOIF mdClass = (MdVertexDAOIF) result.goVertex.getMdClass();
-      List<? extends MdVertexDAOIF> superClasses = mdClass.getSuperClasses();
-      if (superClasses.contains(mdGeoVertex))
+      if (previous != null && !(previous.goVertex.getOid().equals(result.goVertex.getOid()) && previous.edgeOid.equals(result.edgeOid)))
       {
-        if (previous != null && !(previous.goVertex.getOid().equals(result.goVertex.getOid()) && previous.edgeOid.equals(result.edgeOid)))
-        {
-          MdVertexDAOIF mdVertex = (MdVertexDAOIF) previous.goVertex.getMdClass();
-          ServerGeoObjectType type = ServerGeoObjectType.get(mdVertex);
+        MdVertexDAOIF mdVertex = (MdVertexDAOIF) previous.goVertex.getMdClass();
+        ServerGeoObjectType type = ServerGeoObjectType.get(mdVertex);
 
-          Map<String, List<VertexObject>> nodeMap = currentAttributes.stream().collect(Collectors.groupingBy(v -> {
-            return (String) v.getObjectValue(AttributeValue.ATTRIBUTENAME);
-          }));
+        Map<String, List<VertexObject>> nodeMap = currentAttributes.stream().collect(Collectors.groupingBy(v -> {
+          return (String) v.getObjectValue(AttributeValue.ATTRIBUTENAME);
+        }));
 
-          VertexServerGeoObject vsgo = new VertexServerGeoObject(type, previous.goVertex, nodeMap, date);
-          list.add(new GeoObjectAndEdge(vsgo, previous.edgeClass, previous.edgeOid));
-        }
+        VertexServerGeoObject vsgo = new VertexServerGeoObject(type, previous.goVertex, nodeMap, date);
+        list.add(new GeoObjectAndEdge(vsgo, previous.edgeClass, previous.edgeOid));
         currentAttributes = new LinkedList<>();
       }
       else

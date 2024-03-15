@@ -1589,10 +1589,7 @@ public class GeoObjectBusinessService extends RegistryLocalizedValueConverter im
     columns.add(prefix + ".@rid");
     
     // GeoVertex
-    for (String column : new String[] { GeoVertex.SEQ, GeoVertex.CREATEDATE, GeoVertex.GEOLINE, GeoVertex.GEOMULTILINE,
-          GeoVertex.GEOMULTIPOINT, GeoVertex.GEOMULTIPOLYGON, GeoVertex.GEOPOINT, GeoVertex.GEOPOLYGON,
-          GeoVertex.LASTUPDATEDATE, GeoVertex.OID, GeoVertex.SEQ, GeoVertex.SHAPE
-      })
+    for (String column : new String[] { GeoVertex.SEQ, GeoVertex.CREATEDATE, GeoVertex.LASTUPDATEDATE, GeoVertex.OID })
     {
       columns.add(prefix + "." + column);
     }
