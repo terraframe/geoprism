@@ -861,7 +861,7 @@ public class GeoObjectBusinessService extends RegistryLocalizedValueConverter im
     }
     else
     {
-      statement.append(") WHERE last(out('" + EdgeConstant.HAS_VALUE.getDBClassName() + "')).value = true");
+      statement.append(") WHERE last(out('" + EdgeConstant.HAS_VALUE.getDBClassName() + "')[attributeName = 'exists']).value = true");
     }
     statement.append(")");
 
