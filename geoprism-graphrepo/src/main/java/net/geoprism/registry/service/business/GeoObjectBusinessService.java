@@ -431,14 +431,7 @@ public class GeoObjectBusinessService extends RegistryLocalizedValueConverter im
           // endDate);
           // }
 
-          // TODO: HEADS UP - IS THIS CHECK CORRECT
-          // It doesn't make sense to support NULL values with change over time
-          // entries. Just change the period of validity to not include the time
-          // where the value would be null
-          if (value != null || !attribute.isChangeOverTime())
-          {
-            sgo.setValue(attributeName, value, startDate, endDate);
-          }
+          sgo.setValue(attributeName, value, startDate, endDate);
         }
       }
     });

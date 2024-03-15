@@ -86,7 +86,7 @@ public class AttributeDoubleType extends AttributeDoubleTypeBase
         mdAttribute.setStructValue(MdAttributeDoubleInfo.DISPLAY_LABEL, MdAttributeLocalInfo.DEFAULT_LOCALE, "Value");
         mdAttribute.setValue(MdAttributeDoubleInfo.LENGTH, getPrecision());
         mdAttribute.setValue(MdAttributeDoubleInfo.DECIMAL, getScale());
-        mdAttribute.setValue(MdAttributeDoubleInfo.REQUIRED, MdAttributeBooleanInfo.TRUE);
+        mdAttribute.setValue(MdAttributeDoubleInfo.REQUIRED, MdAttributeBooleanInfo.FALSE);
         mdAttribute.apply();
 
         this.setValueVertexId(mdVertex.getOid());

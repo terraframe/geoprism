@@ -54,6 +54,7 @@ import com.runwaysdk.dataaccess.MdAttributeConcreteDAOIF;
 import com.runwaysdk.dataaccess.MdClassDAOIF;
 import com.runwaysdk.dataaccess.ProgrammingErrorException;
 import com.runwaysdk.dataaccess.attributes.AttributeValueException;
+import com.runwaysdk.dataaccess.cache.ObjectCache;
 import com.runwaysdk.dataaccess.metadata.graph.MdVertexDAO;
 import com.runwaysdk.dataaccess.transaction.Transaction;
 import com.runwaysdk.session.Session;
@@ -554,40 +555,47 @@ public class GeoObjectTypeBusinessService implements GeoObjectTypeBusinessServic
   {
     ServiceFactory.getGeoObjectTypePermissionService().enforceCanDelete(type.getOrganizationCode(), type, type.getIsPrivate());
 
-//    /*
-//     * In a multi-threaded import it is likely to get an
-//     * OCurrentModificationException because adding a link to the parent geo
-//     * object adds a pointer to the parent vertex and causes an optimistic lock
-//     * check on the parent vertex. So if multiple geo-objects are assigned to
-//     * the same parent at the same time the system will throw a
-//     * OConcurrentModificationException. Retry the commit again.
-//     */
-//    for (int i = 0; i < 100; i++)
-//    {
-//      try
-//      {
+    /*
+     * In a multi-threaded import it is likely to get an
+     * OCurrentModificationException because adding a link to the parent geo
+     * object adds a pointer to the parent vertex and causes an optimistic lock
+     * check on the parent vertex. So if multiple geo-objects are assigned to
+     * the same parent at the same time the system will throw a
+     * OConcurrentModificationException. Retry the commit again.
+     */
+    for (int i = 0; i < 100; i++)
+    {
+      try
+      {
         this.deleteInTransaction(type);
-//
-//        break;
-//      }
-//      catch (ProgrammingErrorException e)
-//      {
-//        if (! ( e.getCause() instanceof OConcurrentModificationException ))
-//        {
-//          throw e;
-//        }
-//        else
-//        {
-//          try
-//          {
-//            Thread.sleep(100);
-//          }
-//          catch (InterruptedException e1)
-//          {
-//          }
-//        }
-//      }
-//    }
+
+        break;
+      }
+      catch (ProgrammingErrorException e)
+      {
+        if (! ( e.getCause() instanceof OConcurrentModificationException ))
+        {
+          throw e;
+        }
+        else
+        {
+          try
+          {
+            Thread.sleep(100);
+          }
+          catch (InterruptedException e1)
+          {
+          }
+        }
+      }
+
+      System.out.println("Retrying delete");
+
+//      ObjectCache.refreshCache();
+//      ObjectCache.refreshTheEntireCache();
+//      
+//      System.out.println("Cache refreshed");
+    }
 
     Session session = (Session) Session.getCurrentSession();
 
