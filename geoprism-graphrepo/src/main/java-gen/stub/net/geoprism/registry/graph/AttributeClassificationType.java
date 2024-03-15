@@ -93,7 +93,7 @@ public class AttributeClassificationType extends AttributeClassificationTypeBase
         mdAttribute.setValue(MdAttributeClassificationInfo.DEFINING_MD_CLASS, mdVertex.getOid());
         mdAttribute.setValue(MdAttributeClassificationInfo.NAME, VALUE);
         mdAttribute.setStructValue(MdAttributeClassificationInfo.DISPLAY_LABEL, MdAttributeLocalInfo.DEFAULT_LOCALE, "Value");
-        mdAttribute.setValue(MdAttributeClassificationInfo.REQUIRED, MdAttributeBooleanInfo.TRUE);
+        mdAttribute.setValue(MdAttributeClassificationInfo.REQUIRED, MdAttributeBooleanInfo.FALSE);
         mdAttribute.setValue(MdAttributeClassificationInfo.REFERENCE_MD_CLASSIFICATION, this.getMdClassificationOid());
 
         if (!StringUtils.isBlank(this.getObjectValue(ROOTTERM)))
