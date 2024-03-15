@@ -588,13 +588,6 @@ public class GeoObjectTypeBusinessService implements GeoObjectTypeBusinessServic
           }
         }
       }
-
-      System.out.println("Retrying delete");
-
-//      ObjectCache.refreshCache();
-//      ObjectCache.refreshTheEntireCache();
-//      
-//      System.out.println("Cache refreshed");
     }
 
     Session session = (Session) Session.getCurrentSession();
