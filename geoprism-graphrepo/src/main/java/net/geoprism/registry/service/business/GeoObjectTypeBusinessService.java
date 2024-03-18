@@ -19,6 +19,7 @@
 package net.geoprism.registry.service.business;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -305,8 +306,10 @@ public class GeoObjectTypeBusinessService implements GeoObjectTypeBusinessServic
         return getTypeAncestors(superType, hierarchyType, includeInheritedTypes);
       }
     }
-
-    return ancestors;
+    
+    Collections.reverse(ancestors);
+    
+    return  ancestors;
   }
 
   /**

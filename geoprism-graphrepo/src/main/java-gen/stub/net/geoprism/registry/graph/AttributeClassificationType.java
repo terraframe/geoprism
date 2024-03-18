@@ -1,5 +1,7 @@
 package net.geoprism.registry.graph;
 
+import java.util.List;
+
 import org.apache.commons.lang3.StringUtils;
 import org.commongeoregistry.adapter.Term;
 import org.commongeoregistry.adapter.constants.DefaultAttribute;
@@ -11,6 +13,7 @@ import com.runwaysdk.constants.MdAttributeLocalInfo;
 import com.runwaysdk.constants.graph.MdVertexInfo;
 import com.runwaysdk.dataaccess.BusinessDAO;
 import com.runwaysdk.dataaccess.MdAttributeClassificationDAOIF;
+import com.runwaysdk.dataaccess.MdAttributeDAOIF;
 import com.runwaysdk.dataaccess.MdVertexDAOIF;
 import com.runwaysdk.dataaccess.metadata.MdAttributeClassificationDAO;
 import com.runwaysdk.dataaccess.metadata.MdAttributeConcreteDAO;
@@ -209,7 +212,7 @@ public class AttributeClassificationType extends AttributeClassificationTypeBase
   @Override
   public AttributeType toDTO()
   {
-    org.commongeoregistry.adapter.metadata.AttributeClassificationType dto = new org.commongeoregistry.adapter.metadata.AttributeClassificationType(this.getCode(), getLocalizedLabel(), getLocalizedDescription(), isAppliedToDb(), isNew(), isAppliedToDb());
+    org.commongeoregistry.adapter.metadata.AttributeClassificationType dto = new org.commongeoregistry.adapter.metadata.AttributeClassificationType(this.getCode(), getLocalizedLabel(), getLocalizedDescription(), getIsDefault(), isNew(), getUnique());
 
     this.populate(dto);
 
@@ -257,9 +260,10 @@ public class AttributeClassificationType extends AttributeClassificationTypeBase
 
   public MdAttributeClassificationDAOIF getMdAttributeClassification()
   {
-    MdVertexDAOIF mdVertex = MdVertexDAO.get(this.getGeoObjectType().getMdVertexOid());
+    ValueStrategy strategy = this.getStrategy();
 
-    return (MdAttributeClassificationDAOIF) mdVertex.definesAttribute(this.getCode());
+    List<MdAttributeDAOIF> attributes = strategy.getValueAttributes();
 
+    return (MdAttributeClassificationDAOIF) attributes.get(0);
   }
 }
