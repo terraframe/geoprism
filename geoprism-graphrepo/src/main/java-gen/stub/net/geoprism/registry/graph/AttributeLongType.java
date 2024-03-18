@@ -74,7 +74,7 @@ public class AttributeLongType extends AttributeLongTypeBase
   @Override
   public AttributeType toDTO()
   {
-    org.commongeoregistry.adapter.metadata.AttributeIntegerType dto = new org.commongeoregistry.adapter.metadata.AttributeIntegerType(this.getCode(), getLocalizedLabel(), getLocalizedDescription(), isAppliedToDb(), isNew(), isAppliedToDb());
+    org.commongeoregistry.adapter.metadata.AttributeIntegerType dto = new org.commongeoregistry.adapter.metadata.AttributeIntegerType(this.getCode(), getLocalizedLabel(), getLocalizedDescription(), getIsDefault(), isNew(), getUnique());
 
     this.populate(dto);
 

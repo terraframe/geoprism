@@ -74,7 +74,7 @@ public class AttributeDateType extends AttributeDateTypeBase
   @Override
   public AttributeType toDTO()
   {
-    org.commongeoregistry.adapter.metadata.AttributeDateType dto = new org.commongeoregistry.adapter.metadata.AttributeDateType(this.getCode(), getLocalizedLabel(), getLocalizedDescription(), isAppliedToDb(), isNew(), isAppliedToDb());
+    org.commongeoregistry.adapter.metadata.AttributeDateType dto = new org.commongeoregistry.adapter.metadata.AttributeDateType(this.getCode(), getLocalizedLabel(), getLocalizedDescription(), getIsDefault(), isNew(), getUnique());
 
     this.populate(dto);
 

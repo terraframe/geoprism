@@ -162,7 +162,7 @@ public class AttributeDoubleType extends AttributeDoubleTypeBase
   @Override
   public AttributeType toDTO()
   {
-    AttributeFloatType dto = new AttributeFloatType(this.getCode(), getLocalizedLabel(), getLocalizedDescription(), isAppliedToDb(), isNew(), isAppliedToDb());
+    AttributeFloatType dto = new AttributeFloatType(this.getCode(), getLocalizedLabel(), getLocalizedDescription(), getIsDefault(), isNew(), getUnique());
 
     this.populate(dto);
 

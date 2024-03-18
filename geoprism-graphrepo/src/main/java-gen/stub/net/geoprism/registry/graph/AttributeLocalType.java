@@ -74,7 +74,7 @@ public class AttributeLocalType extends AttributeLocalTypeBase
   @Override
   public AttributeType toDTO()
   {
-    org.commongeoregistry.adapter.metadata.AttributeLocalType dto = new org.commongeoregistry.adapter.metadata.AttributeLocalType(this.getCode(), getLocalizedLabel(), getLocalizedDescription(), isAppliedToDb(), isNew(), isAppliedToDb());
+    org.commongeoregistry.adapter.metadata.AttributeLocalType dto = new org.commongeoregistry.adapter.metadata.AttributeLocalType(this.getCode(), getLocalizedLabel(), getLocalizedDescription(), getIsDefault(), isNew(), getUnique());
 
     this.populate(dto);
 
