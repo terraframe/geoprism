@@ -21,7 +21,7 @@ import com.orientechnologies.orient.core.record.OElement;
 import com.orientechnologies.orient.core.record.ORecord;
 import com.orientechnologies.orient.core.record.OVertex;
 import com.orientechnologies.orient.core.record.impl.OBlob;
-import com.orientechnologies.orient.core.record.impl.OVertexDocument;
+import com.orientechnologies.orient.core.record.impl.ODocumentHelper;
 import com.orientechnologies.orient.core.serialization.OSerializableStream;
 import com.orientechnologies.orient.core.sql.executor.OResult;
 import com.orientechnologies.orient.core.storage.OStorage.LOCKING_STRATEGY;
@@ -30,10 +30,8 @@ import com.runwaysdk.dataaccess.MdVertexDAOIF;
 import com.runwaysdk.dataaccess.graph.GraphRequest;
 import com.runwaysdk.dataaccess.graph.VertexObjectDAO;
 import com.runwaysdk.dataaccess.graph.orientdb.ResultSetConverter;
-import com.runwaysdk.dataaccess.metadata.graph.MdVertexDAO;
 
 import net.geoprism.registry.graph.AttributeValue;
-import net.geoprism.registry.graph.GeoVertex;
 import net.geoprism.registry.model.ServerGeoObjectIF;
 import net.geoprism.registry.model.ServerGeoObjectType;
 import net.geoprism.registry.model.graph.VertexServerGeoObject;
@@ -57,8 +55,11 @@ public class VertexAndEdgeResultSetConverter extends ResultSetConverter
     
     if (edgeClass.equals("search_link_default") || (geoObjectOid == null && attrOid == null)) return null;
     
-    final VertexObject goVertex = (VertexObject) super.convert(request, new ResultPrefixWrapper(oresult, "v."));
-    final VertexObject attrVertex = (VertexObject) super.convert(request, new ResultPrefixWrapper(oresult, "attr."));
+    ResultPrefixWrapper vwrapper = new ResultPrefixWrapper(oresult, "v.");
+    final VertexObject goVertex = (VertexObject) super.convert(request, vwrapper);
+    
+    ResultPrefixWrapper attrWrapper = new ResultPrefixWrapper(oresult, "attr.");
+    final VertexObject attrVertex = (VertexObject) super.convert(request, attrWrapper);
     
     return new VertexAndEdge(goVertex, attrVertex, geoObjectOid, edgeClass, edgeOid);
   }
@@ -108,13 +109,14 @@ public class VertexAndEdgeResultSetConverter extends ResultSetConverter
     @Override
     public ORID getIdentity()
     {
-      if (propertyPrefix != null)
-      {
-        OVertexDocument doc = (OVertexDocument) getProperty("@rid");
-        return doc.getIdentity();
-      }
+      // If we fetch the RID in this fashion then OrientDB will cache the document and corrupt subsequent requests
+//      OVertexDocument doc = (OVertexDocument) getProperty("@rid");
+//      ORID ident = doc.getIdentity();
+//      doc.unload();
+//      doc.setDirty();
+//      return ident;
       
-      return oelement.getIdentity();
+      return (ORID) ODocumentHelper.getIdentifiableValue(this, propertyPrefix + "@rid");
     }
 
     @Override
@@ -409,13 +411,14 @@ public class VertexAndEdgeResultSetConverter extends ResultSetConverter
     @Override
     public Optional<ORID> getIdentity()
     {
-      if (propertyPrefix != null)
-      {
-        OVertexDocument doc = (OVertexDocument) getProperty("@rid");
-        return Optional.of(doc.getIdentity());
-      }
+      // If we fetch the RID in this fashion then OrientDB will cache the document and corrupt subsequent requests
+//      OVertexDocument doc = (OVertexDocument) getProperty("@rid");
+//      ORID ident = doc.getIdentity();
+//      doc.unload();
+//      doc.setDirty();
+//      return Optional.of(ident);
       
-      return oresult.getIdentity();
+      return Optional.of((ORID) ODocumentHelper.getIdentifiableValue(this.toElement(), propertyPrefix + "@rid"));
     }
 
     @Override
