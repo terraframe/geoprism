@@ -18,7 +18,6 @@
  */
 package net.geoprism.registry.conversion;
 
-import org.commongeoregistry.adapter.Term;
 import org.commongeoregistry.adapter.dataaccess.LocalizedValue;
 import org.commongeoregistry.adapter.metadata.GeoObjectType;
 import org.commongeoregistry.adapter.metadata.RegistryRole;
@@ -27,11 +26,10 @@ import com.runwaysdk.business.Business;
 import com.runwaysdk.business.LocalStruct;
 import com.runwaysdk.localization.LocalizedValueIF;
 import com.runwaysdk.system.Roles;
-import com.runwaysdk.system.gis.geo.Universal;
 
 import net.geoprism.registry.Organization;
 import net.geoprism.registry.model.LocalizedValueContainer;
-import net.geoprism.registry.service.request.ServiceFactory;
+import net.geoprism.registry.model.ServerGeoObjectType;
 
 public class RegistryLocalizedValueConverter extends LocalizedValueConverter
 {
@@ -82,8 +80,9 @@ public class RegistryLocalizedValueConverter extends LocalizedValueConverter
     String geoObjectTypeCode = registryRole.getGeoObjectTypeCode();
     if (geoObjectTypeCode != null && !geoObjectTypeCode.trim().equals(""))
     {
-      Universal universal = Universal.getByKey(geoObjectTypeCode);
-      registryRole.setGeoObjectTypeLabel(RegistryLocalizedValueConverter.convert(universal.getDisplayLabel()));
+      ServerGeoObjectType type = ServerGeoObjectType.get(geoObjectTypeCode);
+      
+      registryRole.setGeoObjectTypeLabel(type.getLabel());
     }
   }
 
