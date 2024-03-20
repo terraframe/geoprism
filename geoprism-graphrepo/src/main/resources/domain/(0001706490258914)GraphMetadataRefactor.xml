@@ -292,6 +292,9 @@
           <mdBusinessPermission type="net.geoprism.registry.graph.InheritedHierarchyAnnotation">
             <operation name="ALL" />
           </mdBusinessPermission>
+          <mdBusinessPermission type="com.runwaysdk.system.metadata.VertexInheritance">
+            <operation name="ALL" />
+          </mdBusinessPermission>
         </grant>
       </role>
       
