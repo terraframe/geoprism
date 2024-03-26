@@ -31,7 +31,7 @@ import net.geoprism.registry.model.VertexValueStrategy;
 import net.geoprism.registry.model.graph.GraphTableUtil;
 import net.geoprism.registry.service.business.ClassificationBusinessServiceIF;
 import net.geoprism.registry.service.business.ClassificationTypeBusinessServiceIF;
-import net.geoprism.registry.service.request.ServiceFactory;
+import net.geoprism.registry.service.business.ServiceFactory;
 
 public class AttributeClassificationType extends AttributeClassificationTypeBase
 {

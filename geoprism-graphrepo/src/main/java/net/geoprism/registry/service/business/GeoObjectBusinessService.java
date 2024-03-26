@@ -120,7 +120,6 @@ import net.geoprism.registry.service.business.VertexAndEdgeResultSetConverter.Ge
 import net.geoprism.registry.service.business.VertexAndEdgeResultSetConverter.VertexAndEdge;
 import net.geoprism.registry.service.permission.AllowAllGeoObjectPermissionService;
 import net.geoprism.registry.service.permission.GeoObjectPermissionServiceIF;
-import net.geoprism.registry.service.request.ServiceFactory;
 import net.geoprism.registry.view.GeoObjectSplitView;
 import net.geoprism.registry.view.ServerParentTreeNodeOverTime;
 

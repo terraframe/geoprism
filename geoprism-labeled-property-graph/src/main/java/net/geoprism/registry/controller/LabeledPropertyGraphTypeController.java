@@ -36,9 +36,8 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
-import net.geoprism.registry.controller.RunwaySpringController;
 import net.geoprism.registry.service.request.LabeledPropertyGraphTypeServiceIF;
-import net.geoprism.spring.JsonObjectDeserializer;
+import net.geoprism.spring.core.JsonObjectDeserializer;
 
 @RestController
 @Validated

@@ -55,8 +55,8 @@ import net.geoprism.registry.model.graph.VertexServerGeoObject;
 import net.geoprism.registry.service.business.GeoObjectBusinessService;
 import net.geoprism.registry.service.business.GeoObjectBusinessServiceIF;
 import net.geoprism.registry.service.business.GeoObjectTypeBusinessServiceIF;
+import net.geoprism.registry.service.business.ServiceFactory;
 import net.geoprism.registry.service.permission.AllowAllGeoObjectPermissionService;
-import net.geoprism.registry.service.request.ServiceFactory;
 
 public class ServerParentTreeNodeOverTime
 {

@@ -31,8 +31,8 @@ import net.geoprism.registry.conversion.VertexGeoObjectStrategy;
 import net.geoprism.registry.model.EdgeConstant;
 import net.geoprism.registry.model.ServerGeoObjectType;
 import net.geoprism.registry.model.graph.VertexServerGeoObject;
+import net.geoprism.registry.service.business.ServiceFactory;
 import net.geoprism.registry.service.business.TransitionBusinessServiceIF;
-import net.geoprism.registry.service.request.ServiceFactory;
 
 public class Transition extends TransitionBase
 {

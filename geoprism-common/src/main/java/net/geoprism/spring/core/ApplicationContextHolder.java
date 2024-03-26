@@ -16,38 +16,36 @@
  * You should have received a copy of the GNU Lesser General Public
  * License along with Geoprism(tm).  If not, see <http://www.gnu.org/licenses/>.
  */
-package net.geoprism.registry.service.request;
+package net.geoprism.spring.core;
 
-import org.commongeoregistry.adapter.RegistryAdapter;
-import org.commongeoregistry.adapter.RegistryAdapterServer;
-import org.commongeoregistry.adapter.metadata.MetadataCache;
+import org.springframework.beans.BeansException;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.ApplicationContextAware;
 import org.springframework.stereotype.Service;
 
-import net.geoprism.registry.cache.ServerOrganizationCache;
-
 @Service
-public class CacheProvider implements CacheProviderIF
+public class ApplicationContextHolder implements ApplicationContextAware
 {
-  private RegistryIdService       idService;
+  private static ApplicationContext applicationContext;
 
-  private RegistryAdapter         adapter;
-
-  private ServerOrganizationCache metadataCache;
-
-  public CacheProvider()
+  public ApplicationContextHolder()
   {
-    this.idService = new RegistryIdService();
-
-    this.adapter = new RegistryAdapterServer(this.idService);
-
-    this.metadataCache = new ServerOrganizationCache(this.adapter);
-    this.metadataCache.rebuild();
   }
 
   @Override
-  public ServerOrganizationCache getServerCache()
+  public void setApplicationContext(ApplicationContext applicationContext) throws BeansException
   {
-    return this.metadataCache;
+    ApplicationContextHolder.applicationContext = applicationContext;
+  }
+
+  public static ApplicationContext getContext()
+  {
+    return ApplicationContextHolder.applicationContext;
+  }
+
+  public static <T> T getBean(Class<T> clazz)
+  {
+    return applicationContext.getBean(clazz);
   }
 
 }

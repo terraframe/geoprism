@@ -58,7 +58,7 @@ import com.runwaysdk.session.Session;
 import net.geoprism.registry.model.Classification;
 import net.geoprism.registry.model.ClassificationType;
 import net.geoprism.registry.service.business.ClassificationBusinessServiceIF;
-import net.geoprism.spring.ApplicationContextHolder;
+import net.geoprism.spring.core.ApplicationContextHolder;
 
 public class AttributeTypeConverter extends LocalizedValueConverter
 {

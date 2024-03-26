@@ -105,7 +105,6 @@ import net.geoprism.registry.model.GeoObjectMetadata;
 import net.geoprism.registry.model.ServerOrganization;
 import net.geoprism.registry.query.graph.BusinessObjectPageQuery;
 import net.geoprism.registry.service.permission.PermissionServiceIF;
-import net.geoprism.registry.service.request.ServiceFactory;
 import net.geoprism.registry.view.JsonSerializable;
 import net.geoprism.registry.view.Page;
 

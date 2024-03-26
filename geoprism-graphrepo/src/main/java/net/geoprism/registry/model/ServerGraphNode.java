@@ -26,7 +26,7 @@ import com.google.gson.JsonObject;
 
 import net.geoprism.registry.DateFormatter;
 import net.geoprism.registry.service.business.GeoObjectBusinessServiceIF;
-import net.geoprism.registry.service.request.ServiceFactory;
+import net.geoprism.registry.service.business.ServiceFactory;
 
 public abstract class ServerGraphNode
 {

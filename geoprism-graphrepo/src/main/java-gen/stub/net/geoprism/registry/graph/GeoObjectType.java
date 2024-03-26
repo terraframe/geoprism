@@ -23,7 +23,7 @@ import net.geoprism.registry.conversion.GeometryTypeFactory;
 import net.geoprism.registry.conversion.LocalizedValueConverter;
 import net.geoprism.registry.conversion.RegistryLocalizedValueConverter;
 import net.geoprism.registry.model.ServerElement;
-import net.geoprism.registry.service.request.ServiceFactory;
+import net.geoprism.registry.service.business.ServiceFactory;
 
 public class GeoObjectType extends GeoObjectTypeBase implements ServerElement
 {

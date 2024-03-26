@@ -80,7 +80,6 @@ import net.geoprism.registry.model.graph.GraphTableUtil;
 import net.geoprism.registry.service.permission.GeoObjectRelationshipPermissionServiceIF;
 import net.geoprism.registry.service.permission.GeoObjectTypePermissionServiceIF;
 import net.geoprism.registry.service.permission.HierarchyTypePermissionServiceIF;
-import net.geoprism.registry.service.request.ServiceFactory;
 import net.geoprism.registry.view.ServerParentTreeNodeOverTime;
 
 @Service

@@ -32,7 +32,7 @@ import com.google.gson.JsonSerializer;
 import net.geoprism.registry.DateFormatter;
 import net.geoprism.registry.model.ServerGeoObjectIF;
 import net.geoprism.registry.service.business.GeoObjectBusinessServiceIF;
-import net.geoprism.registry.service.request.ServiceFactory;
+import net.geoprism.registry.service.business.ServiceFactory;
 
 public class SeverGeoObjectJsonAdapters
 {

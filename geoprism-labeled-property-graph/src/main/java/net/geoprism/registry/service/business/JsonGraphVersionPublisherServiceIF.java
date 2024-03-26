@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU Lesser General Public
  * License along with Geoprism(tm).  If not, see <http://www.gnu.org/licenses/>.
  */
-package net.geoprism.registry.service.request;
+package net.geoprism.registry.service.business;
 
 import org.springframework.stereotype.Component;
 
@@ -24,7 +24,7 @@ import com.google.gson.JsonArray;
 
 import net.geoprism.graph.LabeledPropertyGraphSynchronization;
 import net.geoprism.graph.LabeledPropertyGraphTypeVersion;
-import net.geoprism.registry.service.request.AbstractGraphVersionPublisherService.State;
+import net.geoprism.registry.service.business.AbstractGraphVersionPublisherService.State;
 
 @Component
 public interface JsonGraphVersionPublisherServiceIF

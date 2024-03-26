@@ -82,7 +82,6 @@ import net.geoprism.registry.model.ServerGeoObjectType;
 import net.geoprism.registry.model.ServerHierarchyType;
 import net.geoprism.registry.model.ServerOrganization;
 import net.geoprism.registry.permission.PermissionContext;
-import net.geoprism.registry.service.request.ServiceFactory;
 
 @Service
 public class GeoObjectTypeBusinessService implements GeoObjectTypeBusinessServiceIF
