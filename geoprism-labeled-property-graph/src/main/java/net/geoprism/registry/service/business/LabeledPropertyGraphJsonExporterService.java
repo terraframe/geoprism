@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU Lesser General Public
  * License along with Geoprism(tm).  If not, see <http://www.gnu.org/licenses/>.
  */
-package net.geoprism.registry.service.request;
+package net.geoprism.registry.service.business;
 
 import java.util.HashMap;
 import java.util.List;
@@ -40,8 +40,6 @@ import com.runwaysdk.system.metadata.MdVertex;
 import net.geoprism.graph.GeoObjectTypeSnapshot;
 import net.geoprism.graph.HierarchyTypeSnapshot;
 import net.geoprism.graph.LabeledPropertyGraphTypeVersion;
-import net.geoprism.registry.service.business.GeoObjectTypeSnapshotBusinessServiceIF;
-import net.geoprism.registry.service.business.LabeledPropertyGraphTypeVersionBusinessServiceIF;
 
 @Service
 public class LabeledPropertyGraphJsonExporterService

@@ -38,6 +38,7 @@ import net.geoprism.registry.OrganizationUtil;
 import net.geoprism.registry.model.OrganizationMetadata;
 import net.geoprism.registry.model.OrganizationView;
 import net.geoprism.registry.model.ServerOrganization;
+import net.geoprism.registry.service.business.CacheProviderIF;
 import net.geoprism.registry.service.business.OrganizationBusinessServiceIF;
 import net.geoprism.registry.service.permission.OrganizationPermissionServiceIF;
 import net.geoprism.registry.view.Page;

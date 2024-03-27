@@ -36,6 +36,7 @@ import net.geoprism.graph.LabeledPropertyGraphType;
 import net.geoprism.graph.LabeledPropertyGraphTypeEntry;
 import net.geoprism.graph.LabeledPropertyGraphTypeVersion;
 import net.geoprism.graph.LabeledPropertyGraphUtil;
+import net.geoprism.registry.service.business.LabeledPropertyGraphJsonExporterService;
 import net.geoprism.registry.service.business.LabeledPropertyGraphTypeBusinessServiceIF;
 import net.geoprism.registry.service.business.LabeledPropertyGraphTypeEntryBusinessServiceIF;
 import net.geoprism.registry.service.business.LabeledPropertyGraphTypeVersionBusinessServiceIF;

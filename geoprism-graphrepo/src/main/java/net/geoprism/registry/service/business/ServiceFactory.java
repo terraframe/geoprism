@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with Geoprism(tm). If not, see <http://www.gnu.org/licenses/>.
  */
-package net.geoprism.registry.service.request;
+package net.geoprism.registry.service.business;
 
 import org.commongeoregistry.adapter.RegistryAdapter;
 import org.commongeoregistry.adapter.RegistryAdapterServer;
@@ -31,7 +31,7 @@ import net.geoprism.registry.service.permission.GeoObjectTypePermissionServiceIF
 import net.geoprism.registry.service.permission.GeoObjectTypeRelationshipPermissionServiceIF;
 import net.geoprism.registry.service.permission.HierarchyTypePermissionServiceIF;
 import net.geoprism.registry.service.permission.OrganizationPermissionServiceIF;
-import net.geoprism.spring.ApplicationContextHolder;
+import net.geoprism.spring.core.ApplicationContextHolder;
 
 @Service
 @Primary
@@ -120,11 +120,6 @@ public class ServiceFactory implements CacheProviderIF
   public static GeoObjectTypePermissionServiceIF getGeoObjectTypePermissionService()
   {
     return getBean(GeoObjectTypePermissionServiceIF.class);
-  }
-
-  public static OrganizationServiceIF getOrganizationService()
-  {
-    return getBean(OrganizationServiceIF.class);
   }
 
   public static ServerMetadataCache getMetadataCache()

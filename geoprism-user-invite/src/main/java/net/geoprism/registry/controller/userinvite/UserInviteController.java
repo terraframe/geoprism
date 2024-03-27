@@ -36,8 +36,8 @@ import com.google.gson.JsonObject;
 
 import net.geoprism.registry.controller.RunwaySpringController;
 import net.geoprism.registry.service.request.UserInviteService;
-import net.geoprism.spring.JsonArrayDeserializer;
-import net.geoprism.spring.JsonObjectDeserializer;
+import net.geoprism.spring.core.JsonArrayDeserializer;
+import net.geoprism.spring.core.JsonObjectDeserializer;
 
 @RestController
 @Validated

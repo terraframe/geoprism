@@ -34,7 +34,7 @@ import com.google.gson.JsonObject;
 import net.geoprism.registry.DateFormatter;
 import net.geoprism.registry.conversion.ServerGeoObjectStrategyIF;
 import net.geoprism.registry.service.business.GeoObjectBusinessService;
-import net.geoprism.registry.service.request.ServiceFactory;
+import net.geoprism.registry.service.business.ServiceFactory;
 
 public class ServerChildGraphNode extends ServerGraphNode
 {

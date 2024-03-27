@@ -4,7 +4,7 @@ import com.runwaysdk.dataaccess.Command;
 
 import net.geoprism.registry.cache.TransactionCacheFacade;
 import net.geoprism.registry.model.ServerHierarchyType;
-import net.geoprism.registry.service.request.ServiceFactory;
+import net.geoprism.registry.service.business.ServiceFactory;
 
 public class HierarchicalRelationshipTypeCacheEventCommand extends AbstractCacheCommand implements Command
 {

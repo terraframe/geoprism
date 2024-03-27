@@ -59,7 +59,7 @@ import com.runwaysdk.session.Session;
 import net.geoprism.registry.model.Classification;
 import net.geoprism.registry.model.ClassificationType;
 import net.geoprism.registry.service.business.ClassificationBusinessServiceIF;
-import net.geoprism.registry.service.request.ServiceFactory;
+import net.geoprism.registry.service.business.ServiceFactory;
 
 public class RegistryAttributeTypeConverter extends RegistryLocalizedValueConverter
 {

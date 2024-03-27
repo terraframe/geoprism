@@ -50,8 +50,8 @@ import net.geoprism.registry.graph.HierarchicalRelationshipType;
 import net.geoprism.registry.model.graph.GraphStrategy;
 import net.geoprism.registry.model.graph.ServerHierarchyStrategy;
 import net.geoprism.registry.service.business.HierarchyTypeBusinessServiceIF;
+import net.geoprism.registry.service.business.ServiceFactory;
 import net.geoprism.registry.service.permission.HierarchyTypePermissionServiceIF;
-import net.geoprism.registry.service.request.ServiceFactory;
 
 public class ServerHierarchyType extends CachableObjectWrapper<HierarchicalRelationshipType> implements ServerElement, GraphType
 {

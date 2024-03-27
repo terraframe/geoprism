@@ -56,7 +56,6 @@ import net.geoprism.registry.model.ServerGeoObjectIF;
 import net.geoprism.registry.model.ServerGeoObjectType;
 import net.geoprism.registry.model.graph.VertexServerGeoObject;
 import net.geoprism.registry.service.permission.TransitionPermissionServiceIF;
-import net.geoprism.registry.service.request.ServiceFactory;
 import net.geoprism.registry.view.Page;
 
 @Service

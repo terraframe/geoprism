@@ -38,10 +38,10 @@ import net.geoprism.registry.RegistryConstants;
 import net.geoprism.registry.model.ServerElement;
 import net.geoprism.registry.model.ServerGeoObjectType;
 import net.geoprism.registry.model.ServerOrganization;
+import net.geoprism.registry.service.business.ServiceFactory;
 import net.geoprism.registry.service.permission.GeoObjectTypePermissionServiceIF;
 import net.geoprism.registry.service.permission.RepoPermissionActionIF;
 import net.geoprism.registry.service.permission.UserPermissionService.RepoPermissionAction;
-import net.geoprism.registry.service.request.ServiceFactory;
 
 /**
  * Responsible for building {@link Term} objects from Runway {@link Classifier}
