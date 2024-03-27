@@ -66,7 +66,7 @@ public class GeoObjectTypeSnapshot extends GeoObjectTypeSnapshotBase
     return StringUtils.isEmpty(this.getGeometryType());
   }
 
-  public List<AttributeType> getAttributeTypes()
+  public List<org.commongeoregistry.adapter.metadata.AttributeType> getAttributeTypes()
   {
     AttributeTypeConverter converter = new AttributeTypeConverter();
 

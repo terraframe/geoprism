@@ -1,12 +1,15 @@
 package net.geoprism.registry.service.business;
 
 import java.util.Date;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
+
+import org.apache.commons.lang3.StringUtils;
 
 import com.orientechnologies.orient.core.db.document.ODatabaseDocument;
 import com.orientechnologies.orient.core.db.record.OIdentifiable;
@@ -26,18 +29,27 @@ import com.orientechnologies.orient.core.serialization.OSerializableStream;
 import com.orientechnologies.orient.core.sql.executor.OResult;
 import com.orientechnologies.orient.core.storage.OStorage.LOCKING_STRATEGY;
 import com.runwaysdk.business.graph.VertexObject;
+import com.runwaysdk.dataaccess.MdAttributeConcreteDAOIF;
+import com.runwaysdk.dataaccess.MdAttributeDAOIF;
+import com.runwaysdk.dataaccess.MdGraphClassDAOIF;
 import com.runwaysdk.dataaccess.MdVertexDAOIF;
 import com.runwaysdk.dataaccess.graph.GraphRequest;
 import com.runwaysdk.dataaccess.graph.VertexObjectDAO;
 import com.runwaysdk.dataaccess.graph.orientdb.ResultSetConverter;
 
+import net.geoprism.registry.graph.AttributeType;
 import net.geoprism.registry.graph.AttributeValue;
+import net.geoprism.registry.graph.GeoVertex;
 import net.geoprism.registry.model.ServerGeoObjectIF;
 import net.geoprism.registry.model.ServerGeoObjectType;
 import net.geoprism.registry.model.graph.VertexServerGeoObject;
 
 public class VertexAndEdgeResultSetConverter extends ResultSetConverter
 {
+  public static final String VERTEX_PREFIX = "v";
+  
+  public static final String ATTR_PREFIX = "attr";
+  
   public VertexAndEdgeResultSetConverter()
   {
     super(VertexObjectDAO.class);
@@ -48,17 +60,17 @@ public class VertexAndEdgeResultSetConverter extends ResultSetConverter
   {
     final OResult oresult = (OResult) result;
     
-    final String geoObjectOid = oresult.getProperty("v.oid");
-    final String attrOid = oresult.getProperty("attr.oid");
+    final String geoObjectOid = oresult.getProperty(VERTEX_PREFIX + ".oid");
+    final String attrOid = oresult.getProperty(ATTR_PREFIX + ".oid");
     final String edgeClass = oresult.getProperty("edgeClass");
     final String edgeOid = oresult.getProperty("edgeOid");
     
     if (edgeClass.equals("search_link_default") || (geoObjectOid == null && attrOid == null)) return null;
     
-    ResultPrefixWrapper vwrapper = new ResultPrefixWrapper(oresult, "v.");
+    ResultPrefixWrapper vwrapper = new ResultPrefixWrapper(oresult, VERTEX_PREFIX + ".");
     final VertexObject goVertex = (VertexObject) super.convert(request, vwrapper);
     
-    ResultPrefixWrapper attrWrapper = new ResultPrefixWrapper(oresult, "attr.");
+    ResultPrefixWrapper attrWrapper = new ResultPrefixWrapper(oresult, ATTR_PREFIX + ".");
     final VertexObject attrVertex = (VertexObject) super.convert(request, attrWrapper);
     
     return new VertexAndEdge(goVertex, attrVertex, geoObjectOid, edgeClass, edgeOid);
@@ -569,5 +581,49 @@ public class VertexAndEdgeResultSetConverter extends ResultSetConverter
     }
 
     return list;
+  }
+  
+  public static String geoVertexColumns(MdGraphClassDAOIF mdClass)
+  {
+    Set<String> columns = new HashSet<String>();
+    columns.add(VERTEX_PREFIX + ".@class");
+    columns.add(VERTEX_PREFIX + ".@rid");
+    
+    // GeoVertex
+    for (String column : new String[] { GeoVertex.SEQ, GeoVertex.CREATEDATE, GeoVertex.LASTUPDATEDATE, GeoVertex.OID })
+    {
+      columns.add(VERTEX_PREFIX + "." + column);
+    }
+    
+    List<? extends MdAttributeConcreteDAOIF> mdAttrs = mdClass.definesAttributes();
+    for(MdAttributeConcreteDAOIF mdAttr : mdAttrs)
+    {
+      columns.add(VERTEX_PREFIX + "." + mdAttr.getColumnName());
+    }
+    
+    return StringUtils.join(columns, ", ");
+  }
+  
+  public static String geoVertexAttributeColumns(List<net.geoprism.registry.graph.AttributeType> types)
+  {
+    Set<String> columns = new HashSet<String>();
+    columns.add(ATTR_PREFIX + ".@class");
+    columns.add(ATTR_PREFIX + ".@rid");
+    
+    // AttributeValue
+    for (String column : new String[] { AttributeValue.SEQ, AttributeValue.OID, AttributeValue.ATTRIBUTENAME, AttributeValue.STARTDATE, AttributeValue.ENDDATE })
+    {
+      columns.add(ATTR_PREFIX + "." + column);
+    }
+    
+    for (net.geoprism.registry.graph.AttributeType at : types)
+    {
+      for (MdAttributeDAOIF mdAttr : at.getStrategy().getValueAttributes())
+      {
+        columns.add(ATTR_PREFIX + "." + mdAttr.getColumnName());
+      }
+    }
+    
+    return StringUtils.join(columns, ", ");
   }
 }

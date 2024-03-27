@@ -1394,7 +1394,7 @@ public class GeoObjectBusinessService extends RegistryLocalizedValueConverter im
     parameters.put("rid", parent.getVertex().getRID());
 
     StringBuilder statement = new StringBuilder();
-    statement.append("SELECT " + generateVertexColumns("v", parent.getMdClass()) + ", " + generateAttributeColumns("attr", parent) + ", edgeClass, edgeOid FROM ( ");
+    statement.append("SELECT " + VertexAndEdgeResultSetConverter.geoVertexColumns(parent.getMdClass()) + ", " + VertexAndEdgeResultSetConverter.geoVertexAttributeColumns(parent.getType().definesAttributes()) + ", edgeClass, edgeOid FROM ( ");
     statement.append("SELECT v, v.out('" + EdgeConstant.HAS_VALUE.getDBClassName() + "', '" + EdgeConstant.HAS_GEOMETRY.getDBClassName() + "') as attr, edgeClass, edgeOid FROM ( ");
     statement.append("SELECT in as v, @class as edgeClass, oid as edgeOid FROM ( ");
     statement.append("SELECT EXPAND( outE( ");
@@ -1479,7 +1479,7 @@ public class GeoObjectBusinessService extends RegistryLocalizedValueConverter im
     parameters.put("rid", child.getVertex().getRID());
 
     StringBuilder statement = new StringBuilder();
-    statement.append("SELECT " + generateVertexColumns("v", child.getMdClass()) + ", " + generateAttributeColumns("attr", child) + ", edgeClass, edgeOid FROM ( ");
+    statement.append("SELECT " + VertexAndEdgeResultSetConverter.geoVertexColumns(child.getMdClass()) + ", " + VertexAndEdgeResultSetConverter.geoVertexAttributeColumns(child.getType().definesAttributes()) + ", edgeClass, edgeOid FROM ( ");
     statement.append("SELECT v, v.out('" + EdgeConstant.HAS_VALUE.getDBClassName() + "', '" + EdgeConstant.HAS_GEOMETRY.getDBClassName() + "') as attr, edgeClass, edgeOid FROM ( ");
     statement.append("SELECT out as v, @class as edgeClass, oid as edgeOid FROM ( ");
     statement.append("SELECT EXPAND( inE( ");
@@ -1581,50 +1581,6 @@ public class GeoObjectBusinessService extends RegistryLocalizedValueConverter im
     return tnRoot;
   }
   
-  private String generateVertexColumns(String prefix, MdGraphClassDAOIF mdClass)
-  {
-    Set<String> columns = new HashSet<String>();
-    columns.add(prefix + ".@class");
-    columns.add(prefix + ".@rid");
-    
-    // GeoVertex
-    for (String column : new String[] { GeoVertex.SEQ, GeoVertex.CREATEDATE, GeoVertex.LASTUPDATEDATE, GeoVertex.OID })
-    {
-      columns.add(prefix + "." + column);
-    }
-    
-    List<? extends MdAttributeConcreteDAOIF> mdAttrs = mdClass.definesAttributes();
-    for(MdAttributeConcreteDAOIF mdAttr : mdAttrs)
-    {
-      columns.add(prefix + "." + mdAttr.getColumnName());
-    }
-    
-    return StringUtils.join(columns, ", ");
-  }
-  
-  private String generateAttributeColumns(String prefix, ServerGeoObjectIF go)
-  {
-    Set<String> columns = new HashSet<String>();
-    columns.add(prefix + ".@class");
-    columns.add(prefix + ".@rid");
-    
-    // AttributeValue
-    for (String column : new String[] { AttributeValue.SEQ, AttributeValue.OID, AttributeValue.ATTRIBUTENAME, AttributeValue.STARTDATE, AttributeValue.ENDDATE })
-    {
-      columns.add(prefix + "." + column);
-    }
-    
-    for (net.geoprism.registry.graph.AttributeType at : go.getType().getAttributeMap().values())
-    {
-      for (MdAttributeDAOIF mdAttr : at.getStrategy().getValueAttributes())
-      {
-        columns.add(prefix + "." + mdAttr.getColumnName());
-      }
-    }
-    
-    return StringUtils.join(columns, ", ");
-  }
-
   protected ServerParentTreeNodeOverTime internalGetParentOverTime(ServerGeoObjectIF child, String[] parentTypes, boolean recursive, boolean includeInherited)
   {
     final ServerGeoObjectType cType = child.getType();
