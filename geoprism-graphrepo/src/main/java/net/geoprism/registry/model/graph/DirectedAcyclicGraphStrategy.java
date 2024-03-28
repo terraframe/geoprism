@@ -3,18 +3,18 @@
  *
  * This file is part of Geoprism(tm).
  *
- * Geoprism(tm) is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
+ * Geoprism(tm) is free software: you can redistribute it and/or modify it under
+ * the terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation, either version 3 of the License, or (at your option) any
+ * later version.
  *
- * Geoprism(tm) is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
+ * Geoprism(tm) is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with Geoprism(tm).  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with Geoprism(tm). If not, see <http://www.gnu.org/licenses/>.
  */
 package net.geoprism.registry.model.graph;
 
@@ -37,6 +37,7 @@ import com.runwaysdk.dataaccess.graph.attributes.ValueOverTime;
 
 import net.geoprism.registry.DirectedAcyclicGraphType;
 import net.geoprism.registry.graph.GeoVertex;
+import net.geoprism.registry.model.EdgeConstant;
 import net.geoprism.registry.model.ServerChildGraphNode;
 import net.geoprism.registry.model.ServerGeoObjectType;
 import net.geoprism.registry.model.ServerParentGraphNode;
@@ -67,11 +68,41 @@ public class DirectedAcyclicGraphStrategy extends AbstractGraphStrategy implemen
       throw new UnsupportedOperationException();
     }
 
+    List<VertexServerGeoObject> children = getObjects(parent, date, boundsWKT, skip, limit, "out");
+
+    long resultsCount = children.size();
+
+    for (VertexServerGeoObject child : children)
+    {
+
+      ServerChildGraphNode tnParent;
+
+      if (recursive && ( limit == null || limit - resultsCount > 0 ))
+      {
+        tnParent = this.getChildren(child, recursive, date, boundsWKT, null, ( limit == null ? null : limit - resultsCount ));
+        tnParent.setOid(parent.getUid());
+
+        resultsCount += tnParent.getChildren().size();
+      }
+      else
+      {
+        tnParent = new ServerChildGraphNode(child, this.type, date, null, parent.getUid());
+      }
+
+      tnRoot.addChild(tnParent);
+    }
+
+    return tnRoot;
+  }
+
+  protected List<VertexServerGeoObject> getObjects(VertexServerGeoObject source, Date date, String boundsWKT, Long skip, Long limit, String direction)
+  {
     Map<String, Object> parameters = new HashedMap<String, Object>();
-    parameters.put("rid", parent.getVertex().getRID());
+    parameters.put("rid", source.getVertex().getRID());
 
     StringBuilder statement = new StringBuilder();
-    statement.append("SELECT EXPAND( outE(");
+    statement.append("TRAVERSE out('" + EdgeConstant.HAS_VALUE.getDBClassName() + "', '" + EdgeConstant.HAS_GEOMETRY.getDBClassName() + "') FROM (");
+    statement.append("SELECT EXPAND( " + direction + "(");
     statement.append("'" + this.type.getMdEdgeDAO().getDBClassName() + "'");
     statement.append(")");
 
@@ -85,7 +116,16 @@ public class DirectedAcyclicGraphStrategy extends AbstractGraphStrategy implemen
 
     if (boundsWKT != null)
     {
-      statement = new StringBuilder(this.wrapQueryWithBounds(statement.toString(), "in", date, boundsWKT, parameters));
+      if (date != null)
+      {
+        statement.append(" WHERE out('has_geometry')[:date BETWEEN startDate AND endDate AND ST_INTERSECTS(value, :bounds) = true].size() > 0");
+      }
+      else
+      {
+        statement.append(" WHERE out('has_geometry')[ST_INTERSECTS(value, :bounds) = true].size() > 0");
+      }
+
+      parameters.put("bounds", boundsWKT);
     }
 
     if (skip != null)
@@ -98,40 +138,11 @@ public class DirectedAcyclicGraphStrategy extends AbstractGraphStrategy implemen
       statement.append(" LIMIT " + limit);
     }
 
-    GraphQuery<EdgeObject> query = new GraphQuery<EdgeObject>(statement.toString(), parameters);
+    statement.append(") ");
 
-    List<EdgeObject> edges = query.getResults();
+    GraphQuery<VertexObject> query = new GraphQuery<VertexObject>(statement.toString(), parameters);
 
-    long resultsCount = edges.size();
-
-    for (EdgeObject edge : edges)
-    {
-      final VertexObject childVertex = edge.getChild();
-
-      MdVertexDAOIF mdVertex = (MdVertexDAOIF) childVertex.getMdClass();
-
-      ServerGeoObjectType childType = ServerGeoObjectType.get(mdVertex);
-
-      VertexServerGeoObject child = new VertexServerGeoObject(childType, childVertex, new TreeMap<>(), date);
-
-      ServerChildGraphNode tnParent;
-
-      if (recursive && ( limit == null || limit - resultsCount > 0 ))
-      {
-        tnParent = this.getChildren(child, recursive, date, boundsWKT, null, ( limit == null ? null : limit - resultsCount ));
-        tnParent.setOid(edge.getOid());
-
-        resultsCount += tnParent.getChildren().size();
-      }
-      else
-      {
-        tnParent = new ServerChildGraphNode(child, this.type, date, null, edge.getOid());
-      }
-
-      tnRoot.addChild(tnParent);
-    }
-
-    return tnRoot;
+    return VertexServerGeoObject.processTraverseResults(query.getResults(), date);
   }
 
   @SuppressWarnings("unchecked")
@@ -150,65 +161,25 @@ public class DirectedAcyclicGraphStrategy extends AbstractGraphStrategy implemen
       throw new UnsupportedOperationException();
     }
 
-    Map<String, Object> parameters = new HashedMap<String, Object>();
-    parameters.put("rid", child.getVertex().getRID());
+    List<VertexServerGeoObject> parents = getObjects(child, date, boundsWKT, skip, limit, "in");
 
-    StringBuilder statement = new StringBuilder();
-    statement.append("SELECT EXPAND( inE(");
-    statement.append("'" + this.type.getMdEdgeDAO().getDBClassName() + "'");
-    statement.append(")");
+    long resultsCount = parents.size();
 
-    if (date != null)
+    for (VertexServerGeoObject parent : parents)
     {
-      statement.append("[:date BETWEEN startDate AND endDate]");
-      parameters.put("date", date);
-    }
-
-    statement.append(") FROM :rid");
-
-    if (boundsWKT != null)
-    {
-      statement = new StringBuilder(this.wrapQueryWithBounds(statement.toString(), "out", date, boundsWKT, parameters));
-    }
-
-    if (skip != null)
-    {
-      statement.append(" SKIP " + skip);
-    }
-
-    if (limit != null)
-    {
-      statement.append(" LIMIT " + limit);
-    }
-
-    GraphQuery<EdgeObject> query = new GraphQuery<EdgeObject>(statement.toString(), parameters);
-
-    List<EdgeObject> edges = query.getResults();
-
-    long resultsCount = edges.size();
-
-    for (EdgeObject edge : edges)
-    {
-      final VertexObject parentVertex = edge.getParent();
-
-      MdVertexDAOIF mdVertex = (MdVertexDAOIF) parentVertex.getMdClass();
-
-      ServerGeoObjectType parentType = ServerGeoObjectType.get(mdVertex);
-
-      VertexServerGeoObject parent = new VertexServerGeoObject(parentType, parentVertex, new TreeMap<>(), date);
 
       ServerParentGraphNode tnParent;
 
       if (recursive && ( limit == null || limit - resultsCount > 0 ))
       {
         tnParent = this.getParents(parent, recursive, date, boundsWKT, null, ( limit == null ? null : limit - resultsCount ));
-        tnParent.setOid(edge.getOid());
+        tnParent.setOid(parent.getUid());
 
         resultsCount += tnParent.getParents().size();
       }
       else
       {
-        tnParent = new ServerParentGraphNode(parent, this.type, date, null, edge.getOid());
+        tnParent = new ServerParentGraphNode(parent, this.type, date, null, parent.getUid());
       }
 
       tnRoot.addParent(tnParent);

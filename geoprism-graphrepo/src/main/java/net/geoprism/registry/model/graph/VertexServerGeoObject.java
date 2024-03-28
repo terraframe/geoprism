@@ -154,7 +154,7 @@ public class VertexServerGeoObject extends AbstractServerGeoObject implements Se
 
     this.date = date;
   }
-
+  
   @Override
   @Transaction
   public void apply()
