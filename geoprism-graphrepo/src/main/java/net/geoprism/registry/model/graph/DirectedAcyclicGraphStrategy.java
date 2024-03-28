@@ -26,6 +26,7 @@ import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeMap;
 import java.util.TreeSet;
+import java.util.UUID;
 
 import org.apache.commons.collections4.map.HashedMap;
 
@@ -80,13 +81,13 @@ public class DirectedAcyclicGraphStrategy extends AbstractGraphStrategy implemen
       if (recursive && ( limit == null || limit - resultsCount > 0 ))
       {
         tnParent = this.getChildren(child, recursive, date, boundsWKT, null, ( limit == null ? null : limit - resultsCount ));
-        tnParent.setOid(parent.getUid());
+        tnParent.setOid(UUID.randomUUID().toString());
 
         resultsCount += tnParent.getChildren().size();
       }
       else
       {
-        tnParent = new ServerChildGraphNode(child, this.type, date, null, parent.getUid());
+        tnParent = new ServerChildGraphNode(child, this.type, date, null, UUID.randomUUID().toString());
       }
 
       tnRoot.addChild(tnParent);
@@ -173,13 +174,13 @@ public class DirectedAcyclicGraphStrategy extends AbstractGraphStrategy implemen
       if (recursive && ( limit == null || limit - resultsCount > 0 ))
       {
         tnParent = this.getParents(parent, recursive, date, boundsWKT, null, ( limit == null ? null : limit - resultsCount ));
-        tnParent.setOid(parent.getUid());
+        tnParent.setOid(UUID.randomUUID().toString());
 
         resultsCount += tnParent.getParents().size();
       }
       else
       {
-        tnParent = new ServerParentGraphNode(parent, this.type, date, null, parent.getUid());
+        tnParent = new ServerParentGraphNode(parent, this.type, date, null, UUID.randomUUID().toString());
       }
 
       tnRoot.addParent(tnParent);
