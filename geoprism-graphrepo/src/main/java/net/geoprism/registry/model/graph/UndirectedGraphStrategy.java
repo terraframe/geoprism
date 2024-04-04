@@ -3,18 +3,18 @@
  *
  * This file is part of Geoprism(tm).
  *
- * Geoprism(tm) is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
+ * Geoprism(tm) is free software: you can redistribute it and/or modify it under
+ * the terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation, either version 3 of the License, or (at your option) any
+ * later version.
  *
- * Geoprism(tm) is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
+ * Geoprism(tm) is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with Geoprism(tm).  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with Geoprism(tm). If not, see <http://www.gnu.org/licenses/>.
  */
 package net.geoprism.registry.model.graph;
 
@@ -26,6 +26,7 @@ import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeMap;
 import java.util.TreeSet;
+import java.util.UUID;
 
 import org.apache.commons.collections4.map.HashedMap;
 
@@ -37,6 +38,7 @@ import com.runwaysdk.dataaccess.graph.attributes.ValueOverTime;
 
 import net.geoprism.registry.UndirectedGraphType;
 import net.geoprism.registry.graph.GeoVertex;
+import net.geoprism.registry.model.EdgeConstant;
 import net.geoprism.registry.model.ServerChildGraphNode;
 import net.geoprism.registry.model.ServerGeoObjectType;
 import net.geoprism.registry.model.ServerGraphNode;
@@ -73,21 +75,12 @@ public class UndirectedGraphStrategy extends AbstractGraphStrategy implements Gr
       throw new UnsupportedOperationException();
     }
 
-    List<EdgeObject> edges = this.getEdges(source, date, boundsWKT, "out", skip, limit);
+    List<VertexServerGeoObject> nodes = this.getObjects(source, date, boundsWKT, "in", skip, limit);
 
-    long resultsCount = edges.size();
+    long resultsCount = nodes.size();
 
-    for (EdgeObject edge : edges)
+    for (VertexServerGeoObject target : nodes)
     {
-      Object sourceRid = source.getVertex().getRID();
-
-      final VertexObject vertex = edge.getChild().getRID().equals(sourceRid) ? edge.getParent() : edge.getChild();
-
-      MdVertexDAOIF mdVertex = (MdVertexDAOIF) vertex.getMdClass();
-
-      ServerGeoObjectType vertexType = ServerGeoObjectType.get(mdVertex);
-
-      VertexServerGeoObject target = new VertexServerGeoObject(vertexType, vertex, new TreeMap<>(), date);
 
       if (!source.getUid().equals(target.getUid()))
       {
@@ -98,13 +91,13 @@ public class UndirectedGraphStrategy extends AbstractGraphStrategy implements Gr
           visited.add(target.getUid());
 
           tnParent = this.getChildren(target, recursive, date, visited, boundsWKT, null, ( limit == null ? null : limit - resultsCount ));
-          tnParent.setOid(edge.getOid());
+          tnParent.setOid(UUID.randomUUID().toString());
 
           resultsCount += tnParent.getChildren().size();
         }
         else
         {
-          tnParent = new ServerChildGraphNode(target, this.type, date, null, edge.getOid());
+          tnParent = new ServerChildGraphNode(target, this.type, date, null, UUID.randomUUID().toString());
         }
 
         tnRoot.addChild(tnParent);
@@ -135,22 +128,12 @@ public class UndirectedGraphStrategy extends AbstractGraphStrategy implements Gr
       throw new UnsupportedOperationException();
     }
 
-    List<EdgeObject> edges = this.getEdges(source, date, boundsWKT, "in", skip, limit);
+    List<VertexServerGeoObject> nodes = this.getObjects(source, date, boundsWKT, "in", skip, limit);
 
-    long resultsCount = edges.size();
+    long resultsCount = nodes.size();
 
-    for (EdgeObject edge : edges)
+    for (VertexServerGeoObject target : nodes)
     {
-      Object sourceRid = source.getVertex().getRID();
-
-      final VertexObject vertex = edge.getChild().getRID().equals(sourceRid) ? edge.getParent() : edge.getChild();
-
-      MdVertexDAOIF mdVertex = (MdVertexDAOIF) vertex.getMdClass();
-
-      ServerGeoObjectType targetType = ServerGeoObjectType.get(mdVertex);
-
-      VertexServerGeoObject target = new VertexServerGeoObject(targetType, vertex, new TreeMap<>(), date);
-
       if (!target.getUid().equals(source.getUid()))
       {
         ServerParentGraphNode tnParent;
@@ -160,13 +143,13 @@ public class UndirectedGraphStrategy extends AbstractGraphStrategy implements Gr
           visited.add(target.getUid());
 
           tnParent = this.getParents(target, recursive, date, visited, boundsWKT, null, ( limit == null ? null : limit - resultsCount ));
-          tnParent.setOid(edge.getOid());
+          tnParent.setOid(UUID.randomUUID().toString());
 
           resultsCount += tnParent.getParents().size();
         }
         else
         {
-          tnParent = new ServerParentGraphNode(target, this.type, date, null, edge.getOid());
+          tnParent = new ServerParentGraphNode(target, this.type, date, null, UUID.randomUUID().toString());
         }
 
         tnRoot.addParent(tnParent);
@@ -357,13 +340,14 @@ public class UndirectedGraphStrategy extends AbstractGraphStrategy implements Gr
     return resultEdges;
   }
 
-  private List<EdgeObject> getEdges(VertexServerGeoObject geoObject, Date date, String boundsWKT, String inOrOut, Long skip, Long limit)
+  private List<VertexServerGeoObject> getObjects(VertexServerGeoObject geoObject, Date date, String boundsWKT, String inOrOut, Long skip, Long limit)
   {
     Map<String, Object> parameters = new HashedMap<String, Object>();
     parameters.put("rid", geoObject.getVertex().getRID());
 
     StringBuilder statement = new StringBuilder();
-    statement.append("SELECT EXPAND( bothE(");
+    statement.append("TRAVERSE out('" + EdgeConstant.HAS_VALUE.getDBClassName() + "', '" + EdgeConstant.HAS_GEOMETRY.getDBClassName() + "') FROM (");
+    statement.append("SELECT EXPAND( both(");
     statement.append("'" + this.type.getMdEdgeDAO().getDBClassName() + "'");
     statement.append(")");
 
@@ -377,7 +361,16 @@ public class UndirectedGraphStrategy extends AbstractGraphStrategy implements Gr
 
     if (boundsWKT != null)
     {
-      statement = new StringBuilder(this.wrapQueryWithBounds(statement.toString(), inOrOut, date, boundsWKT, parameters));
+      if (date != null)
+      {
+        statement.append(" WHERE out('has_geometry')[:date BETWEEN startDate AND endDate AND ST_INTERSECTS(value, :bounds) = true].size() > 0");
+      }
+      else
+      {
+        statement.append(" WHERE out('has_geometry')[ST_INTERSECTS(value, :bounds) = true].size() > 0");
+      }
+
+      parameters.put("bounds", boundsWKT);
     }
 
     if (skip != null)
@@ -389,10 +382,11 @@ public class UndirectedGraphStrategy extends AbstractGraphStrategy implements Gr
     {
       statement.append(" LIMIT " + limit);
     }
+    statement.append(" )");
 
-    GraphQuery<EdgeObject> query = new GraphQuery<EdgeObject>(statement.toString(), parameters);
+    GraphQuery<VertexObject> query = new GraphQuery<VertexObject>(statement.toString(), parameters);
 
-    return query.getResults();
+    return VertexServerGeoObject.processTraverseResults(query.getResults(), date);
   }
 
   private SortedSet<EdgeObject> getEdges(VertexServerGeoObject geoObject, VertexServerGeoObject parent, Date startDate, Date endDate)

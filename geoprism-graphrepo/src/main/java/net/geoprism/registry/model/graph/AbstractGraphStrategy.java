@@ -109,4 +109,5 @@ public class AbstractGraphStrategy
 
     return statement.toString();
   }
+  
 }

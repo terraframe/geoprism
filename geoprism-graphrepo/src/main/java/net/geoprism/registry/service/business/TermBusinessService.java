@@ -22,6 +22,8 @@ import org.commongeoregistry.adapter.Term;
 import org.commongeoregistry.adapter.dataaccess.LocalizedValue;
 import org.springframework.stereotype.Service;
 
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import com.runwaysdk.dataaccess.transaction.Transaction;
 
 import net.geoprism.ontology.Classifier;
@@ -32,6 +34,19 @@ import net.geoprism.registry.conversion.TermConverter;
 @Service
 public class TermBusinessService implements TermBusinessServiceIF
 {
+  
+  @Override
+  public Term createTerm(String parentTermCode, String termJSON)
+  {
+    JsonObject termJSONobj = JsonParser.parseString(termJSON).getAsJsonObject();
+
+    LocalizedValue label = LocalizedValue.fromJSON(termJSONobj.get(Term.JSON_LOCALIZED_LABEL).getAsJsonObject());
+
+    Term term = new Term(termJSONobj.get(Term.JSON_CODE).getAsString(), label, new LocalizedValue(""));
+
+    return this.createTerm(parentTermCode, term);
+  }
+
 
   @Override
   public Term createTerm(String parentTermCode, Term term)
@@ -63,6 +78,19 @@ public class TermBusinessService implements TermBusinessServiceIF
 
     return termBuilder.build();
   }
+  
+  @Override
+  public Term updateTerm(String parentTermCode, String termJSON)
+  {
+    JsonObject termJSONobj = JsonParser.parseString(termJSON).getAsJsonObject();
+
+    String termCode = termJSONobj.get(Term.JSON_CODE).getAsString();
+
+    LocalizedValue value = LocalizedValue.fromJSON(termJSONobj.get(Term.JSON_LOCALIZED_LABEL).getAsJsonObject());
+
+    return this.updateTerm(parentTermCode, termCode, value);
+  }
+
 
   @Override
   @Transaction
