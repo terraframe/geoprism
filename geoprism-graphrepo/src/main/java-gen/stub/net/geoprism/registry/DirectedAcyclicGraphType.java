@@ -24,24 +24,13 @@ import java.util.List;
 import org.commongeoregistry.adapter.dataaccess.LocalizedValue;
 
 import com.google.gson.JsonObject;
-import com.runwaysdk.business.rbac.RoleDAO;
-import com.runwaysdk.constants.MdAttributeBooleanInfo;
-import com.runwaysdk.constants.MdAttributeDateTimeInfo;
-import com.runwaysdk.constants.MdAttributeLocalInfo;
-import com.runwaysdk.constants.graph.MdEdgeInfo;
-import com.runwaysdk.dataaccess.DuplicateDataException;
 import com.runwaysdk.dataaccess.MdEdgeDAOIF;
-import com.runwaysdk.dataaccess.MdVertexDAOIF;
-import com.runwaysdk.dataaccess.metadata.MdAttributeDateTimeDAO;
 import com.runwaysdk.dataaccess.metadata.graph.MdEdgeDAO;
-import com.runwaysdk.dataaccess.metadata.graph.MdVertexDAO;
-import com.runwaysdk.dataaccess.transaction.Transaction;
 import com.runwaysdk.query.OIterator;
 import com.runwaysdk.query.QueryFactory;
 import com.runwaysdk.system.metadata.MdEdge;
 
 import net.geoprism.registry.conversion.RegistryLocalizedValueConverter;
-import net.geoprism.registry.graph.GeoVertex;
 import net.geoprism.registry.model.GraphType;
 import net.geoprism.registry.model.ServerElement;
 import net.geoprism.registry.model.graph.DirectedAcyclicGraphStrategy;
@@ -69,6 +58,12 @@ public class DirectedAcyclicGraphType extends DirectedAcyclicGraphTypeBase imple
   public LocalizedValue getLabel()
   {
     return RegistryLocalizedValueConverter.convertNoAutoCoalesce(this.getDisplayLabel());
+  }
+  
+  @Override
+  public LocalizedValue getDescriptionLV()
+  {
+    return RegistryLocalizedValueConverter.convertNoAutoCoalesce(this.getDescription());
   }
 
   public MdEdgeDAOIF getMdEdgeDAO()

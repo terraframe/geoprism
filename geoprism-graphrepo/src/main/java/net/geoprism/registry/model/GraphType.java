@@ -22,6 +22,8 @@ import org.commongeoregistry.adapter.dataaccess.LocalizedValue;
 
 import com.runwaysdk.dataaccess.MdEdgeDAOIF;
 
+import net.geoprism.graph.GraphTypeReference;
+import net.geoprism.graph.GraphTypeSnapshot;
 import net.geoprism.registry.DirectedAcyclicGraphType;
 import net.geoprism.registry.UndirectedGraphType;
 import net.geoprism.registry.model.graph.GraphStrategy;
@@ -56,4 +58,31 @@ public interface GraphType
 
     return ServerHierarchyType.get(code);
   }
+  
+  public static String getTypeCode(GraphType graphType)
+  {
+    if (graphType instanceof DirectedAcyclicGraphType)
+    {
+      return GraphTypeSnapshot.DIRECTED_ACYCLIC_GRAPH_TYPE;
+    }
+    else if (graphType instanceof DirectedAcyclicGraphType)
+    {
+      return GraphTypeSnapshot.UNDIRECTED_GRAPH_TYPE;
+    }
+    else if (graphType instanceof ServerHierarchyType)
+    {
+      return GraphTypeSnapshot.HIERARCHY_TYPE;
+    }
+    else
+    {
+      throw new UnsupportedOperationException();
+    }
+  }
+  
+  public static GraphType resolve(GraphTypeReference ref)
+  {
+    return getByCode(ref.typeCode, ref.code);
+  }
+
+  public LocalizedValue getDescriptionLV();
 }

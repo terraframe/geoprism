@@ -1,24 +1,6 @@
-/**
- * Copyright (c) 2023 TerraFrame, Inc. All rights reserved.
- *
- * This file is part of Geoprism(tm).
- *
- * Geoprism(tm) is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
- *
- * Geoprism(tm) is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with Geoprism(tm).  If not, see <http://www.gnu.org/licenses/>.
- */
 package net.geoprism.graph;
 
-@com.runwaysdk.business.ClassSignature(hash = 2015432371)
+@com.runwaysdk.business.ClassSignature(hash = 3247868)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -39,13 +21,15 @@ public abstract class LabeledPropertyGraphTypeBase extends com.runwaysdk.busines
   private com.runwaysdk.business.Struct displayLabel = null;
   
   public final static java.lang.String ENTITYDOMAIN = "entityDomain";
+  public final static java.lang.String GEOOBJECTTYPECODES = "geoObjectTypeCodes";
+  public final static java.lang.String GRAPHTYPES = "graphTypes";
   public final static java.lang.String HIERARCHY = "hierarchy";
   public final static java.lang.String KEYNAME = "keyName";
   public final static java.lang.String LASTUPDATEDATE = "lastUpdateDate";
   public final static java.lang.String LASTUPDATEDBY = "lastUpdatedBy";
   public final static java.lang.String LOCKEDBY = "lockedBy";
   public final static java.lang.String OID = "oid";
-  public static final java.lang.String ORGANIZATION = "organization";
+  public final static java.lang.String ORGANIZATION = "organization";
   public final static java.lang.String OWNER = "owner";
   public final static java.lang.String SEQ = "seq";
   public final static java.lang.String SITEMASTER = "siteMaster";
@@ -53,9 +37,8 @@ public abstract class LabeledPropertyGraphTypeBase extends com.runwaysdk.busines
   public final static java.lang.String STRATEGYTYPE = "strategyType";
   public final static java.lang.String TYPE = "type";
   public final static java.lang.String VALID = "valid";
-  
   @SuppressWarnings("unused")
-  private static final long serialVersionUID = 2015432371;
+  private static final long serialVersionUID = 3247868;
   
   public LabeledPropertyGraphTypeBase()
   {
@@ -217,6 +200,62 @@ public abstract class LabeledPropertyGraphTypeBase extends com.runwaysdk.busines
     else
     {
       setValue(ENTITYDOMAIN, oid);
+    }
+  }
+  
+  public String getGeoObjectTypeCodes()
+  {
+    return getValue(GEOOBJECTTYPECODES);
+  }
+  
+  public void validateGeoObjectTypeCodes()
+  {
+    this.validateAttribute(GEOOBJECTTYPECODES);
+  }
+  
+  public static com.runwaysdk.dataaccess.MdAttributeTextDAOIF getGeoObjectTypeCodesMd()
+  {
+    com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(net.geoprism.graph.LabeledPropertyGraphType.CLASS);
+    return (com.runwaysdk.dataaccess.MdAttributeTextDAOIF)mdClassIF.definesAttribute(GEOOBJECTTYPECODES);
+  }
+  
+  public void setGeoObjectTypeCodes(String value)
+  {
+    if(value == null)
+    {
+      setValue(GEOOBJECTTYPECODES, "");
+    }
+    else
+    {
+      setValue(GEOOBJECTTYPECODES, value);
+    }
+  }
+  
+  public String getGraphTypes()
+  {
+    return getValue(GRAPHTYPES);
+  }
+  
+  public void validateGraphTypes()
+  {
+    this.validateAttribute(GRAPHTYPES);
+  }
+  
+  public static com.runwaysdk.dataaccess.MdAttributeTextDAOIF getGraphTypesMd()
+  {
+    com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(net.geoprism.graph.LabeledPropertyGraphType.CLASS);
+    return (com.runwaysdk.dataaccess.MdAttributeTextDAOIF)mdClassIF.definesAttribute(GRAPHTYPES);
+  }
+  
+  public void setGraphTypes(String value)
+  {
+    if(value == null)
+    {
+      setValue(GRAPHTYPES, "");
+    }
+    else
+    {
+      setValue(GRAPHTYPES, value);
     }
   }
   
@@ -416,8 +455,6 @@ public abstract class LabeledPropertyGraphTypeBase extends com.runwaysdk.busines
     }
   }
   
-
-  
   public com.runwaysdk.system.Actor getOwner()
   {
     if (getValue(OWNER).trim().equals(""))
@@ -605,6 +642,13 @@ public abstract class LabeledPropertyGraphTypeBase extends com.runwaysdk.busines
   protected String getDeclaredType()
   {
     return CLASS;
+  }
+  
+  public static LabeledPropertyGraphTypeQuery getAllInstances(String sortAttribute, Boolean ascending, Integer pageSize, Integer pageNumber)
+  {
+    LabeledPropertyGraphTypeQuery query = new LabeledPropertyGraphTypeQuery(new com.runwaysdk.query.QueryFactory());
+    com.runwaysdk.business.Entity.getAllInstances(query, sortAttribute, ascending, pageSize, pageNumber);
+    return query;
   }
   
   public static LabeledPropertyGraphType get(String oid)

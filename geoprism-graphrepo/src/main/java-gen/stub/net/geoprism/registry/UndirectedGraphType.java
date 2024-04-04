@@ -64,6 +64,12 @@ public class UndirectedGraphType extends UndirectedGraphTypeBase implements Json
   {
     return RegistryLocalizedValueConverter.convertNoAutoCoalesce(this.getDisplayLabel());
   }
+  
+  @Override
+  public LocalizedValue getDescriptionLV()
+  {
+    return RegistryLocalizedValueConverter.convertNoAutoCoalesce(this.getDescription());
+  }
 
   @Override
   public JsonObject toJSON()

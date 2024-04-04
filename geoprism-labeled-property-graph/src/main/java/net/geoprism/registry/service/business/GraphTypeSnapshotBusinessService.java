@@ -34,16 +34,20 @@ import com.runwaysdk.query.QueryFactory;
 import com.runwaysdk.system.metadata.MdEdge;
 import com.runwaysdk.system.metadata.MdGraphClassQuery;
 
+import net.geoprism.graph.DirectedAcyclicGraphTypeSnapshot;
+import net.geoprism.graph.DirectedAcyclicGraphTypeSnapshotQuery;
 import net.geoprism.graph.GeoObjectTypeSnapshot;
 import net.geoprism.graph.GraphTypeSnapshot;
 import net.geoprism.graph.HierarchyTypeSnapshot;
 import net.geoprism.graph.HierarchyTypeSnapshotQuery;
 import net.geoprism.graph.LabeledPropertyGraphTypeVersion;
+import net.geoprism.graph.UndirectedGraphTypeSnapshot;
+import net.geoprism.graph.UndirectedGraphTypeSnapshotQuery;
 import net.geoprism.registry.RegistryConstants;
 import net.geoprism.registry.conversion.LocalizedValueConverter;
 
 @Service
-public class HierarchyTypeSnapshotBusinessService implements HierarchyTypeSnapshotBusinessServiceIF
+public class GraphTypeSnapshotBusinessService implements GraphTypeSnapshotBusinessServiceIF
 {
   public static final String                     PREFIX = "g_";
 
@@ -54,7 +58,7 @@ public class HierarchyTypeSnapshotBusinessService implements HierarchyTypeSnapsh
 
   @Override
   @Transaction
-  public void delete(HierarchyTypeSnapshot snapshot)
+  public void delete(GraphTypeSnapshot snapshot)
   {
     String mdEdgeOid = snapshot.getGraphMdEdgeOid();
 
@@ -99,9 +103,10 @@ public class HierarchyTypeSnapshotBusinessService implements HierarchyTypeSnapsh
   }
 
   @Override
-  public HierarchyTypeSnapshot create(LabeledPropertyGraphTypeVersion version, JsonObject type, GeoObjectTypeSnapshot root)
+  public GraphTypeSnapshot create(LabeledPropertyGraphTypeVersion version, JsonObject type, GeoObjectTypeSnapshot root)
   {
     String code = type.get(HierarchyTypeSnapshot.CODE).getAsString();
+    String typeCode = type.get(GraphTypeSnapshot.TYPE_CODE).getAsString();
     String viewName = getTableName(code);
     LocalizedValue label = LocalizedValue.fromJSON(type.get(HierarchyTypeSnapshot.DISPLAYLABEL).getAsJsonObject());
     LocalizedValue description = LocalizedValue.fromJSON(type.get(HierarchyTypeSnapshot.DESCRIPTION).getAsJsonObject());
@@ -121,19 +126,52 @@ public class HierarchyTypeSnapshotBusinessService implements HierarchyTypeSnapsh
 
     this.assignPermissions(mdEdge);
 
-    HierarchyTypeSnapshot snapshot = new HierarchyTypeSnapshot();
-    snapshot.setVersion(version);
-    snapshot.setGraphMdEdge(mdEdge);
-    snapshot.setCode(code);
-    LocalizedValueConverter.populate(snapshot.getDisplayLabel(), label);
-    LocalizedValueConverter.populate(snapshot.getDescription(), description);
-    snapshot.apply();
+    GraphTypeSnapshot snapshot;
+    if (typeCode.equals(GraphTypeSnapshot.DIRECTED_ACYCLIC_GRAPH_TYPE))
+    {
+      DirectedAcyclicGraphTypeSnapshot htsnapshot = new DirectedAcyclicGraphTypeSnapshot();
+      htsnapshot.setVersion(version);
+      htsnapshot.setGraphMdEdge(mdEdge);
+      htsnapshot.setCode(code);
+      LocalizedValueConverter.populate(htsnapshot.getDisplayLabel(), label);
+      LocalizedValueConverter.populate(htsnapshot.getDescription(), description);
+      htsnapshot.apply();
+      
+      snapshot = htsnapshot;
+    }
+    else if (typeCode.equals(GraphTypeSnapshot.UNDIRECTED_GRAPH_TYPE))
+    {
+      UndirectedGraphTypeSnapshot htsnapshot = new UndirectedGraphTypeSnapshot();
+      htsnapshot.setVersion(version);
+      htsnapshot.setGraphMdEdge(mdEdge);
+      htsnapshot.setCode(code);
+      LocalizedValueConverter.populate(htsnapshot.getDisplayLabel(), label);
+      LocalizedValueConverter.populate(htsnapshot.getDescription(), description);
+      htsnapshot.apply();
+      
+      snapshot = htsnapshot;
+    }
+    else if (typeCode.equals(GraphTypeSnapshot.HIERARCHY_TYPE))
+    {
+      HierarchyTypeSnapshot htsnapshot = new HierarchyTypeSnapshot();
+      htsnapshot.setVersion(version);
+      htsnapshot.setGraphMdEdge(mdEdge);
+      htsnapshot.setCode(code);
+      LocalizedValueConverter.populate(htsnapshot.getDisplayLabel(), label);
+      LocalizedValueConverter.populate(htsnapshot.getDescription(), description);
+      htsnapshot.apply();
+      
+      snapshot = htsnapshot;
+    }
+    else
+    {
+      throw new UnsupportedOperationException();
+    }
 
     // Assign the relationship information
     createHierarchyRelationship(version, type, root);
 
     return snapshot;
-
   }
 
   private void createHierarchyRelationship(LabeledPropertyGraphTypeVersion version, JsonObject type, GeoObjectTypeSnapshot parent)
@@ -151,17 +189,48 @@ public class HierarchyTypeSnapshotBusinessService implements HierarchyTypeSnapsh
   }
 
   @Override
-  public HierarchyTypeSnapshot get(LabeledPropertyGraphTypeVersion version, String code)
+  public GraphTypeSnapshot get(LabeledPropertyGraphTypeVersion version, String typeCode, String code)
   {
-    HierarchyTypeSnapshotQuery query = new HierarchyTypeSnapshotQuery(new QueryFactory());
-    query.WHERE(query.getVersion().EQ(version));
-    query.AND(query.getCode().EQ(code));
-
-    try (OIterator<? extends HierarchyTypeSnapshot> it = query.getIterator())
+    if (GraphTypeSnapshot.DIRECTED_ACYCLIC_GRAPH_TYPE.equals(typeCode))
     {
-      if (it.hasNext())
+      DirectedAcyclicGraphTypeSnapshotQuery query = new DirectedAcyclicGraphTypeSnapshotQuery(new QueryFactory());
+      query.WHERE(query.getVersion().EQ(version));
+      query.AND(query.getCode().EQ(code));
+
+      try (OIterator<? extends GraphTypeSnapshot> it = query.getIterator())
       {
-        return it.next();
+        if (it.hasNext())
+        {
+          return it.next();
+        }
+      }      
+    }
+    else if (GraphTypeSnapshot.HIERARCHY_TYPE.equals(typeCode))
+    {
+      HierarchyTypeSnapshotQuery query = new HierarchyTypeSnapshotQuery(new QueryFactory());
+      query.WHERE(query.getVersion().EQ(version));
+      query.AND(query.getCode().EQ(code));
+
+      try (OIterator<? extends GraphTypeSnapshot> it = query.getIterator())
+      {
+        if (it.hasNext())
+        {
+          return it.next();
+        }
+      }
+    }
+    else if (GraphTypeSnapshot.UNDIRECTED_GRAPH_TYPE.equals(typeCode))
+    {
+      UndirectedGraphTypeSnapshotQuery query = new UndirectedGraphTypeSnapshotQuery(new QueryFactory());
+      query.WHERE(query.getVersion().EQ(version));
+      query.AND(query.getCode().EQ(code));
+
+      try (OIterator<? extends GraphTypeSnapshot> it = query.getIterator())
+      {
+        if (it.hasNext())
+        {
+          return it.next();
+        }
       }
     }
 

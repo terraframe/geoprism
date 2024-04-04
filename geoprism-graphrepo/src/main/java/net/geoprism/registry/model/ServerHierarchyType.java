@@ -171,6 +171,12 @@ public class ServerHierarchyType extends CachableObjectWrapper<HierarchicalRelat
   {
     return RegistryLocalizedValueConverter.convert(this.getObject().getEmbeddedComponent(HierarchicalRelationshipType.DESCRIPTION));
   }
+  
+  @Override
+  public LocalizedValue getDescriptionLV()
+  {
+    return this.getDescription();
+  }
 
   /**
    * @return The organization associated with this HierarchyType. If this
