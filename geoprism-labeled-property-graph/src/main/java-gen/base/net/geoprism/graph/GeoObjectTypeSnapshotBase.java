@@ -1,24 +1,6 @@
-/**
- * Copyright (c) 2023 TerraFrame, Inc. All rights reserved.
- *
- * This file is part of Geoprism(tm).
- *
- * Geoprism(tm) is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
- *
- * Geoprism(tm) is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with Geoprism(tm).  If not, see <http://www.gnu.org/licenses/>.
- */
 package net.geoprism.graph;
 
-@com.runwaysdk.business.ClassSignature(hash = 500357504)
+@com.runwaysdk.business.ClassSignature(hash = 1885032645)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -50,6 +32,7 @@ public abstract class GeoObjectTypeSnapshotBase extends com.runwaysdk.business.B
   public final static java.lang.String LASTUPDATEDBY = "lastUpdatedBy";
   public final static java.lang.String LOCKEDBY = "lockedBy";
   public final static java.lang.String OID = "oid";
+  public final static java.lang.String ORGCODE = "orgCode";
   public final static java.lang.String OWNER = "owner";
   public final static java.lang.String PARENT = "parent";
   public final static java.lang.String SEQ = "seq";
@@ -57,7 +40,7 @@ public abstract class GeoObjectTypeSnapshotBase extends com.runwaysdk.business.B
   public final static java.lang.String TYPE = "type";
   public final static java.lang.String VERSION = "version";
   @SuppressWarnings("unused")
-  private static final long serialVersionUID = 500357504;
+  private static final long serialVersionUID = 1885032645;
   
   public GeoObjectTypeSnapshotBase()
   {
@@ -530,6 +513,34 @@ public abstract class GeoObjectTypeSnapshotBase extends com.runwaysdk.business.B
     return (com.runwaysdk.dataaccess.MdAttributeUUIDDAOIF)mdClassIF.definesAttribute(OID);
   }
   
+  public String getOrgCode()
+  {
+    return getValue(ORGCODE);
+  }
+  
+  public void validateOrgCode()
+  {
+    this.validateAttribute(ORGCODE);
+  }
+  
+  public static com.runwaysdk.dataaccess.MdAttributeTextDAOIF getOrgCodeMd()
+  {
+    com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(net.geoprism.graph.GeoObjectTypeSnapshot.CLASS);
+    return (com.runwaysdk.dataaccess.MdAttributeTextDAOIF)mdClassIF.definesAttribute(ORGCODE);
+  }
+  
+  public void setOrgCode(String value)
+  {
+    if(value == null)
+    {
+      setValue(ORGCODE, "");
+    }
+    else
+    {
+      setValue(ORGCODE, value);
+    }
+  }
+  
   public com.runwaysdk.system.Actor getOwner()
   {
     if (getValue(OWNER).trim().equals(""))
@@ -737,6 +748,13 @@ public abstract class GeoObjectTypeSnapshotBase extends com.runwaysdk.business.B
   protected String getDeclaredType()
   {
     return CLASS;
+  }
+  
+  public static GeoObjectTypeSnapshotQuery getAllInstances(String sortAttribute, Boolean ascending, Integer pageSize, Integer pageNumber)
+  {
+    GeoObjectTypeSnapshotQuery query = new GeoObjectTypeSnapshotQuery(new com.runwaysdk.query.QueryFactory());
+    com.runwaysdk.business.Entity.getAllInstances(query, sortAttribute, ascending, pageSize, pageNumber);
+    return query;
   }
   
   public net.geoprism.graph.SnapshotHierarchy addChildSnapshot(net.geoprism.graph.GeoObjectTypeSnapshot geoObjectTypeSnapshot)

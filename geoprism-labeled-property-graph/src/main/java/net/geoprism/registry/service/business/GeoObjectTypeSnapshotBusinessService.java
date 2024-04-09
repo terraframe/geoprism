@@ -312,6 +312,7 @@ public class GeoObjectTypeSnapshotBusinessService implements GeoObjectTypeSnapsh
     GeoObjectTypeSnapshot parent = this.get(version, type.get(GeoObjectTypeSnapshot.PARENT).getAsString());
 
     String code = type.get(GeoObjectTypeSnapshot.CODE).getAsString();
+    String orgCode = type.has(GeoObjectTypeSnapshot.ORGCODE) ? type.get(GeoObjectTypeSnapshot.ORGCODE).getAsString() : null;
     String viewName = getTableName(code);
     boolean isAbstract = type.get(GeoObjectTypeSnapshot.ISABSTRACT).getAsBoolean();
     boolean isRoot = type.get(GeoObjectTypeSnapshot.ISROOT).getAsBoolean();
@@ -333,7 +334,7 @@ public class GeoObjectTypeSnapshotBusinessService implements GeoObjectTypeSnapsh
     mdTableDAO.apply();
 
     MdVertex mdTable = (MdVertex) BusinessFacade.get(mdTableDAO);
-
+    
     if (!isAbstract)
     {
       createGeometryAttribute(geometryType, mdTableDAO);
@@ -354,6 +355,7 @@ public class GeoObjectTypeSnapshotBusinessService implements GeoObjectTypeSnapsh
     snapshot.setVersion(version);
     snapshot.setGraphMdVertex(mdTable);
     snapshot.setCode(code);
+    snapshot.setOrgCode(orgCode);
     snapshot.setGeometryType(geometryType.name());
     snapshot.setIsAbstract(isAbstract);
     snapshot.setIsRoot(isRoot);

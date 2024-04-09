@@ -141,15 +141,24 @@ public abstract class LabeledPropertyGraphType extends LabeledPropertyGraphTypeB
   
   public List<GraphTypeReference> getGraphTypeReferences()
   {
-    List<GraphTypeReference> result = new ArrayList<GraphTypeReference>();
-    
-    if (StringUtils.isEmpty(this.getGraphTypes())) return result;
-    
-    JsonArray jaCodes = JsonParser.parseString(this.getGraphTypes()).getAsJsonArray();
-    
-    jaCodes.forEach(je -> result.add(GraphTypeReference.build(je.getAsString().split("\\" + GRAPH_TYPE_REFERENECE_SEPARATOR))));
-    
-    return result;
+    if (TREE.equals(getStrategyType()))
+    {
+      List<GraphTypeReference> result = new ArrayList<GraphTypeReference>();
+      result.add(new GraphTypeReference(GraphTypeSnapshot.HIERARCHY_TYPE, this.getHierarchy()));
+      return result;
+    }
+    else
+    {
+      List<GraphTypeReference> result = new ArrayList<GraphTypeReference>();
+      
+      if (StringUtils.isEmpty(this.getGraphTypes())) return result;
+      
+      JsonArray jaCodes = JsonParser.parseString(this.getGraphTypes()).getAsJsonArray();
+      
+      jaCodes.forEach(je -> result.add(GraphTypeReference.build(je.getAsString().split("\\" + GRAPH_TYPE_REFERENECE_SEPARATOR))));
+      
+      return result;
+    }
   }
   
   public void setGraphTypeReferences(GraphTypeReference... graphTypeReferences)

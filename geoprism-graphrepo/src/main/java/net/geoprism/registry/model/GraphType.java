@@ -42,13 +42,17 @@ public interface GraphType
   {
     if (relationshipType != null)
     {
-      if (relationshipType.equals("UndirectedGraphType") || relationshipType.equals(UndirectedGraphType.CLASS))
+      if (relationshipType.equals(GraphTypeSnapshot.UNDIRECTED_GRAPH_TYPE) || relationshipType.equals(UndirectedGraphType.CLASS))
       {
         return UndirectedGraphType.getByCode(code);
       }
-      else if (relationshipType.equals("DirectedAcyclicGraphType") || relationshipType.equals(DirectedAcyclicGraphType.CLASS))
+      else if (relationshipType.equals(GraphTypeSnapshot.DIRECTED_ACYCLIC_GRAPH_TYPE) || relationshipType.equals(DirectedAcyclicGraphType.CLASS))
       {
         return DirectedAcyclicGraphType.getByCode(code);
+      }
+      else if (relationshipType.equals(GraphTypeSnapshot.HIERARCHY_TYPE))
+      {
+        return ServerHierarchyType.get(code);
       }
       else
       {

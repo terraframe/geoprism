@@ -1,7 +1,5 @@
 package net.geoprism.registry.lpg.jena;
 
-import org.apache.jena.rdf.model.Model;
-
 import net.geoprism.registry.lpg.adapter.exception.BadServerUriException;
 import net.geoprism.registry.lpg.adapter.exception.HTTPException;
 
@@ -21,8 +19,8 @@ public class JenaBridge
     this.connector = connector;
   }
 
-  public JenaResponse put(String graphName, Model data) throws HTTPException, BadServerUriException
+  public JenaResponse put(String graphName, String file) throws HTTPException, BadServerUriException
   {
-    return this.connector.put(graphName, data);
+    return this.connector.put(graphName, file);
   }
 }
