@@ -69,7 +69,7 @@ public interface GraphType
     {
       return GraphTypeSnapshot.DIRECTED_ACYCLIC_GRAPH_TYPE;
     }
-    else if (graphType instanceof DirectedAcyclicGraphType)
+    else if (graphType instanceof UndirectedGraphType)
     {
       return GraphTypeSnapshot.UNDIRECTED_GRAPH_TYPE;
     }
