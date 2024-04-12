@@ -659,16 +659,16 @@ public class EdgeAndVerticiesResultSetConverter extends ResultSetConverter
     return StringUtils.join(columns, ", ");
   }
   
-  public static String attributeColumns(String prefix)
+  public static Set<String> allAttributeColumns()
   {
     Set<String> columns = new HashSet<String>();
-    columns.add(prefix + ".@class");
-    columns.add(prefix + ".@rid");
+    columns.add("@class");
+    columns.add("@rid");
     
     // AttributeValue
     for (String column : new String[] { AttributeValue.SEQ, AttributeValue.OID, AttributeValue.ATTRIBUTENAME, AttributeValue.STARTDATE, AttributeValue.ENDDATE })
     {
-      columns.add(prefix + "." + column);
+      columns.add(column);
     }
     
     for (ServerGeoObjectType type : ServerGeoObjectType.getAll())
@@ -677,11 +677,11 @@ public class EdgeAndVerticiesResultSetConverter extends ResultSetConverter
       {
         for (MdAttributeDAOIF mdAttr : at.getStrategy().getValueAttributes())
         {
-          columns.add(prefix + "." + mdAttr.getColumnName());
+          columns.add(mdAttr.getColumnName());
         }
       }
     }
     
-    return StringUtils.join(columns, ", ");
+    return columns;
   }
 }
