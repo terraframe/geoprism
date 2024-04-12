@@ -49,6 +49,8 @@ public class ServerMetadataCache extends ServerOrganizationCache
   private Map<String, ServerGeoObjectType> geoGeoObjectTypeCodeMap;
 
   private Map<String, ServerGeoObjectType> geoGeoObjectTypeOidMap;
+  
+  private Map<String, ServerGeoObjectType> geoGeoObjectTypeMdVertexOidMap;
 
   private Map<String, ServerHierarchyType> hierarchyTypeMap;
 
@@ -66,6 +68,7 @@ public class ServerMetadataCache extends ServerOrganizationCache
 
     this.geoGeoObjectTypeCodeMap = new ConcurrentHashMap<String, ServerGeoObjectType>();
     this.geoGeoObjectTypeOidMap = new ConcurrentHashMap<String, ServerGeoObjectType>();
+    this.geoGeoObjectTypeMdVertexOidMap = new ConcurrentHashMap<String, ServerGeoObjectType>();
     this.hierarchyTypeMap = new ConcurrentHashMap<String, ServerHierarchyType>();
 
     getAdapter().getMetadataCache().rebuild();
@@ -75,9 +78,11 @@ public class ServerMetadataCache extends ServerOrganizationCache
   {
     String code = geoObjectType.getCode();
     String oid = geoObjectType.getOid();
+    String mdVertexOid = geoObjectType.getMdVertex().getOid();
     
     this.geoGeoObjectTypeCodeMap.put(code, geoObjectType);
     this.geoGeoObjectTypeOidMap.put(oid, geoObjectType);
+    this.geoGeoObjectTypeMdVertexOidMap.put(mdVertexOid, geoObjectType);
 
     getAdapter().getMetadataCache().addGeoObjectType(geoObjectType.toDTO());
   }
@@ -91,6 +96,11 @@ public class ServerMetadataCache extends ServerOrganizationCache
   {
     return Optional.ofNullable(geoGeoObjectTypeOidMap.get(oid));
   }
+  
+  public Optional<ServerGeoObjectType> getGeoObjectTypeByMdVertexOid(String mdVertexOid)
+  {
+    return Optional.ofNullable(geoGeoObjectTypeMdVertexOidMap.get(mdVertexOid));
+  }
 
   public void removeGeoObjectType(ServerGeoObjectType type)
   {
@@ -101,6 +111,7 @@ public class ServerMetadataCache extends ServerOrganizationCache
   {
     this.geoGeoObjectTypeCodeMap.remove(code);
     this.geoGeoObjectTypeOidMap.remove(oid);
+    this.geoGeoObjectTypeMdVertexOidMap.remove(oid);
 
     getAdapter().getMetadataCache().removeGeoObjectType(code);
   }
