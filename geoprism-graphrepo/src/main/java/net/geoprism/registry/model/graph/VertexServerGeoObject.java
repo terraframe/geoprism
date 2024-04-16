@@ -874,59 +874,6 @@ public class VertexServerGeoObject extends AbstractServerGeoObject implements Se
     service.command(service.getGraphDBRequest(), statement.toString(), parameters);
   }
 
-  public static String findTypeLabelFromGeoObjectCode(String code, ServerGeoObjectType rootType)
-  {
-    ServerGeoObjectType type = null;
-
-    try
-    {
-      type = findTypeOfGeoObjectCode(code, rootType);
-    }
-    catch (Throwable t)
-    {
-      logger.error("Error encountered while finding a geoObject of code [" + code + "].", t);
-    }
-
-    if (type == null)
-    {
-      return "?";
-    }
-    else
-    {
-      return type.getLabel().getValue();
-    }
-  }
-
-  /**
-   * Finds the ServerGeoObjectType associated with the particular Geo-Object
-   * code.
-   * 
-   * @param rootType
-   *          TODO
-   * 
-   * @return
-   */
-  public static ServerGeoObjectType findTypeOfGeoObjectCode(String code, ServerGeoObjectType rootType)
-  {
-    MdVertexDAOIF rootVertex = rootType.getMdVertex();
-
-    StringBuilder statement = new StringBuilder();
-    statement.append("SELECT @class FROM " + rootVertex.getDBClassName() + " WHERE code=:code");
-
-    GraphQuery<String> query = new GraphQuery<String>(statement.toString());
-    query.setParameter("code", code);
-
-    String className = query.getSingleResult();
-
-    MdVertexQuery mvq = new MdVertexQuery(new QueryFactory());
-
-    mvq.WHERE(mvq.getDbClassName().EQ(className));
-
-    MdVertex mdVertex = mvq.getIterator().getAll().get(0);
-
-    return ServerGeoObjectType.get(MdVertexDAO.get(mdVertex.getOid()));
-  }
-
   public static boolean isCodeAttribute(MdAttributeDAOIF attr)
   {
     String attributeName = attr.definesAttribute();
