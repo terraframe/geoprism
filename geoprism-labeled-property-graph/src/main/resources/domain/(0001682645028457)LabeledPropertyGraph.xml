@@ -75,7 +75,7 @@
           <text name="accessConstraints" label="Access Constraints" />
           <text name="useConstraints" label="Use Constraints" />
           <text name="superHierarchy" label="Super Hierarchy" />
-		  <reference name="graphMdEdge" type="com.runwaysdk.system.metadata.MdEdge" required="true" label="MdEdge" />
+          <reference name="graphMdEdge" type="com.runwaysdk.system.metadata.MdEdge" required="true" label="MdEdge" />
           <reference name="version" type="net.geoprism.graph.LabeledPropertyGraphTypeVersion" required="true" label="Version" />                          
         </attributes>
       </mdBusiness>      

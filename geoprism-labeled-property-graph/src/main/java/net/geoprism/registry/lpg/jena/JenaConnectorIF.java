@@ -8,7 +8,7 @@ public interface JenaConnectorIF extends Closeable
 {
   public String getServerUrl();
   
-  public JenaResponse put(String graphName, Model data);
+  public JenaResponse put(String graphName, String file);
 
 //  public JenaResponse httpGet(String string, NameValuePair... params) throws HTTPException, BadServerUriException;
 //  

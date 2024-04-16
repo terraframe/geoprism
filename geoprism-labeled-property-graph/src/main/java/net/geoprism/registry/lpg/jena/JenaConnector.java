@@ -43,7 +43,7 @@ public class JenaConnector implements JenaConnectorIF
 
   synchronized public void initialize()
   {
-    this.setConnector(RDFConnection.connect(this.serverurl)); // TODO : Thread safety ?
+    this.setConnector(RDFConnection.connect(this.serverurl));
   }
 
   public boolean isInitialized()
@@ -98,7 +98,7 @@ public class JenaConnector implements JenaConnectorIF
 //  }
   
   @Override
-  public JenaResponse put(String graphName, Model data)
+  public JenaResponse put(String graphName, String file)
   {
       if (!isInitialized())
       {
@@ -107,7 +107,7 @@ public class JenaConnector implements JenaConnectorIF
       
       try
       {
-        this.connection.put(graphName, data);
+        this.connection.put(graphName, file);
       }
       catch (HttpException e)
       {

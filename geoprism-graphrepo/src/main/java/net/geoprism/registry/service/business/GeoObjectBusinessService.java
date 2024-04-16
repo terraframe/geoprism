@@ -23,12 +23,10 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.Date;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeMap;
 import java.util.TreeSet;
@@ -64,16 +62,12 @@ import com.runwaysdk.business.graph.EdgeObject;
 import com.runwaysdk.business.graph.GraphQuery;
 import com.runwaysdk.business.graph.VertexObject;
 import com.runwaysdk.dataaccess.DuplicateDataException;
-import com.runwaysdk.dataaccess.MdAttributeConcreteDAOIF;
 import com.runwaysdk.dataaccess.MdAttributeDAOIF;
 import com.runwaysdk.dataaccess.MdClassificationDAOIF;
 import com.runwaysdk.dataaccess.MdEdgeDAOIF;
-import com.runwaysdk.dataaccess.MdGraphClassDAOIF;
 import com.runwaysdk.dataaccess.MdVertexDAOIF;
-import com.runwaysdk.dataaccess.graph.ResultSetConverterIF;
 import com.runwaysdk.dataaccess.graph.attributes.ValueOverTime;
 import com.runwaysdk.dataaccess.graph.attributes.ValueOverTimeCollection;
-import com.runwaysdk.dataaccess.graph.orientdb.ResultSetConverter;
 import com.runwaysdk.dataaccess.metadata.graph.MdGraphClassDAO;
 import com.runwaysdk.dataaccess.transaction.Transaction;
 import com.runwaysdk.system.AbstractClassification;
@@ -93,7 +87,6 @@ import net.geoprism.registry.conversion.VertexGeoObjectStrategy;
 import net.geoprism.registry.etl.export.GeoObjectExportFormat;
 import net.geoprism.registry.etl.export.GeoObjectJsonExporter;
 import net.geoprism.registry.etl.upload.ClassifierCache;
-import net.geoprism.registry.graph.AttributeValue;
 import net.geoprism.registry.graph.GeoVertex;
 import net.geoprism.registry.graph.HierarchicalRelationshipType;
 import net.geoprism.registry.graph.InheritedHierarchyAnnotation;
@@ -104,6 +97,7 @@ import net.geoprism.registry.model.ClassificationType;
 import net.geoprism.registry.model.EdgeConstant;
 import net.geoprism.registry.model.GeoObjectMetadata;
 import net.geoprism.registry.model.GeoObjectTypeMetadata;
+import net.geoprism.registry.model.GraphType;
 import net.geoprism.registry.model.LocationInfo;
 import net.geoprism.registry.model.LocationInfoHolder;
 import net.geoprism.registry.model.ServerChildTreeNode;
@@ -1303,6 +1297,18 @@ public class GeoObjectBusinessService extends RegistryLocalizedValueConverter im
   public ServerParentTreeNode getParentGeoObjects(ServerGeoObjectIF sgo, ServerHierarchyType hierarchy, String[] parentTypes, Boolean recursive, Boolean includeInherited, Date date)
   {
     return internalGetParentGeoObjects(sgo, parentTypes, recursive, includeInherited, hierarchy, date);
+  }
+  
+  @Override
+  public ServerChildTreeNode getGraphChildGeoObjects(ServerGeoObjectIF sgo, GraphType graphType, Boolean recursive, Date date)
+  {
+    return sgo.getGraphChildren(graphType, recursive, date);
+  }
+
+  @Override
+  public ServerParentTreeNode getGraphParentGeoObjects(ServerGeoObjectIF sgo, GraphType graphType, Boolean recursive, Boolean includeInherited, Date date)
+  {
+    return sgo.getGraphParents(graphType, recursive, date);
   }
 
   @Override

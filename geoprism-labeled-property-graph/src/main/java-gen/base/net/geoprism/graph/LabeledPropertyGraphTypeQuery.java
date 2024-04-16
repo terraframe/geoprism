@@ -1,24 +1,6 @@
-/**
- * Copyright (c) 2023 TerraFrame, Inc. All rights reserved.
- *
- * This file is part of Geoprism(tm).
- *
- * Geoprism(tm) is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
- *
- * Geoprism(tm) is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with Geoprism(tm).  If not, see <http://www.gnu.org/licenses/>.
- */
 package net.geoprism.graph;
 
-@com.runwaysdk.business.ClassSignature(hash = -378227108)
+@com.runwaysdk.business.ClassSignature(hash = 1941276407)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -182,6 +164,23 @@ public  class LabeledPropertyGraphTypeQuery extends com.runwaysdk.query.Generate
     return (com.runwaysdk.system.metadata.MdDomainQuery.MdDomainQueryReferenceIF)this.getComponentQuery().internalAttributeFactory(net.geoprism.graph.LabeledPropertyGraphType.ENTITYDOMAIN, mdAttributeIF, this, alias, displayLabel);
 
   }
+  public com.runwaysdk.query.SelectableChar getGraphTypes()
+  {
+    return getGraphTypes(null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableChar getGraphTypes(String alias)
+  {
+    return (com.runwaysdk.query.SelectableChar)this.getComponentQuery().get(net.geoprism.graph.LabeledPropertyGraphType.GRAPHTYPES, alias, null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableChar getGraphTypes(String alias, String displayLabel)
+  {
+    return (com.runwaysdk.query.SelectableChar)this.getComponentQuery().get(net.geoprism.graph.LabeledPropertyGraphType.GRAPHTYPES, alias, displayLabel);
+
+  }
   public com.runwaysdk.query.SelectableChar getHierarchy()
   {
     return getHierarchy(null);
@@ -294,6 +293,29 @@ public  class LabeledPropertyGraphTypeQuery extends com.runwaysdk.query.Generate
   public com.runwaysdk.query.SelectableUUID getOid(String alias, String displayLabel)
   {
     return (com.runwaysdk.query.SelectableUUID)this.getComponentQuery().get(net.geoprism.graph.LabeledPropertyGraphType.OID, alias, displayLabel);
+
+  }
+  public net.geoprism.registry.OrganizationQuery.OrganizationQueryReferenceIF getOrganization()
+  {
+    return getOrganization(null);
+
+  }
+ 
+  public net.geoprism.registry.OrganizationQuery.OrganizationQueryReferenceIF getOrganization(String alias)
+  {
+
+    com.runwaysdk.dataaccess.MdAttributeDAOIF mdAttributeIF = this.getComponentQuery().getMdAttributeROfromMap(net.geoprism.graph.LabeledPropertyGraphType.ORGANIZATION);
+
+    return (net.geoprism.registry.OrganizationQuery.OrganizationQueryReferenceIF)this.getComponentQuery().internalAttributeFactory(net.geoprism.graph.LabeledPropertyGraphType.ORGANIZATION, mdAttributeIF, this, alias, null);
+
+  }
+ 
+  public net.geoprism.registry.OrganizationQuery.OrganizationQueryReferenceIF getOrganization(String alias, String displayLabel)
+  {
+
+    com.runwaysdk.dataaccess.MdAttributeDAOIF mdAttributeIF = this.getComponentQuery().getMdAttributeROfromMap(net.geoprism.graph.LabeledPropertyGraphType.ORGANIZATION);
+
+    return (net.geoprism.registry.OrganizationQuery.OrganizationQueryReferenceIF)this.getComponentQuery().internalAttributeFactory(net.geoprism.graph.LabeledPropertyGraphType.ORGANIZATION, mdAttributeIF, this, alias, displayLabel);
 
   }
   public com.runwaysdk.system.ActorQuery.ActorQueryReferenceIF getOwner()
@@ -525,6 +547,9 @@ public  class LabeledPropertyGraphTypeQuery extends com.runwaysdk.query.Generate
     public com.runwaysdk.system.metadata.MdDomainQuery.MdDomainQueryReferenceIF getEntityDomain();
     public com.runwaysdk.system.metadata.MdDomainQuery.MdDomainQueryReferenceIF getEntityDomain(String alias);
     public com.runwaysdk.system.metadata.MdDomainQuery.MdDomainQueryReferenceIF getEntityDomain(String alias, String displayLabel);
+    public com.runwaysdk.query.SelectableChar getGraphTypes();
+    public com.runwaysdk.query.SelectableChar getGraphTypes(String alias);
+    public com.runwaysdk.query.SelectableChar getGraphTypes(String alias, String displayLabel);
     public com.runwaysdk.query.SelectableChar getHierarchy();
     public com.runwaysdk.query.SelectableChar getHierarchy(String alias);
     public com.runwaysdk.query.SelectableChar getHierarchy(String alias, String displayLabel);
@@ -545,7 +570,7 @@ public  class LabeledPropertyGraphTypeQuery extends com.runwaysdk.query.Generate
     public com.runwaysdk.query.SelectableUUID getOid(String alias, String displayLabel);
     public net.geoprism.registry.OrganizationQuery.OrganizationQueryReferenceIF getOrganization();
     public net.geoprism.registry.OrganizationQuery.OrganizationQueryReferenceIF getOrganization(String alias);
-    public net.geoprism.registry.OrganizationQuery.OrganizationQueryReferenceIF getOrganization(String alias, String displayLabel);    
+    public net.geoprism.registry.OrganizationQuery.OrganizationQueryReferenceIF getOrganization(String alias, String displayLabel);
     public com.runwaysdk.system.ActorQuery.ActorQueryReferenceIF getOwner();
     public com.runwaysdk.system.ActorQuery.ActorQueryReferenceIF getOwner(String alias);
     public com.runwaysdk.system.ActorQuery.ActorQueryReferenceIF getOwner(String alias, String displayLabel);
@@ -704,6 +729,23 @@ public  class LabeledPropertyGraphTypeQuery extends com.runwaysdk.query.Generate
     return (com.runwaysdk.system.metadata.MdDomainQuery.MdDomainQueryReferenceIF)this.get(net.geoprism.graph.LabeledPropertyGraphType.ENTITYDOMAIN,  alias, displayLabel);
 
   }
+  public com.runwaysdk.query.SelectableChar getGraphTypes()
+  {
+    return getGraphTypes(null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableChar getGraphTypes(String alias)
+  {
+    return (com.runwaysdk.query.SelectableChar)this.get(net.geoprism.graph.LabeledPropertyGraphType.GRAPHTYPES, alias, null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableChar getGraphTypes(String alias, String displayLabel)
+  {
+    return (com.runwaysdk.query.SelectableChar)this.get(net.geoprism.graph.LabeledPropertyGraphType.GRAPHTYPES, alias, displayLabel);
+
+  }
   public com.runwaysdk.query.SelectableChar getHierarchy()
   {
     return getHierarchy(null);
@@ -806,7 +848,6 @@ public  class LabeledPropertyGraphTypeQuery extends com.runwaysdk.query.Generate
     return (com.runwaysdk.query.SelectableUUID)this.get(net.geoprism.graph.LabeledPropertyGraphType.OID, alias, displayLabel);
 
   }
-  
   public net.geoprism.registry.OrganizationQuery.OrganizationQueryReferenceIF getOrganization()
   {
     return getOrganization(null);
@@ -963,6 +1004,10 @@ public  class LabeledPropertyGraphTypeQuery extends com.runwaysdk.query.Generate
     {
        return new com.runwaysdk.system.SingleActorQuery.SingleActorQueryReference((com.runwaysdk.dataaccess.MdAttributeRefDAOIF)mdAttributeIF, attributeNamespace, definingTableName, definingTableAlias, referenceMdBusinessIF, referenceTableAlias, rootQuery, tableJoinSet, userDefinedAlias, userDefinedDisplayLabel);
     }
+    else if (name.equals(net.geoprism.graph.LabeledPropertyGraphType.ORGANIZATION)) 
+    {
+       return new net.geoprism.registry.OrganizationQuery.OrganizationQueryReference((com.runwaysdk.dataaccess.MdAttributeRefDAOIF)mdAttributeIF, attributeNamespace, definingTableName, definingTableAlias, referenceMdBusinessIF, referenceTableAlias, rootQuery, tableJoinSet, userDefinedAlias, userDefinedDisplayLabel);
+    }
     else if (name.equals(net.geoprism.graph.LabeledPropertyGraphType.OWNER)) 
     {
        return new com.runwaysdk.system.ActorQuery.ActorQueryReference((com.runwaysdk.dataaccess.MdAttributeRefDAOIF)mdAttributeIF, attributeNamespace, definingTableName, definingTableAlias, referenceMdBusinessIF, referenceTableAlias, rootQuery, tableJoinSet, userDefinedAlias, userDefinedDisplayLabel);
@@ -1020,6 +1065,9 @@ public  class LabeledPropertyGraphTypeQuery extends com.runwaysdk.query.Generate
     public com.runwaysdk.system.metadata.MdDomainQuery.MdDomainQueryReferenceIF getEntityDomain();
     public com.runwaysdk.system.metadata.MdDomainQuery.MdDomainQueryReferenceIF getEntityDomain(String alias);
     public com.runwaysdk.system.metadata.MdDomainQuery.MdDomainQueryReferenceIF getEntityDomain(String alias, String displayLabel);
+    public com.runwaysdk.query.SelectableChar getGraphTypes();
+    public com.runwaysdk.query.SelectableChar getGraphTypes(String alias);
+    public com.runwaysdk.query.SelectableChar getGraphTypes(String alias, String displayLabel);
     public com.runwaysdk.query.SelectableChar getHierarchy();
     public com.runwaysdk.query.SelectableChar getHierarchy(String alias);
     public com.runwaysdk.query.SelectableChar getHierarchy(String alias, String displayLabel);
@@ -1038,6 +1086,9 @@ public  class LabeledPropertyGraphTypeQuery extends com.runwaysdk.query.Generate
     public com.runwaysdk.query.SelectableUUID getOid();
     public com.runwaysdk.query.SelectableUUID getOid(String alias);
     public com.runwaysdk.query.SelectableUUID getOid(String alias, String displayLabel);
+    public net.geoprism.registry.OrganizationQuery.OrganizationQueryReferenceIF getOrganization();
+    public net.geoprism.registry.OrganizationQuery.OrganizationQueryReferenceIF getOrganization(String alias);
+    public net.geoprism.registry.OrganizationQuery.OrganizationQueryReferenceIF getOrganization(String alias, String displayLabel);
     public com.runwaysdk.system.ActorQuery.ActorQueryReferenceIF getOwner();
     public com.runwaysdk.system.ActorQuery.ActorQueryReferenceIF getOwner(String alias);
     public com.runwaysdk.system.ActorQuery.ActorQueryReferenceIF getOwner(String alias, String displayLabel);
@@ -1245,6 +1296,23 @@ public  class LabeledPropertyGraphTypeQuery extends com.runwaysdk.query.Generate
     return (com.runwaysdk.system.metadata.MdDomainQuery.MdDomainQueryReferenceIF)this.get(net.geoprism.graph.LabeledPropertyGraphType.ENTITYDOMAIN,  alias, displayLabel);
 
   }
+  public com.runwaysdk.query.SelectableChar getGraphTypes()
+  {
+    return getGraphTypes(null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableChar getGraphTypes(String alias)
+  {
+    return (com.runwaysdk.query.SelectableChar)this.get(net.geoprism.graph.LabeledPropertyGraphType.GRAPHTYPES, alias, null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableChar getGraphTypes(String alias, String displayLabel)
+  {
+    return (com.runwaysdk.query.SelectableChar)this.get(net.geoprism.graph.LabeledPropertyGraphType.GRAPHTYPES, alias, displayLabel);
+
+  }
   public com.runwaysdk.query.SelectableChar getHierarchy()
   {
     return getHierarchy(null);
@@ -1345,6 +1413,23 @@ public  class LabeledPropertyGraphTypeQuery extends com.runwaysdk.query.Generate
   public com.runwaysdk.query.SelectableUUID getOid(String alias, String displayLabel)
   {
     return (com.runwaysdk.query.SelectableUUID)this.get(net.geoprism.graph.LabeledPropertyGraphType.OID, alias, displayLabel);
+
+  }
+  public net.geoprism.registry.OrganizationQuery.OrganizationQueryReferenceIF getOrganization()
+  {
+    return getOrganization(null);
+
+  }
+ 
+  public net.geoprism.registry.OrganizationQuery.OrganizationQueryReferenceIF getOrganization(String alias)
+  {
+    return (net.geoprism.registry.OrganizationQuery.OrganizationQueryReferenceIF)this.get(net.geoprism.graph.LabeledPropertyGraphType.ORGANIZATION, alias, null);
+
+  }
+ 
+  public net.geoprism.registry.OrganizationQuery.OrganizationQueryReferenceIF getOrganization(String alias, String displayLabel)
+  {
+    return (net.geoprism.registry.OrganizationQuery.OrganizationQueryReferenceIF)this.get(net.geoprism.graph.LabeledPropertyGraphType.ORGANIZATION,  alias, displayLabel);
 
   }
   public com.runwaysdk.system.ActorQuery.ActorQueryReferenceIF getOwner()
@@ -1485,6 +1570,10 @@ public  class LabeledPropertyGraphTypeQuery extends com.runwaysdk.query.Generate
     else if (name.equals(net.geoprism.graph.LabeledPropertyGraphType.LOCKEDBY)) 
     {
        return new com.runwaysdk.system.SingleActorQuery.SingleActorQueryReference((com.runwaysdk.dataaccess.MdAttributeRefDAOIF)mdAttributeIF, attributeNamespace, definingTableName, definingTableAlias, referenceMdBusinessIF, referenceTableAlias, rootQuery, tableJoinSet, userDefinedAlias, userDefinedDisplayLabel);
+    }
+    else if (name.equals(net.geoprism.graph.LabeledPropertyGraphType.ORGANIZATION)) 
+    {
+       return new net.geoprism.registry.OrganizationQuery.OrganizationQueryReference((com.runwaysdk.dataaccess.MdAttributeRefDAOIF)mdAttributeIF, attributeNamespace, definingTableName, definingTableAlias, referenceMdBusinessIF, referenceTableAlias, rootQuery, tableJoinSet, userDefinedAlias, userDefinedDisplayLabel);
     }
     else if (name.equals(net.geoprism.graph.LabeledPropertyGraphType.OWNER)) 
     {

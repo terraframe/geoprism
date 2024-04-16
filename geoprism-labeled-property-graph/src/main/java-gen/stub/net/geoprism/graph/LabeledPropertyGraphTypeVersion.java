@@ -38,7 +38,7 @@ public class LabeledPropertyGraphTypeVersion extends LabeledPropertyGraphTypeVer
 
   public static final String ATTRIBUTES       = "attributes";
 
-  public static final String HIERARCHIES      = "hierarchies";
+//  public static final String HIERARCHIES      = "hierarchies";
 
   public static final String PERIOD           = "period";
 

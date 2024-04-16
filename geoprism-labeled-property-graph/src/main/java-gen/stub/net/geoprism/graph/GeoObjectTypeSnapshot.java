@@ -91,6 +91,7 @@ public class GeoObjectTypeSnapshot extends GeoObjectTypeSnapshotBase
 
     JsonObject typeObject = new JsonObject();
     typeObject.addProperty(CODE, this.getCode());
+    typeObject.addProperty(ORGCODE, this.getOrgCode());
     typeObject.add(DISPLAYLABEL, LocalizedValueConverter.convertNoAutoCoalesce(this.getDisplayLabel()).toJSON());
     typeObject.add(DESCRIPTION, LocalizedValueConverter.convertNoAutoCoalesce(this.getDescription()).toJSON());
     typeObject.addProperty(GEOMETRYTYPE, this.getGeometryType());

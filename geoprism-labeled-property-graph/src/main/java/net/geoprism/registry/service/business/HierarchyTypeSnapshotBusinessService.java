@@ -35,6 +35,7 @@ import com.runwaysdk.system.metadata.MdEdge;
 import com.runwaysdk.system.metadata.MdGraphClassQuery;
 
 import net.geoprism.graph.GeoObjectTypeSnapshot;
+import net.geoprism.graph.GraphTypeSnapshot;
 import net.geoprism.graph.HierarchyTypeSnapshot;
 import net.geoprism.graph.HierarchyTypeSnapshotQuery;
 import net.geoprism.graph.LabeledPropertyGraphTypeVersion;

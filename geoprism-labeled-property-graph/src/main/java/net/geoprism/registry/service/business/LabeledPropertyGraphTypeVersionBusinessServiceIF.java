@@ -26,6 +26,7 @@ import com.google.gson.JsonObject;
 import com.runwaysdk.business.graph.VertexObject;
 
 import net.geoprism.graph.GeoObjectTypeSnapshot;
+import net.geoprism.graph.GraphTypeSnapshot;
 import net.geoprism.graph.HierarchyTypeSnapshot;
 import net.geoprism.graph.LabeledPropertyGraphTypeEntry;
 import net.geoprism.graph.LabeledPropertyGraphTypeVersion;
@@ -50,9 +51,9 @@ public interface LabeledPropertyGraphTypeVersionBusinessServiceIF
 
   List<GeoObjectTypeSnapshot> getTypes(LabeledPropertyGraphTypeVersion version);
 
-  List<HierarchyTypeSnapshot> getHierarchies(LabeledPropertyGraphTypeVersion version);
+  List<GraphTypeSnapshot> getGraphSnapshots(LabeledPropertyGraphTypeVersion version);
 
-  HierarchyTypeSnapshot getHierarchySnapshot(LabeledPropertyGraphTypeVersion version, String typeCode);
+  GraphTypeSnapshot getGraphTypeSnapshot(LabeledPropertyGraphTypeVersion version, String typeCode);
 
   VertexObject getVertex(LabeledPropertyGraphTypeVersion version, String uid, String typeCode);
 

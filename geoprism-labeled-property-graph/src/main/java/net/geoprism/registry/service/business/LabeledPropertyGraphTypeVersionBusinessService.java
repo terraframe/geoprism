@@ -19,6 +19,7 @@
 package net.geoprism.registry.service.business;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
@@ -45,8 +46,10 @@ import com.runwaysdk.query.OIterator;
 import com.runwaysdk.query.QueryFactory;
 import com.runwaysdk.session.Session;
 
+import net.geoprism.graph.DirectedAcyclicGraphTypeSnapshotQuery;
 import net.geoprism.graph.GeoObjectTypeSnapshot;
 import net.geoprism.graph.GeoObjectTypeSnapshotQuery;
+import net.geoprism.graph.GraphTypeSnapshot;
 import net.geoprism.graph.HierarchyTypeSnapshot;
 import net.geoprism.graph.HierarchyTypeSnapshotQuery;
 import net.geoprism.graph.LabeledPropertyGraphType;
@@ -54,8 +57,8 @@ import net.geoprism.graph.LabeledPropertyGraphTypeEntry;
 import net.geoprism.graph.LabeledPropertyGraphTypeVersion;
 import net.geoprism.graph.LabeledPropertyGraphTypeVersionQuery;
 import net.geoprism.graph.LabeledPropertyGraphUtil;
+import net.geoprism.graph.UndirectedGraphTypeSnapshotQuery;
 import net.geoprism.registry.DateUtil;
-import net.geoprism.registry.RegistryConstants;
 import net.geoprism.registry.model.ClassificationType;
 
 @Service
@@ -64,8 +67,11 @@ public class LabeledPropertyGraphTypeVersionBusinessService implements LabeledPr
   @Autowired
   private GeoObjectTypeSnapshotBusinessServiceIF objectService;
 
+//  @Autowired
+//  private HierarchyTypeSnapshotBusinessServiceIF hierarchyService;
+  
   @Autowired
-  private HierarchyTypeSnapshotBusinessServiceIF hierarchyService;
+  private GraphTypeSnapshotBusinessServiceIF     graphService;
 
   @Autowired
   private ClassificationBusinessServiceIF        classificationService;
@@ -77,7 +83,7 @@ public class LabeledPropertyGraphTypeVersionBusinessService implements LabeledPr
   @Transaction
   public void delete(LabeledPropertyGraphTypeVersion version)
   {
-    this.getHierarchies(version).forEach(e -> this.hierarchyService.delete(e));
+    this.getGraphSnapshots(version).forEach(e -> this.graphService.delete(e));
 
     // Delete the non-root snapshots first
     this.getTypes(version).stream().filter(v -> !v.getIsAbstract()).forEach(v -> this.objectService.delete(v));
@@ -135,14 +141,49 @@ public class LabeledPropertyGraphTypeVersionBusinessService implements LabeledPr
   }
 
   @Override
-  public List<HierarchyTypeSnapshot> getHierarchies(LabeledPropertyGraphTypeVersion version)
+  public List<GraphTypeSnapshot> getGraphSnapshots(LabeledPropertyGraphTypeVersion version)
   {
-    HierarchyTypeSnapshotQuery query = new HierarchyTypeSnapshotQuery(new QueryFactory());
-    query.WHERE(query.getVersion().EQ(version));
-
-    try (OIterator<? extends HierarchyTypeSnapshot> it = query.getIterator())
+    String strategy = version.getGraphType().getStrategyType();
+    
+    if (strategy.equals(LabeledPropertyGraphType.TREE))
     {
-      return it.getAll().stream().map(b -> (HierarchyTypeSnapshot) b).collect(Collectors.toList());
+      HierarchyTypeSnapshotQuery query = new HierarchyTypeSnapshotQuery(new QueryFactory());
+      query.WHERE(query.getVersion().EQ(version));
+  
+      try (OIterator<? extends GraphTypeSnapshot> it = query.getIterator())
+      {
+        return it.getAll().stream().map(b -> (GraphTypeSnapshot) b).collect(Collectors.toList());
+      }
+    }
+    else
+    {
+      List<GraphTypeSnapshot> snapshots = new ArrayList<GraphTypeSnapshot>();
+      
+      HierarchyTypeSnapshotQuery query = new HierarchyTypeSnapshotQuery(new QueryFactory());
+      query.WHERE(query.getVersion().EQ(version));
+  
+      try (OIterator<? extends GraphTypeSnapshot> it = query.getIterator())
+      {
+        snapshots.addAll(it.getAll().stream().map(b -> (GraphTypeSnapshot) b).collect(Collectors.toList()));
+      }
+      
+      DirectedAcyclicGraphTypeSnapshotQuery query2 = new DirectedAcyclicGraphTypeSnapshotQuery(new QueryFactory());
+      query2.WHERE(query2.getVersion().EQ(version));
+      
+      try (OIterator<? extends GraphTypeSnapshot> it = query2.getIterator())
+      {
+        snapshots.addAll(it.getAll().stream().map(b -> (GraphTypeSnapshot) b).collect(Collectors.toList()));
+      }
+      
+      UndirectedGraphTypeSnapshotQuery query3 = new UndirectedGraphTypeSnapshotQuery(new QueryFactory());
+      query3.WHERE(query3.getVersion().EQ(version));
+      
+      try (OIterator<? extends GraphTypeSnapshot> it = query3.getIterator())
+      {
+        snapshots.addAll(it.getAll().stream().map(b -> (GraphTypeSnapshot) b).collect(Collectors.toList()));
+      }
+      
+      return snapshots;
     }
   }
 
@@ -165,7 +206,7 @@ public class LabeledPropertyGraphTypeVersionBusinessService implements LabeledPr
   }
 
   @Override
-  public HierarchyTypeSnapshot getHierarchySnapshot(LabeledPropertyGraphTypeVersion version, String typeCode)
+  public GraphTypeSnapshot getGraphTypeSnapshot(LabeledPropertyGraphTypeVersion version, String typeCode)
   {
     HierarchyTypeSnapshotQuery query = new HierarchyTypeSnapshotQuery(new QueryFactory());
     query.WHERE(query.getVersion().EQ(version));
@@ -231,7 +272,7 @@ public class LabeledPropertyGraphTypeVersionBusinessService implements LabeledPr
     SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
     format.setTimeZone(DateUtil.SYSTEM_TIMEZONE);
 
-    LabeledPropertyGraphType graphType = version.getGraphType();
+    LabeledPropertyGraphType lpgt = version.getGraphType();
 
     JsonObject object = new JsonObject();
 
@@ -240,13 +281,13 @@ public class LabeledPropertyGraphTypeVersionBusinessService implements LabeledPr
       object.addProperty(LabeledPropertyGraphTypeVersion.OID, version.getOid());
     }
 
-    object.addProperty(LabeledPropertyGraphType.DISPLAYLABEL, graphType.getDisplayLabel().getValue());
-    object.addProperty(LabeledPropertyGraphTypeVersion.GRAPHTYPE, graphType.getOid());
+    object.addProperty(LabeledPropertyGraphType.DISPLAYLABEL, lpgt.getDisplayLabel().getValue());
+    object.addProperty(LabeledPropertyGraphTypeVersion.GRAPHTYPE, lpgt.getOid());
     object.addProperty(LabeledPropertyGraphTypeVersion.ENTRY, version.getEntryOid());
     object.addProperty(LabeledPropertyGraphTypeVersion.FORDATE, format.format(version.getForDate()));
     object.addProperty(LabeledPropertyGraphTypeVersion.CREATEDATE, format.format(version.getCreateDate()));
     object.addProperty(LabeledPropertyGraphTypeVersion.VERSIONNUMBER, version.getVersionNumber());
-    object.add(LabeledPropertyGraphTypeVersion.PERIOD, graphType.formatVersionLabel(version));
+    object.add(LabeledPropertyGraphTypeVersion.PERIOD, lpgt.formatVersionLabel(version));
 
     // Progress progress = ProgressService.get(version.getOid());
     //
@@ -271,16 +312,15 @@ public class LabeledPropertyGraphTypeVersionBusinessService implements LabeledPr
 
       object.add("types", types);
 
-      JsonArray hierarchies = new JsonArray();
+      JsonArray graphTypes = new JsonArray();
 
       GeoObjectTypeSnapshot root = this.getRootType(version);
 
-      this.getHierarchies(version).forEach(hierarchy -> {
-
-        hierarchies.add(hierarchy.toJSON(root));
+      this.getGraphSnapshots(version).forEach(graphType -> {
+        graphTypes.add(graphType.toJSON(root));
       });
 
-      object.add("hierarchies", hierarchies);
+      object.add("graphTypes", graphTypes);
 
       // Add classification definitions
       JsonArray classifications = new JsonArray();
@@ -386,11 +426,11 @@ public class LabeledPropertyGraphTypeVersionBusinessService implements LabeledPr
       this.objectService.create(version, element.getAsJsonObject());
     }
 
-    JsonArray hierarchies = json.get("hierarchies").getAsJsonArray();
+    JsonArray graphTypes = json.get("graphTypes").getAsJsonArray();
 
-    for (JsonElement element : hierarchies)
+    for (JsonElement element : graphTypes)
     {
-      this.hierarchyService.create(version, element.getAsJsonObject(), root);
+      this.graphService.create(version, element.getAsJsonObject(), root);
     }
 
     return version;

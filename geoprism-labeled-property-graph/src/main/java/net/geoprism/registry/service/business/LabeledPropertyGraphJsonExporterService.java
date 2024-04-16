@@ -38,7 +38,7 @@ import com.runwaysdk.system.metadata.MdEdge;
 import com.runwaysdk.system.metadata.MdVertex;
 
 import net.geoprism.graph.GeoObjectTypeSnapshot;
-import net.geoprism.graph.HierarchyTypeSnapshot;
+import net.geoprism.graph.GraphTypeSnapshot;
 import net.geoprism.graph.LabeledPropertyGraphTypeVersion;
 
 @Service
@@ -118,8 +118,8 @@ public class LabeledPropertyGraphJsonExporterService
   {
     JsonArray edges = new JsonArray();
 
-    HierarchyTypeSnapshot hierarchy = this.versionService.getHierarchies(version).get(0);
-    MdEdge mdEdge = hierarchy.getGraphMdEdge();
+    GraphTypeSnapshot snapshot = this.versionService.getGraphSnapshots(version).get(0);
+    MdEdge mdEdge = snapshot.getGraphMdEdge();
 
     StringBuilder statement = new StringBuilder();
     statement.append("SELECT out.uid AS parentUid, out.@class AS parentClass, in.uid AS childUid, in.@class AS childClass FROM " + mdEdge.getDbClassName());
@@ -145,7 +145,7 @@ public class LabeledPropertyGraphJsonExporterService
       jsonEdge.addProperty("startType", parentType.getCode());
       jsonEdge.addProperty("endNode", childUid);
       jsonEdge.addProperty("endType", childType.getCode());
-      jsonEdge.addProperty("type", hierarchy.getCode());
+      jsonEdge.addProperty("type", snapshot.getCode());
 
       edges.add(jsonEdge);
 

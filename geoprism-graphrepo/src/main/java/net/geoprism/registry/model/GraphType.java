@@ -22,6 +22,8 @@ import org.commongeoregistry.adapter.dataaccess.LocalizedValue;
 
 import com.runwaysdk.dataaccess.MdEdgeDAOIF;
 
+import net.geoprism.graph.GraphTypeReference;
+import net.geoprism.graph.GraphTypeSnapshot;
 import net.geoprism.registry.DirectedAcyclicGraphType;
 import net.geoprism.registry.UndirectedGraphType;
 import net.geoprism.registry.model.graph.GraphStrategy;
@@ -40,13 +42,17 @@ public interface GraphType
   {
     if (relationshipType != null)
     {
-      if (relationshipType.equals("UndirectedGraphType") || relationshipType.equals(UndirectedGraphType.CLASS))
+      if (relationshipType.equals(GraphTypeSnapshot.UNDIRECTED_GRAPH_TYPE) || relationshipType.equals(UndirectedGraphType.CLASS))
       {
         return UndirectedGraphType.getByCode(code);
       }
-      else if (relationshipType.equals("DirectedAcyclicGraphType") || relationshipType.equals(DirectedAcyclicGraphType.CLASS))
+      else if (relationshipType.equals(GraphTypeSnapshot.DIRECTED_ACYCLIC_GRAPH_TYPE) || relationshipType.equals(DirectedAcyclicGraphType.CLASS))
       {
         return DirectedAcyclicGraphType.getByCode(code);
+      }
+      else if (relationshipType.equals(GraphTypeSnapshot.HIERARCHY_TYPE))
+      {
+        return ServerHierarchyType.get(code);
       }
       else
       {
@@ -56,4 +62,31 @@ public interface GraphType
 
     return ServerHierarchyType.get(code);
   }
+  
+  public static String getTypeCode(GraphType graphType)
+  {
+    if (graphType instanceof DirectedAcyclicGraphType)
+    {
+      return GraphTypeSnapshot.DIRECTED_ACYCLIC_GRAPH_TYPE;
+    }
+    else if (graphType instanceof UndirectedGraphType)
+    {
+      return GraphTypeSnapshot.UNDIRECTED_GRAPH_TYPE;
+    }
+    else if (graphType instanceof ServerHierarchyType)
+    {
+      return GraphTypeSnapshot.HIERARCHY_TYPE;
+    }
+    else
+    {
+      throw new UnsupportedOperationException();
+    }
+  }
+  
+  public static GraphType resolve(GraphTypeReference ref)
+  {
+    return getByCode(ref.typeCode, ref.code);
+  }
+
+  public LocalizedValue getDescriptionLV();
 }

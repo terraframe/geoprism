@@ -252,26 +252,17 @@ public class ServerGeoObjectType extends CachableObjectWrapper<BaseGeoObjectType
   {
     return GeoObjectTypeMetadata.sGetClassDisplayLabel() + " : " + this.getCode();
   }
-
+  
   public static ServerGeoObjectType get(MdVertexDAOIF mdVertex)
   {
-    MdVertexDAOIF metadata = MdVertexDAO.getMdVertexDAO(GeoObjectType.CLASS);
+    ServerElement element = TransactionCacheFacade.get(mdVertex.getOid());
 
-    StringBuilder statement = new StringBuilder();
-    statement.append("SELECT FROM " + metadata.getDBClassName());
-    statement.append(" WHERE " + metadata.definesAttribute(GeoObjectType.MDVERTEX).getColumnName() + " = :oid");
-
-    GraphQuery<GeoObjectType> query = new GraphQuery<GeoObjectType>(statement.toString());
-    query.setParameter("oid", mdVertex.getOid());
-
-    GeoObjectType result = query.getSingleResult();
-
-    if (result != null)
+    if (element != null && element instanceof ServerGeoObjectType)
     {
-      return ServerGeoObjectType.getByOid(result.getOid());
+      return (ServerGeoObjectType) element;
     }
 
-    return null;
+    return ServiceFactory.getMetadataCache().getGeoObjectTypeByMdVertexOid(mdVertex.getOid()).orElseThrow(() -> new ProgrammingErrorException("Unknown Geo Object Type with mdVertex oid [" + mdVertex.getOid() + "]"));
   }
 
   public static List<ServerGeoObjectType> getAllFromDatabase()

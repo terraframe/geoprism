@@ -24,7 +24,7 @@ import com.runwaysdk.query.OIterator;
 
 import net.geoprism.registry.conversion.AttributeTypeConverter;
 
-public class HierarchyTypeSnapshot extends HierarchyTypeSnapshotBase
+public class HierarchyTypeSnapshot extends HierarchyTypeSnapshotBase implements GraphTypeSnapshot
 {
   @SuppressWarnings("unused")
   private static final long serialVersionUID = 2091038362;
@@ -46,9 +46,10 @@ public class HierarchyTypeSnapshot extends HierarchyTypeSnapshotBase
     }
 
     JsonObject hierarchyObject = new JsonObject();
-    hierarchyObject.addProperty(CODE, this.getCode());
-    hierarchyObject.add(DISPLAYLABEL, AttributeTypeConverter.convertNoAutoCoalesce(this.getDisplayLabel()).toJSON());
-    hierarchyObject.add(DESCRIPTION, AttributeTypeConverter.convertNoAutoCoalesce(this.getDescription()).toJSON());
+    hierarchyObject.addProperty(HierarchyTypeSnapshotBase.CODE, this.getCode());
+    hierarchyObject.addProperty(GraphTypeSnapshot.TYPE_CODE, GraphTypeSnapshot.HIERARCHY_TYPE);
+    hierarchyObject.add(HierarchyTypeSnapshotBase.DISPLAYLABEL, AttributeTypeConverter.convertNoAutoCoalesce(this.getDisplayLabel()).toJSON());
+    hierarchyObject.add(HierarchyTypeSnapshotBase.DESCRIPTION, AttributeTypeConverter.convertNoAutoCoalesce(this.getDescription()).toJSON());
     hierarchyObject.add("nodes", nodes);
 
     return hierarchyObject;
@@ -70,6 +71,12 @@ public class HierarchyTypeSnapshot extends HierarchyTypeSnapshotBase
     node.add("nodes", children);
 
     return node;
+  }
+
+  @Override
+  public String getTypeCode()
+  {
+    return GraphTypeSnapshot.getTypeCode(this);
   }
 
 }

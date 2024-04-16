@@ -6,6 +6,7 @@ import java.util.TreeMap;
 import com.runwaysdk.dataaccess.transaction.TransactionState;
 
 import net.geoprism.registry.model.ServerElement;
+import net.geoprism.registry.model.ServerGeoObjectType;
 
 public class TransactionCacheFacade
 {
@@ -19,6 +20,11 @@ public class TransactionCacheFacade
     {
       cache.put(type.getCode(), type);
       cache.put(type.getOid(), type);
+      
+      if (type instanceof ServerGeoObjectType)
+      {
+        cache.put(((ServerGeoObjectType)type).getMdVertex().getOid(), type);
+      }
     }
   }
 
