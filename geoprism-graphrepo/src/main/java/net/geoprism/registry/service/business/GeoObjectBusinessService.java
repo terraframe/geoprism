@@ -258,7 +258,7 @@ public class GeoObjectBusinessService extends RegistryLocalizedValueConverter im
       if (VertexServerGeoObject.isCodeAttribute(attr))
       {
         DuplicateGeoObjectCodeException ex = new DuplicateGeoObjectCodeException();
-        ex.setGeoObjectType(VertexServerGeoObject.findTypeLabelFromGeoObjectCode(e.getValues().get(0), type));
+        ex.setGeoObjectType(type.getLabel().getValue());
         ex.setValue(e.getValues().get(0));
         throw ex;
       }
