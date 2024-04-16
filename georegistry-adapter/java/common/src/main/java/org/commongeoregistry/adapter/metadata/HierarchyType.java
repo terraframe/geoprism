@@ -39,7 +39,7 @@ import com.google.gson.JsonParser;
  * administrative.
  *
  */
-public class HierarchyType implements Serializable, Cloneable
+public class HierarchyType extends GraphTypeDTO implements Serializable, Cloneable
 {
   /**
    * 
@@ -85,21 +85,6 @@ public class HierarchyType implements Serializable, Cloneable
   public static final String  JSON_ORGANIZARION_CODE     = "organizationCode";
 
   /**
-   * Unique identifier but also human readable.
-   */
-  private String              code;
-
-  /**
-   * The localized label of the hierarchy type for the presentation tier.
-   */
-  private LocalizedValue      label;
-
-  /**
-   * The localized description of the hierarchy type for the presentation tier.
-   */
-  private LocalizedValue      description;
-
-  /**
    * The organization responsible for this {@link HierarchyType}. This can be
    * null.
    */
@@ -127,36 +112,9 @@ public class HierarchyType implements Serializable, Cloneable
 
   public HierarchyType(String code, LocalizedValue label, LocalizedValue description, String organizationCode)
   {
-    this.code = code;
-    this.label = label;
-    this.description = description;
+    super("HierarchyType", code, label, description);
     this.organizationCode = organizationCode;
     this.rootGeoObjectTypes = Collections.synchronizedList(new LinkedList<HierarchyNode>());
-  }
-
-  public String getCode()
-  {
-    return this.code;
-  }
-
-  public LocalizedValue getLabel()
-  {
-    return this.label;
-  }
-
-  public void setLabel(LocalizedValue label)
-  {
-    this.label = label;
-  }
-
-  public LocalizedValue getDescription()
-  {
-    return this.description;
-  }
-
-  public void setDescription(LocalizedValue description)
-  {
-    this.description = description;
   }
 
   /**

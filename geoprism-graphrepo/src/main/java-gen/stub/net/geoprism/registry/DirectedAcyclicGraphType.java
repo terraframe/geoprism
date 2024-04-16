@@ -22,6 +22,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import org.commongeoregistry.adapter.dataaccess.LocalizedValue;
+import org.commongeoregistry.adapter.metadata.GraphTypeDTO;
 
 import com.google.gson.JsonObject;
 import com.runwaysdk.dataaccess.MdEdgeDAOIF;
@@ -30,6 +31,8 @@ import com.runwaysdk.query.OIterator;
 import com.runwaysdk.query.QueryFactory;
 import com.runwaysdk.system.metadata.MdEdge;
 
+import net.geoprism.graph.GraphTypeSnapshot;
+import net.geoprism.registry.conversion.LocalizedValueConverter;
 import net.geoprism.registry.conversion.RegistryLocalizedValueConverter;
 import net.geoprism.registry.model.GraphType;
 import net.geoprism.registry.model.ServerElement;
@@ -83,6 +86,17 @@ public class DirectedAcyclicGraphType extends DirectedAcyclicGraphTypeBase imple
 
     return object;
   }
+  
+  @Override
+  public GraphTypeDTO toDTO()
+  {
+    LocalizedValue label = LocalizedValueConverter.convertNoAutoCoalesce(this.getDisplayLabel());
+    LocalizedValue description = LocalizedValueConverter.convertNoAutoCoalesce(this.getDescription());
+
+    final GraphTypeDTO dto = new GraphTypeDTO(GraphTypeSnapshot.DIRECTED_ACYCLIC_GRAPH_TYPE, this.getCode(), label, description);
+
+    return dto;
+  }
 
   public GraphStrategy getStrategy()
   {
@@ -119,4 +133,5 @@ public class DirectedAcyclicGraphType extends DirectedAcyclicGraphTypeBase imple
 
     return null;
   }
+  
 }

@@ -25,6 +25,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.commongeoregistry.adapter.dataaccess.LocalizedValue;
+import org.commongeoregistry.adapter.metadata.GraphTypeDTO;
 import org.commongeoregistry.adapter.metadata.HierarchyType;
 
 import com.runwaysdk.business.graph.GraphQuery;
@@ -102,7 +103,9 @@ public class ServerHierarchyType extends CachableObjectWrapper<HierarchicalRelat
     ServiceFactory.getBean(HierarchyTypeBusinessServiceIF.class).refresh(this);
   }
 
-  public org.commongeoregistry.adapter.metadata.HierarchyType toDTO()
+  // org.commongeoregistry.adapter.metadata.HierarchyType
+  @Override
+  public HierarchyType toDTO()
   {
     if (this.dto == null)
     {
