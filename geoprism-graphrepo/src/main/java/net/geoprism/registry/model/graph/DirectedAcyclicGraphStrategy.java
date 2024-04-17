@@ -20,6 +20,7 @@ package net.geoprism.registry.model.graph;
 
 import java.util.Comparator;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -27,8 +28,6 @@ import java.util.SortedSet;
 import java.util.TreeMap;
 import java.util.TreeSet;
 import java.util.UUID;
-
-import org.apache.commons.collections4.map.HashedMap;
 
 import com.runwaysdk.business.graph.EdgeObject;
 import com.runwaysdk.business.graph.GraphQuery;
@@ -45,6 +44,21 @@ import net.geoprism.registry.model.ServerParentGraphNode;
 
 public class DirectedAcyclicGraphStrategy extends AbstractGraphStrategy implements GraphStrategy
 {
+  public static enum Edge {
+    IN("inE", "out"), OUT("outE", "in");
+
+    private String name;
+
+    private String vertex;
+
+    private Edge(String name, String vertex)
+    {
+      this.name = name;
+      this.vertex = vertex;
+    }
+
+  }
+
   private DirectedAcyclicGraphType type;
 
   public DirectedAcyclicGraphStrategy(DirectedAcyclicGraphType type)
@@ -69,7 +83,7 @@ public class DirectedAcyclicGraphStrategy extends AbstractGraphStrategy implemen
       throw new UnsupportedOperationException();
     }
 
-    List<VertexServerGeoObject> children = getObjects(parent, date, boundsWKT, skip, limit, "out");
+    List<VertexServerGeoObject> children = getObjects(parent, date, boundsWKT, skip, limit, Edge.OUT);
 
     long resultsCount = children.size();
 
@@ -96,14 +110,14 @@ public class DirectedAcyclicGraphStrategy extends AbstractGraphStrategy implemen
     return tnRoot;
   }
 
-  protected List<VertexServerGeoObject> getObjects(VertexServerGeoObject source, Date date, String boundsWKT, Long skip, Long limit, String direction)
+  protected List<VertexServerGeoObject> getObjects(VertexServerGeoObject source, Date date, String boundsWKT, Long skip, Long limit, Edge edge)
   {
-    Map<String, Object> parameters = new HashedMap<String, Object>();
+    Map<String, Object> parameters = new HashMap<String, Object>();
     parameters.put("rid", source.getVertex().getRID());
 
     StringBuilder statement = new StringBuilder();
     statement.append("TRAVERSE out('" + EdgeConstant.HAS_VALUE.getDBClassName() + "', '" + EdgeConstant.HAS_GEOMETRY.getDBClassName() + "') FROM (");
-    statement.append("SELECT EXPAND( " + direction + "(");
+    statement.append("SELECT EXPAND( " + edge.name + "(");
     statement.append("'" + this.type.getMdEdgeDAO().getDBClassName() + "'");
     statement.append(")");
 
@@ -113,7 +127,7 @@ public class DirectedAcyclicGraphStrategy extends AbstractGraphStrategy implemen
       parameters.put("date", date);
     }
 
-    statement.append(") FROM :rid");
+    statement.append("." + edge.vertex + ") FROM :rid");
 
     if (boundsWKT != null)
     {
@@ -162,7 +176,7 @@ public class DirectedAcyclicGraphStrategy extends AbstractGraphStrategy implemen
       throw new UnsupportedOperationException();
     }
 
-    List<VertexServerGeoObject> parents = getObjects(child, date, boundsWKT, skip, limit, "in");
+    List<VertexServerGeoObject> parents = getObjects(child, date, boundsWKT, skip, limit, Edge.IN);
 
     long resultsCount = parents.size();
 

@@ -347,7 +347,9 @@ public class UndirectedGraphStrategy extends AbstractGraphStrategy implements Gr
 
     StringBuilder statement = new StringBuilder();
     statement.append("TRAVERSE out('" + EdgeConstant.HAS_VALUE.getDBClassName() + "', '" + EdgeConstant.HAS_GEOMETRY.getDBClassName() + "') FROM (");
-    statement.append("SELECT EXPAND( both(");
+    statement.append(" SELECT FROM (");
+
+    statement.append(" SELECT EXPAND(bothE(");
     statement.append("'" + this.type.getMdEdgeDAO().getDBClassName() + "'");
     statement.append(")");
 
@@ -357,17 +359,18 @@ public class UndirectedGraphStrategy extends AbstractGraphStrategy implements Gr
       parameters.put("date", date);
     }
 
-    statement.append(") FROM :rid");
+    statement.append(".bothV()) FROM :rid");
+    statement.append(") WHERE @rid != :rid");
 
     if (boundsWKT != null)
     {
       if (date != null)
       {
-        statement.append(" WHERE out('has_geometry')[:date BETWEEN startDate AND endDate AND ST_INTERSECTS(value, :bounds) = true].size() > 0");
+        statement.append(" AND out('has_geometry')[:date BETWEEN startDate AND endDate AND ST_INTERSECTS(value, :bounds) = true].size() > 0");
       }
       else
       {
-        statement.append(" WHERE out('has_geometry')[ST_INTERSECTS(value, :bounds) = true].size() > 0");
+        statement.append(" AND out('has_geometry')[ST_INTERSECTS(value, :bounds) = true].size() > 0");
       }
 
       parameters.put("bounds", boundsWKT);
