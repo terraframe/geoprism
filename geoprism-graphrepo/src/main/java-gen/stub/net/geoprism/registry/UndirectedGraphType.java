@@ -22,6 +22,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import org.commongeoregistry.adapter.dataaccess.LocalizedValue;
+import org.commongeoregistry.adapter.metadata.GraphTypeDTO;
 
 import com.google.gson.JsonObject;
 import com.runwaysdk.dataaccess.MdEdgeDAOIF;
@@ -30,8 +31,10 @@ import com.runwaysdk.query.OIterator;
 import com.runwaysdk.query.QueryFactory;
 import com.runwaysdk.system.metadata.MdEdge;
 
+import net.geoprism.registry.conversion.LocalizedValueConverter;
 import net.geoprism.registry.conversion.RegistryLocalizedValueConverter;
 import net.geoprism.registry.model.GraphType;
+import net.geoprism.graph.GraphTypeSnapshot;
 import net.geoprism.registry.model.ServerElement;
 import net.geoprism.registry.model.graph.GraphStrategy;
 import net.geoprism.registry.model.graph.UndirectedGraphStrategy;
@@ -82,6 +85,17 @@ public class UndirectedGraphType extends UndirectedGraphTypeBase implements Json
     object.add(UndirectedGraphType.DESCRIPTION, RegistryLocalizedValueConverter.convertNoAutoCoalesce(this.getDescription()).toJSON());
 
     return object;
+  }
+  
+  @Override
+  public GraphTypeDTO toDTO()
+  {
+    LocalizedValue label = LocalizedValueConverter.convertNoAutoCoalesce(this.getDisplayLabel());
+    LocalizedValue description = LocalizedValueConverter.convertNoAutoCoalesce(this.getDescription());
+
+    final GraphTypeDTO dto = new GraphTypeDTO(GraphTypeSnapshot.UNDIRECTED_GRAPH_TYPE, this.getCode(), label, description);
+
+    return dto;
   }
 
   public static List<UndirectedGraphType> getAll()

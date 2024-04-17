@@ -19,6 +19,7 @@
 package net.geoprism.registry.model;
 
 import org.commongeoregistry.adapter.dataaccess.LocalizedValue;
+import org.commongeoregistry.adapter.metadata.GraphTypeDTO;
 
 import com.runwaysdk.dataaccess.MdEdgeDAOIF;
 
@@ -89,4 +90,6 @@ public interface GraphType
   }
 
   public LocalizedValue getDescriptionLV();
+
+  public GraphTypeDTO toDTO();
 }
