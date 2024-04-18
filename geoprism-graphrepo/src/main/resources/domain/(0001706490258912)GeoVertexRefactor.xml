@@ -1,0 +1,26 @@
+<version xsi:noNamespaceSchemaLocation="classpath:com/runwaysdk/resources/xsd/version.xsd"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <doIt>
+        <delete>
+            <object type="com.runwaysdk.system.metadata.MdAttribute"
+                    key="net.geoprism.registry.graph.GeoVertex.geoLine"/>
+            <object type="com.runwaysdk.system.metadata.MdAttribute"
+                    key="net.geoprism.registry.graph.GeoVertex.geoMultiLine"/>
+            <object type="com.runwaysdk.system.metadata.MdAttribute"
+                    key="net.geoprism.registry.graph.GeoVertex.geoPoint"/>
+            <object type="com.runwaysdk.system.metadata.MdAttribute"
+                    key="net.geoprism.registry.graph.GeoVertex.geoMultiPoint"/>
+            <object type="com.runwaysdk.system.metadata.MdAttribute"
+                    key="net.geoprism.registry.graph.GeoVertex.geoPolygon"/>
+            <object type="com.runwaysdk.system.metadata.MdAttribute"
+                    key="net.geoprism.registry.graph.GeoVertex.geoMultiPolygon"/>
+            <object type="com.runwaysdk.system.metadata.MdAttribute"
+                    key="net.geoprism.registry.graph.GeoVertex.shape"/>
+        </delete>
+    </doIt>
+    <undoIt>
+        <delete>
+
+        </delete>
+    </undoIt>
+</version>

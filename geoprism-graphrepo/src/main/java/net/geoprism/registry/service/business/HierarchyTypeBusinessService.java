@@ -128,7 +128,13 @@ public class HierarchyTypeBusinessService implements HierarchyTypeBusinessServic
     new HierarchicalRelationshipTypeCacheEventCommand(sht, CacheEventType.DELETE).doIt();
   }
 
-  public void addToHierarchy(ServerHierarchyType sht, ServerGeoObjectType parentType, ServerGeoObjectType childType)
+  public void addToHierarchy(ServerHierarchyType sht, ServerGeoObjectType parentType, ServerGeoObjectType childType) {
+    this.addToHierarchy(sht, parentType, childType, true);
+  }
+
+
+
+  public void addToHierarchy(ServerHierarchyType sht, ServerGeoObjectType parentType, ServerGeoObjectType childType, boolean validate)
   {
     if (parentType.getIsAbstract())
     {
@@ -148,25 +154,24 @@ public class HierarchyTypeBusinessService implements HierarchyTypeBusinessServic
     }
 
     // Check to see if the child type is already in the hierarchy
-    List<ServerHierarchyType> hierarchies = typeService.getHierarchies(childType, true);
+    if(validate) {
+      List<ServerHierarchyType> hierarchies = typeService.getHierarchies(childType, true);
 
-    if (hierarchies.contains(sht))
-    {
-      GeoObjectTypeAlreadyInHierarchyException ex = new GeoObjectTypeAlreadyInHierarchyException();
-      ex.setGotCode(childType.getCode());
-      throw ex;
-    }
-
-    // Ensure a subtype is not already in the hierarchy
-    if (childType.getIsAbstract())
-    {
-      Set<ServerHierarchyType> hierarchiesOfSubTypes = typeService.getHierarchiesOfSubTypes(childType);
-
-      if (hierarchiesOfSubTypes.contains(sht))
-      {
+      if (hierarchies.contains(sht)) {
         GeoObjectTypeAlreadyInHierarchyException ex = new GeoObjectTypeAlreadyInHierarchyException();
         ex.setGotCode(childType.getCode());
         throw ex;
+      }
+
+      // Ensure a subtype is not already in the hierarchy
+      if (childType.getIsAbstract()) {
+        Set<ServerHierarchyType> hierarchiesOfSubTypes = typeService.getHierarchiesOfSubTypes(childType);
+
+        if (hierarchiesOfSubTypes.contains(sht)) {
+          GeoObjectTypeAlreadyInHierarchyException ex = new GeoObjectTypeAlreadyInHierarchyException();
+          ex.setGotCode(childType.getCode());
+          throw ex;
+        }
       }
     }
 

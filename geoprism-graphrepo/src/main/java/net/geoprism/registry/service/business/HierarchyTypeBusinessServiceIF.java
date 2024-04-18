@@ -61,6 +61,8 @@ public interface HierarchyTypeBusinessServiceIF
 
   public void addToHierarchy(ServerHierarchyType sht, ServerGeoObjectType parentType, ServerGeoObjectType childType);
 
+  public void addToHierarchy(ServerHierarchyType sht, ServerGeoObjectType parentType, ServerGeoObjectType childType, boolean validate);
+
   public void removeChild(ServerHierarchyType sht, ServerGeoObjectType parentType, ServerGeoObjectType childType, boolean migrateChildren);
 
   public List<ServerGeoObjectType> getAllTypes(ServerHierarchyType sht);
