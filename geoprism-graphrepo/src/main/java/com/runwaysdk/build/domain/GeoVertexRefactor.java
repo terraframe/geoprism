@@ -58,7 +58,7 @@ public class GeoVertexRefactor {
         String[] columnNames = new String[]{"createDate", "lastUpdateDate", "oid", "seq"};
 
         for (String columnName : columnNames) {
-            service.ddlCommand(dbRequest, ddlRequest, "DROP ATTRIBUTE " + mdVertexDAO.getDBClassName() + "." + columnName + "_cot IF EXISTS", new HashMap<>()).execute();
+            service.ddlCommand(dbRequest, ddlRequest, "DROP PROPERTY " + mdVertexDAO.getDBClassName() + "." + columnName + "_cot IF EXISTS", new HashMap<>()).execute();
         }
     }
 
