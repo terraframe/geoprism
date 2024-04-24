@@ -48,7 +48,7 @@
 
   <properties>
     <runway.version>3.8.9-SNAPSHOT</runway.version>
-    <geotools.version>24.6</geotools.version>
+    <geotools.version>26.7</geotools.version>
 
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <maven.compiler.source>11</maven.compiler.source>

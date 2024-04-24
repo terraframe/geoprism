@@ -70,7 +70,12 @@ public class GeometryValueNodeStrategy extends ValueNodeStrategy
 
   protected GeometryType getGeometryType()
   {
-    return GeometryType.valueOf(this.getType().getGeometryType());
+    String geometryType = this.getType().getGeometryType();
+
+    if(geometryType.equalsIgnoreCase(com.runwaysdk.system.gis.geo.GeometryType.SHAPE.name())) {
+      return GeometryType.MIXED;
+    }
+    return GeometryType.valueOf(geometryType);
   }
 
   @Override

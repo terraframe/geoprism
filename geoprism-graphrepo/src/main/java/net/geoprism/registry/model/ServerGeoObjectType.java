@@ -133,7 +133,12 @@ public class ServerGeoObjectType extends CachableObjectWrapper<BaseGeoObjectType
 
   public GeometryType getGeometryType()
   {
-    return GeometryType.valueOf(this.getType().getGeometryType());
+    String geometryType = this.getType().getGeometryType();
+
+    if(geometryType.equalsIgnoreCase(com.runwaysdk.system.gis.geo.GeometryType.SHAPE.name())) {
+      return GeometryType.MIXED;
+    }
+    return GeometryType.valueOf(geometryType);
   }
 
   public boolean isGeometryEditable()
