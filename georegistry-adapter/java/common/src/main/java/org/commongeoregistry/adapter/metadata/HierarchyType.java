@@ -46,6 +46,8 @@ public class HierarchyType extends GraphTypeDTO implements Serializable, Cloneab
    */
   private static final long   serialVersionUID           = -1947163248569170534L;
 
+  public static final String JSON_TYPE_CODE              = "typeCode";
+  
   public static final String  JSON_CODE                  = "code";
 
   public static final String  JSON_INHERITED_HIER_CODE   = "inheritedHierarchyCode";
@@ -307,6 +309,8 @@ public class HierarchyType extends GraphTypeDTO implements Serializable, Cloneab
   {
     JsonObject jsonObj = new JsonObject();
 
+    jsonObj.addProperty(JSON_TYPE_CODE, "HierarchyType");
+    
     jsonObj.addProperty(JSON_CODE, this.getCode());
 
     jsonObj.add(JSON_LOCALIZED_LABEL, this.getLabel().toJSON(serializer));
