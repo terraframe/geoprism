@@ -21,6 +21,7 @@ package net.geoprism.data.etl.excel;
 import org.apache.poi.ss.usermodel.BuiltinFormats;
 import org.apache.poi.ss.usermodel.DataFormatter;
 import org.apache.poi.ss.usermodel.DateUtil;
+import org.apache.poi.ss.usermodel.RichTextString;
 import org.apache.poi.xssf.eventusermodel.ReadOnlySharedStringsTable;
 import org.apache.poi.xssf.model.StylesTable;
 import org.apache.poi.xssf.usermodel.XSSFCellStyle;
@@ -318,7 +319,7 @@ public class XSSFSheetXMLHandler extends DefaultHandler
           try
           {
             int idx = Integer.parseInt(sstIndex);
-            XSSFRichTextString rtss = new XSSFRichTextString(sharedStringsTable.getEntryAt(idx));
+            RichTextString rtss = sharedStringsTable.getItemAt(idx);
             thisStr = rtss.toString().trim();
             thisData = new String(thisStr);
           }
