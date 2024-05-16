@@ -27,7 +27,7 @@ import com.runwaysdk.business.graph.VertexObject;
 
 import net.geoprism.registry.model.ServerGeoObjectIF;
 
-public class ClassifierCache
+public class ClassifierVertexCache
 {
   @SuppressWarnings("serial")
   protected class LinkedHashMapCache<a, b> extends LinkedHashMap<a, b>
@@ -49,12 +49,12 @@ public class ClassifierCache
 
   protected Map<String, Map<String, Boolean>>      classifierAttributeValidationCache = Collections.synchronizedMap(new HashMap<String, Map<String, Boolean>>());
 
-  public ClassifierCache()
+  public ClassifierVertexCache()
   {
 
   }
 
-  public ClassifierCache(Integer cacheSize)
+  public ClassifierVertexCache(Integer cacheSize)
   {
     this.cacheSize = cacheSize;
   }
