@@ -38,7 +38,8 @@ import com.runwaysdk.dataaccess.graph.attributes.ValueOverTimeCollection;
 
 import net.geoprism.registry.BusinessType;
 import net.geoprism.registry.conversion.ServerGeoObjectStrategyIF;
-import net.geoprism.registry.etl.upload.ClassifierCache;
+import net.geoprism.registry.etl.upload.ClassificationCache;
+import net.geoprism.registry.etl.upload.ClassifierVertexCache;
 import net.geoprism.registry.model.BusinessObject;
 import net.geoprism.registry.model.GraphType;
 import net.geoprism.registry.model.LocationInfo;
@@ -117,7 +118,7 @@ public interface GeoObjectBusinessServiceIF
 
   public GeoObject toGeoObject(ServerGeoObjectIF sgo, Date date);
 
-  public GeoObject toGeoObject(ServerGeoObjectIF sgo, Date date, boolean includeExternalIds);
+  public GeoObject toGeoObject(ServerGeoObjectIF sgo, Date date, boolean includeExternalIds, ClassificationCache classiCache);
 
   public JsonArray getHierarchiesForGeoObject(ServerGeoObjectIF sgo, Date date);
 
@@ -125,7 +126,7 @@ public interface GeoObjectBusinessServiceIF
 
   public GeoObjectOverTime toGeoObjectOverTime(ServerGeoObjectIF sgo, boolean generateUid);
 
-  public GeoObjectOverTime toGeoObjectOverTime(ServerGeoObjectIF sgo, boolean generateUid, ClassifierCache classifierCache);
+  public GeoObjectOverTime toGeoObjectOverTime(ServerGeoObjectIF sgo, boolean generateUid, ClassifierVertexCache classifierCache);
 
   public ServerParentTreeNode addChild(ServerGeoObjectIF sgo, ServerGeoObjectIF child, ServerHierarchyType hierarchy);
 

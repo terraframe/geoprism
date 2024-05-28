@@ -86,7 +86,8 @@ import net.geoprism.registry.conversion.TermConverter;
 import net.geoprism.registry.conversion.VertexGeoObjectStrategy;
 import net.geoprism.registry.etl.export.GeoObjectExportFormat;
 import net.geoprism.registry.etl.export.GeoObjectJsonExporter;
-import net.geoprism.registry.etl.upload.ClassifierCache;
+import net.geoprism.registry.etl.upload.ClassificationCache;
+import net.geoprism.registry.etl.upload.ClassifierVertexCache;
 import net.geoprism.registry.graph.GeoVertex;
 import net.geoprism.registry.graph.HierarchicalRelationshipType;
 import net.geoprism.registry.graph.InheritedHierarchyAnnotation;
@@ -883,11 +884,11 @@ public class GeoObjectBusinessService extends RegistryLocalizedValueConverter im
   @Override
   public GeoObject toGeoObject(ServerGeoObjectIF sgo, Date date)
   {
-    return toGeoObject(sgo, date, true);
+    return toGeoObject(sgo, date, true, null);
   }
 
   @Override
-  public GeoObject toGeoObject(ServerGeoObjectIF sgo, Date date, boolean includeExternalIds)
+  public GeoObject toGeoObject(ServerGeoObjectIF sgo, Date date, boolean includeExternalIds, ClassificationCache classiCache)
   {
     GeoObjectType dto = sgo.getType().toDTO();
     Map<String, Attribute> attributeMap = GeoObject.buildAttributeMap(dto);
@@ -926,9 +927,24 @@ public class GeoObjectBusinessService extends RegistryLocalizedValueConverter im
           else if (attribute instanceof AttributeClassificationType)
           {
             String classificationTypeCode = ( (AttributeClassificationType) attribute ).getClassificationType();
-            ClassificationType classificationType = this.cTypeService.getByCode(classificationTypeCode);
-            Classification classification = this.cService.getByOid(classificationType, (String) value);
 
+            Classification classification = null;
+            if (classiCache != null)
+            {
+              classification = classiCache.getClassification(classificationTypeCode, value.toString().trim());
+            }
+
+            if (classification == null)
+            {
+              ClassificationType classificationType = this.cTypeService.getByCode(classificationTypeCode);
+              classification = this.cService.getByOid(classificationType, (String) value);
+
+              if (classification != null && classiCache != null)
+              {
+                classiCache.putClassification(classificationTypeCode, value.toString().trim(), classification);
+              }
+            }
+            
             try
             {
               geoObj.setValue(attributeName, classification.toTerm());
@@ -1056,7 +1072,7 @@ public class GeoObjectBusinessService extends RegistryLocalizedValueConverter im
   }
 
   @Override
-  public GeoObjectOverTime toGeoObjectOverTime(ServerGeoObjectIF sgo, boolean generateUid, ClassifierCache classifierCache)
+  public GeoObjectOverTime toGeoObjectOverTime(ServerGeoObjectIF sgo, boolean generateUid, ClassifierVertexCache classifierCache)
   {
     GeoObjectType typeDto = sgo.getType().toDTO();
     Map<String, ValueOverTimeCollectionDTO> votAttributeMap = GeoObjectOverTime.buildVotAttributeMap(typeDto);
