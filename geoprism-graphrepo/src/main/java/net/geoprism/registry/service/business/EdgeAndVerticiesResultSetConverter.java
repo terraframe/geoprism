@@ -641,6 +641,7 @@ public class EdgeAndVerticiesResultSetConverter extends ResultSetConverter
     columns.add(prefix + ".@class");
     columns.add(prefix + ".@rid");
     columns.add(prefix + ".code");
+    columns.add(prefix + ".uid");
     
     // GeoVertex
     for (String column : new String[] { GeoVertex.SEQ, GeoVertex.CREATEDATE, GeoVertex.LASTUPDATEDATE, GeoVertex.OID })
