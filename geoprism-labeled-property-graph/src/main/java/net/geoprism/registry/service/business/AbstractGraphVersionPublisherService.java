@@ -37,10 +37,9 @@ import com.runwaysdk.system.metadata.MdVertex;
 
 import net.geoprism.graph.LabeledPropertyGraphSynchronization;
 import net.geoprism.graph.LabeledPropertyGraphTypeVersion;
-import net.geoprism.registry.RegistryConstants;
+import net.geoprism.registry.cache.ClassificationCache;
 import net.geoprism.registry.conversion.LocalizedValueConverter;
 import net.geoprism.registry.model.Classification;
-import net.geoprism.registry.service.business.ClassificationBusinessServiceIF;
 
 public abstract class AbstractGraphVersionPublisherService
 {
@@ -89,7 +88,7 @@ public abstract class AbstractGraphVersionPublisherService
   }
 
   @Transaction
-  protected VertexObject publish(State state, MdVertex mdVertex, GeoObject geoObject)
+  protected VertexObject publish(State state, MdVertex mdVertex, GeoObject geoObject, ClassificationCache classiCache)
   {
     GeoObjectType type = geoObject.getType();
 
@@ -135,8 +134,24 @@ public abstract class AbstractGraphVersionPublisherService
 
           if (value != null)
           {
-            Classification classification = this.classificationService.get((AttributeClassificationType) attribute, value);
+            String classificationTypeCode = ( (AttributeClassificationType) attribute ).getClassificationType();
 
+            Classification classification = null;
+            if (classiCache != null)
+            {
+              classification = classiCache.getClassification(classificationTypeCode, value.toString().trim());
+            }
+
+            if (classification == null)
+            {
+              classification = this.classificationService.get((AttributeClassificationType) attribute, value);
+
+              if (classification != null && classiCache != null)
+              {
+                classiCache.putClassification(classificationTypeCode, value.toString().trim(), classification);
+              }
+            }
+            
             node.setValue(attributeName, classification.getVertex());
           }
           else

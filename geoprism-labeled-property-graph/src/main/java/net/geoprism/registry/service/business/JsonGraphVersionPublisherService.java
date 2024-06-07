@@ -34,6 +34,7 @@ import net.geoprism.graph.GeoObjectTypeSnapshot;
 import net.geoprism.graph.HierarchyTypeSnapshot;
 import net.geoprism.graph.LabeledPropertyGraphSynchronization;
 import net.geoprism.graph.LabeledPropertyGraphTypeVersion;
+import net.geoprism.registry.cache.ClassificationCache;
 
 @Service
 public class JsonGraphVersionPublisherService extends AbstractGraphVersionPublisherService implements JsonGraphVersionPublisherServiceIF
@@ -73,10 +74,13 @@ public class JsonGraphVersionPublisherService extends AbstractGraphVersionPublis
 
   @Autowired
   private GeoObjectTypeSnapshotBusinessServiceIF objectService;
+  
+  private ClassificationCache classiCache;
 
   public void publish(LabeledPropertyGraphSynchronization synchronization, LabeledPropertyGraphTypeVersion version, JsonObject graph)
   {
     State state = new State(synchronization, version);
+    classiCache = new ClassificationCache();
 
     this.publishGeoObjects(state, graph.get("geoObjects").getAsJsonArray());
     this.publishEdges(state, graph.get("edges").getAsJsonArray());
@@ -135,7 +139,7 @@ public class JsonGraphVersionPublisherService extends AbstractGraphVersionPublis
       {
         GeoObject geoObject = GeoObject.fromJSON(cachedObject.type, object.toString());
 
-        this.publish(state, cachedObject.mdVertex, geoObject);
+        this.publish(state, cachedObject.mdVertex, geoObject, classiCache);
       }
     }
   }

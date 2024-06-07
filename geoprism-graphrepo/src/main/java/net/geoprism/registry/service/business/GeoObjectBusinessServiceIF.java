@@ -37,8 +37,8 @@ import com.runwaysdk.dataaccess.MdEdgeDAOIF;
 import com.runwaysdk.dataaccess.graph.attributes.ValueOverTimeCollection;
 
 import net.geoprism.registry.BusinessType;
+import net.geoprism.registry.cache.ClassificationCache;
 import net.geoprism.registry.conversion.ServerGeoObjectStrategyIF;
-import net.geoprism.registry.etl.upload.ClassificationCache;
 import net.geoprism.registry.etl.upload.ClassifierVertexCache;
 import net.geoprism.registry.model.BusinessObject;
 import net.geoprism.registry.model.GraphType;
