@@ -197,20 +197,11 @@ public static final String VERTEX_IN_PREFIX = "in";
       
       if (nodeMap.containsKey(DefaultAttribute.DISPLAY_LABEL.getName()))
         geoObj.setDisplayLabel(new LocalizedValue((String) nodeMap.get(DefaultAttribute.DISPLAY_LABEL.getName()).getObjectValue("defaultLocale")));
-//      else
-//        System.out.println("DisplayLabel attribute missing for " + typeDto.getCode() + "-" + geoObj.getCode());
       
       if (nodeMap.containsKey(DefaultAttribute.EXISTS.getName()))
         geoObj.setExists((Boolean) nodeMap.get(DefaultAttribute.EXISTS.getName()).getObjectValue("value"));
-//      else
-//        System.out.println("Exists attribute missing for " + typeDto.getCode() + "-" + geoObj.getCode());
       
       geoObj.setInvalid((Boolean) this.getObjectValue(DefaultAttribute.INVALID.getName()));
-
-//      if (sgo.isNew())// && !vertex.isAppliedToDB())
-//      {
-//        geoObj.setUid(UUID.randomUUID().toString());
-//      }
 
       return geoObj;
     }
@@ -306,7 +297,6 @@ public static final String VERTEX_IN_PREFIX = "in";
     ReadonlyPrefixedResultObject currentOutVertex = null;
     List<EdgeAndGOInOut> list = new LinkedList<EdgeAndGOInOut>();
 
-    // This code was caught dropping attributes. Not sure why
     for (ReadonlyEdgeAndVerticies result : results)
     {
       if (previous != null && !(previous.edgeOid.equals(result.edgeOid)))
