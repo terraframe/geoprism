@@ -16,14 +16,12 @@
  * You should have received a copy of the GNU Lesser General Public
  * License along with Geoprism(tm).  If not, see <http://www.gnu.org/licenses/>.
  */
-package net.geoprism.registry.etl.upload;
+package net.geoprism.registry.cache;
 
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
-
-import com.runwaysdk.business.graph.VertexObject;
 
 import net.geoprism.registry.model.Classification;
 
@@ -43,7 +41,7 @@ public class ClassificationCache
     }
   };
 
-  protected Integer cacheSize = 10000;
+  protected Integer cacheSize = 500;
 
   protected Map<String, Map<String, Classification>> cache = Collections.synchronizedMap(new HashMap<String, Map<String, Classification>>());
 
