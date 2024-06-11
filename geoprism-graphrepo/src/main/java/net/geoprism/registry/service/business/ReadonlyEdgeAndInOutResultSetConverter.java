@@ -299,7 +299,7 @@ public static final String VERTEX_IN_PREFIX = "in";
 
     for (ReadonlyEdgeAndVerticies result : results)
     {
-      if (previous != null && !(previous.edgeOid.equals(result.edgeOid)))
+      if (previous != null && !(previous.edgeOid.equals(result.edgeOid)) && currentOutVertex != null && currentInVertex != null)
       {
         GeoObject out = currentOutVertex.toGeoObject(currentOutAttributes, date, classiCache, cService, cTypeService);
         GeoObject in = currentInVertex.toGeoObject(currentInAttributes, date, classiCache, cService, cTypeService);
