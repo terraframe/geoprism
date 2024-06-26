@@ -65,16 +65,21 @@ public class LabeledPropertyGraphTypeService implements LabeledPropertyGraphType
   @Request(RequestType.SESSION)
   public JsonObject apply(String sessionId, JsonObject list)
   {
+    final boolean isNew = !list.has(LabeledPropertyGraphType.OID) || list.get(LabeledPropertyGraphType.OID).isJsonNull();
+    
     LabeledPropertyGraphType type = typeService.apply(list);
 
     // Refresh the users session
     ( (Session) Session.getCurrentSession() ).reloadPermissions();
 
     // Auto publish the working versions of the lists
-    List<LabeledPropertyGraphTypeVersion> versions = typeService.getVersions(type);
-    for (LabeledPropertyGraphTypeVersion version : versions)
+    if (isNew)
     {
-      this.versionService.createPublishJob(version);
+      List<LabeledPropertyGraphTypeVersion> versions = typeService.getVersions(type);
+      for (LabeledPropertyGraphTypeVersion version : versions)
+      {
+        this.versionService.createPublishJob(version);
+      }
     }
 
     return type.toJSON();
