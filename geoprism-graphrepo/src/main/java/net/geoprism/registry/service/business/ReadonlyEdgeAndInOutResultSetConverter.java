@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import org.commongeoregistry.adapter.Term;
 import org.commongeoregistry.adapter.constants.DefaultAttribute;
 import org.commongeoregistry.adapter.dataaccess.Attribute;
 import org.commongeoregistry.adapter.dataaccess.GeoObject;
@@ -28,6 +29,7 @@ import com.runwaysdk.dataaccess.metadata.graph.MdGraphClassDAO;
 
 import net.geoprism.ontology.Classifier;
 import net.geoprism.registry.cache.ClassificationCache;
+import net.geoprism.registry.conversion.TermConverter;
 import net.geoprism.registry.graph.AttributeValue;
 import net.geoprism.registry.io.TermValueException;
 import net.geoprism.registry.model.Classification;
@@ -146,11 +148,11 @@ public static final String VERTEX_IN_PREFIX = "in";
           {
             if (attribute instanceof AttributeTermType)
             {
-              Classifier classifier = (Classifier) value;
+              Classifier classifier = Classifier.get((String)value);
 
               try
               {
-                geoObj.setValue(attributeName, classifier.getClassifierId());
+                geoObj.setValue(attributeName, classifier == null ? null : classifier.getClassifierId());
               }
               catch (UnknownTermException e)
               {

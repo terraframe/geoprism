@@ -61,7 +61,7 @@
     <plugins>
       <!-- Weave Aspects -->
       <plugin>
-        <groupId>dev.aspectj</groupId>
+        <groupId>org.codehaus.mojo</groupId>
         <artifactId>aspectj-maven-plugin</artifactId>
         <version>${aspectj.plugin.version}</version>
         <dependencies>
