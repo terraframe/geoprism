@@ -16,19 +16,14 @@
  * You should have received a copy of the GNU Lesser General Public
  * License along with Geoprism(tm).  If not, see <http://www.gnu.org/licenses/>.
  */
-package net.geoprism.build;
+package net.geoprism.registry.tile;
 
-import java.io.File;
+import java.util.List;
 
-public interface GeoprismDatabaseBuilderIF extends AutoCloseable
+import org.locationtech.jts.geom.Envelope;
+import com.wdtinc.mapbox_vector_tile.VectorTile;
+
+public interface VectorLayerPublisherIF
 {
-  public void initialize(File metadataDir);
-
-  public void initialize(String[] cliArgs);
-
-  public void run();
-
-  public void configureStrategies();
-
-  public abstract void close();
+  public List<VectorTile.Tile.Layer> writeVectorLayers(Envelope envelope, Envelope bounds);
 }

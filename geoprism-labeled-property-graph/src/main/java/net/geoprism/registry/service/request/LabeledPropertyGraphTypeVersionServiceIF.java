@@ -16,19 +16,19 @@
  * You should have received a copy of the GNU Lesser General Public
  * License along with Geoprism(tm).  If not, see <http://www.gnu.org/licenses/>.
  */
-package net.geoprism.build;
+package net.geoprism.registry.service.request;
 
-import java.io.File;
+import java.io.InputStream;
 
-public interface GeoprismDatabaseBuilderIF extends AutoCloseable
+import org.json.JSONObject;
+import org.springframework.stereotype.Component;
+
+@Component
+public interface LabeledPropertyGraphTypeVersionServiceIF
 {
-  public void initialize(File metadataDir);
 
-  public void initialize(String[] cliArgs);
+  void createTiles(String sessionId, String oid);
 
-  public void run();
+  InputStream getTile(String sessionId, JSONObject object);
 
-  public void configureStrategies();
-
-  public abstract void close();
 }

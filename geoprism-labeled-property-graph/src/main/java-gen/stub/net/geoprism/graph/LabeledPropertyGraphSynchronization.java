@@ -63,6 +63,7 @@ public class LabeledPropertyGraphSynchronization extends LabeledPropertyGraphSyn
     object.addProperty(LabeledPropertyGraphSynchronization.FORDATE, DateUtil.formatDate(this.getForDate(), false));
     object.addProperty(LabeledPropertyGraphSynchronization.REMOTEVERSION, this.getRemoteVersion());
     object.addProperty(LabeledPropertyGraphSynchronization.VERSIONNUMBER, this.getVersionNumber());
+    object.addProperty(LabeledPropertyGraphSynchronization.VERSION, this.getVersionOid());
 
     return object;
   }

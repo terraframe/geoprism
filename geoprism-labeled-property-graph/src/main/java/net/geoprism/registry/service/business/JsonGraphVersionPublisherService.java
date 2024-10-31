@@ -85,7 +85,12 @@ public class JsonGraphVersionPublisherService extends AbstractGraphVersionPublis
     this.publishGeoObjects(state, graph.get("geoObjects").getAsJsonArray());
     this.publishEdges(state, graph.get("edges").getAsJsonArray());
   }
+  
+  public void publish(State state, VertexObject parent, VertexObject child, MdEdge mdEdge) {
+    parent.addChild(child, mdEdge.definesType()).apply();
+  }
 
+  @Override
   public void publishEdges(State state, JsonArray edges)
   {
     for (int i = 0; i < edges.size(); i++)
@@ -111,7 +116,7 @@ public class JsonGraphVersionPublisherService extends AbstractGraphVersionPublis
       VertexObject parent = this.service.getVertex(state.version, parentUid, parentType);
       VertexObject child = this.service.getVertex(state.version, childUid, childType);
 
-      parent.addChild(child, cachedObject.mdEdge.definesType()).apply();
+      publish(state, parent, child, cachedObject.mdEdge);
     }
   }
 
