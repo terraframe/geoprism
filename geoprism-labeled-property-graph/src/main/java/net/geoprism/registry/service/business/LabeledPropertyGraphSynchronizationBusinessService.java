@@ -50,8 +50,8 @@ import net.geoprism.registry.graph.GraphOrganization;
 import net.geoprism.registry.lpg.adapter.RegistryBridge;
 import net.geoprism.registry.lpg.adapter.RegistryConnectorFactory;
 import net.geoprism.registry.lpg.adapter.RegistryConnectorIF;
+import net.geoprism.registry.model.ServerOrganization;
 import net.geoprism.registry.service.business.AbstractGraphVersionPublisherService.State;
-
 import net.geoprism.registry.view.Page;
 
 @Service
