@@ -27,6 +27,7 @@ import org.springframework.stereotype.Service;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+import com.runwaysdk.business.graph.GraphQuery;
 import com.runwaysdk.business.graph.VertexObject;
 import com.runwaysdk.dataaccess.transaction.Transaction;
 import com.runwaysdk.query.AttributeLocal;
@@ -35,18 +36,22 @@ import com.runwaysdk.query.OrderBy.SortOrder;
 import com.runwaysdk.query.QueryFactory;
 import com.runwaysdk.query.Selectable;
 import com.runwaysdk.query.SelectableChar;
+import com.runwaysdk.query.SelectableReference;
 import com.runwaysdk.session.Session;
 
 import net.geoprism.graph.LabeledPropertyGraphSynchronization;
 import net.geoprism.graph.LabeledPropertyGraphSynchronizationQuery;
 import net.geoprism.graph.LabeledPropertyGraphType;
 import net.geoprism.graph.LabeledPropertyGraphTypeEntry;
+import net.geoprism.graph.LabeledPropertyGraphTypeQuery;
 import net.geoprism.graph.LabeledPropertyGraphTypeVersion;
 import net.geoprism.graph.LabeledPropertyGraphUtil;
+import net.geoprism.registry.graph.GraphOrganization;
 import net.geoprism.registry.lpg.adapter.RegistryBridge;
 import net.geoprism.registry.lpg.adapter.RegistryConnectorFactory;
 import net.geoprism.registry.lpg.adapter.RegistryConnectorIF;
 import net.geoprism.registry.service.business.AbstractGraphVersionPublisherService.State;
+
 import net.geoprism.registry.view.Page;
 
 @Service
@@ -381,9 +386,43 @@ public class LabeledPropertyGraphSynchronizationBusinessService implements Label
   }
 
   @Override
+  public JsonArray getForOrganization(ServerOrganization organization)
+  {
+    // Two phase query. The first phase traverses the graph tree to find all of
+    // the child organizations of a node in the tree. The second phase then
+    // queries postgres with the list of child organizations as criteria
+
+    StringBuilder statement = new StringBuilder();
+    statement.append("TRAVERSE OUT('organization_hierarchy') FROM :organization");
+
+    GraphQuery<GraphOrganization> gQuery = new GraphQuery<GraphOrganization>(statement.toString());
+    gQuery.setParameter("organization", organization.getGraphOrganization().getRID());
+
+    String[] organizationIds = gQuery.getResults().stream().map(org -> org.getOrganizationOid()).toArray(String[]::new);
+
+    QueryFactory factory = new QueryFactory();
+
+    LabeledPropertyGraphTypeQuery query = new LabeledPropertyGraphTypeQuery(factory);
+    query.WHERE( ( (SelectableReference) query.get(LabeledPropertyGraphType.ORGANIZATION) ).IN(organizationIds));
+
+    LabeledPropertyGraphSynchronizationQuery sQuery = new LabeledPropertyGraphSynchronizationQuery(factory);
+    sQuery.WHERE(sQuery.getGraphType().EQ(query));
+
+    JsonArray array = new JsonArray();
+
+    try (OIterator<? extends LabeledPropertyGraphSynchronization> iterator = sQuery.getIterator())
+    {
+      iterator.forEach(i -> array.add(i.toJSON()));
+    }
+
+    return array;
+  }
+
+  @Override
   public LabeledPropertyGraphSynchronization get(String oid)
   {
     return LabeledPropertyGraphSynchronization.get(oid);
   }
+
 
 }
