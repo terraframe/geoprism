@@ -41,7 +41,6 @@ import org.opengis.referencing.crs.CoordinateReferenceSystem;
 import org.opengis.referencing.operation.MathTransform;
 import org.opengis.referencing.operation.TransformException;
 
-import com.orientechnologies.common.io.OIOException;
 import com.runwaysdk.business.graph.GraphQuery;
 import com.runwaysdk.dataaccess.AttributeIF;
 import com.runwaysdk.dataaccess.ProgrammingErrorException;
@@ -62,11 +61,11 @@ import com.wdtinc.mapbox_vector_tile.build.MvtLayerParams;
 import com.wdtinc.mapbox_vector_tile.build.MvtLayerProps;
 
 import net.geoprism.graph.GeoObjectTypeSnapshot;
-import net.geoprism.graph.HierarchyTypeSnapshot;
+import net.geoprism.graph.GraphTypeSnapshot;
 import net.geoprism.graph.LabeledPropertyGraphTypeVersion;
 import net.geoprism.registry.service.business.GeoObjectTypeSnapshotBusinessServiceIF;
 import net.geoprism.registry.service.business.LabeledPropertyGraphTypeVersionBusinessServiceIF;
-import net.geoprism.spring.ApplicationContextHolder;
+import net.geoprism.spring.core.ApplicationContextHolder;
 
 public class VersionVectorTileBuilder implements VectorLayerPublisherIF
 {
@@ -85,7 +84,7 @@ public class VersionVectorTileBuilder implements VectorLayerPublisherIF
     GeoObjectTypeSnapshotBusinessServiceIF gTypeService = ApplicationContextHolder.getBean(GeoObjectTypeSnapshotBusinessServiceIF.class);
     LabeledPropertyGraphTypeVersionBusinessServiceIF versionService = ApplicationContextHolder.getBean(LabeledPropertyGraphTypeVersionBusinessServiceIF.class);
 
-    HierarchyTypeSnapshot hierarchy = versionService.getHierarchies(version).get(0);
+    GraphTypeSnapshot hierarchy = versionService.getGraphSnapshots(version).get(0);
     GeoObjectTypeSnapshot snapshot = gTypeService.get(version, this.typeCode);
 
     if (snapshot != null)
