@@ -22,18 +22,18 @@ package net.geoprism;
 public class EmailSettingControllerBase 
 {
   public static final String CLASS = "net.geoprism.EmailSettingController";
-  protected javax.servlet.http.HttpServletRequest req;
-  protected javax.servlet.http.HttpServletResponse resp;
+  protected jakarta.servlet.http.HttpServletRequest req;
+  protected jakarta.servlet.http.HttpServletResponse resp;
   protected java.lang.Boolean isAsynchronous;
   protected java.lang.String dir;
   protected java.lang.String layout;
   
-  public EmailSettingControllerBase(javax.servlet.http.HttpServletRequest req, javax.servlet.http.HttpServletResponse resp, java.lang.Boolean isAsynchronous)
+  public EmailSettingControllerBase(jakarta.servlet.http.HttpServletRequest req, jakarta.servlet.http.HttpServletResponse resp, java.lang.Boolean isAsynchronous)
   {
     this(req, resp, isAsynchronous, "","");
   }
   
-  public EmailSettingControllerBase(javax.servlet.http.HttpServletRequest req, javax.servlet.http.HttpServletResponse resp, java.lang.Boolean isAsynchronous, java.lang.String dir, java.lang.String layout)
+  public EmailSettingControllerBase(jakarta.servlet.http.HttpServletRequest req, jakarta.servlet.http.HttpServletResponse resp, java.lang.Boolean isAsynchronous, java.lang.String dir, java.lang.String layout)
   {
     this.req = req;
     this.resp = resp;
@@ -42,7 +42,7 @@ public class EmailSettingControllerBase
     this.layout = layout;
   }
   
-  protected void render(String jsp) throws java.io.IOException, javax.servlet.ServletException
+  protected void render(String jsp) throws java.io.IOException, jakarta.servlet.ServletException
   {
     if(!resp.isCommitted())
     {
@@ -58,12 +58,12 @@ public class EmailSettingControllerBase
     }
   }
   
-  public javax.servlet.http.HttpServletRequest getRequest()
+  public jakarta.servlet.http.HttpServletRequest getRequest()
   {
     return this.req;
   }
   
-  public javax.servlet.http.HttpServletResponse getResponse()
+  public jakarta.servlet.http.HttpServletResponse getResponse()
   {
     return this.resp;
   }
@@ -84,126 +84,126 @@ public class EmailSettingControllerBase
   }
   
   @com.runwaysdk.controller.ActionParameters(parameters="net.geoprism.EmailSettingDTO:dto", post=true)
-  public void cancel(net.geoprism.EmailSettingDTO dto) throws java.io.IOException, javax.servlet.ServletException
+  public void cancel(net.geoprism.EmailSettingDTO dto) throws java.io.IOException, jakarta.servlet.ServletException
   {
     String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.EmailSettingController.java";
     throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "net.geoprism.EmailSettingController.cancel");
   }
   
   @com.runwaysdk.controller.ActionParameters(parameters="net.geoprism.EmailSettingDTO:dto", post=true)
-  public void failCancel(net.geoprism.EmailSettingDTO dto) throws java.io.IOException, javax.servlet.ServletException
+  public void failCancel(net.geoprism.EmailSettingDTO dto) throws java.io.IOException, jakarta.servlet.ServletException
   {
     String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.EmailSettingController.java";
     throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "net.geoprism.EmailSettingController.failCancel");
   }
   
   @com.runwaysdk.controller.ActionParameters(parameters="net.geoprism.EmailSettingDTO:dto", post=true)
-  public void create(net.geoprism.EmailSettingDTO dto) throws java.io.IOException, javax.servlet.ServletException
+  public void create(net.geoprism.EmailSettingDTO dto) throws java.io.IOException, jakarta.servlet.ServletException
   {
     String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.EmailSettingController.java";
     throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "net.geoprism.EmailSettingController.create");
   }
   
   @com.runwaysdk.controller.ActionParameters(parameters="net.geoprism.EmailSettingDTO:dto", post=true)
-  public void failCreate(net.geoprism.EmailSettingDTO dto) throws java.io.IOException, javax.servlet.ServletException
+  public void failCreate(net.geoprism.EmailSettingDTO dto) throws java.io.IOException, jakarta.servlet.ServletException
   {
     String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.EmailSettingController.java";
     throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "net.geoprism.EmailSettingController.failCreate");
   }
   
   @com.runwaysdk.controller.ActionParameters(parameters="net.geoprism.EmailSettingDTO:dto", post=true)
-  public void delete(net.geoprism.EmailSettingDTO dto) throws java.io.IOException, javax.servlet.ServletException
+  public void delete(net.geoprism.EmailSettingDTO dto) throws java.io.IOException, jakarta.servlet.ServletException
   {
     String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.EmailSettingController.java";
     throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "net.geoprism.EmailSettingController.delete");
   }
   
   @com.runwaysdk.controller.ActionParameters(parameters="net.geoprism.EmailSettingDTO:dto", post=true)
-  public void failDelete(net.geoprism.EmailSettingDTO dto) throws java.io.IOException, javax.servlet.ServletException
+  public void failDelete(net.geoprism.EmailSettingDTO dto) throws java.io.IOException, jakarta.servlet.ServletException
   {
     String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.EmailSettingController.java";
     throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "net.geoprism.EmailSettingController.failDelete");
   }
   
   @com.runwaysdk.controller.ActionParameters(parameters="java.lang.String:oid", post=false)
-  public void edit(java.lang.String oid) throws java.io.IOException, javax.servlet.ServletException
+  public void edit(java.lang.String oid) throws java.io.IOException, jakarta.servlet.ServletException
   {
     String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.EmailSettingController.java";
     throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "net.geoprism.EmailSettingController.edit");
   }
   
   @com.runwaysdk.controller.ActionParameters(parameters="java.lang.String:oid", post=false)
-  public void failEdit(java.lang.String oid) throws java.io.IOException, javax.servlet.ServletException
+  public void failEdit(java.lang.String oid) throws java.io.IOException, jakarta.servlet.ServletException
   {
     String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.EmailSettingController.java";
     throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "net.geoprism.EmailSettingController.failEdit");
   }
   
   @com.runwaysdk.controller.ActionParameters(parameters="", post=false)
-  public void newInstance() throws java.io.IOException, javax.servlet.ServletException
+  public void newInstance() throws java.io.IOException, jakarta.servlet.ServletException
   {
     String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.EmailSettingController.java";
     throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "net.geoprism.EmailSettingController.newInstance");
   }
   
   @com.runwaysdk.controller.ActionParameters(parameters="", post=false)
-  public void failNewInstance() throws java.io.IOException, javax.servlet.ServletException
+  public void failNewInstance() throws java.io.IOException, jakarta.servlet.ServletException
   {
     String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.EmailSettingController.java";
     throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "net.geoprism.EmailSettingController.failNewInstance");
   }
   
   @com.runwaysdk.controller.ActionParameters(parameters="net.geoprism.EmailSettingDTO:dto", post=true)
-  public void update(net.geoprism.EmailSettingDTO dto) throws java.io.IOException, javax.servlet.ServletException
+  public void update(net.geoprism.EmailSettingDTO dto) throws java.io.IOException, jakarta.servlet.ServletException
   {
     String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.EmailSettingController.java";
     throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "net.geoprism.EmailSettingController.update");
   }
   
   @com.runwaysdk.controller.ActionParameters(parameters="net.geoprism.EmailSettingDTO:dto", post=true)
-  public void failUpdate(net.geoprism.EmailSettingDTO dto) throws java.io.IOException, javax.servlet.ServletException
+  public void failUpdate(net.geoprism.EmailSettingDTO dto) throws java.io.IOException, jakarta.servlet.ServletException
   {
     String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.EmailSettingController.java";
     throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "net.geoprism.EmailSettingController.failUpdate");
   }
   
   @com.runwaysdk.controller.ActionParameters(parameters="java.lang.String:oid", post=false)
-  public void view(java.lang.String oid) throws java.io.IOException, javax.servlet.ServletException
+  public void view(java.lang.String oid) throws java.io.IOException, jakarta.servlet.ServletException
   {
     String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.EmailSettingController.java";
     throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "net.geoprism.EmailSettingController.view");
   }
   
   @com.runwaysdk.controller.ActionParameters(parameters="java.lang.String:oid", post=false)
-  public void failView(java.lang.String oid) throws java.io.IOException, javax.servlet.ServletException
+  public void failView(java.lang.String oid) throws java.io.IOException, jakarta.servlet.ServletException
   {
     String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.EmailSettingController.java";
     throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "net.geoprism.EmailSettingController.failView");
   }
   
   @com.runwaysdk.controller.ActionParameters(parameters="", post=false)
-  public void viewAll() throws java.io.IOException, javax.servlet.ServletException
+  public void viewAll() throws java.io.IOException, jakarta.servlet.ServletException
   {
     String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.EmailSettingController.java";
     throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "net.geoprism.EmailSettingController.viewAll");
   }
   
   @com.runwaysdk.controller.ActionParameters(parameters="", post=false)
-  public void failViewAll() throws java.io.IOException, javax.servlet.ServletException
+  public void failViewAll() throws java.io.IOException, jakarta.servlet.ServletException
   {
     String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.EmailSettingController.java";
     throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "net.geoprism.EmailSettingController.failViewAll");
   }
   
   @com.runwaysdk.controller.ActionParameters(parameters="java.lang.String:sortAttribute, java.lang.Boolean:isAscending, java.lang.Integer:pageSize, java.lang.Integer:pageNumber", post=false)
-  public void viewPage(java.lang.String sortAttribute, java.lang.Boolean isAscending, java.lang.Integer pageSize, java.lang.Integer pageNumber) throws java.io.IOException, javax.servlet.ServletException
+  public void viewPage(java.lang.String sortAttribute, java.lang.Boolean isAscending, java.lang.Integer pageSize, java.lang.Integer pageNumber) throws java.io.IOException, jakarta.servlet.ServletException
   {
     String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.EmailSettingController.java";
     throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "net.geoprism.EmailSettingController.viewPage");
   }
   
   @com.runwaysdk.controller.ActionParameters(parameters="java.lang.String:sortAttribute, java.lang.String:isAscending, java.lang.String:pageSize, java.lang.String:pageNumber", post=false)
-  public void failViewPage(java.lang.String sortAttribute, java.lang.String isAscending, java.lang.String pageSize, java.lang.String pageNumber) throws java.io.IOException, javax.servlet.ServletException
+  public void failViewPage(java.lang.String sortAttribute, java.lang.String isAscending, java.lang.String pageSize, java.lang.String pageNumber) throws java.io.IOException, jakarta.servlet.ServletException
   {
     String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.EmailSettingController.java";
     throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "net.geoprism.EmailSettingController.failViewPage");

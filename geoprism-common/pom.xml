@@ -57,7 +57,7 @@
     <dependency>
       <groupId>org.springframework</groupId>
       <artifactId>spring-webmvc</artifactId>
-      <version>5.3.24</version>
+      <version>6.1.14</version>
     </dependency>
     <dependency>
 	  <groupId>com.google.guava</groupId>
@@ -88,17 +88,17 @@
     <dependency>
       <groupId>com.fasterxml.jackson.core</groupId>
       <artifactId>jackson-annotations</artifactId>
-      <version>2.10.0</version>
+      <version>2.18.1</version>
     </dependency>
     <dependency>
       <groupId>com.fasterxml.jackson.core</groupId>
       <artifactId>jackson-databind</artifactId>
-      <version>2.10.0</version>
+      <version>2.18.1</version>
     </dependency>
     <dependency>
       <groupId>com.fasterxml.jackson.core</groupId>
       <artifactId>jackson-core</artifactId>
-      <version>2.10.0</version>
+      <version>2.18.1</version>
     </dependency>
     <dependency>
       <groupId>com.google.code.gson</groupId>
@@ -152,6 +152,7 @@
           <fork>true</fork>
           <meminitial>512m</meminitial>
           <maxmem>1024m</maxmem>
+          <parameters>true</parameters>
         </configuration>
       </plugin>
     </plugins>
