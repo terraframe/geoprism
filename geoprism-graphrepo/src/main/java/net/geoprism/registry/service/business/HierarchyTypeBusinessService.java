@@ -526,7 +526,7 @@ public class HierarchyTypeBusinessService implements HierarchyTypeBusinessServic
     }
     catch (DuplicateDataException ex)
     {
-      DuplicateHierarchyTypeException ex2 = new DuplicateHierarchyTypeException();
+      DuplicateHierarchyTypeException ex2 = new DuplicateHierarchyTypeException(ex);
       ex2.setDuplicateValue(hierarchyType.getCode());
       throw ex2;
     }
