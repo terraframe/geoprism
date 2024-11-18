@@ -49,7 +49,8 @@ public class GeoprismProperties
 {
   private ConfigurationReaderIF props;
 
-  private static class Singleton 
+
+    private static class Singleton
   {
     private static GeoprismProperties INSTANCE = new GeoprismProperties();
   }
@@ -110,6 +111,11 @@ public class GeoprismProperties
   public static Integer getEmailPort()
   {
     return Singleton.INSTANCE.props.getInteger("geoprism.email.port");
+  }
+
+  public static int getNumberOfTileThreads() {
+
+    return Singleton.INSTANCE.props.getInteger("geoprism.number.tile.threads", 2);
   }
 
   public static Integer getForgotPasswordExpireTime()
@@ -177,4 +183,6 @@ public class GeoprismProperties
     
     return file;
   }
+
+
 }
