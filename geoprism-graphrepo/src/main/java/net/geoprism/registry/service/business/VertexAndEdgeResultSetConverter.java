@@ -577,10 +577,8 @@ public class VertexAndEdgeResultSetConverter extends ResultSetConverter
         list.add(new GeoObjectAndEdge(vsgo, previous.edgeClass, previous.edgeOid));
         currentAttributes = new LinkedList<>();
       }
-      else
-      {
-        currentAttributes.add(result.attrVertex);
-      }
+      
+      currentAttributes.add(result.attrVertex);
       
       previous = result;
     }
