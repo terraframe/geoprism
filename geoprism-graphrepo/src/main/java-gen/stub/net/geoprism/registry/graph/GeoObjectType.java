@@ -206,6 +206,17 @@ public class GeoObjectType extends GeoObjectTypeBase implements ServerElement
       labelAttr.setIsChangeOverTime(true);
       labelAttr.setIsDefault(true);
       labelAttr.apply();
+      
+      AttributeSourceType sourceAttr = new AttributeSourceType();
+      sourceAttr.setCode(DefaultAttribute.SOURCE.getName());
+      sourceAttr.setEmbeddedValue(AttributeUUIDType.LABEL, LocalizedValue.DEFAULT_LOCALE, DefaultAttribute.SOURCE.getDefaultLocalizedName());
+      sourceAttr.setEmbeddedValue(AttributeUUIDType.DESCRIPTION, LocalizedValue.DEFAULT_LOCALE, DefaultAttribute.SOURCE.getDefaultDescription());
+      sourceAttr.setValue(AttributeBooleanType.GEOOBJECTTYPE, this.getOid());
+      sourceAttr.setRequired(false);
+      sourceAttr.setUnique(false);
+      sourceAttr.setIsChangeOverTime(true);
+      sourceAttr.setIsDefault(true);
+      sourceAttr.apply();
 
       AttributeGeometryType geometryAttr = new AttributeGeometryType();
       geometryAttr.setCode(DefaultAttribute.GEOMETRY.getName());

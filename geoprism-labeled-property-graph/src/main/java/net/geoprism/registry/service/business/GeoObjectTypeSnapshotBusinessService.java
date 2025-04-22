@@ -35,6 +35,7 @@ import org.commongeoregistry.adapter.metadata.AttributeDateType;
 import org.commongeoregistry.adapter.metadata.AttributeFloatType;
 import org.commongeoregistry.adapter.metadata.AttributeIntegerType;
 import org.commongeoregistry.adapter.metadata.AttributeLocalType;
+import org.commongeoregistry.adapter.metadata.AttributeSourceType;
 import org.commongeoregistry.adapter.metadata.AttributeTermType;
 import org.commongeoregistry.adapter.metadata.AttributeType;
 import org.commongeoregistry.adapter.metadata.GeoObjectType;
@@ -50,6 +51,7 @@ import com.runwaysdk.constants.MdAttributeBooleanInfo;
 import com.runwaysdk.constants.MdAttributeCharacterInfo;
 import com.runwaysdk.constants.MdAttributeConcreteInfo;
 import com.runwaysdk.constants.MdAttributeDoubleInfo;
+import com.runwaysdk.constants.MdAttributeGraphReferenceInfo;
 import com.runwaysdk.constants.MdAttributeLocalInfo;
 import com.runwaysdk.constants.graph.MdVertexInfo;
 import com.runwaysdk.dataaccess.MdVertexDAOIF;
@@ -78,6 +80,7 @@ import com.runwaysdk.system.metadata.MdAttributeClassification;
 import com.runwaysdk.system.metadata.MdAttributeConcrete;
 import com.runwaysdk.system.metadata.MdAttributeDateTime;
 import com.runwaysdk.system.metadata.MdAttributeDouble;
+import com.runwaysdk.system.metadata.MdAttributeGraphReference;
 import com.runwaysdk.system.metadata.MdAttributeIndices;
 import com.runwaysdk.system.metadata.MdAttributeLocalCharacterEmbedded;
 import com.runwaysdk.system.metadata.MdAttributeLocalText;
@@ -90,8 +93,8 @@ import com.runwaysdk.system.metadata.MdVertex;
 import net.geoprism.graph.GeoObjectTypeSnapshot;
 import net.geoprism.graph.GeoObjectTypeSnapshotQuery;
 import net.geoprism.graph.LabeledPropertyGraphTypeVersion;
-import net.geoprism.registry.RegistryConstants;
 import net.geoprism.registry.conversion.LocalizedValueConverter;
+import net.geoprism.registry.graph.Source;
 import net.geoprism.registry.model.Classification;
 import net.geoprism.registry.model.ClassificationType;
 
@@ -493,6 +496,13 @@ public class GeoObjectTypeSnapshotBusinessService implements GeoObjectTypeSnapsh
     else if (attributeType.getType().equals(AttributeBooleanType.TYPE))
     {
       mdAttribute = new MdAttributeBoolean();
+    }
+    else if (attributeType.getType().equals(AttributeSourceType.TYPE))
+    {
+      MdVertexDAOIF mdVertex = MdVertexDAO.getMdVertexDAO(Source.CLASS);
+
+      mdAttribute = new MdAttributeGraphReference();
+      mdAttribute.setValue(MdAttributeGraphReferenceInfo.REFERENCE_MD_VERTEX, mdVertex.getOid());
     }
     else if (attributeType.getType().equals(AttributeLocalType.TYPE))
     {

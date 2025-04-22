@@ -3,18 +3,18 @@
  *
  * This file is part of Geoprism(tm).
  *
- * Geoprism(tm) is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
+ * Geoprism(tm) is free software: you can redistribute it and/or modify it under
+ * the terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation, either version 3 of the License, or (at your option) any
+ * later version.
  *
- * Geoprism(tm) is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
+ * Geoprism(tm) is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with Geoprism(tm).  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with Geoprism(tm). If not, see <http://www.gnu.org/licenses/>.
  */
 package net.geoprism.registry.service.business;
 
@@ -35,6 +35,7 @@ import org.commongeoregistry.adapter.metadata.AttributeDateType;
 import org.commongeoregistry.adapter.metadata.AttributeFloatType;
 import org.commongeoregistry.adapter.metadata.AttributeIntegerType;
 import org.commongeoregistry.adapter.metadata.AttributeLocalType;
+import org.commongeoregistry.adapter.metadata.AttributeSourceType;
 import org.commongeoregistry.adapter.metadata.AttributeTermType;
 import org.commongeoregistry.adapter.metadata.AttributeType;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,6 +49,7 @@ import com.runwaysdk.constants.MdAttributeBooleanInfo;
 import com.runwaysdk.constants.MdAttributeCharacterInfo;
 import com.runwaysdk.constants.MdAttributeConcreteInfo;
 import com.runwaysdk.constants.MdAttributeDoubleInfo;
+import com.runwaysdk.constants.MdAttributeGraphReferenceInfo;
 import com.runwaysdk.constants.MdAttributeLocalInfo;
 import com.runwaysdk.constants.graph.MdEdgeInfo;
 import com.runwaysdk.constants.graph.MdVertexInfo;
@@ -76,6 +78,7 @@ import com.runwaysdk.system.metadata.MdAttributeClassification;
 import com.runwaysdk.system.metadata.MdAttributeConcrete;
 import com.runwaysdk.system.metadata.MdAttributeDateTime;
 import com.runwaysdk.system.metadata.MdAttributeDouble;
+import com.runwaysdk.system.metadata.MdAttributeGraphReference;
 import com.runwaysdk.system.metadata.MdAttributeIndices;
 import com.runwaysdk.system.metadata.MdAttributeLocalCharacterEmbedded;
 import com.runwaysdk.system.metadata.MdAttributeLocalText;
@@ -99,6 +102,7 @@ import net.geoprism.registry.conversion.RegistryAttributeTypeConverter;
 import net.geoprism.registry.conversion.RegistryLocalizedValueConverter;
 import net.geoprism.registry.conversion.TermConverter;
 import net.geoprism.registry.graph.GeoVertex;
+import net.geoprism.registry.graph.Source;
 import net.geoprism.registry.model.Classification;
 import net.geoprism.registry.model.ClassificationType;
 import net.geoprism.registry.model.GeoObjectMetadata;
@@ -677,6 +681,13 @@ public class BusinessTypeBusinessService implements BusinessTypeBusinessServiceI
 
         mdAttributeTerm.setValue(MdAttributeClassification.ROOT, classification.getOid());
       }
+    }
+    else if (attributeType.getType().equals(AttributeSourceType.TYPE))
+    {
+      MdVertexDAOIF mdVertex = MdVertexDAO.getMdVertexDAO(Source.CLASS);
+
+      mdAttribute = new MdAttributeGraphReference();
+      mdAttribute.setValue(MdAttributeGraphReferenceInfo.REFERENCE_MD_VERTEX, mdVertex.getOid());
     }
     else if (attributeType.getType().equals(AttributeBooleanType.TYPE))
     {

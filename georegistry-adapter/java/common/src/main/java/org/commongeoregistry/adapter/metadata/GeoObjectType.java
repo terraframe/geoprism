@@ -3,18 +3,19 @@
  *
  * This file is part of Common Geo Registry Adapter(tm).
  *
- * Common Geo Registry Adapter(tm) is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
+ * Common Geo Registry Adapter(tm) is free software: you can redistribute it
+ * and/or modify it under the terms of the GNU Lesser General Public License as
+ * published by the Free Software Foundation, either version 3 of the License,
+ * or (at your option) any later version.
  *
- * Common Geo Registry Adapter(tm) is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
+ * Common Geo Registry Adapter(tm) is distributed in the hope that it will be
+ * useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser
+ * General Public License for more details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with Common Geo Registry Adapter(tm).  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with Common Geo Registry Adapter(tm). If not, see
+ * <http://www.gnu.org/licenses/>.
  */
 package org.commongeoregistry.adapter.metadata;
 
@@ -74,7 +75,7 @@ public class GeoObjectType implements Serializable
   public static final String         JSON_IS_ABSTRACT           = "isAbstract";
 
   public static final String         JSON_SUPER_TYPE_CODE       = "superTypeCode";
-  
+
   public static final String         JSON_IS_PRIVATE            = "isPrivate";
 
   /**
@@ -120,11 +121,12 @@ public class GeoObjectType implements Serializable
    * null.
    */
   private String                     organizationCode;
-  
+
   /**
-   * Whether or not the GeoObjectType is publicly viewable, or restricted to their organization.
+   * Whether or not the GeoObjectType is publicly viewable, or restricted to
+   * their organization.
    */
-  private Boolean                    isPrivate = false;
+  private Boolean                    isPrivate                  = false;
 
   /**
    * Collection of {@link AttributeType} metadata attributes.
@@ -245,7 +247,7 @@ public class GeoObjectType implements Serializable
   {
     return this.code;
   }
-  
+
   public Boolean getIsPrivate()
   {
     return isPrivate;
@@ -476,7 +478,7 @@ public class GeoObjectType implements Serializable
 
     AttributeCharacterType code = (AttributeCharacterType) DefaultAttribute.CODE.createAttributeType();
     defaultAttributeMap.put(DefaultAttribute.CODE.getName(), code);
-    
+
     AttributeBooleanType invalid = (AttributeBooleanType) DefaultAttribute.INVALID.createAttributeType();
     defaultAttributeMap.put(DefaultAttribute.INVALID.getName(), invalid);
 
@@ -497,9 +499,11 @@ public class GeoObjectType implements Serializable
 
     AttributeBooleanType exists = (AttributeBooleanType) DefaultAttribute.EXISTS.createAttributeType();
     defaultAttributeMap.put(DefaultAttribute.EXISTS.getName(), exists);
-    
-    @SuppressWarnings("unchecked")
-    AttributeListType<String> alternateIds = (AttributeListType<String>) DefaultAttribute.ALT_IDS.createAttributeType();
+
+    AttributeSourceType source = (AttributeSourceType) DefaultAttribute.SOURCE.createAttributeType();
+    defaultAttributeMap.put(DefaultAttribute.SOURCE.getName(), source);
+
+    @SuppressWarnings("unchecked") AttributeListType<String> alternateIds = (AttributeListType<String>) DefaultAttribute.ALT_IDS.createAttributeType();
     defaultAttributeMap.put(DefaultAttribute.ALT_IDS.getName(), alternateIds);
 
     // AttributeCharacterType organization = (AttributeCharacterType)
@@ -582,7 +586,7 @@ public class GeoObjectType implements Serializable
     {
       geoObjType.setIsAbstract(oJson.get(JSON_IS_ABSTRACT).getAsBoolean());
     }
-    
+
     if (oJson.has(JSON_IS_PRIVATE))
     {
       geoObjType.setIsPrivate(oJson.get(JSON_IS_PRIVATE).getAsBoolean());
@@ -625,7 +629,7 @@ public class GeoObjectType implements Serializable
     json.addProperty(JSON_GEOMETRY_TYPE, this.geometryType.name());
 
     json.addProperty(JSON_IS_GEOMETRY_EDITABLE, this.isGeometryEditable());
-    
+
     json.addProperty(JSON_IS_PRIVATE, this.getIsPrivate());
 
     String organizationString;

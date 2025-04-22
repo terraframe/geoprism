@@ -3,18 +3,18 @@
  *
  * This file is part of Geoprism(tm).
  *
- * Geoprism(tm) is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
+ * Geoprism(tm) is free software: you can redistribute it and/or modify it under
+ * the terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation, either version 3 of the License, or (at your option) any
+ * later version.
  *
- * Geoprism(tm) is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
+ * Geoprism(tm) is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with Geoprism(tm).  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with Geoprism(tm). If not, see <http://www.gnu.org/licenses/>.
  */
 package net.geoprism.registry.conversion;
 
@@ -31,6 +31,7 @@ import org.commongeoregistry.adapter.metadata.AttributeDateType;
 import org.commongeoregistry.adapter.metadata.AttributeFloatType;
 import org.commongeoregistry.adapter.metadata.AttributeIntegerType;
 import org.commongeoregistry.adapter.metadata.AttributeLocalType;
+import org.commongeoregistry.adapter.metadata.AttributeSourceType;
 import org.commongeoregistry.adapter.metadata.AttributeTermType;
 import org.commongeoregistry.adapter.metadata.AttributeType;
 
@@ -45,6 +46,7 @@ import com.runwaysdk.dataaccess.MdAttributeDateDAOIF;
 import com.runwaysdk.dataaccess.MdAttributeDateTimeDAOIF;
 import com.runwaysdk.dataaccess.MdAttributeDecDAOIF;
 import com.runwaysdk.dataaccess.MdAttributeEnumerationDAOIF;
+import com.runwaysdk.dataaccess.MdAttributeGraphReferenceDAOIF;
 import com.runwaysdk.dataaccess.MdAttributeIntegerDAOIF;
 import com.runwaysdk.dataaccess.MdAttributeLocalDAOIF;
 import com.runwaysdk.dataaccess.MdAttributeLocalEmbeddedDAOIF;
@@ -106,6 +108,10 @@ public class RegistryAttributeTypeConverter extends RegistryLocalizedValueConver
 
       return attributeType;
     }
+    else if (mdAttribute instanceof MdAttributeGraphReferenceDAOIF)
+    {
+      return AttributeType.factory(attributeName, displayLabel, description, AttributeSourceType.TYPE, required, unique, isChangeOverTime);
+    }
     else if (mdAttribute instanceof MdAttributeIntegerDAOIF || mdAttribute instanceof MdAttributeLongDAOIF)
     {
       return AttributeType.factory(attributeName, displayLabel, description, AttributeIntegerType.TYPE, required, unique, isChangeOverTime);
@@ -122,7 +128,7 @@ public class RegistryAttributeTypeConverter extends RegistryLocalizedValueConver
       if (rootOid != null && rootOid.length() > 0)
       {
         ClassificationBusinessServiceIF service = ServiceFactory.getBean(ClassificationBusinessServiceIF.class);
-        
+
         ClassificationType type = new ClassificationType(mdClassification);
 
         Classification classification = service.getByOid(type, rootOid);

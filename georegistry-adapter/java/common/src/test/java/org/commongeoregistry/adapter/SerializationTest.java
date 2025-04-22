@@ -3,18 +3,19 @@
  *
  * This file is part of Common Geo Registry Adapter(tm).
  *
- * Common Geo Registry Adapter(tm) is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
+ * Common Geo Registry Adapter(tm) is free software: you can redistribute it
+ * and/or modify it under the terms of the GNU Lesser General Public License as
+ * published by the Free Software Foundation, either version 3 of the License,
+ * or (at your option) any later version.
  *
- * Common Geo Registry Adapter(tm) is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
+ * Common Geo Registry Adapter(tm) is distributed in the hope that it will be
+ * useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser
+ * General Public License for more details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with Common Geo Registry Adapter(tm).  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with Common Geo Registry Adapter(tm). If not, see
+ * <http://www.gnu.org/licenses/>.
  */
 package org.commongeoregistry.adapter;
 
@@ -42,6 +43,7 @@ import org.commongeoregistry.adapter.metadata.AttributeClassificationType;
 import org.commongeoregistry.adapter.metadata.AttributeDateType;
 import org.commongeoregistry.adapter.metadata.AttributeFloatType;
 import org.commongeoregistry.adapter.metadata.AttributeIntegerType;
+import org.commongeoregistry.adapter.metadata.AttributeSourceType;
 import org.commongeoregistry.adapter.metadata.AttributeTermType;
 import org.commongeoregistry.adapter.metadata.AttributeType;
 import org.commongeoregistry.adapter.metadata.GeoObjectType;
@@ -305,7 +307,7 @@ public class SerializationTest
     RegistryAdapterServer registry = new RegistryAdapterServer(new MockIdService());
 
     GeoObjectType state = MetadataFactory.newGeoObjectType("State", GeometryType.POLYGON, new LocalizedValue("State"), new LocalizedValue("State"), true, null, registry);
-    
+
     Term testRoot = MetadataFactory.newTerm("testRoot", new LocalizedValue("testRoot"), new LocalizedValue("testRoot"), registry);
     Term testChild = MetadataFactory.newTerm("testChild", new LocalizedValue("testChild"), new LocalizedValue("testChild"), registry);
     testRoot.addChild(testChild);
@@ -314,9 +316,10 @@ public class SerializationTest
     AttributeType testDate = AttributeType.factory("testDate", new LocalizedValue("testDateLocalName"), new LocalizedValue("testDateLocalDescrip"), AttributeDateType.TYPE, false, false, false);
     AttributeType testInteger = AttributeType.factory("testInteger", new LocalizedValue("testIntegerLocalName"), new LocalizedValue("testIntegerLocalDescrip"), AttributeIntegerType.TYPE, false, false, false);
     AttributeType testBoolean = AttributeType.factory("testBoolean", new LocalizedValue("testBooleanName"), new LocalizedValue("testBooleanDescrip"), AttributeBooleanType.TYPE, false, false, false);
+    AttributeType testSource = AttributeType.factory("testSource", new LocalizedValue("testSourceName"), new LocalizedValue("testSourceDescrip"), AttributeSourceType.TYPE, false, false, false);
     AttributeTermType testTerm = (AttributeTermType) AttributeType.factory("testTerm", new LocalizedValue("testTermLocalName"), new LocalizedValue("testTermLocalDescrip"), AttributeTermType.TYPE, false, false, false);
     testTerm.setRootTerm(testRoot);
-    
+
     AttributeClassificationType testClassification = (AttributeClassificationType) AttributeType.factory("testClassification", new LocalizedValue("testClassificationLocalName"), new LocalizedValue("testClassificationLocalDescrip"), AttributeClassificationType.TYPE, false, false, false);
     testClassification.setClassificationType("test.classification.Test");
     testClassification.setRootTerm(testRoot);
@@ -325,6 +328,7 @@ public class SerializationTest
     state.addAttribute(testDate);
     state.addAttribute(testInteger);
     state.addAttribute(testBoolean);
+    state.addAttribute(testSource);
     state.addAttribute(testTerm);
     state.addAttribute(testClassification);
 
@@ -340,6 +344,7 @@ public class SerializationTest
     geoObject.setValue("testDate", new Date());
     geoObject.setValue("testInteger", 3L);
     geoObject.setValue("testBoolean", false);
+    geoObject.setValue("testSource", "value");
     geoObject.setValue("testTerm", testChild);
     geoObject.setValue("testClassification", testChild);
 
@@ -353,6 +358,7 @@ public class SerializationTest
     Assert.assertEquals(geoObject.getValue("testInteger"), geoObject2.getValue("testInteger"));
     Assert.assertEquals(geoObject.getValue("testBoolean"), geoObject2.getValue("testBoolean"));
     Assert.assertEquals(geoObject.getValue("testClassification"), geoObject2.getValue("testClassification"));
+    Assert.assertEquals(geoObject.getValue("testSource"), geoObject2.getValue("testSource"));
 
     Assert.assertEquals( ( (Iterator<String>) geoObject.getValue("testTerm") ).next(), ( (Iterator<String>) geoObject2.getValue("testTerm") ).next());
   }
@@ -363,7 +369,7 @@ public class SerializationTest
     RegistryAdapterServer registryServerInterface = new RegistryAdapterServer(new MockIdService());
 
     GeoObjectType state = MetadataFactory.newGeoObjectType("State", GeometryType.POLYGON, new LocalizedValue("State"), new LocalizedValue("State"), true, null, registryServerInterface);
-    
+
     Term testRoot = MetadataFactory.newTerm("testRoot", new LocalizedValue("testRoot"), new LocalizedValue("testRoot"), registryServerInterface);
     Term testChild = MetadataFactory.newTerm("testChild", new LocalizedValue("testChild"), new LocalizedValue("testChild"), registryServerInterface);
     testRoot.addChild(testChild);

@@ -30,6 +30,7 @@ import org.commongeoregistry.adapter.metadata.AttributeDateType;
 import org.commongeoregistry.adapter.metadata.AttributeFloatType;
 import org.commongeoregistry.adapter.metadata.AttributeIntegerType;
 import org.commongeoregistry.adapter.metadata.AttributeLocalType;
+import org.commongeoregistry.adapter.metadata.AttributeSourceType;
 import org.commongeoregistry.adapter.metadata.AttributeTermType;
 import org.commongeoregistry.adapter.metadata.AttributeType;
 
@@ -44,6 +45,7 @@ import com.runwaysdk.dataaccess.MdAttributeDateDAOIF;
 import com.runwaysdk.dataaccess.MdAttributeDateTimeDAOIF;
 import com.runwaysdk.dataaccess.MdAttributeDecDAOIF;
 import com.runwaysdk.dataaccess.MdAttributeEnumerationDAOIF;
+import com.runwaysdk.dataaccess.MdAttributeGraphReferenceDAOIF;
 import com.runwaysdk.dataaccess.MdAttributeIntegerDAOIF;
 import com.runwaysdk.dataaccess.MdAttributeLocalDAOIF;
 import com.runwaysdk.dataaccess.MdAttributeLocalEmbeddedDAOIF;
@@ -108,6 +110,10 @@ public class AttributeTypeConverter extends LocalizedValueConverter
     else if (mdAttribute instanceof MdAttributeIntegerDAOIF || mdAttribute instanceof MdAttributeLongDAOIF)
     {
       return AttributeType.factory(attributeName, displayLabel, description, AttributeIntegerType.TYPE, required, unique, isChangeOverTime);
+    }
+    else if (mdAttribute instanceof MdAttributeGraphReferenceDAOIF)
+    {
+      return AttributeType.factory(attributeName, displayLabel, description, AttributeSourceType.TYPE, required, unique, isChangeOverTime);
     }
     else if (mdAttribute instanceof MdAttributeClassificationDAOIF)
     {

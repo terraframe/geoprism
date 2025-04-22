@@ -3,18 +3,18 @@
  *
  * This file is part of Geoprism(tm).
  *
- * Geoprism(tm) is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
+ * Geoprism(tm) is free software: you can redistribute it and/or modify it under
+ * the terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation, either version 3 of the License, or (at your option) any
+ * later version.
  *
- * Geoprism(tm) is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
+ * Geoprism(tm) is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with Geoprism(tm).  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with Geoprism(tm). If not, see <http://www.gnu.org/licenses/>.
  */
 package net.geoprism.registry.service.business;
 
@@ -47,6 +47,7 @@ import org.commongeoregistry.adapter.dataaccess.ValueOverTimeCollectionDTO;
 import org.commongeoregistry.adapter.dataaccess.ValueOverTimeDTO;
 import org.commongeoregistry.adapter.metadata.AttributeClassificationType;
 import org.commongeoregistry.adapter.metadata.AttributeLocalType;
+import org.commongeoregistry.adapter.metadata.AttributeSourceType;
 import org.commongeoregistry.adapter.metadata.AttributeTermType;
 import org.commongeoregistry.adapter.metadata.AttributeType;
 import org.commongeoregistry.adapter.metadata.GeoObjectType;
@@ -91,6 +92,7 @@ import net.geoprism.registry.etl.upload.ClassifierVertexCache;
 import net.geoprism.registry.graph.GeoVertex;
 import net.geoprism.registry.graph.HierarchicalRelationshipType;
 import net.geoprism.registry.graph.InheritedHierarchyAnnotation;
+import net.geoprism.registry.graph.Source;
 import net.geoprism.registry.io.TermValueException;
 import net.geoprism.registry.model.BusinessObject;
 import net.geoprism.registry.model.Classification;
@@ -115,6 +117,7 @@ import net.geoprism.registry.service.business.VertexAndEdgeResultSetConverter.Ge
 import net.geoprism.registry.service.business.VertexAndEdgeResultSetConverter.VertexAndEdge;
 import net.geoprism.registry.service.permission.AllowAllGeoObjectPermissionService;
 import net.geoprism.registry.service.permission.GeoObjectPermissionServiceIF;
+import net.geoprism.registry.service.request.SourceServiceIF;
 import net.geoprism.registry.view.GeoObjectSplitView;
 import net.geoprism.registry.view.ServerParentTreeNodeOverTime;
 
@@ -143,6 +146,9 @@ public class GeoObjectBusinessService extends RegistryLocalizedValueConverter im
 
   @Autowired
   protected ClassificationBusinessServiceIF     cService;
+
+  @Autowired
+  protected SourceBusinessServiceIF             sourceService;
 
   public GeoObjectBusinessService()
   {
@@ -406,6 +412,21 @@ public class GeoObjectBusinessService extends RegistryLocalizedValueConverter im
             sgo.setValue(attributeName, (String) null, startDate, endDate);
           }
         }
+        else if (attribute instanceof AttributeSourceType)
+        {
+          String value = (String) dto.getValue(attributeName);
+
+          if (value != null)
+          {
+            this.sourceService.getByCode(value).ifPresent(source -> {
+              sgo.setValue(attributeName, source, startDate, endDate);
+            });
+          }
+          else
+          {
+            sgo.setValue(attributeName, (String) null, startDate, endDate);
+          }
+        }
         else if (attribute instanceof AttributeClassificationType)
         {
           String value = (String) dto.getValue(attributeName);
@@ -520,6 +541,23 @@ public class GeoObjectBusinessService extends RegistryLocalizedValueConverter im
 
               c.add(new ValueOverTime(votDTO.getStartDate(), votDTO.getEndDate(), classification.getVertex()));
 
+            }
+            else
+            {
+              c.add(new ValueOverTime(votDTO.getStartDate(), votDTO.getEndDate(), (String) null));
+            }
+          }
+          else if (attribute instanceof AttributeClassificationType)
+          {
+            String value = (String) votDTO.getValue();
+
+            if (value != null)
+            {
+              this.sourceService.getByCode(value).ifPresent(source -> {
+                sgo.setValue(attributeName, source, votDTO.getStartDate(), votDTO.getEndDate());
+
+                c.add(new ValueOverTime(votDTO.getStartDate(), votDTO.getEndDate(), source));
+              });
             }
             else
             {
@@ -924,6 +962,14 @@ public class GeoObjectBusinessService extends RegistryLocalizedValueConverter im
               throw e;
             }
           }
+          else if (attribute instanceof AttributeSourceType)
+          {
+            String sourceOid = (String) value;
+
+            Source source = Source.get(sourceOid);
+
+            geoObj.setValue(attributeName, source.getCode());
+          }
           else if (attribute instanceof AttributeClassificationType)
           {
             String classificationTypeCode = ( (AttributeClassificationType) attribute ).getClassificationType();
@@ -944,7 +990,7 @@ public class GeoObjectBusinessService extends RegistryLocalizedValueConverter im
                 classiCache.putClassification(classificationTypeCode, value.toString().trim(), classification);
               }
             }
-            
+
             try
             {
               geoObj.setValue(attributeName, classification.toTerm());
@@ -1143,6 +1189,14 @@ public class GeoObjectBusinessService extends RegistryLocalizedValueConverter im
                   throw e;
                 }
               }
+              else if (attribute instanceof AttributeSourceType)
+              {
+                Source source = Source.get((String) value);
+
+                ValueOverTimeDTO votDTO = new ValueOverTimeDTO(vot.getOid(), vot.getStartDate(), vot.getEndDate(), votcDTO);
+                votDTO.setValue(source.getCode());
+                votcDTO.add(votDTO);
+              }
               else if (attribute instanceof AttributeClassificationType)
               {
                 String classificationTypeCode = ( (AttributeClassificationType) attribute ).getClassificationType();
@@ -1314,7 +1368,7 @@ public class GeoObjectBusinessService extends RegistryLocalizedValueConverter im
   {
     return internalGetParentGeoObjects(sgo, parentTypes, recursive, includeInherited, hierarchy, date);
   }
-  
+
   @Override
   public ServerChildTreeNode getGraphChildGeoObjects(ServerGeoObjectIF sgo, GraphType graphType, Boolean recursive, Date date)
   {
@@ -1455,7 +1509,7 @@ public class GeoObjectBusinessService extends RegistryLocalizedValueConverter im
     GraphQuery<VertexAndEdge> query = new GraphQuery<VertexAndEdge>(statement.toString(), parameters, new VertexAndEdgeResultSetConverter());
 
     List<VertexAndEdge> results = query.getResults();
-    
+
     List<GeoObjectAndEdge> parents = VertexAndEdgeResultSetConverter.convertResults(results, date);
 
     for (GeoObjectAndEdge childAndEdge : parents)
@@ -1465,7 +1519,7 @@ public class GeoObjectBusinessService extends RegistryLocalizedValueConverter im
         continue;
 
       ServerChildTreeNode tnChild;
-      
+
       final ServerHierarchyType rowHierarchy = ServerHierarchyType.get((MdEdgeDAOIF) MdGraphClassDAO.getMdGraphClassByTableName(childAndEdge.edgeClass));
 
       if (recursive)
@@ -1482,21 +1536,18 @@ public class GeoObjectBusinessService extends RegistryLocalizedValueConverter im
 
     return tnRoot;
   }
-  
+
   /*
-  SELECT v.@rid, v.@class, v.oid, v.code, attr.@rid, attr.oid, attr.@class, attr.value, edgeClass, edgeOid FROM (
-    SELECT v, v.out('has_value', 'has_geometry') as attr, edgeClass, edgeOid FROM (
-      SELECT out as v, @class as edgeClass, oid as edgeOid FROM (
-        SELECT EXPAND(inE('fasta_dmin_code')) FROM #366:1
-      )
-    )
-    UNWIND attr
-  )
-  */
+   * SELECT v.@rid, v.@class, v.oid, v.code, attr.@rid, attr.oid, attr.@class,
+   * attr.value, edgeClass, edgeOid FROM ( SELECT v, v.out('has_value',
+   * 'has_geometry') as attr, edgeClass, edgeOid FROM ( SELECT out as v, @class
+   * as edgeClass, oid as edgeOid FROM ( SELECT EXPAND(inE('fasta_dmin_code'))
+   * FROM #366:1 ) ) UNWIND attr )
+   */
   protected ServerParentTreeNode internalGetParentGeoObjects(ServerGeoObjectIF child, String[] parentTypes, boolean recursive, boolean includeInherited, ServerHierarchyType htIn, Date date)
   {
     ServerParentTreeNode tnRoot = new ServerParentTreeNode(child, htIn, date, null, null);
-    
+
     Map<String, Object> parameters = new HashedMap<String, Object>();
     parameters.put("rid", child.getVertex().getRID());
 
@@ -1556,18 +1607,18 @@ public class GeoObjectBusinessService extends RegistryLocalizedValueConverter im
     GraphQuery<VertexAndEdge> query = new GraphQuery<VertexAndEdge>(statement.toString(), parameters, new VertexAndEdgeResultSetConverter());
 
     List<VertexAndEdge> results = query.getResults();
-    
+
     List<GeoObjectAndEdge> parents = VertexAndEdgeResultSetConverter.convertResults(results, date);
 
     for (GeoObjectAndEdge parentAndEdge : parents)
     {
       ServerGeoObjectIF parent = parentAndEdge.geoObject;
-      
+
       if (child.getRunwayId().equals(parent.getRunwayId()))
         continue;
 
       ServerParentTreeNode tnParent;
-      
+
       final ServerHierarchyType rowHierarchy = ServerHierarchyType.get((MdEdgeDAOIF) MdGraphClassDAO.getMdGraphClassByTableName(parentAndEdge.edgeClass));
 
       if (recursive)
@@ -1602,7 +1653,7 @@ public class GeoObjectBusinessService extends RegistryLocalizedValueConverter im
 
     return tnRoot;
   }
-  
+
   protected ServerParentTreeNodeOverTime internalGetParentOverTime(ServerGeoObjectIF child, String[] parentTypes, boolean recursive, boolean includeInherited)
   {
     final ServerGeoObjectType cType = child.getType();
