@@ -3,18 +3,18 @@
  *
  * This file is part of Geoprism(tm).
  *
- * Geoprism(tm) is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
+ * Geoprism(tm) is free software: you can redistribute it and/or modify it under
+ * the terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation, either version 3 of the License, or (at your option) any
+ * later version.
  *
- * Geoprism(tm) is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
+ * Geoprism(tm) is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with Geoprism(tm).  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with Geoprism(tm). If not, see <http://www.gnu.org/licenses/>.
  */
 package net.geoprism.registry.service.business;
 
@@ -25,6 +25,7 @@ import org.commongeoregistry.adapter.constants.DefaultAttribute;
 import org.commongeoregistry.adapter.dataaccess.GeoObject;
 import org.commongeoregistry.adapter.dataaccess.LocalizedValue;
 import org.commongeoregistry.adapter.metadata.AttributeClassificationType;
+import org.commongeoregistry.adapter.metadata.AttributeSourceType;
 import org.commongeoregistry.adapter.metadata.AttributeTermType;
 import org.commongeoregistry.adapter.metadata.AttributeType;
 import org.commongeoregistry.adapter.metadata.GeoObjectType;
@@ -39,6 +40,7 @@ import net.geoprism.graph.LabeledPropertyGraphSynchronization;
 import net.geoprism.graph.LabeledPropertyGraphTypeVersion;
 import net.geoprism.registry.cache.ClassificationCache;
 import net.geoprism.registry.conversion.LocalizedValueConverter;
+import net.geoprism.registry.graph.Source;
 import net.geoprism.registry.model.Classification;
 
 public abstract class AbstractGraphVersionPublisherService
@@ -81,6 +83,9 @@ public abstract class AbstractGraphVersionPublisherService
 
   @Autowired
   protected ClassificationBusinessServiceIF                  classificationService;
+
+  @Autowired
+  protected SourceBusinessServiceIF                          sourceService;
 
   public State createState(LabeledPropertyGraphSynchronization synchronization, LabeledPropertyGraphTypeVersion version)
   {
@@ -151,8 +156,30 @@ public abstract class AbstractGraphVersionPublisherService
                 classiCache.putClassification(classificationTypeCode, value.toString().trim(), classification);
               }
             }
-            
+
             node.setValue(attributeName, classification.getVertex());
+          }
+          else
+          {
+            node.setValue(attributeName, (String) null);
+          }
+        }
+        else if (attribute instanceof AttributeSourceType)
+        {
+          String code = (String) geoObject.getValue(attributeName);
+
+          if (code != null)
+          {
+            Map<String, Object> cache = state.getCache();
+
+            String key = "SOURCE-" + code;
+
+            if (!cache.containsKey(key))
+            {
+              cache.put(key, this.sourceService.getByCode(code).orElse(null));
+            }
+
+            node.setValue(attributeName, (Source) cache.get(key));
           }
           else
           {

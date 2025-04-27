@@ -46,7 +46,6 @@ import com.runwaysdk.dataaccess.AttributeIF;
 import com.runwaysdk.dataaccess.ProgrammingErrorException;
 import com.runwaysdk.dataaccess.ValueObject;
 import com.runwaysdk.system.gis.geo.GeoEntity;
-import com.runwaysdk.system.gis.mapping.GeoserverFacade;
 import com.runwaysdk.system.metadata.MdEdge;
 import com.runwaysdk.system.metadata.MdVertex;
 import com.wdtinc.mapbox_vector_tile.VectorTile;
@@ -69,6 +68,8 @@ import net.geoprism.spring.core.ApplicationContextHolder;
 
 public class VersionVectorTileBuilder implements VectorLayerPublisherIF
 {
+  public static final String GEOM_COLUMN      = "geom";
+
   private LabeledPropertyGraphTypeVersion version;
 
   private String                          typeCode;
@@ -231,7 +232,7 @@ public class VersionVectorTileBuilder implements VectorLayerPublisherIF
     {
       String name = attribute.getName();
 
-      if (!name.equals(GeoserverFacade.GEOM_COLUMN))
+      if (!name.equals(GEOM_COLUMN))
       {
         data.put(name, attribute.getValue());
       }
