@@ -23,7 +23,7 @@
 
   <groupId>net.geoprism</groupId>
   <artifactId>geoprism</artifactId>
-  <version>1.2.5-SNAPSHOT</version>
+  <version>1.2.6-SNAPSHOT</version>
   <packaging>pom</packaging>
 
   <name>Geoprism</name>
