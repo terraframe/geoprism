@@ -73,4 +73,13 @@ public class SourceService implements SourceServiceIF
 
     return this.service.toDTO(source);
   }
+  
+  @Override
+  @Request(RequestType.SESSION)
+  public List<SourceDTO> search(String sessionId, String text)
+  {
+    List<Source> sources = this.service.search(text);
+
+    return sources.stream().map(source -> this.service.toDTO(source)).collect(Collectors.toList());
+  }
 }

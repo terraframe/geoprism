@@ -103,4 +103,22 @@ public class SourceBusinessService implements SourceBusinessServiceIF
 
     return query.getResults();
   }
+
+  @Override
+  public List<Source> search(String text)
+  {
+    MdVertexDAOIF mdVertex = MdVertexDAO.getMdVertexDAO(Source.CLASS);
+    MdAttributeDAOIF mdAttribute = mdVertex.definesAttribute(Source.CODE);
+
+    StringBuilder statement = new StringBuilder();
+    statement.append("SELECT FROM " + mdVertex.getDBClassName());
+    statement.append(" WHERE " + mdAttribute.getColumnName() + " LIKE :text");
+    statement.append(" ORDER BY " + mdAttribute.getColumnName());
+
+    GraphQuery<Source> query = new GraphQuery<Source>(statement.toString());
+    query.setParameter("text", "%" + text + "%");
+
+    return query.getResults();
+  }
+
 }

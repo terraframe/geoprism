@@ -35,4 +35,5 @@ public interface SourceServiceIF
 
   public SourceDTO getByCode(String sessionId, String code);
 
+  public List<SourceDTO> search(String sessionId, String text);
 }

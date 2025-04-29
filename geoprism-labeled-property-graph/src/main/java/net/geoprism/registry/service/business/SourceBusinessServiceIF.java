@@ -42,4 +42,6 @@ public interface SourceBusinessServiceIF
 
   public List<Source> getAll();
 
+  public List<Source> search(String text);
+
 }
