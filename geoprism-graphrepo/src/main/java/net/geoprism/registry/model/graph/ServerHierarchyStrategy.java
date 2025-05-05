@@ -22,6 +22,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
+import java.util.UUID;
 
 import org.apache.commons.collections4.map.HashedMap;
 
@@ -30,7 +31,9 @@ import com.runwaysdk.business.graph.GraphQuery;
 import com.runwaysdk.business.graph.VertexObject;
 import com.runwaysdk.dataaccess.MdVertexDAOIF;
 
+import net.geoprism.registry.model.EdgeConstant;
 import net.geoprism.registry.model.ServerChildGraphNode;
+import net.geoprism.registry.model.ServerGeoObjectIF;
 import net.geoprism.registry.model.ServerGeoObjectType;
 import net.geoprism.registry.model.ServerGraphNode;
 import net.geoprism.registry.model.ServerHierarchyType;
@@ -61,9 +64,10 @@ public class ServerHierarchyStrategy extends AbstractGraphStrategy implements Gr
     parameters.put("rid", parent.getVertex().getRID());
 
     StringBuilder statement = new StringBuilder();
-    statement.append("SELECT EXPAND( outE(");
+    statement.append("TRAVERSE out('" + EdgeConstant.HAS_VALUE.getDBClassName() + "', '" + EdgeConstant.HAS_GEOMETRY.getDBClassName() + "') FROM (");
+    statement.append("SELECT EXPAND( out(");
     statement.append("'" + this.hierarchy.getObjectEdge().getDBClassName() + "'");
-    statement.append(")");
+    statement.append(")");    
 
     if (date != null)
     {
@@ -93,34 +97,29 @@ public class ServerHierarchyStrategy extends AbstractGraphStrategy implements Gr
       statement.append(" LIMIT " + limit);
     }
     
-    GraphQuery<EdgeObject> query = new GraphQuery<EdgeObject>(statement.toString(), parameters);
+    statement.append(") ");
 
-    List<EdgeObject> edges = query.getResults();
     
-    long resultsCount = edges.size();
+    GraphQuery<VertexObject> query = new GraphQuery<VertexObject>(statement.toString(), parameters);
 
-    for (EdgeObject edge : edges)
+    List<VertexServerGeoObject> children = VertexServerGeoObject.processTraverseResults(query.getResults(), date);
+    
+    long resultsCount = children.size();
+
+    for (VertexServerGeoObject child : children)
     {
-      final VertexObject childVertex = edge.getChild();
-
-      MdVertexDAOIF mdVertex = (MdVertexDAOIF) childVertex.getMdClass();
-
-      ServerGeoObjectType childType = ServerGeoObjectType.get(mdVertex);
-
-      VertexServerGeoObject child = new VertexServerGeoObject(childType, childVertex, new TreeMap<>(), date);
-
       ServerChildGraphNode tnParent;
 
       if (recursive && (limit == null || limit - resultsCount > 0))
       {
         tnParent = this.getChildren(child, recursive, date, boundsWKT, null, (limit == null ? null : limit - resultsCount));
-        tnParent.setOid(edge.getOid());
+        tnParent.setOid(UUID.randomUUID().toString());
         
         resultsCount += tnParent.getChildren().size();
       }
       else
       {
-        tnParent = new ServerChildGraphNode(child, this.hierarchy, date, null, edge.getOid());
+        tnParent = new ServerChildGraphNode(child, this.hierarchy, date, null, UUID.randomUUID().toString());
       }
 
       tnRoot.addChild(tnParent);
@@ -144,7 +143,8 @@ public class ServerHierarchyStrategy extends AbstractGraphStrategy implements Gr
     parameters.put("rid", child.getVertex().getRID());
 
     StringBuilder statement = new StringBuilder();
-    statement.append("SELECT EXPAND( inE(");
+    statement.append("TRAVERSE out('" + EdgeConstant.HAS_VALUE.getDBClassName() + "', '" + EdgeConstant.HAS_GEOMETRY.getDBClassName() + "') FROM (");    
+    statement.append("SELECT EXPAND( in(");
     statement.append("'" + this.hierarchy.getObjectEdge().getDBClassName() + "'");
     statement.append(")");
 
@@ -175,35 +175,29 @@ public class ServerHierarchyStrategy extends AbstractGraphStrategy implements Gr
     {
       statement.append(" LIMIT " + limit);
     }
-
-    GraphQuery<EdgeObject> query = new GraphQuery<EdgeObject>(statement.toString(), parameters);
-
-    List<EdgeObject> edges = query.getResults();
     
-    long resultsCount = edges.size();
+    statement.append(") ");
 
-    for (EdgeObject edge : edges)
+    GraphQuery<VertexObject> query = new GraphQuery<VertexObject>(statement.toString(), parameters);
+
+    List<VertexServerGeoObject> parents = VertexServerGeoObject.processTraverseResults(query.getResults(), date);
+    
+    long resultsCount = parents.size();
+
+    for (VertexServerGeoObject parent : parents)
     {
-      final VertexObject parentVertex = edge.getParent();
-
-      MdVertexDAOIF mdVertex = (MdVertexDAOIF) parentVertex.getMdClass();
-
-      ServerGeoObjectType parentType = ServerGeoObjectType.get(mdVertex);
-
-      VertexServerGeoObject parent = new VertexServerGeoObject(parentType, parentVertex, new TreeMap<>(), date);
-
       ServerParentGraphNode tnParent;
 
       if (recursive && (limit == null || limit - resultsCount > 0))
       {
         tnParent = this.getParents(parent, recursive, date, boundsWKT, null, (limit == null ? null : limit - resultsCount));
-        tnParent.setOid(edge.getOid());
+        tnParent.setOid(UUID.randomUUID().toString());
         
         resultsCount += tnParent.getParents().size();
       }
       else
       {
-        tnParent = new ServerParentGraphNode(parent, this.hierarchy, date, null, edge.getOid());
+        tnParent = new ServerParentGraphNode(parent, this.hierarchy, date, null, UUID.randomUUID().toString());
       }
 
       tnRoot.addParent(tnParent);
