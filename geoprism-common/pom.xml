@@ -88,29 +88,17 @@
     <dependency>
       <groupId>com.fasterxml.jackson.core</groupId>
       <artifactId>jackson-annotations</artifactId>
-<<<<<<< HEAD
       <version>2.18.1</version>
-=======
-      <version>2.17.1</version>
->>>>>>> refs/remotes/origin/master
     </dependency>
     <dependency>
       <groupId>com.fasterxml.jackson.core</groupId>
       <artifactId>jackson-databind</artifactId>
-<<<<<<< HEAD
       <version>2.18.1</version>
-=======
-      <version>2.17.1</version>
->>>>>>> refs/remotes/origin/master
     </dependency>
     <dependency>
       <groupId>com.fasterxml.jackson.core</groupId>
       <artifactId>jackson-core</artifactId>
-<<<<<<< HEAD
       <version>2.18.1</version>
-=======
-      <version>2.17.1</version>
->>>>>>> refs/remotes/origin/master
     </dependency>
     <dependency>
       <groupId>com.google.code.gson</groupId>
