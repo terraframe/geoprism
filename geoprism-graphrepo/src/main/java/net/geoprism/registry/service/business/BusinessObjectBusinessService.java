@@ -3,18 +3,18 @@
  *
  * This file is part of Geoprism(tm).
  *
- * Geoprism(tm) is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
+ * Geoprism(tm) is free software: you can redistribute it and/or modify it under
+ * the terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation, either version 3 of the License, or (at your option) any
+ * later version.
  *
- * Geoprism(tm) is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
+ * Geoprism(tm) is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with Geoprism(tm).  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with Geoprism(tm). If not, see <http://www.gnu.org/licenses/>.
  */
 package net.geoprism.registry.service.business;
 
@@ -43,6 +43,7 @@ import net.geoprism.registry.BusinessEdgeType;
 import net.geoprism.registry.BusinessType;
 import net.geoprism.registry.DateFormatter;
 import net.geoprism.registry.model.BusinessObject;
+import net.geoprism.registry.model.EdgeDirection;
 import net.geoprism.registry.model.ServerGeoObjectIF;
 import net.geoprism.registry.model.ServerGeoObjectType;
 import net.geoprism.registry.model.graph.VertexServerGeoObject;
@@ -124,57 +125,82 @@ public class BusinessObjectBusinessService implements BusinessObjectBusinessServ
   }
 
   @Override
-  public boolean exists(BusinessObject object, ServerGeoObjectIF geoObject)
+  public boolean exists(BusinessObject object, BusinessEdgeType edgeType, ServerGeoObjectIF geoObject, EdgeDirection direction)
   {
     if (geoObject != null && geoObject instanceof VertexServerGeoObject)
     {
-      return getEdge(object, geoObject) != null;
+      return getEdge(object, edgeType, geoObject, direction) != null;
     }
 
     return false;
   }
 
-  protected EdgeObject getEdge(BusinessObject object, ServerGeoObjectIF geoObject)
+  protected EdgeObject getEdge(BusinessObject object, BusinessEdgeType edgeType, ServerGeoObjectIF geoObject, EdgeDirection direction)
   {
     VertexObject geoVertex = ( (VertexServerGeoObject) geoObject ).getVertex();
 
-    String statement = "SELECT FROM " + object.getType().getMdEdgeDAO().getDBClassName();
+    String statement = "SELECT FROM " + edgeType.getMdEdgeDAO().getDBClassName();
     statement += " WHERE out = :parent";
     statement += " AND in = :child";
 
     GraphQuery<EdgeObject> query = new GraphQuery<EdgeObject>(statement);
-    query.setParameter("parent", geoVertex.getRID());
-    query.setParameter("child", object.getVertex().getRID());
+    query.setParameter("parent", direction.equals(EdgeDirection.PARENT) ? geoVertex.getRID() : object.getVertex().getRID());
+    query.setParameter("child", direction.equals(EdgeDirection.PARENT) ? object.getVertex().getRID() : geoVertex.getRID());
 
     return query.getSingleResult();
   }
 
   @Override
-  public void addGeoObject(BusinessObject object, ServerGeoObjectIF geoObject)
+  public void addGeoObject(BusinessObject object, BusinessEdgeType edgeType, ServerGeoObjectIF geoObject, EdgeDirection direction)
   {
-    if (geoObject != null && geoObject instanceof VertexServerGeoObject && !this.exists(object, geoObject))
+    if (geoObject != null && geoObject instanceof VertexServerGeoObject && !this.exists(object, edgeType, geoObject, direction))
     {
       VertexObject geoVertex = ( (VertexServerGeoObject) geoObject ).getVertex();
 
-      geoVertex.addChild(object.getVertex(), object.getType().getMdEdgeDAO()).apply();
+      if (direction.equals(EdgeDirection.CHILD))
+      {
+        geoVertex.addParent(object.getVertex(), edgeType.getMdEdgeDAO()).apply();
+      }
+      else if (direction.equals(EdgeDirection.PARENT))
+      {
+        geoVertex.addChild(object.getVertex(), edgeType.getMdEdgeDAO()).apply();
+      }
+      else
+      {
+        throw new UnsupportedOperationException();
+      }
     }
   }
 
   @Override
-  public void removeGeoObject(BusinessObject object, ServerGeoObjectIF geoObject)
+  public void removeGeoObject(BusinessObject object, BusinessEdgeType edgeType, ServerGeoObjectIF geoObject, EdgeDirection direction)
   {
     if (geoObject != null && geoObject instanceof VertexServerGeoObject)
     {
       VertexObject geoVertex = ( (VertexServerGeoObject) geoObject ).getVertex();
 
-      geoVertex.removeChild(object.getVertex(), object.getType().getMdEdgeDAO());
+      if (direction.equals(EdgeDirection.CHILD))
+      {
+        geoVertex.removeParent(object.getVertex(), edgeType.getMdEdgeDAO());
+      }
+      else if (direction.equals(EdgeDirection.PARENT))
+      {
+        geoVertex.removeChild(object.getVertex(), edgeType.getMdEdgeDAO());
+      }
+      else
+      {
+        throw new UnsupportedOperationException();
+      }
+
     }
   }
 
   @Override
-  public List<VertexServerGeoObject> getGeoObjects(BusinessObject object)
+  public List<VertexServerGeoObject> getGeoObjects(BusinessObject object, BusinessEdgeType edgeType, EdgeDirection direction)
   {
-    List<VertexObject> geoObjects = object.getVertex().getParents(object.getType().getMdEdgeDAO(), VertexObject.class);
+    List<VertexObject> geoObjects = direction.equals(EdgeDirection.PARENT) ? 
+        object.getVertex().getParents(edgeType.getMdEdgeDAO(), VertexObject.class) :
+          object.getVertex().getChildren(edgeType.getMdEdgeDAO(), VertexObject.class);
 
     return geoObjects.stream().map(geoVertex -> {
       MdVertexDAOIF mdVertex = (MdVertexDAOIF) geoVertex.getMdClass();

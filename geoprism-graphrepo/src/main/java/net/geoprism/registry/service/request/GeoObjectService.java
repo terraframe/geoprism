@@ -315,13 +315,6 @@ public class GeoObjectService implements GeoObjectServiceIF
 
   @Override
   @Request(RequestType.SESSION)
-  public JsonArray getBusinessObjects(String sessionId, String typeCode, String code, String businessTypeCode)
-  {
-    return this.service.getBusinessObjects(typeCode, code, businessTypeCode);
-  }
-
-  @Override
-  @Request(RequestType.SESSION)
   public ParentTreeNode addChild(String sessionId, String parentCode, String parentTypeCode, String childCode, String childTypeCode, String hierarchyCode, Date startDate, Date endDate)
   {
     return this.service.addChild(parentCode, parentTypeCode, childCode, childTypeCode, hierarchyCode, startDate, endDate);
@@ -332,6 +325,13 @@ public class GeoObjectService implements GeoObjectServiceIF
   public void removeChild(String sessionId, String parentCode, String parentTypeCode, String childCode, String childTypeCode, String hierarchyCode, Date startDate, Date endDate)
   {
     this.service.removeChild(parentCode, parentTypeCode, childCode, childTypeCode, hierarchyCode, startDate, endDate);
+  }
+
+  @Override
+  @Request(RequestType.SESSION)
+  public JsonArray getBusinessObjects(String sessionId, String typeCode, String code, String edgeTypeCode, String direction)
+  {
+    return this.service.getBusinessObjects(typeCode, code, edgeTypeCode, direction);
   }
 
 }

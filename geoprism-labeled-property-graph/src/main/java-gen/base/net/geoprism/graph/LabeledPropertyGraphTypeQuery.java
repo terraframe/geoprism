@@ -1,24 +1,6 @@
-/**
- * Copyright (c) 2023 TerraFrame, Inc. All rights reserved.
- *
- * This file is part of Geoprism(tm).
- *
- * Geoprism(tm) is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
- *
- * Geoprism(tm) is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with Geoprism(tm).  If not, see <http://www.gnu.org/licenses/>.
- */
 package net.geoprism.graph;
 
-@com.runwaysdk.business.ClassSignature(hash = 1941276407)
+@com.runwaysdk.business.ClassSignature(hash = -1976612094)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -55,6 +37,40 @@ public  class LabeledPropertyGraphTypeQuery extends com.runwaysdk.query.Generate
   public String getClassType()
   {
     return net.geoprism.graph.LabeledPropertyGraphType.CLASS;
+  }
+  public com.runwaysdk.query.SelectableChar getBusinessEdgeCodes()
+  {
+    return getBusinessEdgeCodes(null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableChar getBusinessEdgeCodes(String alias)
+  {
+    return (com.runwaysdk.query.SelectableChar)this.getComponentQuery().get(net.geoprism.graph.LabeledPropertyGraphType.BUSINESSEDGECODES, alias, null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableChar getBusinessEdgeCodes(String alias, String displayLabel)
+  {
+    return (com.runwaysdk.query.SelectableChar)this.getComponentQuery().get(net.geoprism.graph.LabeledPropertyGraphType.BUSINESSEDGECODES, alias, displayLabel);
+
+  }
+  public com.runwaysdk.query.SelectableChar getBusinessTypeCodes()
+  {
+    return getBusinessTypeCodes(null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableChar getBusinessTypeCodes(String alias)
+  {
+    return (com.runwaysdk.query.SelectableChar)this.getComponentQuery().get(net.geoprism.graph.LabeledPropertyGraphType.BUSINESSTYPECODES, alias, null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableChar getBusinessTypeCodes(String alias, String displayLabel)
+  {
+    return (com.runwaysdk.query.SelectableChar)this.getComponentQuery().get(net.geoprism.graph.LabeledPropertyGraphType.BUSINESSTYPECODES, alias, displayLabel);
+
   }
   public com.runwaysdk.query.SelectableChar getCode()
   {
@@ -180,6 +196,23 @@ public  class LabeledPropertyGraphTypeQuery extends com.runwaysdk.query.Generate
     com.runwaysdk.dataaccess.MdAttributeDAOIF mdAttributeIF = this.getComponentQuery().getMdAttributeROfromMap(net.geoprism.graph.LabeledPropertyGraphType.ENTITYDOMAIN);
 
     return (com.runwaysdk.system.metadata.MdDomainQuery.MdDomainQueryReferenceIF)this.getComponentQuery().internalAttributeFactory(net.geoprism.graph.LabeledPropertyGraphType.ENTITYDOMAIN, mdAttributeIF, this, alias, displayLabel);
+
+  }
+  public com.runwaysdk.query.SelectableChar getGeoObjectTypeCodes()
+  {
+    return getGeoObjectTypeCodes(null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableChar getGeoObjectTypeCodes(String alias)
+  {
+    return (com.runwaysdk.query.SelectableChar)this.getComponentQuery().get(net.geoprism.graph.LabeledPropertyGraphType.GEOOBJECTTYPECODES, alias, null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableChar getGeoObjectTypeCodes(String alias, String displayLabel)
+  {
+    return (com.runwaysdk.query.SelectableChar)this.getComponentQuery().get(net.geoprism.graph.LabeledPropertyGraphType.GEOOBJECTTYPECODES, alias, displayLabel);
 
   }
   public com.runwaysdk.query.SelectableChar getGraphTypes()
@@ -547,6 +580,12 @@ public  class LabeledPropertyGraphTypeQuery extends com.runwaysdk.query.Generate
   public interface LabeledPropertyGraphTypeQueryReferenceIF extends com.runwaysdk.query.SelectableReference
   {
 
+    public com.runwaysdk.query.SelectableChar getBusinessEdgeCodes();
+    public com.runwaysdk.query.SelectableChar getBusinessEdgeCodes(String alias);
+    public com.runwaysdk.query.SelectableChar getBusinessEdgeCodes(String alias, String displayLabel);
+    public com.runwaysdk.query.SelectableChar getBusinessTypeCodes();
+    public com.runwaysdk.query.SelectableChar getBusinessTypeCodes(String alias);
+    public com.runwaysdk.query.SelectableChar getBusinessTypeCodes(String alias, String displayLabel);
     public com.runwaysdk.query.SelectableChar getCode();
     public com.runwaysdk.query.SelectableChar getCode(String alias);
     public com.runwaysdk.query.SelectableChar getCode(String alias, String displayLabel);
@@ -565,6 +604,9 @@ public  class LabeledPropertyGraphTypeQuery extends com.runwaysdk.query.Generate
     public com.runwaysdk.system.metadata.MdDomainQuery.MdDomainQueryReferenceIF getEntityDomain();
     public com.runwaysdk.system.metadata.MdDomainQuery.MdDomainQueryReferenceIF getEntityDomain(String alias);
     public com.runwaysdk.system.metadata.MdDomainQuery.MdDomainQueryReferenceIF getEntityDomain(String alias, String displayLabel);
+    public com.runwaysdk.query.SelectableChar getGeoObjectTypeCodes();
+    public com.runwaysdk.query.SelectableChar getGeoObjectTypeCodes(String alias);
+    public com.runwaysdk.query.SelectableChar getGeoObjectTypeCodes(String alias, String displayLabel);
     public com.runwaysdk.query.SelectableChar getGraphTypes();
     public com.runwaysdk.query.SelectableChar getGraphTypes(String alias);
     public com.runwaysdk.query.SelectableChar getGraphTypes(String alias, String displayLabel);
@@ -645,6 +687,40 @@ public  class LabeledPropertyGraphTypeQuery extends com.runwaysdk.query.Generate
       return this.NE(labeledPropertyGraphType.getOid());
     }
 
+  public com.runwaysdk.query.SelectableChar getBusinessEdgeCodes()
+  {
+    return getBusinessEdgeCodes(null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableChar getBusinessEdgeCodes(String alias)
+  {
+    return (com.runwaysdk.query.SelectableChar)this.get(net.geoprism.graph.LabeledPropertyGraphType.BUSINESSEDGECODES, alias, null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableChar getBusinessEdgeCodes(String alias, String displayLabel)
+  {
+    return (com.runwaysdk.query.SelectableChar)this.get(net.geoprism.graph.LabeledPropertyGraphType.BUSINESSEDGECODES, alias, displayLabel);
+
+  }
+  public com.runwaysdk.query.SelectableChar getBusinessTypeCodes()
+  {
+    return getBusinessTypeCodes(null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableChar getBusinessTypeCodes(String alias)
+  {
+    return (com.runwaysdk.query.SelectableChar)this.get(net.geoprism.graph.LabeledPropertyGraphType.BUSINESSTYPECODES, alias, null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableChar getBusinessTypeCodes(String alias, String displayLabel)
+  {
+    return (com.runwaysdk.query.SelectableChar)this.get(net.geoprism.graph.LabeledPropertyGraphType.BUSINESSTYPECODES, alias, displayLabel);
+
+  }
   public com.runwaysdk.query.SelectableChar getCode()
   {
     return getCode(null);
@@ -745,6 +821,23 @@ public  class LabeledPropertyGraphTypeQuery extends com.runwaysdk.query.Generate
   public com.runwaysdk.system.metadata.MdDomainQuery.MdDomainQueryReferenceIF getEntityDomain(String alias, String displayLabel)
   {
     return (com.runwaysdk.system.metadata.MdDomainQuery.MdDomainQueryReferenceIF)this.get(net.geoprism.graph.LabeledPropertyGraphType.ENTITYDOMAIN,  alias, displayLabel);
+
+  }
+  public com.runwaysdk.query.SelectableChar getGeoObjectTypeCodes()
+  {
+    return getGeoObjectTypeCodes(null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableChar getGeoObjectTypeCodes(String alias)
+  {
+    return (com.runwaysdk.query.SelectableChar)this.get(net.geoprism.graph.LabeledPropertyGraphType.GEOOBJECTTYPECODES, alias, null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableChar getGeoObjectTypeCodes(String alias, String displayLabel)
+  {
+    return (com.runwaysdk.query.SelectableChar)this.get(net.geoprism.graph.LabeledPropertyGraphType.GEOOBJECTTYPECODES, alias, displayLabel);
 
   }
   public com.runwaysdk.query.SelectableChar getGraphTypes()
@@ -1065,6 +1158,12 @@ public  class LabeledPropertyGraphTypeQuery extends com.runwaysdk.query.Generate
   public interface LabeledPropertyGraphTypeQueryMultiReferenceIF extends com.runwaysdk.query.SelectableMultiReference
   {
 
+    public com.runwaysdk.query.SelectableChar getBusinessEdgeCodes();
+    public com.runwaysdk.query.SelectableChar getBusinessEdgeCodes(String alias);
+    public com.runwaysdk.query.SelectableChar getBusinessEdgeCodes(String alias, String displayLabel);
+    public com.runwaysdk.query.SelectableChar getBusinessTypeCodes();
+    public com.runwaysdk.query.SelectableChar getBusinessTypeCodes(String alias);
+    public com.runwaysdk.query.SelectableChar getBusinessTypeCodes(String alias, String displayLabel);
     public com.runwaysdk.query.SelectableChar getCode();
     public com.runwaysdk.query.SelectableChar getCode(String alias);
     public com.runwaysdk.query.SelectableChar getCode(String alias, String displayLabel);
@@ -1083,6 +1182,9 @@ public  class LabeledPropertyGraphTypeQuery extends com.runwaysdk.query.Generate
     public com.runwaysdk.system.metadata.MdDomainQuery.MdDomainQueryReferenceIF getEntityDomain();
     public com.runwaysdk.system.metadata.MdDomainQuery.MdDomainQueryReferenceIF getEntityDomain(String alias);
     public com.runwaysdk.system.metadata.MdDomainQuery.MdDomainQueryReferenceIF getEntityDomain(String alias, String displayLabel);
+    public com.runwaysdk.query.SelectableChar getGeoObjectTypeCodes();
+    public com.runwaysdk.query.SelectableChar getGeoObjectTypeCodes(String alias);
+    public com.runwaysdk.query.SelectableChar getGeoObjectTypeCodes(String alias, String displayLabel);
     public com.runwaysdk.query.SelectableChar getGraphTypes();
     public com.runwaysdk.query.SelectableChar getGraphTypes(String alias);
     public com.runwaysdk.query.SelectableChar getGraphTypes(String alias, String displayLabel);
@@ -1212,6 +1314,40 @@ public  class LabeledPropertyGraphTypeQuery extends com.runwaysdk.query.Generate
 
       return this.containsExactly(itemIdArray);
   }
+  public com.runwaysdk.query.SelectableChar getBusinessEdgeCodes()
+  {
+    return getBusinessEdgeCodes(null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableChar getBusinessEdgeCodes(String alias)
+  {
+    return (com.runwaysdk.query.SelectableChar)this.get(net.geoprism.graph.LabeledPropertyGraphType.BUSINESSEDGECODES, alias, null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableChar getBusinessEdgeCodes(String alias, String displayLabel)
+  {
+    return (com.runwaysdk.query.SelectableChar)this.get(net.geoprism.graph.LabeledPropertyGraphType.BUSINESSEDGECODES, alias, displayLabel);
+
+  }
+  public com.runwaysdk.query.SelectableChar getBusinessTypeCodes()
+  {
+    return getBusinessTypeCodes(null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableChar getBusinessTypeCodes(String alias)
+  {
+    return (com.runwaysdk.query.SelectableChar)this.get(net.geoprism.graph.LabeledPropertyGraphType.BUSINESSTYPECODES, alias, null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableChar getBusinessTypeCodes(String alias, String displayLabel)
+  {
+    return (com.runwaysdk.query.SelectableChar)this.get(net.geoprism.graph.LabeledPropertyGraphType.BUSINESSTYPECODES, alias, displayLabel);
+
+  }
   public com.runwaysdk.query.SelectableChar getCode()
   {
     return getCode(null);
@@ -1312,6 +1448,23 @@ public  class LabeledPropertyGraphTypeQuery extends com.runwaysdk.query.Generate
   public com.runwaysdk.system.metadata.MdDomainQuery.MdDomainQueryReferenceIF getEntityDomain(String alias, String displayLabel)
   {
     return (com.runwaysdk.system.metadata.MdDomainQuery.MdDomainQueryReferenceIF)this.get(net.geoprism.graph.LabeledPropertyGraphType.ENTITYDOMAIN,  alias, displayLabel);
+
+  }
+  public com.runwaysdk.query.SelectableChar getGeoObjectTypeCodes()
+  {
+    return getGeoObjectTypeCodes(null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableChar getGeoObjectTypeCodes(String alias)
+  {
+    return (com.runwaysdk.query.SelectableChar)this.get(net.geoprism.graph.LabeledPropertyGraphType.GEOOBJECTTYPECODES, alias, null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableChar getGeoObjectTypeCodes(String alias, String displayLabel)
+  {
+    return (com.runwaysdk.query.SelectableChar)this.get(net.geoprism.graph.LabeledPropertyGraphType.GEOOBJECTTYPECODES, alias, displayLabel);
 
   }
   public com.runwaysdk.query.SelectableChar getGraphTypes()

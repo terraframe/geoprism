@@ -3,18 +3,18 @@
  *
  * This file is part of Geoprism(tm).
  *
- * Geoprism(tm) is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
+ * Geoprism(tm) is free software: you can redistribute it and/or modify it under
+ * the terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation, either version 3 of the License, or (at your option) any
+ * later version.
  *
- * Geoprism(tm) is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
+ * Geoprism(tm) is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with Geoprism(tm).  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with Geoprism(tm). If not, see <http://www.gnu.org/licenses/>.
  */
 package net.geoprism.registry.service.business;
 
@@ -47,6 +47,10 @@ import com.runwaysdk.query.OIterator;
 import com.runwaysdk.query.QueryFactory;
 import com.runwaysdk.session.Session;
 
+import net.geoprism.graph.BusinessEdgeTypeSnapshot;
+import net.geoprism.graph.BusinessEdgeTypeSnapshotQuery;
+import net.geoprism.graph.BusinessTypeSnapshot;
+import net.geoprism.graph.BusinessTypeSnapshotQuery;
 import net.geoprism.graph.DirectedAcyclicGraphTypeSnapshotQuery;
 import net.geoprism.graph.GeoObjectTypeSnapshot;
 import net.geoprism.graph.GeoObjectTypeSnapshotQuery;
@@ -61,34 +65,45 @@ import net.geoprism.graph.LabeledPropertyGraphUtil;
 import net.geoprism.graph.UndirectedGraphTypeSnapshotQuery;
 import net.geoprism.registry.DateUtil;
 import net.geoprism.registry.LPGTileCache;
-import net.geoprism.registry.RegistryConstants;
 import net.geoprism.registry.model.ClassificationType;
 
 @Service
 public class LabeledPropertyGraphTypeVersionBusinessService implements LabeledPropertyGraphTypeVersionBusinessServiceIF
 {
   @Autowired
-  private GeoObjectTypeSnapshotBusinessServiceIF objectService;
-
-//  @Autowired
-//  private HierarchyTypeSnapshotBusinessServiceIF hierarchyService;
-  
-  @Autowired
-  private GraphTypeSnapshotBusinessServiceIF     graphService;
+  private GeoObjectTypeSnapshotBusinessServiceIF    objectService;
 
   @Autowired
-  private ClassificationBusinessServiceIF        classificationService;
+  private BusinessTypeSnapshotBusinessServiceIF     businessService;
 
   @Autowired
-  private ClassificationTypeBusinessServiceIF    typeService;
+  private BusinessEdgeTypeSnapshotBusinessServiceIF bEdgeTypeService;
+
+  // @Autowired
+  // private HierarchyTypeSnapshotBusinessServiceIF hierarchyService;
+
+  @Autowired
+  private GraphTypeSnapshotBusinessServiceIF        graphService;
+
+  @Autowired
+  private ClassificationBusinessServiceIF           classificationService;
+
+  @Autowired
+  private ClassificationTypeBusinessServiceIF       typeService;
 
   @Override
   @Transaction
   public void delete(LabeledPropertyGraphTypeVersion version)
   {
     LPGTileCache.deleteTiles(version);
-    
+
     this.getGraphSnapshots(version).forEach(e -> this.graphService.delete(e));
+
+    // Delete all business edge types
+    this.getBusinessEdgeTypes(version).stream().forEach(v -> this.bEdgeTypeService.delete(v));
+    
+    // Delete all business types
+    this.getBusinessTypes(version).stream().forEach(v -> this.businessService.delete(v));
 
     // Delete the non-root snapshots first
     this.getTypes(version).stream().filter(v -> !v.getIsAbstract()).forEach(v -> this.objectService.delete(v));
@@ -128,6 +143,24 @@ public class LabeledPropertyGraphTypeVersionBusinessService implements LabeledPr
   }
 
   @Override
+  public VertexObject getBusinessVertex(LabeledPropertyGraphTypeVersion version, String code, String typeCode)
+  {
+    BusinessTypeSnapshot type = this.businessService.get(version, typeCode);
+
+    MdVertexDAOIF mdVertex = (MdVertexDAOIF) BusinessFacade.getEntityDAO(type.getGraphMdVertex());
+    MdAttributeDAOIF mdAttribute = mdVertex.getAllDefinedMdAttributeMap().get(DefaultAttribute.CODE.getName());
+
+    StringBuilder statement = new StringBuilder();
+    statement.append("SELECT FROM " + mdVertex.getDBClassName());
+    statement.append(" WHERE " + mdAttribute.getColumnName() + " = :uid");
+
+    GraphQuery<VertexObject> query = new GraphQuery<VertexObject>(statement.toString());
+    query.setParameter("code", code);
+
+    return query.getSingleResult();
+  }
+
+  @Override
   public GeoObjectTypeSnapshot getRootType(LabeledPropertyGraphTypeVersion version)
   {
     return this.objectService.getRoot(version);
@@ -146,15 +179,39 @@ public class LabeledPropertyGraphTypeVersionBusinessService implements LabeledPr
   }
 
   @Override
+  public List<BusinessTypeSnapshot> getBusinessTypes(LabeledPropertyGraphTypeVersion version)
+  {
+    BusinessTypeSnapshotQuery query = new BusinessTypeSnapshotQuery(new QueryFactory());
+    query.WHERE(query.getVersion().EQ(version));
+
+    try (OIterator<? extends BusinessTypeSnapshot> it = query.getIterator())
+    {
+      return it.getAll().stream().map(b -> (BusinessTypeSnapshot) b).collect(Collectors.toList());
+    }
+  }
+
+  @Override
+  public List<BusinessEdgeTypeSnapshot> getBusinessEdgeTypes(LabeledPropertyGraphTypeVersion version)
+  {
+    BusinessEdgeTypeSnapshotQuery query = new BusinessEdgeTypeSnapshotQuery(new QueryFactory());
+    query.WHERE(query.getVersion().EQ(version));
+
+    try (OIterator<? extends BusinessEdgeTypeSnapshot> it = query.getIterator())
+    {
+      return it.getAll().stream().map(b -> (BusinessEdgeTypeSnapshot) b).collect(Collectors.toList());
+    }
+  }
+
+  @Override
   public List<GraphTypeSnapshot> getGraphSnapshots(LabeledPropertyGraphTypeVersion version)
   {
     String strategy = version.getGraphType().getStrategyType();
-    
+
     if (strategy.equals(LabeledPropertyGraphType.TREE))
     {
       HierarchyTypeSnapshotQuery query = new HierarchyTypeSnapshotQuery(new QueryFactory());
       query.WHERE(query.getVersion().EQ(version));
-  
+
       try (OIterator<? extends GraphTypeSnapshot> it = query.getIterator())
       {
         return it.getAll().stream().map(b -> (GraphTypeSnapshot) b).collect(Collectors.toList());
@@ -163,31 +220,31 @@ public class LabeledPropertyGraphTypeVersionBusinessService implements LabeledPr
     else
     {
       List<GraphTypeSnapshot> snapshots = new ArrayList<GraphTypeSnapshot>();
-      
+
       HierarchyTypeSnapshotQuery query = new HierarchyTypeSnapshotQuery(new QueryFactory());
       query.WHERE(query.getVersion().EQ(version));
-  
+
       try (OIterator<? extends GraphTypeSnapshot> it = query.getIterator())
       {
         snapshots.addAll(it.getAll().stream().map(b -> (GraphTypeSnapshot) b).collect(Collectors.toList()));
       }
-      
+
       DirectedAcyclicGraphTypeSnapshotQuery query2 = new DirectedAcyclicGraphTypeSnapshotQuery(new QueryFactory());
       query2.WHERE(query2.getVersion().EQ(version));
-      
+
       try (OIterator<? extends GraphTypeSnapshot> it = query2.getIterator())
       {
         snapshots.addAll(it.getAll().stream().map(b -> (GraphTypeSnapshot) b).collect(Collectors.toList()));
       }
-      
+
       UndirectedGraphTypeSnapshotQuery query3 = new UndirectedGraphTypeSnapshotQuery(new QueryFactory());
       query3.WHERE(query3.getVersion().EQ(version));
-      
+
       try (OIterator<? extends GraphTypeSnapshot> it = query3.getIterator())
       {
         snapshots.addAll(it.getAll().stream().map(b -> (GraphTypeSnapshot) b).collect(Collectors.toList()));
       }
-      
+
       return snapshots;
     }
   }
@@ -249,8 +306,10 @@ public class LabeledPropertyGraphTypeVersionBusinessService implements LabeledPr
     // this.getTypes().forEach(type -> {
     // type.truncate();
     // });
-    
+
     LPGTileCache.deleteTiles(version);
+
+    this.getBusinessTypes(version).forEach(type -> this.businessService.truncate(type));
 
     this.objectService.truncate(this.getRootType(version));
 
@@ -328,6 +387,22 @@ public class LabeledPropertyGraphTypeVersionBusinessService implements LabeledPr
       });
 
       object.add("graphTypes", graphTypes);
+
+      JsonArray businessTypes = new JsonArray();
+
+      this.getBusinessTypes(version).forEach(type -> {
+        businessTypes.add(type.toJSON());
+      });
+
+      object.add("businessTypes", businessTypes);
+
+      JsonArray businessEdges = new JsonArray();
+
+      this.getBusinessEdgeTypes(version).forEach(type -> {
+        businessEdges.add(this.bEdgeTypeService.toJSON(type));
+      });
+
+      object.add("businessEdges", businessEdges);
 
       // Add classification definitions
       JsonArray classifications = new JsonArray();
@@ -433,11 +508,25 @@ public class LabeledPropertyGraphTypeVersionBusinessService implements LabeledPr
       this.objectService.create(version, element.getAsJsonObject());
     }
 
+    JsonArray businessTypes = json.get("businessTypes").getAsJsonArray();
+
+    for (JsonElement element : businessTypes)
+    {
+      this.businessService.create(version, element.getAsJsonObject());
+    }
+
     JsonArray graphTypes = json.get("graphTypes").getAsJsonArray();
 
     for (JsonElement element : graphTypes)
     {
       this.graphService.create(version, element.getAsJsonObject(), root);
+    }
+    
+    JsonArray businessEdges = json.get("businessEdges").getAsJsonArray();
+
+    for (JsonElement element : businessEdges)
+    {
+      this.bEdgeTypeService.create(version, element.getAsJsonObject());
     }
 
     return version;
@@ -493,14 +582,14 @@ public class LabeledPropertyGraphTypeVersionBusinessService implements LabeledPr
         if (!snapshot.getIsAbstract())
         {
           // Ensure there is at least one geometry defined for the type
-          
+
           for (int z = 0; z < 4; z++)
           {
             int tiles = (int) Math.pow(2, z);
 
             for (int x = 0; x < tiles; x++)
             {
-              
+
               for (int y = 0; y < tiles; y++)
               {
                 JSONObject config = new JSONObject();

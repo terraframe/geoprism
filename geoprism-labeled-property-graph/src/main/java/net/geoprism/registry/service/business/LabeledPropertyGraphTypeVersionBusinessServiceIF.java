@@ -25,9 +25,10 @@ import org.springframework.stereotype.Component;
 import com.google.gson.JsonObject;
 import com.runwaysdk.business.graph.VertexObject;
 
+import net.geoprism.graph.BusinessEdgeTypeSnapshot;
+import net.geoprism.graph.BusinessTypeSnapshot;
 import net.geoprism.graph.GeoObjectTypeSnapshot;
 import net.geoprism.graph.GraphTypeSnapshot;
-import net.geoprism.graph.HierarchyTypeSnapshot;
 import net.geoprism.graph.LabeledPropertyGraphTypeEntry;
 import net.geoprism.graph.LabeledPropertyGraphTypeVersion;
 import net.geoprism.spring.core.ApplicationContextHolder;
@@ -48,10 +49,14 @@ public interface LabeledPropertyGraphTypeVersionBusinessServiceIF
   GeoObjectTypeSnapshot getRootType(LabeledPropertyGraphTypeVersion version);
 
   GeoObjectTypeSnapshot getSnapshot(LabeledPropertyGraphTypeVersion version, String typeCode);
+  
+  List<BusinessTypeSnapshot> getBusinessTypes(LabeledPropertyGraphTypeVersion version);
 
   List<GeoObjectTypeSnapshot> getTypes(LabeledPropertyGraphTypeVersion version);
 
   List<GraphTypeSnapshot> getGraphSnapshots(LabeledPropertyGraphTypeVersion version);
+  
+  List<BusinessEdgeTypeSnapshot> getBusinessEdgeTypes(LabeledPropertyGraphTypeVersion version);
 
   GraphTypeSnapshot getGraphTypeSnapshot(LabeledPropertyGraphTypeVersion version, String typeCode);
 
@@ -80,5 +85,8 @@ public interface LabeledPropertyGraphTypeVersionBusinessServiceIF
   public void createPublishJob(LabeledPropertyGraphTypeVersion version);
 
   void createTiles(LabeledPropertyGraphTypeVersion version);
+
+  VertexObject getBusinessVertex(LabeledPropertyGraphTypeVersion version, String code, String typeCode);
+
 
 }

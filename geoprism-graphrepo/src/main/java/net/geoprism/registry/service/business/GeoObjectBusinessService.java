@@ -3,25 +3,24 @@
  *
  * This file is part of Geoprism(tm).
  *
- * Geoprism(tm) is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
+ * Geoprism(tm) is free software: you can redistribute it and/or modify it under
+ * the terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation, either version 3 of the License, or (at your option) any
+ * later version.
  *
- * Geoprism(tm) is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
+ * Geoprism(tm) is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with Geoprism(tm).  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with Geoprism(tm). If not, see <http://www.gnu.org/licenses/>.
  */
 package net.geoprism.registry.service.business;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Comparator;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -74,7 +73,7 @@ import com.runwaysdk.system.AbstractClassification;
 
 import net.geoprism.dashboard.GeometryUpdateException;
 import net.geoprism.ontology.Classifier;
-import net.geoprism.registry.BusinessType;
+import net.geoprism.registry.BusinessEdgeType;
 import net.geoprism.registry.DataNotFoundException;
 import net.geoprism.registry.DuplicateGeoObjectCodeException;
 import net.geoprism.registry.DuplicateGeoObjectException;
@@ -96,6 +95,7 @@ import net.geoprism.registry.model.BusinessObject;
 import net.geoprism.registry.model.Classification;
 import net.geoprism.registry.model.ClassificationType;
 import net.geoprism.registry.model.EdgeConstant;
+import net.geoprism.registry.model.EdgeDirection;
 import net.geoprism.registry.model.GeoObjectMetadata;
 import net.geoprism.registry.model.GeoObjectTypeMetadata;
 import net.geoprism.registry.model.GraphType;
@@ -106,6 +106,7 @@ import net.geoprism.registry.model.ServerGeoObjectIF;
 import net.geoprism.registry.model.ServerGeoObjectType;
 import net.geoprism.registry.model.ServerHierarchyType;
 import net.geoprism.registry.model.ServerParentTreeNode;
+import net.geoprism.registry.model.graph.EdgeVertexType;
 import net.geoprism.registry.model.graph.VertexComponent;
 import net.geoprism.registry.model.graph.VertexServerGeoObject;
 import net.geoprism.registry.model.graph.VertexServerGeoObject.EdgeComparator;
@@ -134,6 +135,9 @@ public class GeoObjectBusinessService extends RegistryLocalizedValueConverter im
 
   @Autowired
   protected BusinessTypeBusinessServiceIF       businessTypeService;
+
+  @Autowired
+  protected BusinessEdgeTypeBusinessServiceIF   businessEdgeTypeService;
 
   @Autowired
   protected BusinessObjectBusinessServiceIF     businessObjectService;
@@ -944,7 +948,7 @@ public class GeoObjectBusinessService extends RegistryLocalizedValueConverter im
                 classiCache.putClassification(classificationTypeCode, value.toString().trim(), classification);
               }
             }
-            
+
             try
             {
               geoObj.setValue(attributeName, classification.toTerm());
@@ -1314,7 +1318,7 @@ public class GeoObjectBusinessService extends RegistryLocalizedValueConverter im
   {
     return internalGetParentGeoObjects(sgo, parentTypes, recursive, includeInherited, hierarchy, date);
   }
-  
+
   @Override
   public ServerChildTreeNode getGraphChildGeoObjects(ServerGeoObjectIF sgo, GraphType graphType, Boolean recursive, Date date)
   {
@@ -1455,7 +1459,7 @@ public class GeoObjectBusinessService extends RegistryLocalizedValueConverter im
     GraphQuery<VertexAndEdge> query = new GraphQuery<VertexAndEdge>(statement.toString(), parameters, new VertexAndEdgeResultSetConverter());
 
     List<VertexAndEdge> results = query.getResults();
-    
+
     List<GeoObjectAndEdge> parents = VertexAndEdgeResultSetConverter.convertResults(results, date);
 
     for (GeoObjectAndEdge childAndEdge : parents)
@@ -1465,7 +1469,7 @@ public class GeoObjectBusinessService extends RegistryLocalizedValueConverter im
         continue;
 
       ServerChildTreeNode tnChild;
-      
+
       final ServerHierarchyType rowHierarchy = ServerHierarchyType.get((MdEdgeDAOIF) MdGraphClassDAO.getMdGraphClassByTableName(childAndEdge.edgeClass));
 
       if (recursive)
@@ -1482,21 +1486,18 @@ public class GeoObjectBusinessService extends RegistryLocalizedValueConverter im
 
     return tnRoot;
   }
-  
+
   /*
-  SELECT v.@rid, v.@class, v.oid, v.code, attr.@rid, attr.oid, attr.@class, attr.value, edgeClass, edgeOid FROM (
-    SELECT v, v.out('has_value', 'has_geometry') as attr, edgeClass, edgeOid FROM (
-      SELECT out as v, @class as edgeClass, oid as edgeOid FROM (
-        SELECT EXPAND(inE('fasta_dmin_code')) FROM #366:1
-      )
-    )
-    UNWIND attr
-  )
-  */
+   * SELECT v.@rid, v.@class, v.oid, v.code, attr.@rid, attr.oid, attr.@class,
+   * attr.value, edgeClass, edgeOid FROM ( SELECT v, v.out('has_value',
+   * 'has_geometry') as attr, edgeClass, edgeOid FROM ( SELECT out as v, @class
+   * as edgeClass, oid as edgeOid FROM ( SELECT EXPAND(inE('fasta_dmin_code'))
+   * FROM #366:1 ) ) UNWIND attr )
+   */
   protected ServerParentTreeNode internalGetParentGeoObjects(ServerGeoObjectIF child, String[] parentTypes, boolean recursive, boolean includeInherited, ServerHierarchyType htIn, Date date)
   {
     ServerParentTreeNode tnRoot = new ServerParentTreeNode(child, htIn, date, null, null);
-    
+
     Map<String, Object> parameters = new HashedMap<String, Object>();
     parameters.put("rid", child.getVertex().getRID());
 
@@ -1556,18 +1557,18 @@ public class GeoObjectBusinessService extends RegistryLocalizedValueConverter im
     GraphQuery<VertexAndEdge> query = new GraphQuery<VertexAndEdge>(statement.toString(), parameters, new VertexAndEdgeResultSetConverter());
 
     List<VertexAndEdge> results = query.getResults();
-    
+
     List<GeoObjectAndEdge> parents = VertexAndEdgeResultSetConverter.convertResults(results, date);
 
     for (GeoObjectAndEdge parentAndEdge : parents)
     {
       ServerGeoObjectIF parent = parentAndEdge.geoObject;
-      
+
       if (child.getRunwayId().equals(parent.getRunwayId()))
         continue;
 
       ServerParentTreeNode tnParent;
-      
+
       final ServerHierarchyType rowHierarchy = ServerHierarchyType.get((MdEdgeDAOIF) MdGraphClassDAO.getMdGraphClassByTableName(parentAndEdge.edgeClass));
 
       if (recursive)
@@ -1602,7 +1603,7 @@ public class GeoObjectBusinessService extends RegistryLocalizedValueConverter im
 
     return tnRoot;
   }
-  
+
   protected ServerParentTreeNodeOverTime internalGetParentOverTime(ServerGeoObjectIF child, String[] parentTypes, boolean recursive, boolean includeInherited)
   {
     final ServerGeoObjectType cType = child.getType();
@@ -1999,76 +2000,34 @@ public class GeoObjectBusinessService extends RegistryLocalizedValueConverter im
   }
 
   @Override
-  public JsonArray getBusinessObjects(String typeCode, String code, String businessTypeCode)
+  public JsonArray getBusinessObjects(String typeCode, String code, String edgeTypeCode, String direction)
   {
     VertexServerGeoObject vsgo = (VertexServerGeoObject) this.getGeoObjectByCode(code, typeCode);
-
+    
     List<BusinessObject> objects = null;
-
-    if (businessTypeCode != null && businessTypeCode.length() > 0)
-    {
-      BusinessType businessType = this.businessTypeService.getByCode(businessTypeCode);
-
-      objects = this.getBusinessObjects(vsgo, businessType);
-    }
-    else
-    {
-      objects = this.getBusinessObjects(vsgo);
-    }
-
+    
+    BusinessEdgeType edgeType = this.businessEdgeTypeService.getByCode(edgeTypeCode);
+    
+    objects = this.getBusinessObjects(vsgo, edgeType, EdgeDirection.valueOf(direction));
+    
     return objects.stream().map(object -> {
       return this.businessObjectService.toJSON(object);
     }).collect(() -> new JsonArray(), (array, element) -> array.add(element), (listA, listB) -> {
     });
   }
-
+  
   @Override
-  public List<BusinessObject> getBusinessObjects(VertexServerGeoObject object)
+  public List<BusinessObject> getBusinessObjects(VertexServerGeoObject object, BusinessEdgeType edgeType, EdgeDirection direction)
   {
-    Map<String, Object> parameters = new HashedMap<String, Object>();
-    parameters.put("rid", object.getVertex().getRID());
-
-    StringBuilder statement = new StringBuilder();
-    statement.append("SELECT EXPAND(outE()) FROM :rid");
-
-    GraphQuery<EdgeObject> query = new GraphQuery<EdgeObject>(statement.toString(), parameters);
-
-    List<EdgeObject> edges = query.getResults();
-
-    List<BusinessObject> results = new LinkedList<BusinessObject>();
-
-    for (EdgeObject edge : edges)
-    {
-      MdEdgeDAOIF mdEdge = (MdEdgeDAOIF) edge.getMdClass();
-
-      BusinessType businessType = this.businessTypeService.getByMdEdge(mdEdge);
-
-      if (businessType != null)
-      {
-        VertexObject childVertex = edge.getChild();
-
-        results.add(new BusinessObject(childVertex, businessType));
-      }
-    }
-
-    results.sort(new Comparator<BusinessObject>()
-    {
-      @Override
-      public int compare(BusinessObject o1, BusinessObject o2)
-      {
-        return o1.getLabel().compareTo(o2.getLabel());
-      }
-    });
-
-    return results;
+    List<VertexObject> objects = direction.equals(EdgeDirection.PARENT) ?
+        object.getVertex().getParents(edgeType.getMdEdgeDAO(), VertexObject.class) :
+        object.getVertex().getChildren(edgeType.getMdEdgeDAO(), VertexObject.class);
+    
+    EdgeVertexType type =  direction.equals(EdgeDirection.PARENT) ?
+        this.businessEdgeTypeService.getParent(edgeType) :
+        this.businessEdgeTypeService.getChild(edgeType);
+    
+    return objects.stream().map(o -> new BusinessObject(o, type.toBusinessType())).collect(Collectors.toList());
   }
-
-  @Override
-  public List<BusinessObject> getBusinessObjects(VertexServerGeoObject object, BusinessType type)
-  {
-    List<VertexObject> objects = object.getVertex().getChildren(type.getMdEdgeDAO(), VertexObject.class);
-
-    return objects.stream().map(o -> new BusinessObject(o, type)).collect(Collectors.toList());
-  }
-
+  
 }

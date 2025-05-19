@@ -25,16 +25,15 @@ import org.commongeoregistry.adapter.dataaccess.LocalizedValue;
 import org.commongeoregistry.adapter.metadata.AttributeType;
 
 import com.runwaysdk.dataaccess.MdAttributeConcreteDAOIF;
-import com.runwaysdk.dataaccess.MdEdgeDAOIF;
 import com.runwaysdk.dataaccess.MdVertexDAOIF;
-import com.runwaysdk.dataaccess.metadata.graph.MdEdgeDAO;
 import com.runwaysdk.dataaccess.metadata.graph.MdVertexDAO;
 
 import net.geoprism.registry.conversion.RegistryAttributeTypeConverter;
 import net.geoprism.registry.conversion.RegistryLocalizedValueConverter;
 import net.geoprism.registry.model.ServerElement;
+import net.geoprism.registry.model.graph.EdgeVertexType;
 
-public class BusinessType extends BusinessTypeBase implements ServerElement
+public class BusinessType extends BusinessTypeBase implements ServerElement, EdgeVertexType
 {
   private static final long  serialVersionUID = 88826735;
 
@@ -50,11 +49,6 @@ public class BusinessType extends BusinessTypeBase implements ServerElement
   public MdVertexDAOIF getMdVertexDAO()
   {
     return MdVertexDAO.get(this.getMdVertexOid());
-  }
-
-  public MdEdgeDAOIF getMdEdgeDAO()
-  {
-    return MdEdgeDAO.get(this.getMdEdgeOid());
   }
 
   public LocalizedValue getLabel()
@@ -91,4 +85,27 @@ public class BusinessType extends BusinessTypeBase implements ServerElement
     this.setLabelAttributeId(mdAttribute.getOid());
   }
 
+  @Override
+  public boolean isGeoObjectType()
+  {
+    return false;
+  }
+
+  @Override
+  public MdVertexDAOIF toGeoObjectType()
+  {
+    throw new UnsupportedOperationException();
+  }
+
+  @Override
+  public boolean isBusinessType()
+  {
+    return true;
+  }
+
+  @Override
+  public BusinessType toBusinessType()
+  {
+    return this;
+  }
 }

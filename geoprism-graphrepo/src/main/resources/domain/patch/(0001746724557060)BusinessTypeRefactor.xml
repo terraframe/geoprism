@@ -18,35 +18,15 @@
     License along with Geoprism(tm).  If not, see <http://www.gnu.org/licenses/>.
 
 -->
-<version
-  xsi:noNamespaceSchemaLocation="classpath:com/runwaysdk/resources/xsd/version.xsd"
-  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<version xsi:noNamespaceSchemaLocation="classpath:com/runwaysdk/resources/xsd/version.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <doIt>
-    <update>
-      <mdBusiness
-        name="net.geoprism.registry.BusinessType"
-        label="Business Type"
-        generateController="false"
-        cacheAlgorithm="everything">
-        <create>
-          <attributes>
-<!-- 
-            <reference
-              name="mdEdge"
-              type="com.runwaysdk.system.metadata.MdEdge"
-              required="true"
-              label="MdEdge" />            
- -->          
-          </attributes>
-        </create>
-      </mdBusiness>
-    </update>
-  </doIt>
-  <undoIt>
     <delete>
       <object
         key="net.geoprism.registry.BusinessType.mdEdge"
         type="com.runwaysdk.system.metadata.MdAttribute"></object>
     </delete>
+  
+  </doIt>
+  <undoIt>
   </undoIt>
 </version>

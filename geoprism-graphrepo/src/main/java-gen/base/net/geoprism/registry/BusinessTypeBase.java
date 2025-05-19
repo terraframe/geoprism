@@ -41,7 +41,6 @@ public abstract class BusinessTypeBase extends com.runwaysdk.business.Business
   public static final java.lang.String LASTUPDATEDATE = "lastUpdateDate";
   public static final java.lang.String LASTUPDATEDBY = "lastUpdatedBy";
   public static final java.lang.String LOCKEDBY = "lockedBy";
-  public static final java.lang.String MDEDGE = "mdEdge";
   public static final java.lang.String MDVERTEX = "mdVertex";
   public static final java.lang.String OID = "oid";
   public static final java.lang.String ORGANIZATION = "organization";
@@ -348,58 +347,6 @@ public abstract class BusinessTypeBase extends com.runwaysdk.business.Business
   {
     com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(net.geoprism.registry.BusinessType.CLASS);
     return (com.runwaysdk.dataaccess.MdAttributeReferenceDAOIF)mdClassIF.definesAttribute(LOCKEDBY);
-  }
-  
-  public com.runwaysdk.system.metadata.MdEdge getMdEdge()
-  {
-    if (getValue(MDEDGE).trim().equals(""))
-    {
-      return null;
-    }
-    else
-    {
-      return com.runwaysdk.system.metadata.MdEdge.get(getValue(MDEDGE));
-    }
-  }
-  
-  public String getMdEdgeOid()
-  {
-    return getValue(MDEDGE);
-  }
-  
-  public void validateMdEdge()
-  {
-    this.validateAttribute(MDEDGE);
-  }
-  
-  public static com.runwaysdk.dataaccess.MdAttributeReferenceDAOIF getMdEdgeMd()
-  {
-    com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(net.geoprism.registry.BusinessType.CLASS);
-    return (com.runwaysdk.dataaccess.MdAttributeReferenceDAOIF)mdClassIF.definesAttribute(MDEDGE);
-  }
-  
-  public void setMdEdge(com.runwaysdk.system.metadata.MdEdge value)
-  {
-    if(value == null)
-    {
-      setValue(MDEDGE, "");
-    }
-    else
-    {
-      setValue(MDEDGE, value.getOid());
-    }
-  }
-  
-  public void setMdEdgeId(java.lang.String oid)
-  {
-    if(oid == null)
-    {
-      setValue(MDEDGE, "");
-    }
-    else
-    {
-      setValue(MDEDGE, oid);
-    }
   }
   
   public com.runwaysdk.system.metadata.MdVertex getMdVertex()
