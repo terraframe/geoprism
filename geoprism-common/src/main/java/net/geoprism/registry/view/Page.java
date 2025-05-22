@@ -27,13 +27,13 @@ import com.google.gson.JsonObject;
 public class Page<T extends JsonSerializable> implements Iterable<T>
 {
 
-  private Long    count;
+  protected Long    count;
 
-  private Integer pageNumber;
+  protected Integer pageNumber;
 
-  private Integer pageSize;
+  protected Integer pageSize;
 
-  private List<T> results;
+  protected List<T> results;
 
   public Page()
   {

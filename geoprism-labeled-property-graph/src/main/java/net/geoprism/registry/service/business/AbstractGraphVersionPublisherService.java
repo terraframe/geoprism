@@ -39,6 +39,7 @@ import net.geoprism.graph.LabeledPropertyGraphSynchronization;
 import net.geoprism.graph.LabeledPropertyGraphTypeVersion;
 import net.geoprism.registry.cache.ClassificationCache;
 import net.geoprism.registry.conversion.LocalizedValueConverter;
+import net.geoprism.registry.lpg.LPGPublishProgressMonitorIF;
 import net.geoprism.registry.model.Classification;
 
 public abstract class AbstractGraphVersionPublisherService
@@ -75,6 +76,8 @@ public abstract class AbstractGraphVersionPublisherService
     }
 
   }
+  
+  protected LPGPublishProgressMonitorIF monitor;
 
   @Autowired
   protected LabeledPropertyGraphTypeVersionBusinessServiceIF service;
@@ -188,6 +191,44 @@ public abstract class AbstractGraphVersionPublisherService
     if (geometry != null)
     {
       node.setValue(DefaultAttribute.GEOMETRY.getName(), geometry);
+    }
+  }
+  
+  protected void beginWork(long workTotal, Object importStage)
+  {
+    if (monitor != null)
+    {
+      monitor.appLock();
+      monitor.setWorkTotal(workTotal);
+      monitor.setWorkProgress(0L);
+      monitor.clearStage();
+      monitor.addStage(importStage);
+      monitor.apply();
+    }
+  }
+  
+  protected void recordProgress(long progress, Object importStage)
+  {
+    if (monitor != null)
+    {
+      monitor.appLock();
+      monitor.setWorkProgress(progress);
+      monitor.clearStage();
+      monitor.addStage(importStage);
+      monitor.apply();
+    }
+  }
+  
+  protected void updateProgress(long workTotal, long progress, Object importStage)
+  {
+    if (monitor != null)
+    {
+      monitor.appLock();
+      monitor.setWorkProgress(progress);
+      monitor.setWorkTotal(workTotal);
+      monitor.clearStage();
+      monitor.addStage(importStage);
+      monitor.apply();
     }
   }
 
