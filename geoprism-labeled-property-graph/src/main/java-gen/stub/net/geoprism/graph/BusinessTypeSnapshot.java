@@ -80,6 +80,7 @@ public class BusinessTypeSnapshot extends BusinessTypeSnapshotBase
 
     JsonObject typeObject = new JsonObject();
     typeObject.addProperty(CODE, this.getCode());
+    typeObject.addProperty(ORGCODE, this.getOrgCode());
     typeObject.addProperty(LABELATTRIBUTE, this.getLabelAttribute());
     typeObject.add(DISPLAYLABEL, LocalizedValueConverter.convertNoAutoCoalesce(this.getDisplayLabel()).toJSON());
     typeObject.add("attributes", attributes);

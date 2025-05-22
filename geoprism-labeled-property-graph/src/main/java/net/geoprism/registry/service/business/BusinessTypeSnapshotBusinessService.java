@@ -155,6 +155,7 @@ public class BusinessTypeSnapshotBusinessService implements BusinessTypeSnapshot
   public BusinessTypeSnapshot create(LabeledPropertyGraphTypeVersion version, JsonObject typeDto)
   {
     String code = typeDto.get(BusinessTypeSnapshot.CODE).getAsString();
+    String orgCode = typeDto.get(BusinessTypeSnapshot.ORGCODE).getAsString();
     String viewName = getTableName(code);
     LocalizedValue label = LocalizedValue.fromJSON(typeDto.get(BusinessTypeSnapshot.DISPLAYLABEL).getAsJsonObject());
 
@@ -186,6 +187,7 @@ public class BusinessTypeSnapshotBusinessService implements BusinessTypeSnapshot
     snapshot.setGraphMdVertex(mdTable);
     snapshot.setLabelAttribute(typeDto.get(BusinessTypeSnapshot.LABELATTRIBUTE).getAsString());
     snapshot.setCode(code);
+    snapshot.setOrgCode(orgCode);
     LocalizedValueConverter.populate(snapshot.getDisplayLabel(), label);
     snapshot.apply();
 

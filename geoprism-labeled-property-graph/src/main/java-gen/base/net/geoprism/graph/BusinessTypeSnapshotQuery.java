@@ -1,6 +1,6 @@
 package net.geoprism.graph;
 
-@com.runwaysdk.business.ClassSignature(hash = 577367492)
+@com.runwaysdk.business.ClassSignature(hash = -2006433281)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -278,6 +278,23 @@ public  class BusinessTypeSnapshotQuery extends com.runwaysdk.query.GeneratedBus
     return (com.runwaysdk.query.SelectableUUID)this.getComponentQuery().get(net.geoprism.graph.BusinessTypeSnapshot.OID, alias, displayLabel);
 
   }
+  public com.runwaysdk.query.SelectableChar getOrgCode()
+  {
+    return getOrgCode(null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableChar getOrgCode(String alias)
+  {
+    return (com.runwaysdk.query.SelectableChar)this.getComponentQuery().get(net.geoprism.graph.BusinessTypeSnapshot.ORGCODE, alias, null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableChar getOrgCode(String alias, String displayLabel)
+  {
+    return (com.runwaysdk.query.SelectableChar)this.getComponentQuery().get(net.geoprism.graph.BusinessTypeSnapshot.ORGCODE, alias, displayLabel);
+
+  }
   public com.runwaysdk.system.ActorQuery.ActorQueryReferenceIF getOwner()
   {
     return getOwner(null);
@@ -497,6 +514,9 @@ public  class BusinessTypeSnapshotQuery extends com.runwaysdk.query.GeneratedBus
     public com.runwaysdk.query.SelectableUUID getOid();
     public com.runwaysdk.query.SelectableUUID getOid(String alias);
     public com.runwaysdk.query.SelectableUUID getOid(String alias, String displayLabel);
+    public com.runwaysdk.query.SelectableChar getOrgCode();
+    public com.runwaysdk.query.SelectableChar getOrgCode(String alias);
+    public com.runwaysdk.query.SelectableChar getOrgCode(String alias, String displayLabel);
     public com.runwaysdk.system.ActorQuery.ActorQueryReferenceIF getOwner();
     public com.runwaysdk.system.ActorQuery.ActorQueryReferenceIF getOwner(String alias);
     public com.runwaysdk.system.ActorQuery.ActorQueryReferenceIF getOwner(String alias, String displayLabel);
@@ -751,6 +771,23 @@ public  class BusinessTypeSnapshotQuery extends com.runwaysdk.query.GeneratedBus
     return (com.runwaysdk.query.SelectableUUID)this.get(net.geoprism.graph.BusinessTypeSnapshot.OID, alias, displayLabel);
 
   }
+  public com.runwaysdk.query.SelectableChar getOrgCode()
+  {
+    return getOrgCode(null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableChar getOrgCode(String alias)
+  {
+    return (com.runwaysdk.query.SelectableChar)this.get(net.geoprism.graph.BusinessTypeSnapshot.ORGCODE, alias, null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableChar getOrgCode(String alias, String displayLabel)
+  {
+    return (com.runwaysdk.query.SelectableChar)this.get(net.geoprism.graph.BusinessTypeSnapshot.ORGCODE, alias, displayLabel);
+
+  }
   public com.runwaysdk.system.ActorQuery.ActorQueryReferenceIF getOwner()
   {
     return getOwner(null);
@@ -935,6 +972,9 @@ public  class BusinessTypeSnapshotQuery extends com.runwaysdk.query.GeneratedBus
     public com.runwaysdk.query.SelectableUUID getOid();
     public com.runwaysdk.query.SelectableUUID getOid(String alias);
     public com.runwaysdk.query.SelectableUUID getOid(String alias, String displayLabel);
+    public com.runwaysdk.query.SelectableChar getOrgCode();
+    public com.runwaysdk.query.SelectableChar getOrgCode(String alias);
+    public com.runwaysdk.query.SelectableChar getOrgCode(String alias, String displayLabel);
     public com.runwaysdk.system.ActorQuery.ActorQueryReferenceIF getOwner();
     public com.runwaysdk.system.ActorQuery.ActorQueryReferenceIF getOwner(String alias);
     public com.runwaysdk.system.ActorQuery.ActorQueryReferenceIF getOwner(String alias, String displayLabel);
@@ -1236,6 +1276,23 @@ public  class BusinessTypeSnapshotQuery extends com.runwaysdk.query.GeneratedBus
   public com.runwaysdk.query.SelectableUUID getOid(String alias, String displayLabel)
   {
     return (com.runwaysdk.query.SelectableUUID)this.get(net.geoprism.graph.BusinessTypeSnapshot.OID, alias, displayLabel);
+
+  }
+  public com.runwaysdk.query.SelectableChar getOrgCode()
+  {
+    return getOrgCode(null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableChar getOrgCode(String alias)
+  {
+    return (com.runwaysdk.query.SelectableChar)this.get(net.geoprism.graph.BusinessTypeSnapshot.ORGCODE, alias, null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableChar getOrgCode(String alias, String displayLabel)
+  {
+    return (com.runwaysdk.query.SelectableChar)this.get(net.geoprism.graph.BusinessTypeSnapshot.ORGCODE, alias, displayLabel);
 
   }
   public com.runwaysdk.system.ActorQuery.ActorQueryReferenceIF getOwner()

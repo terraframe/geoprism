@@ -32,6 +32,11 @@
             required="true"
             label="Code" />
           <char
+            name="orgCode"
+            size="32"
+            required="true"
+            label="Organization Code" />
+          <char
             name="labelAttribute"
             size="32"
             required="false"

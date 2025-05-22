@@ -1,6 +1,6 @@
 package net.geoprism.graph;
 
-@com.runwaysdk.business.ClassSignature(hash = 1241521293)
+@com.runwaysdk.business.ClassSignature(hash = 817411720)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -25,13 +25,14 @@ public abstract class BusinessTypeSnapshotBase extends com.runwaysdk.business.Bu
   public final static java.lang.String LASTUPDATEDBY = "lastUpdatedBy";
   public final static java.lang.String LOCKEDBY = "lockedBy";
   public final static java.lang.String OID = "oid";
+  public final static java.lang.String ORGCODE = "orgCode";
   public final static java.lang.String OWNER = "owner";
   public final static java.lang.String SEQ = "seq";
   public final static java.lang.String SITEMASTER = "siteMaster";
   public final static java.lang.String TYPE = "type";
   public final static java.lang.String VERSION = "version";
   @SuppressWarnings("unused")
-  private static final long serialVersionUID = 1241521293;
+  private static final long serialVersionUID = 817411720;
   
   public BusinessTypeSnapshotBase()
   {
@@ -373,6 +374,34 @@ public abstract class BusinessTypeSnapshotBase extends com.runwaysdk.business.Bu
   {
     com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(net.geoprism.graph.BusinessTypeSnapshot.CLASS);
     return (com.runwaysdk.dataaccess.MdAttributeUUIDDAOIF)mdClassIF.definesAttribute(OID);
+  }
+  
+  public String getOrgCode()
+  {
+    return getValue(ORGCODE);
+  }
+  
+  public void validateOrgCode()
+  {
+    this.validateAttribute(ORGCODE);
+  }
+  
+  public static com.runwaysdk.dataaccess.MdAttributeCharacterDAOIF getOrgCodeMd()
+  {
+    com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(net.geoprism.graph.BusinessTypeSnapshot.CLASS);
+    return (com.runwaysdk.dataaccess.MdAttributeCharacterDAOIF)mdClassIF.definesAttribute(ORGCODE);
+  }
+  
+  public void setOrgCode(String value)
+  {
+    if(value == null)
+    {
+      setValue(ORGCODE, "");
+    }
+    else
+    {
+      setValue(ORGCODE, value);
+    }
   }
   
   public com.runwaysdk.system.Actor getOwner()
