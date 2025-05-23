@@ -31,6 +31,7 @@ import net.geoprism.graph.GeoObjectTypeSnapshot;
 import net.geoprism.graph.GraphTypeSnapshot;
 import net.geoprism.graph.LabeledPropertyGraphTypeEntry;
 import net.geoprism.graph.LabeledPropertyGraphTypeVersion;
+import net.geoprism.registry.lpg.LPGPublishProgressMonitorIF;
 import net.geoprism.spring.core.ApplicationContextHolder;
 
 @Component
@@ -78,9 +79,9 @@ public interface LabeledPropertyGraphTypeVersionBusinessServiceIF
 
   List<? extends LabeledPropertyGraphTypeVersion> getAll();
 
-  public void publish(LabeledPropertyGraphTypeVersion version);
+  public void publish(LPGPublishProgressMonitorIF history, LabeledPropertyGraphTypeVersion version);
 
-  public void publishNoAuth(LabeledPropertyGraphTypeVersion version);
+  public void publishNoAuth(LPGPublishProgressMonitorIF history, LabeledPropertyGraphTypeVersion version);
 
   public void createPublishJob(LabeledPropertyGraphTypeVersion version);
 

@@ -65,6 +65,7 @@ import net.geoprism.graph.LabeledPropertyGraphUtil;
 import net.geoprism.graph.UndirectedGraphTypeSnapshotQuery;
 import net.geoprism.registry.DateUtil;
 import net.geoprism.registry.LPGTileCache;
+import net.geoprism.registry.lpg.LPGPublishProgressMonitorIF;
 import net.geoprism.registry.model.ClassificationType;
 
 @Service
@@ -550,13 +551,13 @@ public class LabeledPropertyGraphTypeVersionBusinessService implements LabeledPr
   }
 
   @Override
-  public void publish(LabeledPropertyGraphTypeVersion version)
+  public void publish(LPGPublishProgressMonitorIF monitor, LabeledPropertyGraphTypeVersion version)
   {
-    new LabeledPropertyGraphUtil(this).publishVersion(version);
+    new LabeledPropertyGraphUtil(this, monitor).publishVersion(version);
   }
 
   @Override
-  public void publishNoAuth(LabeledPropertyGraphTypeVersion version)
+  public void publishNoAuth(LPGPublishProgressMonitorIF monitor, LabeledPropertyGraphTypeVersion version)
   {
     // Do nothing
   }
