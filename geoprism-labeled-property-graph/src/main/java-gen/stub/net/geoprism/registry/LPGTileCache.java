@@ -47,7 +47,7 @@ import net.geoprism.graph.LabeledPropertyGraphTypeVersion;
 import net.geoprism.registry.tile.PublisherUtil;
 import net.geoprism.registry.tile.VersionVectorTileBuilder;
 
-import javax.validation.constraints.NotNull;
+import jakarta.validation.constraints.NotNull;
 
 public class LPGTileCache extends LPGTileCacheBase {
     public abstract static class TileCallable implements Callable<byte[]> {

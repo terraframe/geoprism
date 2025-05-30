@@ -67,13 +67,7 @@
     <dependency>
       <groupId>org.hibernate</groupId>
       <artifactId>hibernate-validator</artifactId>
-      <version>5.4.3.Final</version>
-    </dependency>
-    <dependency>
-      <groupId>javax.servlet</groupId>
-      <artifactId>javax.servlet-api</artifactId>
-      <version>3.0.1</version>
-      <scope>provided</scope>
+      <version>8.0.2.Final</version>
     </dependency>
     <dependency>
       <groupId>org.geotools</groupId>
@@ -111,6 +105,13 @@
       <artifactId>json</artifactId>
       <version>20231013</version>
     </dependency>
+    <dependency>
+        <groupId>jakarta.servlet</groupId>
+        <artifactId>jakarta.servlet-api</artifactId>
+        <version>6.1.0</version>
+        <scope>provided</scope>
+      </dependency>
+    
   </dependencies>
   
   <build>
