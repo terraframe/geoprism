@@ -71,11 +71,8 @@ import com.runwaysdk.dataaccess.metadata.graph.MdGraphClassDAO;
 import com.runwaysdk.dataaccess.metadata.graph.MdVertexDAO;
 import com.runwaysdk.dataaccess.transaction.Transaction;
 import com.runwaysdk.localization.LocalizationFacade;
-import com.runwaysdk.query.QueryFactory;
 import com.runwaysdk.session.Session;
 import com.runwaysdk.system.gis.geo.GeoEntity;
-import com.runwaysdk.system.metadata.MdVertex;
-import com.runwaysdk.system.metadata.MdVertexQuery;
 
 import net.geoprism.ontology.Classifier;
 import net.geoprism.registry.DateFormatter;
@@ -749,6 +746,19 @@ public class VertexServerGeoObject extends AbstractServerGeoObject implements Se
     return query.getSingleResult();
   }
 
+  public EdgeObject getEdge(ServerHierarchyType hierarchyType, String uid)
+  {
+    String statement = "SELECT FROM " + hierarchyType.getObjectEdge().getDBClassName();
+    statement += " WHERE uid = :uid";
+    statement += " AND in = :child";
+    
+    GraphQuery<EdgeObject> query = new GraphQuery<EdgeObject>(statement);
+    query.setParameter("uid", uid);
+    query.setParameter("child", this.getVertex().getRID());
+    
+    return query.getSingleResult();
+  }
+  
   public SortedSet<EdgeObject> getEdges(ServerHierarchyType hierarchyType)
   {
     TreeSet<EdgeObject> set = new TreeSet<EdgeObject>(new EdgeComparator());

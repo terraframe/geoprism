@@ -27,6 +27,8 @@ import java.util.List;
 import java.util.Set;
 
 import org.apache.commons.lang3.StringUtils;
+import org.commongeoregistry.adapter.constants.DefaultAttribute;
+import org.commongeoregistry.adapter.dataaccess.LocalizedValue;
 import org.commongeoregistry.adapter.metadata.GeoObjectType;
 import org.commongeoregistry.adapter.metadata.HierarchyNode;
 import org.commongeoregistry.adapter.metadata.HierarchyType;
@@ -40,6 +42,7 @@ import com.runwaysdk.business.BusinessFacade;
 import com.runwaysdk.business.rbac.Operation;
 import com.runwaysdk.business.rbac.RoleDAO;
 import com.runwaysdk.constants.MdAttributeBooleanInfo;
+import com.runwaysdk.constants.MdAttributeConcreteInfo;
 import com.runwaysdk.constants.MdAttributeDateTimeInfo;
 import com.runwaysdk.constants.MdAttributeLocalInfo;
 import com.runwaysdk.constants.graph.MdEdgeInfo;
@@ -47,6 +50,7 @@ import com.runwaysdk.dataaccess.DuplicateDataException;
 import com.runwaysdk.dataaccess.MdVertexDAOIF;
 import com.runwaysdk.dataaccess.attributes.AttributeValueException;
 import com.runwaysdk.dataaccess.metadata.MdAttributeDateTimeDAO;
+import com.runwaysdk.dataaccess.metadata.MdAttributeUUIDDAO;
 import com.runwaysdk.dataaccess.metadata.graph.MdEdgeDAO;
 import com.runwaysdk.dataaccess.metadata.graph.MdVertexDAO;
 import com.runwaysdk.dataaccess.transaction.Transaction;
@@ -56,6 +60,7 @@ import com.runwaysdk.system.gis.geo.InvalidGeoEntityUniversalException;
 import com.runwaysdk.system.metadata.MdEdge;
 import com.runwaysdk.system.metadata.MdTermRelationship;
 
+import net.geoprism.configuration.GeoprismProperties;
 import net.geoprism.rbac.RoleConstants;
 import net.geoprism.registry.AbstractParentException;
 import net.geoprism.registry.CodeLengthException;
@@ -433,6 +438,7 @@ public class HierarchyTypeBusinessService implements HierarchyTypeBusinessServic
       hierarchicalRelationship.setDefinitionEdge(defitionEdge);
       hierarchicalRelationship.setOrganization(organization.getGraphOrganization());
       hierarchicalRelationship.setDbClassName(objectEdge.getDbClassName());
+      hierarchicalRelationship.setOrigin(GeoprismProperties.getOrigin());
       hierarchicalRelationship.apply();
 
       ServerHierarchyType sht = this.get(hierarchicalRelationship);
@@ -471,6 +477,14 @@ public class HierarchyTypeBusinessService implements HierarchyTypeBusinessServic
     LocalizedValueConverter.populate(mdEdgeDAO, MdEdgeInfo.DESCRIPTION, dto.getDescription());
     mdEdgeDAO.setValue(MdEdgeInfo.ENABLE_CHANGE_OVER_TIME, MdAttributeBooleanInfo.FALSE);
     mdEdgeDAO.apply();
+    
+    MdAttributeUUIDDAO uidAttr = MdAttributeUUIDDAO.newInstance();
+    uidAttr.setValue(MdAttributeConcreteInfo.NAME, DefaultAttribute.UID.getName());
+    uidAttr.setStructValue(MdAttributeBooleanInfo.DISPLAY_LABEL, LocalizedValue.DEFAULT_LOCALE, DefaultAttribute.UID.getDefaultLocalizedName());
+    uidAttr.setStructValue(MdAttributeBooleanInfo.DESCRIPTION, LocalizedValue.DEFAULT_LOCALE, DefaultAttribute.UID.getDefaultDescription());
+    uidAttr.setValue(MdAttributeConcreteInfo.DEFINING_MD_CLASS, mdEdgeDAO.getOid());
+    uidAttr.setValue(MdAttributeConcreteInfo.REQUIRED, true);
+    uidAttr.apply();
 
     MdAttributeDateTimeDAO startDate = MdAttributeDateTimeDAO.newInstance();
     startDate.setValue(MdAttributeDateTimeInfo.NAME, GeoVertex.START_DATE);
@@ -668,7 +682,7 @@ public class HierarchyTypeBusinessService implements HierarchyTypeBusinessServic
 
     sht.removeFromHierarchy(parentType, childType, migrateChildren);
 
-    objectService.removeAllEdges(sht, childType);
+    objectService.removeAllEdges(sht, childType, true);
 
     InheritedHierarchyAnnotation annotation = InheritedHierarchyAnnotation.get(childType, sht);
 

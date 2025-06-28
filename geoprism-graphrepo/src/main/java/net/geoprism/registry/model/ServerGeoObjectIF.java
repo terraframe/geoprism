@@ -96,6 +96,8 @@ public interface ServerGeoObjectIF
   public VertexObject getVertex();
 
   public EdgeObject getEdge(ServerGeoObjectIF parent, ServerHierarchyType hierarchyType, Date startDate, Date endDate);
+  
+  public EdgeObject getEdge(ServerHierarchyType hierarchyType, String uid);
 
   public ValueOverTimeCollection getValuesOverTime(String attributeName);
 

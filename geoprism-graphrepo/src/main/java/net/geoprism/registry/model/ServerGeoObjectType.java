@@ -3,22 +3,21 @@
  *
  * This file is part of Geoprism(tm).
  *
- * Geoprism(tm) is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
+ * Geoprism(tm) is free software: you can redistribute it and/or modify it under
+ * the terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation, either version 3 of the License, or (at your option) any
+ * later version.
  *
- * Geoprism(tm) is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
+ * Geoprism(tm) is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with Geoprism(tm).  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with Geoprism(tm). If not, see <http://www.gnu.org/licenses/>.
  */
 package net.geoprism.registry.model;
 
-import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -32,22 +31,16 @@ import org.commongeoregistry.adapter.dataaccess.LocalizedValue;
 import org.commongeoregistry.adapter.metadata.CustomSerializer;
 
 import com.google.gson.JsonObject;
-import com.runwaysdk.business.graph.GraphQuery;
-import com.runwaysdk.business.graph.VertexObject;
 import com.runwaysdk.dataaccess.MdVertexDAOIF;
 import com.runwaysdk.dataaccess.ProgrammingErrorException;
 import com.runwaysdk.dataaccess.metadata.graph.MdVertexDAO;
-import com.runwaysdk.dataaccess.transaction.TransactionState;
 import com.runwaysdk.system.gis.geo.Universal;
 
 import net.geoprism.registry.cache.TransactionCacheFacade;
 import net.geoprism.registry.conversion.LocalizedValueConverter;
 import net.geoprism.registry.graph.AttributeType;
-import net.geoprism.registry.graph.AttributeValue;
 import net.geoprism.registry.graph.BaseGeoObjectType;
 import net.geoprism.registry.graph.GeoObjectType;
-import net.geoprism.registry.graph.GeoVertex;
-import net.geoprism.registry.model.graph.VertexServerGeoObject;
 import net.geoprism.registry.service.business.ServiceFactory;
 
 public class ServerGeoObjectType extends CachableObjectWrapper<BaseGeoObjectType> implements ServerElement
@@ -135,7 +128,8 @@ public class ServerGeoObjectType extends CachableObjectWrapper<BaseGeoObjectType
   {
     String geometryType = this.getType().getGeometryType();
 
-    if(geometryType.equalsIgnoreCase(com.runwaysdk.system.gis.geo.GeometryType.SHAPE.name())) {
+    if (geometryType.equalsIgnoreCase(com.runwaysdk.system.gis.geo.GeometryType.SHAPE.name()))
+    {
       return GeometryType.MIXED;
     }
     return GeometryType.valueOf(geometryType);
@@ -257,7 +251,7 @@ public class ServerGeoObjectType extends CachableObjectWrapper<BaseGeoObjectType
   {
     return GeoObjectTypeMetadata.sGetClassDisplayLabel() + " : " + this.getCode();
   }
-  
+
   public static ServerGeoObjectType get(MdVertexDAOIF mdVertex)
   {
     ServerElement element = TransactionCacheFacade.get(mdVertex.getOid());
@@ -371,5 +365,10 @@ public class ServerGeoObjectType extends CachableObjectWrapper<BaseGeoObjectType
   {
     List<String> codes = this.getType().getSubTypeCodes();
     return codes.stream().map(code -> ServerGeoObjectType.get(code)).collect(Collectors.toList());
+  }
+
+  public String getOrigin()
+  {
+    return this.getType().getOrigin();
   }
 }

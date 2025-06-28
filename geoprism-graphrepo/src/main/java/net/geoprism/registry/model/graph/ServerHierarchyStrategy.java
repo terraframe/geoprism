@@ -21,20 +21,15 @@ package net.geoprism.registry.model.graph;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
-import java.util.TreeMap;
 import java.util.UUID;
 
 import org.apache.commons.collections4.map.HashedMap;
 
-import com.runwaysdk.business.graph.EdgeObject;
 import com.runwaysdk.business.graph.GraphQuery;
 import com.runwaysdk.business.graph.VertexObject;
-import com.runwaysdk.dataaccess.MdVertexDAOIF;
 
 import net.geoprism.registry.model.EdgeConstant;
 import net.geoprism.registry.model.ServerChildGraphNode;
-import net.geoprism.registry.model.ServerGeoObjectIF;
-import net.geoprism.registry.model.ServerGeoObjectType;
 import net.geoprism.registry.model.ServerGraphNode;
 import net.geoprism.registry.model.ServerHierarchyType;
 import net.geoprism.registry.model.ServerParentGraphNode;
@@ -53,7 +48,7 @@ public class ServerHierarchyStrategy extends AbstractGraphStrategy implements Gr
   @Override
   public ServerChildGraphNode getChildren(VertexServerGeoObject parent, Boolean recursive, Date date, String boundsWKT, Long skip, Long limit)
   {
-    ServerChildGraphNode tnRoot = new ServerChildGraphNode(parent, this.hierarchy, date, null, null);
+    ServerChildGraphNode tnRoot = new ServerChildGraphNode(parent, this.hierarchy, date, null, null, null);
     
     if (limit != null && limit <= 0)
     {
@@ -119,7 +114,7 @@ public class ServerHierarchyStrategy extends AbstractGraphStrategy implements Gr
       }
       else
       {
-        tnParent = new ServerChildGraphNode(child, this.hierarchy, date, null, UUID.randomUUID().toString());
+        tnParent = new ServerChildGraphNode(child, this.hierarchy, date, null, UUID.randomUUID().toString(), null);
       }
 
       tnRoot.addChild(tnParent);
@@ -132,7 +127,7 @@ public class ServerHierarchyStrategy extends AbstractGraphStrategy implements Gr
   @Override
   public ServerParentGraphNode getParents(VertexServerGeoObject child, Boolean recursive, Date date, String boundsWKT, Long skip, Long limit)
   {
-    ServerParentGraphNode tnRoot = new ServerParentGraphNode(child, this.hierarchy, date, null, null);
+    ServerParentGraphNode tnRoot = new ServerParentGraphNode(child, this.hierarchy, date, null, null, null);
     
     if (limit != null && limit <= 0)
     {
@@ -197,7 +192,7 @@ public class ServerHierarchyStrategy extends AbstractGraphStrategy implements Gr
       }
       else
       {
-        tnParent = new ServerParentGraphNode(parent, this.hierarchy, date, null, UUID.randomUUID().toString());
+        tnParent = new ServerParentGraphNode(parent, this.hierarchy, date, null, UUID.randomUUID().toString(), null);
       }
 
       tnRoot.addParent(tnParent);

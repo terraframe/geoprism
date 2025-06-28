@@ -24,9 +24,9 @@ import org.commongeoregistry.adapter.dataaccess.TreeNode;
 
 public abstract class ServerTreeNode extends ServerGraphNode
 {
-  public ServerTreeNode(ServerGeoObjectIF geoObject, ServerHierarchyType hierarchyType, Date startDate, Date endDate, String oid)
+  public ServerTreeNode(ServerGeoObjectIF geoObject, ServerHierarchyType hierarchyType, Date startDate, Date endDate, String oid, String uid)
   {
-    super(geoObject, hierarchyType, startDate, endDate, oid);
+    super(geoObject, hierarchyType, startDate, endDate, oid, uid);
   }
 
   public ServerHierarchyType getHierarchyType()

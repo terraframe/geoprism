@@ -44,9 +44,9 @@ public class ServerParentTreeNode extends ServerTreeNode
    * @param date
    *          TODO
    */
-  public ServerParentTreeNode(ServerGeoObjectIF geoObject, ServerHierarchyType hierarchyType, Date startDate, Date endDate, String oid)
+  public ServerParentTreeNode(ServerGeoObjectIF geoObject, ServerHierarchyType hierarchyType, Date startDate, Date endDate, String oid, String uid)
   {
-    super(geoObject, hierarchyType, startDate, endDate, oid);
+    super(geoObject, hierarchyType, startDate, endDate, oid, uid);
 
     this.parents = Collections.synchronizedList(new LinkedList<ServerParentTreeNode>());
   }

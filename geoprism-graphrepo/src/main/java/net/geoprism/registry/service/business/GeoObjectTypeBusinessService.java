@@ -65,6 +65,7 @@ import com.runwaysdk.system.metadata.MdAttributeConcrete;
 import com.runwaysdk.system.metadata.MdBusiness;
 import com.runwaysdk.system.metadata.MdClass;
 
+import net.geoprism.configuration.GeoprismProperties;
 import net.geoprism.registry.ChainInheritanceException;
 import net.geoprism.registry.CodeLengthException;
 import net.geoprism.registry.DuplicateGeoObjectTypeException;
@@ -409,6 +410,7 @@ public class GeoObjectTypeBusinessService implements GeoObjectTypeBusinessServic
     type.setOrganization(organization.getGraphOrganization());
     type.setValue(net.geoprism.registry.graph.GeoObjectType.MDVERTEX, mdVertex.getOid());
     type.setDbClassName(mdVertex.getDBClassName());
+    type.setOrigin(GeoprismProperties.getOrigin());
     type.fromDTO(dto);
 
     if (superType != null)

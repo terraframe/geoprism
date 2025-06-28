@@ -21,6 +21,7 @@ package net.geoprism.registry.service.business;
 import java.util.Date;
 import java.util.List;
 import java.util.TreeMap;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 import org.commongeoregistry.adapter.constants.DefaultAttribute;
@@ -31,17 +32,22 @@ import com.google.gson.JsonObject;
 import com.runwaysdk.business.graph.EdgeObject;
 import com.runwaysdk.business.graph.GraphQuery;
 import com.runwaysdk.business.graph.VertexObject;
+import com.runwaysdk.dataaccess.MdAttributeBooleanDAOIF;
 import com.runwaysdk.dataaccess.MdAttributeConcreteDAOIF;
 import com.runwaysdk.dataaccess.MdAttributeDAOIF;
+import com.runwaysdk.dataaccess.MdAttributeDateDAOIF;
+import com.runwaysdk.dataaccess.MdAttributeNumberDAOIF;
 import com.runwaysdk.dataaccess.MdAttributeTermDAOIF;
 import com.runwaysdk.dataaccess.MdVertexDAOIF;
 import com.runwaysdk.dataaccess.graph.VertexObjectDAO;
 import com.runwaysdk.dataaccess.transaction.Transaction;
 
+import net.geoprism.configuration.GeoprismProperties;
 import net.geoprism.ontology.Classifier;
 import net.geoprism.registry.BusinessEdgeType;
 import net.geoprism.registry.BusinessType;
 import net.geoprism.registry.DateFormatter;
+import net.geoprism.registry.OriginException;
 import net.geoprism.registry.model.BusinessObject;
 import net.geoprism.registry.model.EdgeDirection;
 import net.geoprism.registry.model.ServerGeoObjectIF;
@@ -111,9 +117,72 @@ public class BusinessObjectBusinessService implements BusinessObjectBusinessServ
   }
 
   @Override
+  public BusinessObject parse(BusinessType type, JsonObject json)
+  {
+    BusinessObject object = this.newInstance(type);
+    object.setCode(json.get("code").getAsString());
+
+    JsonObject data = json.get("data").getAsJsonObject();
+
+    List<? extends MdAttributeConcreteDAOIF> mdAttributes = object.getType().getMdVertexDAO().definesAttributes();
+
+    for (MdAttributeConcreteDAOIF mdAttribute : mdAttributes)
+    {
+      String attributeName = mdAttribute.definesAttribute();
+
+      if (!attributeName.equals(BusinessObject.CODE) && data.has(attributeName) && !data.get(attributeName).isJsonNull())
+      {
+        if (mdAttribute instanceof MdAttributeTermDAOIF)
+        {
+          String value = json.get(attributeName).getAsString();
+
+          Classifier classifier = Classifier.get((String) value);
+
+          object.setValue(attributeName, classifier);
+        }
+        else if (mdAttribute instanceof MdAttributeNumberDAOIF)
+        {
+          object.setValue(attributeName, json.get(attributeName).getAsNumber());
+        }
+        else if (mdAttribute instanceof MdAttributeBooleanDAOIF)
+        {
+          object.setValue(attributeName, json.get(attributeName).getAsBoolean());
+        }
+        else if (mdAttribute instanceof MdAttributeDateDAOIF)
+        {
+          object.setValue(attributeName, DateFormatter.parseDate(json.get(attributeName).getAsString()));
+        }
+        else
+        {
+          object.setValue(attributeName, json.get(attributeName).getAsString());
+        }
+      }
+    }
+
+    return object;
+  }
+
+  @Override
   @Transaction
   public void apply(BusinessObject object)
   {
+    apply(object, true);
+  }
+
+  @Override
+  @Transaction
+  public void apply(BusinessObject object, boolean validateOrigin)
+  {
+    if (validateOrigin)
+    {
+      BusinessType type = object.getType();
+
+      if (!type.getOrigin().equals(GeoprismProperties.getOrigin()))
+      {
+        throw new OriginException();
+      }
+    }
+
     object.getVertex().apply();
   }
 
@@ -121,6 +190,20 @@ public class BusinessObjectBusinessService implements BusinessObjectBusinessServ
   @Transaction
   public void delete(BusinessObject object)
   {
+    this.delete(object, true);
+  }
+
+  @Override
+  public void delete(BusinessObject object, boolean validateOrigin)
+  {
+    if (validateOrigin)
+    {
+      if (!object.getType().getOrigin().equals(GeoprismProperties.getOrigin()))
+      {
+        throw new OriginException();
+      }
+    }
+
     object.getVertex().delete();
   }
 
@@ -151,19 +234,31 @@ public class BusinessObjectBusinessService implements BusinessObjectBusinessServ
   }
 
   @Override
-  public void addGeoObject(BusinessObject object, BusinessEdgeType edgeType, ServerGeoObjectIF geoObject, EdgeDirection direction)
+  public void addGeoObject(BusinessObject object, BusinessEdgeType edgeType, ServerGeoObjectIF geoObject, EdgeDirection direction, boolean validateOrigin)
   {
+    if (validateOrigin)
+    {
+      if (!edgeType.getOrigin().equals(GeoprismProperties.getOrigin()))
+      {
+        throw new OriginException();
+      }
+    }
+
     if (geoObject != null && geoObject instanceof VertexServerGeoObject && !this.exists(object, edgeType, geoObject, direction))
     {
       VertexObject geoVertex = ( (VertexServerGeoObject) geoObject ).getVertex();
 
       if (direction.equals(EdgeDirection.CHILD))
       {
-        geoVertex.addParent(object.getVertex(), edgeType.getMdEdgeDAO()).apply();
+        EdgeObject newEdge = geoVertex.addParent(object.getVertex(), edgeType.getMdEdgeDAO());
+        newEdge.setValue(DefaultAttribute.UID.getName(), UUID.randomUUID().toString());
+        newEdge.apply();
       }
       else if (direction.equals(EdgeDirection.PARENT))
       {
-        geoVertex.addChild(object.getVertex(), edgeType.getMdEdgeDAO()).apply();
+        EdgeObject newEdge = geoVertex.addChild(object.getVertex(), edgeType.getMdEdgeDAO());
+        newEdge.setValue(DefaultAttribute.UID.getName(), UUID.randomUUID().toString());
+        newEdge.apply();
       }
       else
       {
@@ -173,8 +268,16 @@ public class BusinessObjectBusinessService implements BusinessObjectBusinessServ
   }
 
   @Override
-  public void removeGeoObject(BusinessObject object, BusinessEdgeType edgeType, ServerGeoObjectIF geoObject, EdgeDirection direction)
+  public void removeGeoObject(BusinessObject object, BusinessEdgeType edgeType, ServerGeoObjectIF geoObject, EdgeDirection direction, boolean validateOrigin)
   {
+    if (validateOrigin)
+    {
+      if (!edgeType.getOrigin().equals(GeoprismProperties.getOrigin()))
+      {
+        throw new OriginException();
+      }
+    }
+
     if (geoObject != null && geoObject instanceof VertexServerGeoObject)
     {
       VertexObject geoVertex = ( (VertexServerGeoObject) geoObject ).getVertex();
@@ -198,9 +301,7 @@ public class BusinessObjectBusinessService implements BusinessObjectBusinessServ
   @Override
   public List<VertexServerGeoObject> getGeoObjects(BusinessObject object, BusinessEdgeType edgeType, EdgeDirection direction)
   {
-    List<VertexObject> geoObjects = direction.equals(EdgeDirection.PARENT) ? 
-        object.getVertex().getParents(edgeType.getMdEdgeDAO(), VertexObject.class) :
-          object.getVertex().getChildren(edgeType.getMdEdgeDAO(), VertexObject.class);
+    List<VertexObject> geoObjects = direction.equals(EdgeDirection.PARENT) ? object.getVertex().getParents(edgeType.getMdEdgeDAO(), VertexObject.class) : object.getVertex().getChildren(edgeType.getMdEdgeDAO(), VertexObject.class);
 
     return geoObjects.stream().map(geoVertex -> {
       MdVertexDAOIF mdVertex = (MdVertexDAOIF) geoVertex.getMdClass();
@@ -235,15 +336,45 @@ public class BusinessObjectBusinessService implements BusinessObjectBusinessServ
   @Override
   public void addParent(BusinessObject object, BusinessEdgeType type, BusinessObject parent)
   {
+    this.addParent(object, type, parent, true);
+  }
+
+  @Override
+  public void addParent(BusinessObject object, BusinessEdgeType type, BusinessObject parent, boolean validateOrigin)
+  {
+    if (validateOrigin)
+    {
+      if (!type.getOrigin().equals(GeoprismProperties.getOrigin()))
+      {
+        throw new OriginException();
+      }
+    }
+
     if (parent != null && !this.exists(type, parent, object))
     {
-      object.getVertex().addParent(parent.getVertex(), type.getMdEdgeDAO()).apply();
+      EdgeObject newEdge = object.getVertex().addParent(parent.getVertex(), type.getMdEdgeDAO());
+      newEdge.setValue(DefaultAttribute.UID.getName(), UUID.randomUUID().toString());
+      newEdge.apply();
     }
   }
 
   @Override
   public void removeParent(BusinessObject object, BusinessEdgeType type, BusinessObject parent)
   {
+    this.removeParent(object, type, parent, true);
+  }
+
+  @Override
+  public void removeParent(BusinessObject object, BusinessEdgeType type, BusinessObject parent, boolean validateOrigin)
+  {
+    if (validateOrigin)
+    {
+      if (!type.getOrigin().equals(GeoprismProperties.getOrigin()))
+      {
+        throw new OriginException();
+      }
+    }
+
     if (parent != null)
     {
       object.getVertex().removeParent(parent.getVertex(), type.getMdEdgeDAO());
@@ -269,14 +400,36 @@ public class BusinessObjectBusinessService implements BusinessObjectBusinessServ
   @Override
   public void addChild(BusinessObject object, BusinessEdgeType type, BusinessObject child)
   {
+    this.addChild(object, type, child, true);
+  }
+
+  @Override
+  public void addChild(BusinessObject object, BusinessEdgeType type, BusinessObject child, boolean validateOrigin)
+  {
+    if (validateOrigin)
+    {
+      if (!type.getOrigin().equals(GeoprismProperties.getOrigin()))
+      {
+        throw new OriginException();
+      }
+    }
+
     if (child != null && !this.exists(type, object, child))
     {
-      object.getVertex().addChild(child.getVertex(), type.getMdEdgeDAO()).apply();
+      EdgeObject newEdge = object.getVertex().addChild(child.getVertex(), type.getMdEdgeDAO());
+      newEdge.setValue(DefaultAttribute.UID.getName(), UUID.randomUUID().toString());
+      newEdge.apply();
     }
   }
 
   @Override
   public void removeChild(BusinessObject object, BusinessEdgeType type, BusinessObject child)
+  {
+    this.removeChild(object, type, child, true);
+  }
+
+  @Override
+  public void removeChild(BusinessObject object, BusinessEdgeType type, BusinessObject child, boolean validateOrigin)
   {
     if (child != null)
     {

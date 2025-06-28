@@ -1,24 +1,6 @@
-/**
- * Copyright (c) 2023 TerraFrame, Inc. All rights reserved.
- *
- * This file is part of Geoprism(tm).
- *
- * Geoprism(tm) is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
- *
- * Geoprism(tm) is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with Geoprism(tm).  If not, see <http://www.gnu.org/licenses/>.
- */
 package net.geoprism.registry;
 
-@com.runwaysdk.business.ClassSignature(hash = -743011208)
+@com.runwaysdk.business.ClassSignature(hash = 1392492989)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -29,27 +11,28 @@ package net.geoprism.registry;
 public abstract class BusinessTypeBase extends com.runwaysdk.business.Business
 {
   public final static String CLASS = "net.geoprism.registry.BusinessType";
-  public static final java.lang.String CODE = "code";
-  public static final java.lang.String CREATEDATE = "createDate";
-  public static final java.lang.String CREATEDBY = "createdBy";
-  public static final java.lang.String DISPLAYLABEL = "displayLabel";
+  public final static java.lang.String CODE = "code";
+  public final static java.lang.String CREATEDATE = "createDate";
+  public final static java.lang.String CREATEDBY = "createdBy";
+  public final static java.lang.String DISPLAYLABEL = "displayLabel";
   private com.runwaysdk.business.Struct displayLabel = null;
   
-  public static final java.lang.String ENTITYDOMAIN = "entityDomain";
-  public static final java.lang.String KEYNAME = "keyName";
-  public static final java.lang.String LABELATTRIBUTE = "labelAttribute";
-  public static final java.lang.String LASTUPDATEDATE = "lastUpdateDate";
-  public static final java.lang.String LASTUPDATEDBY = "lastUpdatedBy";
-  public static final java.lang.String LOCKEDBY = "lockedBy";
-  public static final java.lang.String MDVERTEX = "mdVertex";
-  public static final java.lang.String OID = "oid";
-  public static final java.lang.String ORGANIZATION = "organization";
-  public static final java.lang.String OWNER = "owner";
-  public static final java.lang.String SEQ = "seq";
-  public static final java.lang.String SITEMASTER = "siteMaster";
-  public static final java.lang.String TYPE = "type";
+  public final static java.lang.String ENTITYDOMAIN = "entityDomain";
+  public final static java.lang.String KEYNAME = "keyName";
+  public final static java.lang.String LABELATTRIBUTE = "labelAttribute";
+  public final static java.lang.String LASTUPDATEDATE = "lastUpdateDate";
+  public final static java.lang.String LASTUPDATEDBY = "lastUpdatedBy";
+  public final static java.lang.String LOCKEDBY = "lockedBy";
+  public final static java.lang.String MDVERTEX = "mdVertex";
+  public final static java.lang.String OID = "oid";
+  public final static java.lang.String ORGANIZATION = "organization";
+  public final static java.lang.String ORIGIN = "origin";
+  public final static java.lang.String OWNER = "owner";
+  public final static java.lang.String SEQ = "seq";
+  public final static java.lang.String SITEMASTER = "siteMaster";
+  public final static java.lang.String TYPE = "type";
   @SuppressWarnings("unused")
-  private static final long serialVersionUID = -743011208;
+  private static final long serialVersionUID = 1392492989;
   
   public BusinessTypeBase()
   {
@@ -466,6 +449,34 @@ public abstract class BusinessTypeBase extends com.runwaysdk.business.Business
     else
     {
       setValue(ORGANIZATION, oid);
+    }
+  }
+  
+  public String getOrigin()
+  {
+    return getValue(ORIGIN);
+  }
+  
+  public void validateOrigin()
+  {
+    this.validateAttribute(ORIGIN);
+  }
+  
+  public static com.runwaysdk.dataaccess.MdAttributeTextDAOIF getOriginMd()
+  {
+    com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(net.geoprism.registry.BusinessType.CLASS);
+    return (com.runwaysdk.dataaccess.MdAttributeTextDAOIF)mdClassIF.definesAttribute(ORIGIN);
+  }
+  
+  public void setOrigin(String value)
+  {
+    if(value == null)
+    {
+      setValue(ORIGIN, "");
+    }
+    else
+    {
+      setValue(ORIGIN, value);
     }
   }
   

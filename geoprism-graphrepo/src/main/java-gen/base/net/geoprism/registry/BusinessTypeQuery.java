@@ -1,24 +1,6 @@
-/**
- * Copyright (c) 2023 TerraFrame, Inc. All rights reserved.
- *
- * This file is part of Geoprism(tm).
- *
- * Geoprism(tm) is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
- *
- * Geoprism(tm) is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with Geoprism(tm).  If not, see <http://www.gnu.org/licenses/>.
- */
 package net.geoprism.registry;
 
-@com.runwaysdk.business.ClassSignature(hash = -437122463)
+@com.runwaysdk.business.ClassSignature(hash = -776971162)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -262,7 +244,6 @@ public  class BusinessTypeQuery extends com.runwaysdk.query.GeneratedBusinessQue
     return (com.runwaysdk.system.SingleActorQuery.SingleActorQueryReferenceIF)this.getComponentQuery().internalAttributeFactory(net.geoprism.registry.BusinessType.LOCKEDBY, mdAttributeIF, this, alias, displayLabel);
 
   }
- 
   public com.runwaysdk.system.metadata.MdVertexQuery.MdVertexQueryReferenceIF getMdVertex()
   {
     return getMdVertex(null);
@@ -324,6 +305,23 @@ public  class BusinessTypeQuery extends com.runwaysdk.query.GeneratedBusinessQue
     com.runwaysdk.dataaccess.MdAttributeDAOIF mdAttributeIF = this.getComponentQuery().getMdAttributeROfromMap(net.geoprism.registry.BusinessType.ORGANIZATION);
 
     return (net.geoprism.registry.OrganizationQuery.OrganizationQueryReferenceIF)this.getComponentQuery().internalAttributeFactory(net.geoprism.registry.BusinessType.ORGANIZATION, mdAttributeIF, this, alias, displayLabel);
+
+  }
+  public com.runwaysdk.query.SelectableChar getOrigin()
+  {
+    return getOrigin(null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableChar getOrigin(String alias)
+  {
+    return (com.runwaysdk.query.SelectableChar)this.getComponentQuery().get(net.geoprism.registry.BusinessType.ORIGIN, alias, null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableChar getOrigin(String alias, String displayLabel)
+  {
+    return (com.runwaysdk.query.SelectableChar)this.getComponentQuery().get(net.geoprism.registry.BusinessType.ORIGIN, alias, displayLabel);
 
   }
   public com.runwaysdk.system.ActorQuery.ActorQueryReferenceIF getOwner()
@@ -529,6 +527,9 @@ public  class BusinessTypeQuery extends com.runwaysdk.query.GeneratedBusinessQue
     public net.geoprism.registry.OrganizationQuery.OrganizationQueryReferenceIF getOrganization();
     public net.geoprism.registry.OrganizationQuery.OrganizationQueryReferenceIF getOrganization(String alias);
     public net.geoprism.registry.OrganizationQuery.OrganizationQueryReferenceIF getOrganization(String alias, String displayLabel);
+    public com.runwaysdk.query.SelectableChar getOrigin();
+    public com.runwaysdk.query.SelectableChar getOrigin(String alias);
+    public com.runwaysdk.query.SelectableChar getOrigin(String alias, String displayLabel);
     public com.runwaysdk.system.ActorQuery.ActorQueryReferenceIF getOwner();
     public com.runwaysdk.system.ActorQuery.ActorQueryReferenceIF getOwner(String alias);
     public com.runwaysdk.system.ActorQuery.ActorQueryReferenceIF getOwner(String alias, String displayLabel);
@@ -797,6 +798,23 @@ public  class BusinessTypeQuery extends com.runwaysdk.query.GeneratedBusinessQue
     return (net.geoprism.registry.OrganizationQuery.OrganizationQueryReferenceIF)this.get(net.geoprism.registry.BusinessType.ORGANIZATION,  alias, displayLabel);
 
   }
+  public com.runwaysdk.query.SelectableChar getOrigin()
+  {
+    return getOrigin(null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableChar getOrigin(String alias)
+  {
+    return (com.runwaysdk.query.SelectableChar)this.get(net.geoprism.registry.BusinessType.ORIGIN, alias, null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableChar getOrigin(String alias, String displayLabel)
+  {
+    return (com.runwaysdk.query.SelectableChar)this.get(net.geoprism.registry.BusinessType.ORIGIN, alias, displayLabel);
+
+  }
   public com.runwaysdk.system.ActorQuery.ActorQueryReferenceIF getOwner()
   {
     return getOwner(null);
@@ -971,6 +989,9 @@ public  class BusinessTypeQuery extends com.runwaysdk.query.GeneratedBusinessQue
     public net.geoprism.registry.OrganizationQuery.OrganizationQueryReferenceIF getOrganization();
     public net.geoprism.registry.OrganizationQuery.OrganizationQueryReferenceIF getOrganization(String alias);
     public net.geoprism.registry.OrganizationQuery.OrganizationQueryReferenceIF getOrganization(String alias, String displayLabel);
+    public com.runwaysdk.query.SelectableChar getOrigin();
+    public com.runwaysdk.query.SelectableChar getOrigin(String alias);
+    public com.runwaysdk.query.SelectableChar getOrigin(String alias, String displayLabel);
     public com.runwaysdk.system.ActorQuery.ActorQueryReferenceIF getOwner();
     public com.runwaysdk.system.ActorQuery.ActorQueryReferenceIF getOwner(String alias);
     public com.runwaysdk.system.ActorQuery.ActorQueryReferenceIF getOwner(String alias, String displayLabel);
@@ -1286,6 +1307,23 @@ public  class BusinessTypeQuery extends com.runwaysdk.query.GeneratedBusinessQue
   public net.geoprism.registry.OrganizationQuery.OrganizationQueryReferenceIF getOrganization(String alias, String displayLabel)
   {
     return (net.geoprism.registry.OrganizationQuery.OrganizationQueryReferenceIF)this.get(net.geoprism.registry.BusinessType.ORGANIZATION,  alias, displayLabel);
+
+  }
+  public com.runwaysdk.query.SelectableChar getOrigin()
+  {
+    return getOrigin(null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableChar getOrigin(String alias)
+  {
+    return (com.runwaysdk.query.SelectableChar)this.get(net.geoprism.registry.BusinessType.ORIGIN, alias, null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableChar getOrigin(String alias, String displayLabel)
+  {
+    return (com.runwaysdk.query.SelectableChar)this.get(net.geoprism.registry.BusinessType.ORIGIN, alias, displayLabel);
 
   }
   public com.runwaysdk.system.ActorQuery.ActorQueryReferenceIF getOwner()

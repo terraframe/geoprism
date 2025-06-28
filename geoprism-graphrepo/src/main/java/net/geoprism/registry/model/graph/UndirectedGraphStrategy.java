@@ -29,6 +29,7 @@ import java.util.TreeSet;
 import java.util.UUID;
 
 import org.apache.commons.collections4.map.HashedMap;
+import org.commongeoregistry.adapter.constants.DefaultAttribute;
 
 import com.runwaysdk.business.graph.EdgeObject;
 import com.runwaysdk.business.graph.GraphQuery;
@@ -63,7 +64,7 @@ public class UndirectedGraphStrategy extends AbstractGraphStrategy implements Gr
 
   private ServerChildGraphNode getChildren(VertexServerGeoObject source, Boolean recursive, Date date, TreeSet<String> visited, String boundsWKT, Long skip, Long limit)
   {
-    ServerChildGraphNode tnRoot = new ServerChildGraphNode(source, this.type, date, null, null);
+    ServerChildGraphNode tnRoot = new ServerChildGraphNode(source, this.type, date, null, null, null);
 
     if (limit != null && limit <= 0)
     {
@@ -97,7 +98,7 @@ public class UndirectedGraphStrategy extends AbstractGraphStrategy implements Gr
         }
         else
         {
-          tnParent = new ServerChildGraphNode(target, this.type, date, null, UUID.randomUUID().toString());
+          tnParent = new ServerChildGraphNode(target, this.type, date, null, UUID.randomUUID().toString(), null);
         }
 
         tnRoot.addChild(tnParent);
@@ -116,7 +117,7 @@ public class UndirectedGraphStrategy extends AbstractGraphStrategy implements Gr
 
   private ServerParentGraphNode getParents(VertexServerGeoObject source, Boolean recursive, Date date, TreeSet<String> visited, String boundsWKT, Long skip, Long limit)
   {
-    ServerParentGraphNode tnRoot = new ServerParentGraphNode(source, this.type, date, null, null);
+    ServerParentGraphNode tnRoot = new ServerParentGraphNode(source, this.type, date, null, null, null);
 
     if (limit != null && limit <= 0)
     {
@@ -149,7 +150,7 @@ public class UndirectedGraphStrategy extends AbstractGraphStrategy implements Gr
         }
         else
         {
-          tnParent = new ServerParentGraphNode(target, this.type, date, null, UUID.randomUUID().toString());
+          tnParent = new ServerParentGraphNode(target, this.type, date, null, UUID.randomUUID().toString(), null);
         }
 
         tnRoot.addParent(tnParent);
@@ -186,9 +187,10 @@ public class UndirectedGraphStrategy extends AbstractGraphStrategy implements Gr
     votc.add(new ValueOverTime(startDate, endDate, parent));
 
     SortedSet<EdgeObject> newEdges = this.setParentCollection(geoObject, votc);
+    EdgeObject edge = newEdges.first();
 
-    ServerParentGraphNode node = new ServerParentGraphNode(geoObject, this.type, startDate, endDate, null);
-    node.addParent(new ServerParentGraphNode(parent, this.type, startDate, endDate, newEdges.first().getOid()));
+    ServerParentGraphNode node = new ServerParentGraphNode(geoObject, this.type, startDate, endDate, null, null);
+    node.addParent(new ServerParentGraphNode(parent, this.type, startDate, endDate, edge.getOid(), edge.getObjectValue(DefaultAttribute.UID.getName())));
 
     return (T) node;
   }
@@ -282,6 +284,7 @@ public class UndirectedGraphStrategy extends AbstractGraphStrategy implements Gr
           EdgeObject newEdge = geoObject.getVertex().addParent(inGo.getVertex(), this.type.getMdEdgeDAO());
           newEdge.setValue(GeoVertex.START_DATE, startDate);
           newEdge.setValue(GeoVertex.END_DATE, endDate);
+          newEdge.setValue(DefaultAttribute.UID.getName(), UUID.randomUUID().toString());
           newEdge.apply();
 
           resultEdges.add(newEdge);
@@ -331,6 +334,7 @@ public class UndirectedGraphStrategy extends AbstractGraphStrategy implements Gr
         EdgeObject newEdge = geoObject.getVertex().addParent( ( (VertexServerGeoObject) vot.getValue() ).getVertex(), this.type.getMdEdgeDAO());
         newEdge.setValue(GeoVertex.START_DATE, vot.getStartDate());
         newEdge.setValue(GeoVertex.END_DATE, vot.getEndDate());
+        newEdge.setValue(DefaultAttribute.UID.getName(), UUID.randomUUID().toString());
         newEdge.apply();
 
         resultEdges.add(newEdge);

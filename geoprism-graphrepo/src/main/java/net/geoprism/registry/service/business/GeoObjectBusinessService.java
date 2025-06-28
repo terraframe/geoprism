@@ -26,6 +26,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.SortedSet;
 import java.util.TreeMap;
 import java.util.TreeSet;
@@ -71,6 +72,7 @@ import com.runwaysdk.dataaccess.metadata.graph.MdGraphClassDAO;
 import com.runwaysdk.dataaccess.transaction.Transaction;
 import com.runwaysdk.system.AbstractClassification;
 
+import net.geoprism.configuration.GeoprismProperties;
 import net.geoprism.dashboard.GeometryUpdateException;
 import net.geoprism.ontology.Classifier;
 import net.geoprism.registry.BusinessEdgeType;
@@ -78,6 +80,7 @@ import net.geoprism.registry.DataNotFoundException;
 import net.geoprism.registry.DuplicateGeoObjectCodeException;
 import net.geoprism.registry.DuplicateGeoObjectException;
 import net.geoprism.registry.DuplicateGeoObjectMultipleException;
+import net.geoprism.registry.OriginException;
 import net.geoprism.registry.RequiredAttributeException;
 import net.geoprism.registry.cache.ClassificationCache;
 import net.geoprism.registry.conversion.RegistryLocalizedValueConverter;
@@ -96,6 +99,7 @@ import net.geoprism.registry.model.Classification;
 import net.geoprism.registry.model.ClassificationType;
 import net.geoprism.registry.model.EdgeConstant;
 import net.geoprism.registry.model.EdgeDirection;
+import net.geoprism.registry.model.EdgeValueOverTime;
 import net.geoprism.registry.model.GeoObjectMetadata;
 import net.geoprism.registry.model.GeoObjectTypeMetadata;
 import net.geoprism.registry.model.GraphType;
@@ -180,8 +184,7 @@ public class GeoObjectBusinessService extends RegistryLocalizedValueConverter im
   }
 
   @Override
-
-  public ParentTreeNode addChild(String parentCode, String parentGeoObjectTypeCode, String childCode, String childGeoObjectTypeCode, String hierarchyCode, Date startDate, Date endDate)
+  public ParentTreeNode addChild(String parentCode, String parentGeoObjectTypeCode, String childCode, String childGeoObjectTypeCode, String hierarchyCode, Date startDate, Date endDate, String uid, boolean validateOrigin)
   {
     ServerGeoObjectIF parent = this.getGeoObjectByCode(parentCode, parentGeoObjectTypeCode, true);
     ServerGeoObjectIF child = this.getGeoObjectByCode(childCode, childGeoObjectTypeCode, true);
@@ -189,12 +192,11 @@ public class GeoObjectBusinessService extends RegistryLocalizedValueConverter im
 
     ServiceFactory.getGeoObjectRelationshipPermissionService().enforceCanAddChild(ht.getOrganization().getCode(), parent.getType(), child.getType());
 
-    return addChild(parent, child, ht, startDate, endDate).toNode(false);
+    return addChild(parent, child, ht, startDate, endDate, uid, validateOrigin).toNode(false);
   }
 
   @Override
-
-  public void removeChild(String parentCode, String parentGeoObjectTypeCode, String childCode, String childGeoObjectTypeCode, String hierarchyCode, Date startDate, Date endDate)
+  public void removeChild(String parentCode, String parentGeoObjectTypeCode, String childCode, String childGeoObjectTypeCode, String hierarchyCode, Date startDate, Date endDate, boolean validateOrigin)
   {
     ServerGeoObjectIF parent = this.getGeoObjectByCode(parentCode, parentGeoObjectTypeCode, true);
     ServerGeoObjectIF child = this.getGeoObjectByCode(childCode, childGeoObjectTypeCode, true);
@@ -202,12 +204,12 @@ public class GeoObjectBusinessService extends RegistryLocalizedValueConverter im
 
     ServiceFactory.getGeoObjectRelationshipPermissionService().enforceCanRemoveChild(ht.getOrganization().getCode(), parent.getType(), child.getType());
 
-    removeChild(parent, child, hierarchyCode, startDate, endDate);
+    removeChild(parent, child, hierarchyCode, startDate, endDate, validateOrigin);
   }
 
   @Override
   @Transaction
-  public ServerGeoObjectIF apply(GeoObject dto, Date startDate, Date endDate, boolean isNew, boolean isImport)
+  public ServerGeoObjectIF apply(GeoObject dto, Date startDate, Date endDate, boolean isNew, boolean isImport, boolean validateOrigin)
   {
     ServerGeoObjectType type = ServerGeoObjectType.get(dto.getType().getCode());
     ServerGeoObjectStrategyIF strategy = this.getStrategy(type);
@@ -228,7 +230,7 @@ public class GeoObjectBusinessService extends RegistryLocalizedValueConverter im
 
     try
     {
-      apply(geoObject, isImport);
+      apply(geoObject, isImport, validateOrigin);
 
       // Return the refreshed copy of the geoObject
       ServerGeoObjectIF object = strategy.getGeoObjectByUid(geoObject.getUid());
@@ -293,12 +295,21 @@ public class GeoObjectBusinessService extends RegistryLocalizedValueConverter im
 
   @Override
   @Transaction
-  public void apply(ServerGeoObjectIF sgo, boolean isImport)
+  public void apply(ServerGeoObjectIF sgo, boolean isImport, boolean validateOrigin)
   {
     if (!isImport && !sgo.isNew() && !sgo.getType().isGeometryEditable() && sgo.isModified(DefaultAttribute.GEOMETRY.getName()))
     {
       throw new GeometryUpdateException();
     }
+    
+    if (validateOrigin)
+    {
+      if (!sgo.getType().getOrigin().equals(GeoprismProperties.getOrigin()))
+      {
+        throw new OriginException();
+      }
+    }
+
 
     final boolean isNew = sgo.isNew() || sgo.getValue(GeoVertex.CREATEDATE) == null;
 
@@ -337,16 +348,22 @@ public class GeoObjectBusinessService extends RegistryLocalizedValueConverter im
 
   @Override
   @Transaction
-  public ServerGeoObjectIF apply(GeoObject object, boolean isNew, boolean isImport)
+  public ServerGeoObjectIF apply(GeoObject object, boolean isNew, boolean isImport, boolean validateOrigin)
   {
-    return apply(object, null, null, isNew, isImport);
+    return apply(object, null, null, isNew, isImport, validateOrigin);
   }
 
   @Override
-  @Transaction
-  public ServerGeoObjectIF apply(GeoObjectOverTime goTime, boolean isNew, boolean isImport)
+  public ServerGeoObjectIF fromDTO(GeoObjectOverTime goTime, boolean isNew)
   {
     ServerGeoObjectType type = ServerGeoObjectType.get(goTime.getType().getCode());
+
+    return fromDTO(type, goTime, isNew);
+  }
+
+  @Override
+  public ServerGeoObjectIF fromDTO(ServerGeoObjectType type, GeoObjectOverTime goTime, boolean isNew)
+  {
     ServerGeoObjectStrategyIF strategy = this.getStrategy(type);
 
     if (isNew)
@@ -362,12 +379,23 @@ public class GeoObjectBusinessService extends RegistryLocalizedValueConverter im
 
     populate(goServer, goTime);
 
+    return goServer;
+  }
+
+  @Override
+  @Transaction
+  public ServerGeoObjectIF apply(GeoObjectOverTime goTime, boolean isNew, boolean isImport, boolean validateOrigin)
+  {
+    ServerGeoObjectType type = ServerGeoObjectType.get(goTime.getType().getCode());
+
+    ServerGeoObjectIF goServer = this.fromDTO(type, goTime, isNew);
+
     try
     {
-      apply(goServer, isImport);
+      apply(goServer, isImport, validateOrigin);
 
       // Return the refreshed copy of the geoObject
-      return strategy.getGeoObjectByUid(goServer.getUid());
+      return this.getStrategy(type).getGeoObjectByUid(goServer.getUid());
     }
     catch (DuplicateDataException e)
     {
@@ -573,7 +601,8 @@ public class GeoObjectBusinessService extends RegistryLocalizedValueConverter im
     populate(target, toGeoObject(source, view.getDate()), view.getDate(), view.getDate());
     target.setCode(view.getTargetCode());
     target.setDisplayLabel(view.getLabel());
-    apply(target, false);
+    
+    apply(target, false, true);
 
     final ServerParentTreeNode sNode = getParentGeoObjects(source, null, null, false, false, view.getDate());
 
@@ -584,7 +613,7 @@ public class GeoObjectBusinessService extends RegistryLocalizedValueConverter im
       final ServerGeoObjectIF parent = sParent.getGeoObject();
       final ServerHierarchyType hierarchyType = sParent.getHierarchyType();
 
-      addParent(target, parent, hierarchyType, view.getDate(), null);
+      addParent(target, parent, hierarchyType, view.getDate(), null, sParent.getUid(), true);
     }
 
     return target;
@@ -707,7 +736,7 @@ public class GeoObjectBusinessService extends RegistryLocalizedValueConverter im
   }
 
   @Override
-  public void removeAllEdges(ServerHierarchyType hierarchyType, ServerGeoObjectType childType)
+  public void removeAllEdges(ServerHierarchyType hierarchyType, ServerGeoObjectType childType, boolean validateOrigin)
   {
     VertexServerGeoObject.removeAllEdges(hierarchyType, childType);
   }
@@ -869,15 +898,23 @@ public class GeoObjectBusinessService extends RegistryLocalizedValueConverter im
 
   @Override
   @Transaction
-  public void removeChild(ServerGeoObjectIF sgo, ServerGeoObjectIF child, String hierarchyCode, Date startDate, Date endDate)
+  public void removeChild(ServerGeoObjectIF sgo, ServerGeoObjectIF child, String hierarchyCode, Date startDate, Date endDate, boolean validateOrigin)
   {
     ServerHierarchyType hierarchyType = ServerHierarchyType.get(hierarchyCode);
-    removeParent(child, sgo, hierarchyType, startDate, endDate);
+    removeParent(child, sgo, hierarchyType, startDate, endDate, validateOrigin);
   }
 
   @Override
-  public void removeParent(ServerGeoObjectIF sgo, ServerGeoObjectIF parent, ServerHierarchyType hierarchyType, Date startDate, Date endDate)
+  public void removeParent(ServerGeoObjectIF sgo, ServerGeoObjectIF parent, ServerHierarchyType hierarchyType, Date startDate, Date endDate, boolean validateOrigin)
   {
+    if (validateOrigin)
+    {
+      if (!hierarchyType.getOrigin().equals(GeoprismProperties.getOrigin()))
+      {
+        throw new OriginException();
+      }
+    }
+
     EdgeObject edge = sgo.getEdge(parent, hierarchyType, startDate, endDate);
     edge.delete();
     //
@@ -1292,19 +1329,20 @@ public class GeoObjectBusinessService extends RegistryLocalizedValueConverter im
 
     return geoObj;
   }
+  //
+  // @Transaction
+  // @Override
+  // public ServerParentTreeNode addChild(ServerGeoObjectIF sgo,
+  // ServerGeoObjectIF child, ServerHierarchyType hierarchy)
+  // {
+  // return addParent(child, sgo, hierarchy, uid);
+  // }
 
   @Transaction
   @Override
-  public ServerParentTreeNode addChild(ServerGeoObjectIF sgo, ServerGeoObjectIF child, ServerHierarchyType hierarchy)
+  public ServerParentTreeNode addChild(ServerGeoObjectIF sgo, ServerGeoObjectIF child, ServerHierarchyType hierarchy, Date startDate, Date endDate, String uid, boolean validateOrigin)
   {
-    return addParent(child, sgo, hierarchy);
-  }
-
-  @Transaction
-  @Override
-  public ServerParentTreeNode addChild(ServerGeoObjectIF sgo, ServerGeoObjectIF child, ServerHierarchyType hierarchy, Date startDate, Date endDate)
-  {
-    return addParent(child, sgo, hierarchy, startDate, endDate);
+    return addParent(child, sgo, hierarchy, startDate, endDate, uid, validateOrigin);
   }
 
   @Override
@@ -1344,7 +1382,7 @@ public class GeoObjectBusinessService extends RegistryLocalizedValueConverter im
   }
 
   @Override
-  public void setParents(ServerGeoObjectIF sgo, ServerParentTreeNodeOverTime parentsOverTime)
+  public void setParents(ServerGeoObjectIF sgo, ServerParentTreeNodeOverTime parentsOverTime, boolean validateOrigin)
   {
     parentsOverTime.enforceUserHasPermissionSetParents(sgo.getType().getCode(), false);
 
@@ -1352,9 +1390,17 @@ public class GeoObjectBusinessService extends RegistryLocalizedValueConverter im
 
     for (ServerHierarchyType hierarchyType : hierarchyTypes)
     {
+      if (validateOrigin)
+      {
+        if (!hierarchyType.getOrigin().equals(GeoprismProperties.getOrigin()))
+        {
+          throw new OriginException();
+        }
+      }
+
       final List<ServerParentTreeNode> entries = parentsOverTime.getEntries(hierarchyType);
 
-      this.removeAllEdges(sgo, hierarchyType);
+      this.removeAllEdges(sgo, hierarchyType, validateOrigin);
 
       final TreeSet<EdgeObject> edges = new TreeSet<EdgeObject>(new EdgeComparator());
 
@@ -1365,6 +1411,7 @@ public class GeoObjectBusinessService extends RegistryLocalizedValueConverter im
         EdgeObject newEdge = sgo.getVertex().addParent( ( (VertexComponent) parent ).getVertex(), hierarchyType.getObjectEdge());
         newEdge.setValue(GeoVertex.START_DATE, entry.getStartDate());
         newEdge.setValue(GeoVertex.END_DATE, entry.getEndDate());
+        newEdge.setValue(DefaultAttribute.UID.getName(), entry.getUid());
 
         edges.add(newEdge);
       }
@@ -1377,8 +1424,16 @@ public class GeoObjectBusinessService extends RegistryLocalizedValueConverter im
   }
 
   @Override
-  public void removeAllEdges(ServerGeoObjectIF sgo, ServerHierarchyType hierarchyType)
+  public void removeAllEdges(ServerGeoObjectIF sgo, ServerHierarchyType hierarchyType, boolean validateOrigin)
   {
+    if (validateOrigin)
+    {
+      if (!hierarchyType.getOrigin().equals(GeoprismProperties.getOrigin()))
+      {
+        throw new OriginException();
+      }
+    }
+
     // Delete the current edges and recreate the new ones
     final SortedSet<EdgeObject> edges = sgo.getEdges(hierarchyType);
 
@@ -1388,33 +1443,41 @@ public class GeoObjectBusinessService extends RegistryLocalizedValueConverter im
     }
   }
 
-  @Override
-  public ServerParentTreeNode addParent(ServerGeoObjectIF sgo, ServerGeoObjectIF parent, ServerHierarchyType hierarchyType)
-  {
-    // if (!hierarchyType.getUniversalType().equals(AllowedIn.CLASS))
-    // {
-    htService.validateUniversalRelationship(hierarchyType, sgo.getType(), parent.getType());
-    // }
-
-    String edgeOid = null;
-
-    if (sgo.isNew() || !sgo.exists(parent, hierarchyType, null, null))
-    {
-      EdgeObject edge = sgo.getVertex().addParent( ( (VertexComponent) parent ).getVertex(), hierarchyType.getObjectEdge());
-      edge.apply();
-
-      edgeOid = edge.getOid();
-    }
-
-    ServerParentTreeNode node = new ServerParentTreeNode(sgo, hierarchyType, sgo.getDate(), null, null);
-    node.addParent(new ServerParentTreeNode(parent, hierarchyType, sgo.getDate(), null, edgeOid));
-
-    return node;
-  }
+  // @Override
+  // public ServerParentTreeNode addParent(ServerGeoObjectIF sgo,
+  // ServerGeoObjectIF parent, ServerHierarchyType hierarchyType, String uid)
+  // {
+  // // if (!hierarchyType.getUniversalType().equals(AllowedIn.CLASS))
+  // // {
+  // htService.validateUniversalRelationship(hierarchyType, sgo.getType(),
+  // parent.getType());
+  // // }
+  //
+  // String edgeOid = null;
+  // String edgeUid = null;
+  //
+  // if (sgo.isNew() || !sgo.exists(parent, hierarchyType, null, null))
+  // {
+  // EdgeObject edge = sgo.getVertex().addParent( ( (VertexComponent) parent
+  // ).getVertex(), hierarchyType.getObjectEdge());
+  // edge.setValue(DefaultAttribute.UID.getName(), uid);
+  // edge.apply();
+  //
+  // edgeOid = edge.getOid();
+  // edgeUid = edge.getObjectValue(DefaultAttribute.UID.getName());
+  // }
+  //
+  // ServerParentTreeNode node = new ServerParentTreeNode(sgo, hierarchyType,
+  // sgo.getDate(), null, null, null);
+  // node.addParent(new ServerParentTreeNode(parent, hierarchyType,
+  // sgo.getDate(), null, edgeOid, edgeUid));
+  //
+  // return node;
+  // }
 
   private ServerChildTreeNode internalGetChildGeoObjects(ServerGeoObjectIF parent, String[] childrenTypes, Boolean recursive, ServerHierarchyType htIn, Date date)
   {
-    ServerChildTreeNode tnRoot = new ServerChildTreeNode(parent, htIn, date, null, null);
+    ServerChildTreeNode tnRoot = new ServerChildTreeNode(parent, htIn, date, null, null, null);
 
     Map<String, Object> parameters = new HashedMap<String, Object>();
     parameters.put("rid", parent.getVertex().getRID());
@@ -1422,7 +1485,7 @@ public class GeoObjectBusinessService extends RegistryLocalizedValueConverter im
     StringBuilder statement = new StringBuilder();
     statement.append("SELECT " + VertexAndEdgeResultSetConverter.geoVertexColumns(parent.getMdClass()) + ", " + VertexAndEdgeResultSetConverter.geoVertexAttributeColumns(parent.getType().definesAttributes()) + ", edgeClass, edgeOid FROM ( ");
     statement.append("SELECT v, v.out('" + EdgeConstant.HAS_VALUE.getDBClassName() + "', '" + EdgeConstant.HAS_GEOMETRY.getDBClassName() + "') as attr, edgeClass, edgeOid FROM ( ");
-    statement.append("SELECT in as v, @class as edgeClass, oid as edgeOid FROM ( ");
+    statement.append("SELECT in as v, @class as edgeClass, oid as edgeOid, uid as edgeUid FROM ( ");
     statement.append("SELECT EXPAND( outE( ");
 
     if (htIn != null)
@@ -1478,7 +1541,7 @@ public class GeoObjectBusinessService extends RegistryLocalizedValueConverter im
       }
       else
       {
-        tnChild = new ServerChildTreeNode(child, rowHierarchy, date, null, childAndEdge.edgeOid);
+        tnChild = new ServerChildTreeNode(child, rowHierarchy, date, null, childAndEdge.edgeOid, childAndEdge.edgeUid);
       }
 
       tnRoot.addChild(tnChild);
@@ -1496,7 +1559,7 @@ public class GeoObjectBusinessService extends RegistryLocalizedValueConverter im
    */
   protected ServerParentTreeNode internalGetParentGeoObjects(ServerGeoObjectIF child, String[] parentTypes, boolean recursive, boolean includeInherited, ServerHierarchyType htIn, Date date)
   {
-    ServerParentTreeNode tnRoot = new ServerParentTreeNode(child, htIn, date, null, null);
+    ServerParentTreeNode tnRoot = new ServerParentTreeNode(child, htIn, date, null, null, null);
 
     Map<String, Object> parameters = new HashedMap<String, Object>();
     parameters.put("rid", child.getVertex().getRID());
@@ -1504,7 +1567,7 @@ public class GeoObjectBusinessService extends RegistryLocalizedValueConverter im
     StringBuilder statement = new StringBuilder();
     statement.append("SELECT " + VertexAndEdgeResultSetConverter.geoVertexColumns(child.getMdClass()) + ", " + VertexAndEdgeResultSetConverter.geoVertexAttributeColumns(child.getType().definesAttributes()) + ", edgeClass, edgeOid FROM ( ");
     statement.append("SELECT v, v.out('" + EdgeConstant.HAS_VALUE.getDBClassName() + "', '" + EdgeConstant.HAS_GEOMETRY.getDBClassName() + "') as attr, edgeClass, edgeOid FROM ( ");
-    statement.append("SELECT out as v, @class as edgeClass, oid as edgeOid FROM ( ");
+    statement.append("SELECT out as v, @class as edgeClass, oid as edgeOid, oid as edgeUid FROM ( ");
     statement.append("SELECT EXPAND( inE( ");
 
     if (htIn != null)
@@ -1595,7 +1658,7 @@ public class GeoObjectBusinessService extends RegistryLocalizedValueConverter im
       }
       else
       {
-        tnParent = new ServerParentTreeNode(parent, rowHierarchy, date, null, parentAndEdge.edgeOid);
+        tnParent = new ServerParentTreeNode(parent, rowHierarchy, date, null, parentAndEdge.edgeOid, parentAndEdge.edgeUid);
       }
 
       tnRoot.addParent(tnParent);
@@ -1667,8 +1730,9 @@ public class GeoObjectBusinessService extends RegistryLocalizedValueConverter im
         Date date = edge.getObjectValue(GeoVertex.START_DATE);
         Date endDate = edge.getObjectValue(GeoVertex.END_DATE);
         String oid = edge.getObjectValue(GeoVertex.OID);
+        String uid = edge.getObjectValue(DefaultAttribute.UID.getName());
 
-        ServerParentTreeNode tnRoot = new ServerParentTreeNode(child, null, date, null, oid);
+        ServerParentTreeNode tnRoot = new ServerParentTreeNode(child, null, date, null, oid, uid);
         tnRoot.setEndDate(endDate);
         tnRoot.setOid(oid);
 
@@ -1702,7 +1766,7 @@ public class GeoObjectBusinessService extends RegistryLocalizedValueConverter im
         }
         else
         {
-          tnParent = new ServerParentTreeNode(parent, ht, date, null, oid);
+          tnParent = new ServerParentTreeNode(parent, ht, date, null, oid, uid);
         }
 
         tnRoot.addParent(tnParent);
@@ -1725,20 +1789,21 @@ public class GeoObjectBusinessService extends RegistryLocalizedValueConverter im
     {
       final Date startDate = edge.getObjectValue(GeoVertex.START_DATE);
       final Date endDate = edge.getObjectValue(GeoVertex.END_DATE);
+      final String uid = edge.getObjectValue(DefaultAttribute.UID.getName());
 
       VertexObject parentVertex = edge.getParent();
       MdVertexDAOIF mdVertex = (MdVertexDAOIF) parentVertex.getMdClass();
       ServerGeoObjectType parentType = ServerGeoObjectType.get(mdVertex);
       VertexServerGeoObject parent = new VertexServerGeoObject(parentType, parentVertex, new TreeMap<>(), startDate);
 
-      votc.add(new ValueOverTime(edge.getOid(), startDate, endDate, parent));
+      votc.add(new EdgeValueOverTime(edge.getOid(), startDate, endDate, parent, uid));
     }
 
     return votc;
   }
 
   @Override
-  public SortedSet<EdgeObject> setParentCollection(ServerGeoObjectIF sgo, ServerHierarchyType hierarchyType, ValueOverTimeCollection votc)
+  public SortedSet<EdgeObject> setParentCollection(ServerGeoObjectIF sgo, ServerHierarchyType hierarchyType, ValueOverTimeCollection votc, boolean validateOrigin)
   {
     SortedSet<EdgeObject> resultEdges = new TreeSet<EdgeObject>(new EdgeComparator());
     SortedSet<EdgeObject> existingEdges = sgo.getEdges(hierarchyType);
@@ -1747,28 +1812,16 @@ public class GeoObjectBusinessService extends RegistryLocalizedValueConverter im
     {
       final Date startDate = edge.getObjectValue(GeoVertex.START_DATE);
       final Date endDate = edge.getObjectValue(GeoVertex.END_DATE);
+      final String uid = edge.getObjectValue(DefaultAttribute.UID.getName());
 
       VertexObject parentVertex = edge.getParent();
       MdVertexDAOIF mdVertex = (MdVertexDAOIF) parentVertex.getMdClass();
       ServerGeoObjectType parentType = ServerGeoObjectType.get(mdVertex);
       final VertexServerGeoObject edgeGo = new VertexServerGeoObject(parentType, parentVertex, new TreeMap<>(), startDate);
 
-      ValueOverTime inVot = null;
-      for (ValueOverTime vot : votc)
-      {
-        if (vot.getOid().equals(edge.getOid()))
-        {
-          inVot = vot;
-          break;
-        }
-      }
+      Optional<EdgeValueOverTime> existing = votc.stream().map(vot -> (EdgeValueOverTime) vot).filter(vot -> vot.getUid().equals(uid)).findFirst();
 
-      if (inVot == null)
-      {
-        edge.delete();
-      }
-      else
-      {
+      existing.ifPresentOrElse(inVot -> {
         VertexServerGeoObject inGo = (VertexServerGeoObject) inVot.getValue();
 
         boolean hasValueChange = false;
@@ -1786,7 +1839,7 @@ public class GeoObjectBusinessService extends RegistryLocalizedValueConverter im
         {
           edge.delete();
 
-          EdgeObject newEdge = addParentRaw(sgo, inGo.getVertex(), hierarchyType.getObjectEdge(), startDate, endDate);
+          EdgeObject newEdge = addParentRaw(sgo, inGo.getVertex(), hierarchyType.getObjectEdge(), startDate, endDate, uid, validateOrigin);
 
           resultEdges.add(newEdge);
         }
@@ -1814,44 +1867,36 @@ public class GeoObjectBusinessService extends RegistryLocalizedValueConverter im
             edge.apply();
           }
         }
-      }
+      }, () -> {
+        edge.delete();
+      });
     }
 
-    for (ValueOverTime vot : votc)
-    {
-      boolean isNew = true;
+    // Handle new edges
+    List<String> edgeUids = existingEdges.stream().map(e -> (String) e.getObjectValue(DefaultAttribute.UID.getName())).toList();
 
-      for (EdgeObject edge : existingEdges)
-      {
-        if (vot.getOid().equals(edge.getOid()))
-        {
-          isNew = false;
-          resultEdges.add(edge);
-        }
-      }
+    votc.stream().map(vot -> (EdgeValueOverTime) vot).filter(vot -> !edgeUids.contains(vot.getUid())).forEach(vot -> {
+      EdgeObject newEdge = addParentRaw(sgo, ( (VertexServerGeoObject) vot.getValue() ).getVertex(), hierarchyType.getObjectEdge(), vot.getStartDate(), vot.getEndDate(), vot.getUid(), validateOrigin);
 
-      if (isNew)
-      {
-        EdgeObject newEdge = addParentRaw(sgo, ( (VertexServerGeoObject) vot.getValue() ).getVertex(), hierarchyType.getObjectEdge(), vot.getStartDate(), vot.getEndDate());
-
-        resultEdges.add(newEdge);
-      }
-    }
+      resultEdges.add(newEdge);
+    });
 
     return resultEdges;
   }
 
   @Override
-  public ServerParentTreeNode addParent(ServerGeoObjectIF sgo, ServerGeoObjectIF parent, ServerHierarchyType hierarchyType, Date startDate, Date endDate)
+  public ServerParentTreeNode addParent(ServerGeoObjectIF sgo, ServerGeoObjectIF parent, ServerHierarchyType hierarchyType, Date startDate, Date endDate, String uid, boolean validateOrigin)
   {
     htService.validateUniversalRelationship(hierarchyType, sgo.getType(), parent.getType());
 
     ValueOverTimeCollection votc = getParentCollection(sgo, hierarchyType);
-    votc.add(new ValueOverTime(startDate, endDate, parent));
-    SortedSet<EdgeObject> newEdges = setParentCollection(sgo, hierarchyType, votc);
+    votc.add(new EdgeValueOverTime(startDate, endDate, parent, uid));
 
-    ServerParentTreeNode node = new ServerParentTreeNode(sgo, hierarchyType, startDate, null, null);
-    node.addParent(new ServerParentTreeNode(parent, hierarchyType, startDate, null, newEdges.first().getOid()));
+    SortedSet<EdgeObject> newEdges = setParentCollection(sgo, hierarchyType, votc, validateOrigin);
+    EdgeObject edge = newEdges.first();
+
+    ServerParentTreeNode node = new ServerParentTreeNode(sgo, hierarchyType, startDate, null, null, null);
+    node.addParent(new ServerParentTreeNode(parent, hierarchyType, startDate, null, edge.getOid(), edge.getObjectValue(DefaultAttribute.UID.getName())));
 
     return node;
   }
@@ -1862,11 +1907,12 @@ public class GeoObjectBusinessService extends RegistryLocalizedValueConverter im
    * instead.
    */
   @Override
-  public EdgeObject addParentRaw(ServerGeoObjectIF sgo, VertexObject parent, MdEdgeDAOIF mdEdge, Date startDate, Date endDate)
+  public EdgeObject addParentRaw(ServerGeoObjectIF sgo, VertexObject parent, MdEdgeDAOIF mdEdge, Date startDate, Date endDate, String uid, boolean validateOrigin)
   {
     EdgeObject newEdge = sgo.getVertex().addParent(parent, mdEdge);
     newEdge.setValue(GeoVertex.START_DATE, startDate);
     newEdge.setValue(GeoVertex.END_DATE, endDate);
+    newEdge.setValue(DefaultAttribute.UID.getName(), UUID.randomUUID().toString());
     newEdge.apply();
 
     return newEdge;
@@ -2003,31 +2049,27 @@ public class GeoObjectBusinessService extends RegistryLocalizedValueConverter im
   public JsonArray getBusinessObjects(String typeCode, String code, String edgeTypeCode, String direction)
   {
     VertexServerGeoObject vsgo = (VertexServerGeoObject) this.getGeoObjectByCode(code, typeCode);
-    
+
     List<BusinessObject> objects = null;
-    
+
     BusinessEdgeType edgeType = this.businessEdgeTypeService.getByCode(edgeTypeCode);
-    
+
     objects = this.getBusinessObjects(vsgo, edgeType, EdgeDirection.valueOf(direction));
-    
+
     return objects.stream().map(object -> {
       return this.businessObjectService.toJSON(object);
     }).collect(() -> new JsonArray(), (array, element) -> array.add(element), (listA, listB) -> {
     });
   }
-  
+
   @Override
   public List<BusinessObject> getBusinessObjects(VertexServerGeoObject object, BusinessEdgeType edgeType, EdgeDirection direction)
   {
-    List<VertexObject> objects = direction.equals(EdgeDirection.PARENT) ?
-        object.getVertex().getParents(edgeType.getMdEdgeDAO(), VertexObject.class) :
-        object.getVertex().getChildren(edgeType.getMdEdgeDAO(), VertexObject.class);
-    
-    EdgeVertexType type =  direction.equals(EdgeDirection.PARENT) ?
-        this.businessEdgeTypeService.getParent(edgeType) :
-        this.businessEdgeTypeService.getChild(edgeType);
-    
+    List<VertexObject> objects = direction.equals(EdgeDirection.PARENT) ? object.getVertex().getParents(edgeType.getMdEdgeDAO(), VertexObject.class) : object.getVertex().getChildren(edgeType.getMdEdgeDAO(), VertexObject.class);
+
+    EdgeVertexType type = direction.equals(EdgeDirection.PARENT) ? this.businessEdgeTypeService.getParent(edgeType) : this.businessEdgeTypeService.getChild(edgeType);
+
     return objects.stream().map(o -> new BusinessObject(o, type.toBusinessType())).collect(Collectors.toList());
   }
-  
+
 }

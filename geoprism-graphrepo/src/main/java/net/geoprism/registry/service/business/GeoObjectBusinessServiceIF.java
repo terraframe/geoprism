@@ -65,19 +65,19 @@ public interface GeoObjectBusinessServiceIF
 
   public JsonObject getAll(String gotCode, String hierarchyCode, Date since, Boolean includeLevel, String format, String externalSystemId, Integer pageNumber, Integer pageSize);
 
-  public ParentTreeNode addChild(String parentCode, String parentGeoObjectTypeCode, String childCode, String childGeoObjectTypeCode, String hierarchyCode, Date startDate, Date endDate);
+  public ParentTreeNode addChild(String parentCode, String parentGeoObjectTypeCode, String childCode, String childGeoObjectTypeCode, String hierarchyCode, Date startDate, Date endDate, String uid, boolean validateOrigin);
 
-  public void removeChild(String parentCode, String parentGeoObjectTypeCode, String childCode, String childGeoObjectTypeCode, String hierarchyCode, Date startDate, Date endDate);
+  public void removeChild(String parentCode, String parentGeoObjectTypeCode, String childCode, String childGeoObjectTypeCode, String hierarchyCode, Date startDate, Date endDate, boolean validateOrigin);
 
-  public void apply(ServerGeoObjectIF sgo, boolean isImport);
+  public void apply(ServerGeoObjectIF sgo, boolean isImport, boolean validateOrigin);
 
-  public ServerGeoObjectIF apply(GeoObject object, Date startDate, Date endDate, boolean isNew, boolean isImport);
+  public ServerGeoObjectIF apply(GeoObject object, Date startDate, Date endDate, boolean isNew, boolean isImport, boolean validateOrigin);
 
   public void handleDuplicateDataException(ServerGeoObjectType type, DuplicateDataException e);
 
-  public ServerGeoObjectIF apply(GeoObject object, boolean isNew, boolean isImport);
+  public ServerGeoObjectIF apply(GeoObject object, boolean isNew, boolean isImport, boolean validateOrigin);
 
-  public ServerGeoObjectIF apply(GeoObjectOverTime goTime, boolean isNew, boolean isImport);
+  public ServerGeoObjectIF apply(GeoObjectOverTime goTime, boolean isNew, boolean isImport, boolean validateOrigin);
 
   public ServerGeoObjectIF split(GeoObjectSplitView view);
 
@@ -105,7 +105,7 @@ public interface GeoObjectBusinessServiceIF
 
   public boolean hasData(ServerHierarchyType serverHierarchyType, ServerGeoObjectType childType);
 
-  public void removeAllEdges(ServerHierarchyType hierarchyType, ServerGeoObjectType childType);
+  public void removeAllEdges(ServerHierarchyType hierarchyType, ServerGeoObjectType childType, boolean validateOrigin);
 
   public JsonObject doesGeoObjectExistAtRange(Date startDate, Date endDate, String typeCode, String code);
 
@@ -113,9 +113,9 @@ public interface GeoObjectBusinessServiceIF
 
   public List<VertexServerGeoObject> getAncestors(ServerGeoObjectIF sgo, ServerHierarchyType hierarchy, boolean includeNonExist, boolean includeInherited);
 
-  public void removeChild(ServerGeoObjectIF sgo, ServerGeoObjectIF child, String hierarchyCode, Date startDate, Date endDate);
+  public void removeChild(ServerGeoObjectIF sgo, ServerGeoObjectIF child, String hierarchyCode, Date startDate, Date endDate, boolean validateOrigin);
 
-  public void removeParent(ServerGeoObjectIF sgo, ServerGeoObjectIF parent, ServerHierarchyType hierarchyType, Date startDate, Date endDate);
+  public void removeParent(ServerGeoObjectIF sgo, ServerGeoObjectIF parent, ServerHierarchyType hierarchyType, Date startDate, Date endDate, boolean validateOrigin);
 
   public GeoObject toGeoObject(ServerGeoObjectIF sgo, Date date);
 
@@ -129,9 +129,13 @@ public interface GeoObjectBusinessServiceIF
 
   public GeoObjectOverTime toGeoObjectOverTime(ServerGeoObjectIF sgo, boolean generateUid, ClassifierVertexCache classifierCache);
 
-  public ServerParentTreeNode addChild(ServerGeoObjectIF sgo, ServerGeoObjectIF child, ServerHierarchyType hierarchy);
+//  public ServerParentTreeNode addChild(ServerGeoObjectIF sgo, ServerGeoObjectIF child, ServerHierarchyType hierarchy);
+  
+//  public ServerParentTreeNode addParent(ServerGeoObjectIF sgo, ServerGeoObjectIF parent, ServerHierarchyType hierarchyType, String uid);
 
-  public ServerParentTreeNode addChild(ServerGeoObjectIF sgo, ServerGeoObjectIF child, ServerHierarchyType hierarchy, Date startDate, Date endDate);
+  public ServerParentTreeNode addParent(ServerGeoObjectIF sgo, ServerGeoObjectIF parent, ServerHierarchyType hierarchyType, Date startDate, Date endDate, String uid, boolean validateOrigin);
+  
+  public ServerParentTreeNode addChild(ServerGeoObjectIF sgo, ServerGeoObjectIF child, ServerHierarchyType hierarchy, Date startDate, Date endDate, String uid, boolean validateOrigin);
 
   public ServerChildTreeNode getChildGeoObjects(ServerGeoObjectIF sgo, ServerHierarchyType hierarchy, String[] childrenTypes, Boolean recursive, Date date);
 
@@ -141,17 +145,15 @@ public interface GeoObjectBusinessServiceIF
 
   public ServerParentTreeNodeOverTime getParentsOverTime(ServerGeoObjectIF sgo, String[] parentTypes, Boolean recursive, Boolean includeInherited);
 
-  public void setParents(ServerGeoObjectIF sgo, ServerParentTreeNodeOverTime parentsOverTime);
+  public void setParents(ServerGeoObjectIF sgo, ServerParentTreeNodeOverTime parentsOverTime, boolean validateOrigin);
 
-  public void removeAllEdges(ServerGeoObjectIF sgo, ServerHierarchyType hierarchyType);
+  public void removeAllEdges(ServerGeoObjectIF sgo, ServerHierarchyType hierarchyType, boolean validateOrigin);
 
-  public ServerParentTreeNode addParent(ServerGeoObjectIF sgo, ServerGeoObjectIF parent, ServerHierarchyType hierarchyType);
 
   public ValueOverTimeCollection getParentCollection(ServerGeoObjectIF sgo, ServerHierarchyType hierarchyType);
 
-  public SortedSet<EdgeObject> setParentCollection(ServerGeoObjectIF sgo, ServerHierarchyType hierarchyType, ValueOverTimeCollection votc);
+  public SortedSet<EdgeObject> setParentCollection(ServerGeoObjectIF sgo, ServerHierarchyType hierarchyType, ValueOverTimeCollection votc, boolean validateOrigin);
 
-  public ServerParentTreeNode addParent(ServerGeoObjectIF sgo, ServerGeoObjectIF parent, ServerHierarchyType hierarchyType, Date startDate, Date endDate);
 
   public ServerParentTreeNode getGraphParentGeoObjects(ServerGeoObjectIF sgo, GraphType graphType, Boolean recursive, Boolean includeInherited, Date date);
 
@@ -161,8 +163,10 @@ public interface GeoObjectBusinessServiceIF
    * Adds an edge, bypassing all validation (for performance reasons). Be
    * careful with this method!! You probably want to call addChild or addParent
    * instead.
+   * @param uid TODO
+   * @param validateOrigin TODO
    */
-  public EdgeObject addParentRaw(ServerGeoObjectIF sgo, VertexObject parent, MdEdgeDAOIF mdEdge, Date startDate, Date endDate);
+  public EdgeObject addParentRaw(ServerGeoObjectIF sgo, VertexObject parent, MdEdgeDAOIF mdEdge, Date startDate, Date endDate, String uid, boolean validateOrigin);
 
   public Map<String, LocationInfo> getAncestorMap(ServerGeoObjectIF sgo, ServerHierarchyType hierarchy, List<ServerGeoObjectType> parents);
 
@@ -171,4 +175,8 @@ public interface GeoObjectBusinessServiceIF
   public JsonArray getBusinessObjects(String typeCode, String code, String edgeTypeCode, String direction);
 
   public List<BusinessObject> getBusinessObjects(VertexServerGeoObject object, BusinessEdgeType edgeType, EdgeDirection direction);
+
+  ServerGeoObjectIF fromDTO(ServerGeoObjectType type, GeoObjectOverTime goTime, boolean isNew);
+
+  ServerGeoObjectIF fromDTO(GeoObjectOverTime goTime, boolean isNew);
 }

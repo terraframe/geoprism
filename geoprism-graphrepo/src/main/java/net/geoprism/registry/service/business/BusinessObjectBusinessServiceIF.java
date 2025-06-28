@@ -39,21 +39,29 @@ public interface BusinessObjectBusinessServiceIF
 
   public void apply(BusinessObject object);
 
+  public void apply(BusinessObject object, boolean validateOrigin);
+
   public void delete(BusinessObject object);
+  
+  public void delete(BusinessObject object, boolean validateOrigin);
 
   public boolean exists(BusinessObject object, BusinessEdgeType edgeType, ServerGeoObjectIF geoObject, EdgeDirection direction);
 
-  public void addGeoObject(BusinessObject object, BusinessEdgeType edgeType, ServerGeoObjectIF geoObject, EdgeDirection direction);
+  public void addGeoObject(BusinessObject object, BusinessEdgeType edgeType, ServerGeoObjectIF geoObject, EdgeDirection direction, boolean validateOrigin);
 
-  public void removeGeoObject(BusinessObject object, BusinessEdgeType edgeType, ServerGeoObjectIF geoObject, EdgeDirection direction);
+  public void removeGeoObject(BusinessObject object, BusinessEdgeType edgeType, ServerGeoObjectIF geoObject, EdgeDirection direction, boolean validateOrigin);
 
   public List<VertexServerGeoObject> getGeoObjects(BusinessObject object, BusinessEdgeType edgeType, EdgeDirection direction);
 
   public boolean exists(BusinessEdgeType type, BusinessObject parent, BusinessObject child);
 
   public void addParent(BusinessObject object, BusinessEdgeType type, BusinessObject parent);
-
+  
   public void removeParent(BusinessObject object, BusinessEdgeType type, BusinessObject parent);
+  
+  public void addParent(BusinessObject object, BusinessEdgeType type, BusinessObject parent, boolean validateOrigin);
+
+  public void removeParent(BusinessObject object, BusinessEdgeType type, BusinessObject parent, boolean validateOrigin);
 
   public List<BusinessObject> getParents(BusinessObject object, BusinessEdgeType type);
 
@@ -61,6 +69,10 @@ public interface BusinessObjectBusinessServiceIF
 
   public void removeChild(BusinessObject object, BusinessEdgeType type, BusinessObject child);
 
+  public void addChild(BusinessObject object, BusinessEdgeType type, BusinessObject child, boolean validateOrigin);
+  
+  public void removeChild(BusinessObject object, BusinessEdgeType type, BusinessObject child, boolean validateOrigin);
+  
   public List<BusinessObject> getChildren(BusinessObject object, BusinessEdgeType type);
 
   public BusinessObject newInstance(BusinessType type);
@@ -68,5 +80,7 @@ public interface BusinessObjectBusinessServiceIF
   public BusinessObject get(BusinessType type, String attributeName, Object value);
 
   public BusinessObject getByCode(BusinessType type, Object value);
+
+  BusinessObject parse(BusinessType type, JsonObject json);
 
 }

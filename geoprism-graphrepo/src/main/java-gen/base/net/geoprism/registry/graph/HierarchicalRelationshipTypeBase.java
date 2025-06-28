@@ -1,24 +1,6 @@
-/**
- * Copyright (c) 2023 TerraFrame, Inc. All rights reserved.
- *
- * This file is part of Geoprism(tm).
- *
- * Geoprism(tm) is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
- *
- * Geoprism(tm) is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with Geoprism(tm).  If not, see <http://www.gnu.org/licenses/>.
- */
 package net.geoprism.registry.graph;
 
-@com.runwaysdk.business.ClassSignature(hash = -390352493)
+@com.runwaysdk.business.ClassSignature(hash = -964636949)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -43,12 +25,13 @@ public abstract class HierarchicalRelationshipTypeBase extends com.runwaysdk.bus
   public final static java.lang.String OBJECTEDGE = "objectEdge";
   public final static java.lang.String OID = "oid";
   public final static java.lang.String ORGANIZATION = "organization";
+  public final static java.lang.String ORIGIN = "origin";
   public final static java.lang.String PHONENUMBER = "phoneNumber";
   public final static java.lang.String PROGRESS = "progress";
   public final static java.lang.String SEQ = "seq";
   public final static java.lang.String USECONSTRAINTS = "useConstraints";
   @SuppressWarnings("unused")
-  private static final long serialVersionUID = -390352493;
+  private static final long serialVersionUID = -964636949;
   
   public HierarchicalRelationshipTypeBase()
   {
@@ -306,6 +289,22 @@ public abstract class HierarchicalRelationshipTypeBase extends com.runwaysdk.bus
   public void setOrganization(net.geoprism.registry.graph.GraphOrganization value)
   {
     this.setValue(ORGANIZATION, value);
+  }
+  
+  public String getOrigin()
+  {
+    return (String) this.getObjectValue(ORIGIN);
+  }
+  
+  public static com.runwaysdk.dataaccess.MdAttributeTextDAOIF getOriginMd()
+  {
+    com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(net.geoprism.registry.graph.HierarchicalRelationshipType.CLASS);
+    return (com.runwaysdk.dataaccess.MdAttributeTextDAOIF)mdClassIF.definesAttribute(ORIGIN);
+  }
+  
+  public void setOrigin(String value)
+  {
+    this.setValue(ORIGIN, value);
   }
   
   public String getPhoneNumber()
