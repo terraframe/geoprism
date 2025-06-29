@@ -84,6 +84,7 @@ import com.runwaysdk.system.metadata.MdClass;
 import com.runwaysdk.system.metadata.MdGraphClass;
 import com.runwaysdk.system.metadata.MdVertex;
 
+import net.geoprism.configuration.GeoprismProperties;
 import net.geoprism.ontology.Classifier;
 import net.geoprism.registry.BusinessEdgeType;
 import net.geoprism.registry.BusinessEdgeTypeQuery;
@@ -337,6 +338,7 @@ public class BusinessTypeBusinessService implements BusinessTypeBusinessServiceI
     BusinessType businessType = ( object.has(BusinessType.OID) && !object.get(BusinessType.OID).isJsonNull() ) ? BusinessType.get(object.get(BusinessType.OID).getAsString()) : new BusinessType();
     businessType.setCode(code);
     businessType.setOrganization(organization);
+    businessType.setOrigin(GeoprismProperties.getOrigin());
     RegistryLocalizedValueConverter.populate(businessType.getDisplayLabel(), localizedValue);
 
     boolean isNew = businessType.isNew();

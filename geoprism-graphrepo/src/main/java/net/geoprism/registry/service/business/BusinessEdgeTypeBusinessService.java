@@ -286,6 +286,7 @@ public class BusinessEdgeTypeBusinessService implements BusinessEdgeTypeBusiness
       businessEdgeType.setChildTypeId(childOid);
       RegistryLocalizedValueConverter.populate(businessEdgeType.getDisplayLabel(), label);
       RegistryLocalizedValueConverter.populate(businessEdgeType.getDescription(), description);
+      businessEdgeType.setOrigin(GeoprismProperties.getOrigin());
       businessEdgeType.apply();
       
       return businessEdgeType;

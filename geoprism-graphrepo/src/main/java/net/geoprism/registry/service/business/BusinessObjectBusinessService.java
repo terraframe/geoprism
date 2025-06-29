@@ -36,6 +36,9 @@ import com.runwaysdk.dataaccess.MdAttributeBooleanDAOIF;
 import com.runwaysdk.dataaccess.MdAttributeConcreteDAOIF;
 import com.runwaysdk.dataaccess.MdAttributeDAOIF;
 import com.runwaysdk.dataaccess.MdAttributeDateDAOIF;
+import com.runwaysdk.dataaccess.MdAttributeDecimalDAOIF;
+import com.runwaysdk.dataaccess.MdAttributeDoubleDAOIF;
+import com.runwaysdk.dataaccess.MdAttributeLongDAOIF;
 import com.runwaysdk.dataaccess.MdAttributeNumberDAOIF;
 import com.runwaysdk.dataaccess.MdAttributeTermDAOIF;
 import com.runwaysdk.dataaccess.MdVertexDAOIF;
@@ -117,49 +120,69 @@ public class BusinessObjectBusinessService implements BusinessObjectBusinessServ
   }
 
   @Override
-  public BusinessObject parse(BusinessType type, JsonObject json)
+  public BusinessObject newInstance(BusinessType type, JsonObject json)
   {
     BusinessObject object = this.newInstance(type);
+
+    populate(object, json);
+
+    return object;
+  }
+
+  @Override
+  public void populate(BusinessObject object, JsonObject json)
+  {
     object.setCode(json.get("code").getAsString());
 
     JsonObject data = json.get("data").getAsJsonObject();
 
-    List<? extends MdAttributeConcreteDAOIF> mdAttributes = object.getType().getMdVertexDAO().definesAttributes();
-
-    for (MdAttributeConcreteDAOIF mdAttribute : mdAttributes)
-    {
+    object.getType().getMdVertexDAO().definesAttributes().stream().filter(mdAttribute -> {
       String attributeName = mdAttribute.definesAttribute();
 
-      if (!attributeName.equals(BusinessObject.CODE) && data.has(attributeName) && !data.get(attributeName).isJsonNull())
+      return !attributeName.equals(BusinessObject.CODE) && !mdAttribute.isSystem();
+    }).forEach(mdAttribute -> {
+      String attributeName = mdAttribute.definesAttribute();
+
+      if (data.has(attributeName) && !data.get(attributeName).isJsonNull())
       {
         if (mdAttribute instanceof MdAttributeTermDAOIF)
         {
-          String value = json.get(attributeName).getAsString();
+          String value = data.get(attributeName).getAsString();
 
           Classifier classifier = Classifier.get((String) value);
 
           object.setValue(attributeName, classifier);
         }
+        else if (mdAttribute instanceof MdAttributeLongDAOIF)
+        {
+          object.setValue(attributeName, data.get(attributeName).getAsLong());
+        }
+        else if (mdAttribute instanceof MdAttributeDoubleDAOIF)
+        {
+          object.setValue(attributeName, data.get(attributeName).getAsDouble());
+        }
+        else if (mdAttribute instanceof MdAttributeDecimalDAOIF)
+        {
+          object.setValue(attributeName, data.get(attributeName).getAsBigDecimal());
+        }
         else if (mdAttribute instanceof MdAttributeNumberDAOIF)
         {
-          object.setValue(attributeName, json.get(attributeName).getAsNumber());
+          object.setValue(attributeName, data.get(attributeName).getAsNumber());
         }
         else if (mdAttribute instanceof MdAttributeBooleanDAOIF)
         {
-          object.setValue(attributeName, json.get(attributeName).getAsBoolean());
+          object.setValue(attributeName, data.get(attributeName).getAsBoolean());
         }
         else if (mdAttribute instanceof MdAttributeDateDAOIF)
         {
-          object.setValue(attributeName, DateFormatter.parseDate(json.get(attributeName).getAsString()));
+          object.setValue(attributeName, DateFormatter.parseDate(data.get(attributeName).getAsString()));
         }
         else
         {
-          object.setValue(attributeName, json.get(attributeName).getAsString());
+          object.setValue(attributeName, data.get(attributeName).getAsString());
         }
       }
-    }
-
-    return object;
+    });
   }
 
   @Override
