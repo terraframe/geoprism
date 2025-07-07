@@ -33,7 +33,7 @@ public class DirectedAcyclicGraphTypeSnapshot extends DirectedAcyclicGraphTypeSn
   {
     super();
   }
-
+  
   @Override
   public String getTypeCode()
   {

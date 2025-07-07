@@ -18,6 +18,7 @@
  */
 package net.geoprism.registry.service.business;
 
+import org.apache.commons.lang.StringUtils;
 import org.commongeoregistry.adapter.constants.DefaultAttribute;
 import org.commongeoregistry.adapter.dataaccess.LocalizedValue;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,6 +32,7 @@ import com.runwaysdk.constants.MdAttributeConcreteInfo;
 import com.runwaysdk.constants.graph.MdEdgeInfo;
 import com.runwaysdk.dataaccess.metadata.MdAttributeUUIDDAO;
 import com.runwaysdk.dataaccess.metadata.graph.MdEdgeDAO;
+import com.runwaysdk.dataaccess.metadata.graph.MdGraphClassDAO;
 import com.runwaysdk.dataaccess.transaction.Transaction;
 import com.runwaysdk.query.OIterator;
 import com.runwaysdk.query.QueryFactory;
@@ -43,6 +45,7 @@ import net.geoprism.graph.GeoObjectTypeSnapshot;
 import net.geoprism.graph.GraphTypeSnapshot;
 import net.geoprism.graph.HierarchyTypeSnapshot;
 import net.geoprism.graph.HierarchyTypeSnapshotQuery;
+import net.geoprism.graph.LabeledPropertyGraphTypeSnapshotQuery;
 import net.geoprism.graph.LabeledPropertyGraphTypeVersion;
 import net.geoprism.graph.UndirectedGraphTypeSnapshot;
 import net.geoprism.graph.UndirectedGraphTypeSnapshotQuery;
@@ -59,6 +62,9 @@ public class GraphTypeSnapshotBusinessService implements GraphTypeSnapshotBusine
   @Autowired
   private GeoObjectTypeSnapshotBusinessServiceIF service;
 
+  @Autowired
+  private HierarchyTypeSnapshotBusinessServiceIF hService;
+  
   @Override
   @Transaction
   public void delete(GraphTypeSnapshot snapshot)
@@ -67,7 +73,10 @@ public class GraphTypeSnapshotBusinessService implements GraphTypeSnapshotBusine
 
     snapshot.delete();
 
-    MdEdgeDAO.get(mdEdgeOid).getBusinessDAO().delete();
+    if (!StringUtils.isBlank(mdEdgeOid))
+    {
+      MdGraphClassDAO.get(mdEdgeOid).getBusinessDAO().delete();
+    }
   }
 
   @Override
@@ -141,36 +150,39 @@ public class GraphTypeSnapshotBusinessService implements GraphTypeSnapshotBusine
     if (typeCode.equals(GraphTypeSnapshot.DIRECTED_ACYCLIC_GRAPH_TYPE))
     {
       DirectedAcyclicGraphTypeSnapshot htsnapshot = new DirectedAcyclicGraphTypeSnapshot();
-      htsnapshot.setVersion(version);
       htsnapshot.setGraphMdEdge(mdEdge);
       htsnapshot.setCode(code);
       LocalizedValueConverter.populate(htsnapshot.getDisplayLabel(), label);
       LocalizedValueConverter.populate(htsnapshot.getDescription(), description);
       htsnapshot.apply();
-      
+
+      htsnapshot.addversion(version).apply();
+
       snapshot = htsnapshot;
     }
     else if (typeCode.equals(GraphTypeSnapshot.UNDIRECTED_GRAPH_TYPE))
     {
       UndirectedGraphTypeSnapshot htsnapshot = new UndirectedGraphTypeSnapshot();
-      htsnapshot.setVersion(version);
+      htsnapshot.setGraphMdEdge(mdEdge);
+      htsnapshot.setCode(code);
+      LocalizedValueConverter.populate(htsnapshot.getDisplayLabel(), label);
+      LocalizedValueConverter.populate(htsnapshot.getDescription(), description);
+      htsnapshot.apply();
+
+      htsnapshot.addversion(version).apply();
+
+      snapshot = htsnapshot;
+    }
+    else if (typeCode.equals(GraphTypeSnapshot.HIERARCHY_TYPE))
+    {
+      HierarchyTypeSnapshot htsnapshot = new HierarchyTypeSnapshot();
       htsnapshot.setGraphMdEdge(mdEdge);
       htsnapshot.setCode(code);
       LocalizedValueConverter.populate(htsnapshot.getDisplayLabel(), label);
       LocalizedValueConverter.populate(htsnapshot.getDescription(), description);
       htsnapshot.apply();
       
-      snapshot = htsnapshot;
-    }
-    else if (typeCode.equals(GraphTypeSnapshot.HIERARCHY_TYPE))
-    {
-      HierarchyTypeSnapshot htsnapshot = new HierarchyTypeSnapshot();
-      htsnapshot.setVersion(version);
-      htsnapshot.setGraphMdEdge(mdEdge);
-      htsnapshot.setCode(code);
-      LocalizedValueConverter.populate(htsnapshot.getDisplayLabel(), label);
-      LocalizedValueConverter.populate(htsnapshot.getDescription(), description);
-      htsnapshot.apply();
+      htsnapshot.addversion(version).apply();
       
       snapshot = htsnapshot;
     }
@@ -204,8 +216,13 @@ public class GraphTypeSnapshotBusinessService implements GraphTypeSnapshotBusine
   {
     if (GraphTypeSnapshot.DIRECTED_ACYCLIC_GRAPH_TYPE.equals(typeCode))
     {
-      DirectedAcyclicGraphTypeSnapshotQuery query = new DirectedAcyclicGraphTypeSnapshotQuery(new QueryFactory());
-      query.WHERE(query.getVersion().EQ(version));
+      QueryFactory factory = new QueryFactory();
+      
+      LabeledPropertyGraphTypeSnapshotQuery vQuery = new LabeledPropertyGraphTypeSnapshotQuery(factory);
+      vQuery.WHERE(vQuery.getParent().EQ(version));
+
+      DirectedAcyclicGraphTypeSnapshotQuery query = new DirectedAcyclicGraphTypeSnapshotQuery(factory);
+      query.LEFT_JOIN_EQ(vQuery.getChild());
       query.AND(query.getCode().EQ(code));
 
       try (OIterator<? extends GraphTypeSnapshot> it = query.getIterator())
@@ -218,24 +235,19 @@ public class GraphTypeSnapshotBusinessService implements GraphTypeSnapshotBusine
     }
     else if (GraphTypeSnapshot.HIERARCHY_TYPE.equals(typeCode))
     {
-      HierarchyTypeSnapshotQuery query = new HierarchyTypeSnapshotQuery(new QueryFactory());
-      query.WHERE(query.getVersion().EQ(version));
-      query.AND(query.getCode().EQ(code));
-
-      try (OIterator<? extends GraphTypeSnapshot> it = query.getIterator())
-      {
-        if (it.hasNext())
-        {
-          return it.next();
-        }
-      }
+      return this.hService.get(version, code);
     }
     else if (GraphTypeSnapshot.UNDIRECTED_GRAPH_TYPE.equals(typeCode))
     {
-      UndirectedGraphTypeSnapshotQuery query = new UndirectedGraphTypeSnapshotQuery(new QueryFactory());
-      query.WHERE(query.getVersion().EQ(version));
-      query.AND(query.getCode().EQ(code));
+      QueryFactory factory = new QueryFactory();
+      
+      LabeledPropertyGraphTypeSnapshotQuery vQuery = new LabeledPropertyGraphTypeSnapshotQuery(factory);
+      vQuery.WHERE(vQuery.getParent().EQ(version));
 
+      UndirectedGraphTypeSnapshotQuery query = new UndirectedGraphTypeSnapshotQuery(factory);
+      query.LEFT_JOIN_EQ(vQuery.getChild());
+      query.AND(query.getCode().EQ(code));
+      
       try (OIterator<? extends GraphTypeSnapshot> it = query.getIterator())
       {
         if (it.hasNext())

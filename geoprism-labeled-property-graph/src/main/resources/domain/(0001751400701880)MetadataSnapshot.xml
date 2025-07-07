@@ -1,0 +1,187 @@
+<!--
+
+    Copyright (c) 2023 TerraFrame, Inc. All rights reserved.
+
+    This file is part of Geoprism(tm).
+
+    Geoprism(tm) is free software: you can redistribute it and/or modify
+    it under the terms of the GNU Lesser General Public License as
+    published by the Free Software Foundation, either version 3 of the
+    License, or (at your option) any later version.
+
+    Geoprism(tm) is distributed in the hope that it will be useful, but
+    WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU Lesser General Public License for more details.
+
+    You should have received a copy of the GNU Lesser General Public
+    License along with Geoprism(tm).  If not, see <http://www.gnu.org/licenses/>.
+
+-->
+<version xsi:noNamespaceSchemaLocation="classpath:com/runwaysdk/resources/xsd/version.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <doIt>
+    <create>
+      
+      <mdBusiness name="net.geoprism.graph.MetadataSnapshot" table="metadata_snapshot" isAbstract="true" label="Metadata Snapshot" generateController="false" publish="true">
+      </mdBusiness>      
+      
+      <mdBusiness name="net.geoprism.graph.RelationshipTypeSnapshot" extends="net.geoprism.graph.MetadataSnapshot" table="relationship_type_snapshot" isAbstract="true" label="Object Type Snapshot" generateController="false">
+      </mdBusiness>      
+      
+      <mdBusiness name="net.geoprism.graph.ObjectTypeSnapshot" extends="net.geoprism.graph.MetadataSnapshot" table="object_type_snapshot" isAbstract="true" label="Object Type Snapshot" generateController="false">
+      </mdBusiness>      
+      
+      <mdBusiness name="net.geoprism.graph.GeoObjectTypeSnapshot" extends="net.geoprism.graph.ObjectTypeSnapshot" table="geo_object_type_snapshot" label="Geo-Object Type Snapshot" generateController="false">
+        <attributes>
+          <char name="code" label="Code" size="255" required="true" />
+          <localChar name="displayLabel" label="Label" required="true" />
+          <localText name="description"/>          
+          <text name="geometryType" label="Geometry Type" />
+          <boolean name="isPrivate" label="Is Private" />          
+          <boolean name="isRoot" label="Is Root" />          
+          <boolean name="isAbstract" label="Is Abstract" />          
+          <boolean name="isGeometryEditable" label="Is Geometry Editable" />          
+          <reference name="graphMdVertex" type="com.runwaysdk.system.metadata.MdVertex" required="false" label="MdVertex" />
+          <reference name="parent" type="net.geoprism.graph.GeoObjectTypeSnapshot" required="false" label="Parent" />                
+          <text name="orgCode" label="Organization Code" required="false" />          
+        </attributes>
+      </mdBusiness>      
+      
+      <mdRelationship name="net.geoprism.graph.SnapshotHierarchy" table="snapshot_hierarchy" label="Snapshot Hierarchy" generateController="false" exported="false" publish="true">
+        <parent cardinality="1" name="net.geoprism.graph.GeoObjectTypeSnapshot" method="ParentSnapshot" />
+        <child cardinality="*" name="net.geoprism.graph.GeoObjectTypeSnapshot" method="ChildSnapshot" />
+      </mdRelationship>
+      
+      <mdBusiness
+        name="net.geoprism.graph.BusinessTypeSnapshot"
+        extends="net.geoprism.graph.ObjectTypeSnapshot" 
+        table="business_type_snapshot"
+        label="Business Type Snapshot"
+        generateController="false">
+        <attributes>
+          <char
+            name="code"
+            size="32"
+            required="true"
+            label="Code" />
+          <char
+            name="orgCode"
+            size="32"
+            required="true"
+            label="Organization Code" />
+          <char
+            name="labelAttribute"
+            size="32"
+            required="false"
+            label="Label Attribute" />
+          <reference
+            name="graphMdVertex"
+            type="com.runwaysdk.system.metadata.MdVertex"
+            required="false"
+            label="MdVertex" />
+          <localChar
+            name="displayLabel"
+            label="Label"
+            required="true" />
+        </attributes>
+      </mdBusiness>
+      
+      <mdBusiness name="net.geoprism.graph.HierarchyTypeSnapshot" extends="net.geoprism.graph.RelationshipTypeSnapshot" table="hierarchy_type_snapshot" label="Hierarchy Type Snapshot" generateController="false">
+        <attributes>
+          <char name="code" label="Code" size="255" required="true" />
+          <localChar name="displayLabel" label="Label" required="true" />
+          <localText name="description"/>          
+          <text name="progress" label="progress" />
+          <text name="acknowledgement" label="Acknowledgement" />
+          <text name="disclaimer" label="Disclaimer" />
+          <text name="accessConstraints" label="Access Constraints" />
+          <text name="useConstraints" label="Use Constraints" />
+          <text name="superHierarchy" label="Super Hierarchy" />
+          <reference name="graphMdEdge" type="com.runwaysdk.system.metadata.MdEdge" required="false" label="MdEdge" />          
+        </attributes>
+      </mdBusiness>            
+      
+      <mdBusiness name="net.geoprism.graph.DirectedAcyclicGraphTypeSnapshot" extends="net.geoprism.graph.RelationshipTypeSnapshot" table="dag_type_snapshot" label="Directed Acyclic Graph Type Snapshot" generateController="false">
+        <attributes>
+          <char name="code" label="Code" size="255" required="true" />
+          <localChar name="displayLabel" label="Label" required="true" />
+          <localText name="description"/>
+          <reference name="graphMdEdge" type="com.runwaysdk.system.metadata.MdEdge" required="false" label="MdEdge" />
+        </attributes>
+      </mdBusiness>
+      
+      <mdBusiness name="net.geoprism.graph.UndirectedGraphTypeSnapshot" extends="net.geoprism.graph.RelationshipTypeSnapshot" table="undirected_type_snapshot" label="Undirected Graph Type Snapshot" generateController="false">
+        <attributes>
+          <char name="code" label="Code" size="255" required="true" />
+          <localChar name="displayLabel" label="Label" required="true" />
+          <localText name="description"/>
+          <reference name="graphMdEdge" type="com.runwaysdk.system.metadata.MdEdge" required="true" label="MdEdge" />
+        </attributes>
+      </mdBusiness>
+      
+
+      <mdBusiness name="net.geoprism.graph.BusinessEdgeTypeSnapshot" extends="net.geoprism.graph.RelationshipTypeSnapshot" table="business_edge_type_snapshot" label="Business Edge Type Snapshot" generateController="false">
+        <attributes>
+          <char name="code" size="255" required="true" label="Code" />
+          <localChar name="displayLabel" label="Label" required="true" />
+          <localChar name="description" label="Description" required="false" />            
+          <reference name="parentType" type="net.geoprism.graph.ObjectTypeSnapshot" required="true" label="Parent Vertex" />          
+          <reference name="childType" type="net.geoprism.graph.ObjectTypeSnapshot" required="true" label="Child Vertex" />           
+          <reference name="graphMdEdge" type="com.runwaysdk.system.metadata.MdEdge" required="false" label="MdEdge" />
+          <boolean name="isParentGeoObject" required="true" label="is Parent a GeoObject" />          
+          <boolean name="isChildGeoObject" required="true" label="is Parent a GeoObject" />          
+        </attributes>
+      </mdBusiness>      
+      
+      <mdRelationship name="net.geoprism.graph.LabeledPropertyGraphTypeSnapshot" label="Labeled Property Graph Type Snapshot" table="lpg_type_snapshot" generateController="false" exported="false" publish="true">
+        <parent cardinality="*" name="net.geoprism.graph.LabeledPropertyGraphTypeVersion" method="version" />
+        <child cardinality="*" name="net.geoprism.graph.MetadataSnapshot"  method="Snapshot" />
+      </mdRelationship>
+      
+    </create>
+    <permissions>
+      <role roleName="geoprism.admin.Administrator">
+        <grant>
+          <mdBusinessPermission type="net.geoprism.graph.GeoObjectTypeSnapshot">
+            <operation name="ALL" />
+          </mdBusinessPermission>
+          <mdBusinessPermission type="net.geoprism.graph.HierarchyTypeSnapshot">
+            <operation name="ALL" />
+          </mdBusinessPermission>
+          <mdRelationshipPermission type="net.geoprism.graph.SnapshotHierarchy">
+            <operation name="ALL" />
+          </mdRelationshipPermission>     
+          <mdBusinessPermission type="net.geoprism.graph.BusinessEdgeTypeSnapshot">
+            <operation name="ALL" />
+          </mdBusinessPermission>
+          <mdBusinessPermission type="net.geoprism.graph.BusinessTypeSnapshot">
+            <operation name="ALL" />
+          </mdBusinessPermission>          
+          <mdRelationshipPermission type="net.geoprism.graph.LabeledPropertyGraphTypeSnapshot">
+            <operation name="ALL" />
+          </mdRelationshipPermission>     
+          <mdBusinessPermission type="net.geoprism.graph.DirectedAcyclicGraphTypeSnapshot">
+            <operation name="ALL" />
+          </mdBusinessPermission>
+          <mdBusinessPermission type="net.geoprism.graph.UndirectedGraphTypeSnapshot">
+            <operation name="ALL" />
+          </mdBusinessPermission>          
+        </grant>        
+      </role>
+    </permissions>
+  </doIt>
+  <undoIt>
+    <delete>
+      <object key="net.geoprism.graph.LabeledPropertyGraphTypeSnapshot" type="com.runwaysdk.system.metadata.MdRelationship"></object>
+      <object key="net.geoprism.graph.SnapshotHierarchy" type="com.runwaysdk.system.metadata.MdRelationship"></object>
+      <object key="net.geoprism.graph.HierarchyTypeSnapshot" type="com.runwaysdk.system.metadata.MdBusiness"></object>
+      <object key="net.geoprism.graph.DirectedAcyclicGraphTypeSnapshot" type="com.runwaysdk.system.metadata.MdBusiness"></object>
+      <object key="net.geoprism.graph.UndirectedGraphTypeSnapshot" type="com.runwaysdk.system.metadata.MdBusiness"></object>
+      <object key="net.geoprism.graph.GeoObjectTypeSnapshot" type="com.runwaysdk.system.metadata.MdBusiness"></object>    
+      <object key="net.geoprism.graph.BusinessEdgeTypeSnapshot" type="com.runwaysdk.system.metadata.MdBusiness"></object>
+      <object key="net.geoprism.graph.BusinessTypeSnapshot" type="com.runwaysdk.system.metadata.MdBusiness"></object>      
+      <object key="net.geoprism.graph.ObjectTypeSnapshot" type="com.runwaysdk.system.metadata.MdBusiness"></object>
+      <object key="net.geoprism.graph.MetadataSnapshot" type="com.runwaysdk.system.metadata.MdBusiness"></object>
+    </delete>
+  </undoIt>
+</version>

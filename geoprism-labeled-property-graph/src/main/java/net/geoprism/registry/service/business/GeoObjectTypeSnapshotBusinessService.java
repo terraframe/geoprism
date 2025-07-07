@@ -21,6 +21,7 @@ package net.geoprism.registry.service.business;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.commons.lang.StringUtils;
 import org.commongeoregistry.adapter.Term;
 import org.commongeoregistry.adapter.constants.DefaultAttribute;
 import org.commongeoregistry.adapter.constants.GeometryType;
@@ -54,6 +55,7 @@ import com.runwaysdk.constants.MdAttributeLocalInfo;
 import com.runwaysdk.constants.graph.MdVertexInfo;
 import com.runwaysdk.dataaccess.MdVertexDAOIF;
 import com.runwaysdk.dataaccess.graph.GraphDBService;
+import com.runwaysdk.dataaccess.metadata.graph.MdGraphClassDAO;
 import com.runwaysdk.dataaccess.metadata.graph.MdVertexDAO;
 import com.runwaysdk.dataaccess.transaction.Transaction;
 import com.runwaysdk.gis.constants.MdAttributeLineStringInfo;
@@ -89,8 +91,8 @@ import com.runwaysdk.system.metadata.MdVertex;
 
 import net.geoprism.graph.GeoObjectTypeSnapshot;
 import net.geoprism.graph.GeoObjectTypeSnapshotQuery;
+import net.geoprism.graph.LabeledPropertyGraphTypeSnapshotQuery;
 import net.geoprism.graph.LabeledPropertyGraphTypeVersion;
-import net.geoprism.registry.RegistryConstants;
 import net.geoprism.registry.conversion.LocalizedValueConverter;
 import net.geoprism.registry.model.Classification;
 import net.geoprism.registry.model.ClassificationType;
@@ -116,11 +118,14 @@ public class GeoObjectTypeSnapshotBusinessService implements GeoObjectTypeSnapsh
   @Transaction
   public void delete(GeoObjectTypeSnapshot snapshot)
   {
-    MdVertex mdVertex = snapshot.getGraphMdVertex();
+    String mdVertexOid = snapshot.getGraphMdVertexOid();
 
     snapshot.delete();
 
-    mdVertex.delete();
+    if (!StringUtils.isBlank(mdVertexOid))
+    {
+      MdGraphClassDAO.get(mdVertexOid).getBusinessDAO().delete();
+    }
   }
 
   @Override
@@ -292,7 +297,6 @@ public class GeoObjectTypeSnapshotBusinessService implements GeoObjectTypeSnapsh
     MdVertex graphMdVertex = (MdVertex) BusinessFacade.get(rootMdVertexDAO);
 
     GeoObjectTypeSnapshot snapshot = new GeoObjectTypeSnapshot();
-    snapshot.setVersion(version);
     snapshot.setGraphMdVertex(graphMdVertex);
     snapshot.setCode(ROOT);
     snapshot.setIsAbstract(true);
@@ -301,6 +305,8 @@ public class GeoObjectTypeSnapshotBusinessService implements GeoObjectTypeSnapsh
     LocalizedValueConverter.populate(snapshot.getDisplayLabel(), LocalizedValueConverter.convertNoAutoCoalesce(graphMdVertex.getDisplayLabel()));
     LocalizedValueConverter.populate(snapshot.getDescription(), LocalizedValueConverter.convertNoAutoCoalesce(graphMdVertex.getDescription()));
     snapshot.apply();
+
+    snapshot.addversion(version).apply();
 
     return snapshot;
   }
@@ -352,7 +358,6 @@ public class GeoObjectTypeSnapshotBusinessService implements GeoObjectTypeSnapsh
     });
 
     GeoObjectTypeSnapshot snapshot = new GeoObjectTypeSnapshot();
-    snapshot.setVersion(version);
     snapshot.setGraphMdVertex(mdTable);
     snapshot.setCode(code);
     snapshot.setOrgCode(orgCode);
@@ -364,6 +369,8 @@ public class GeoObjectTypeSnapshotBusinessService implements GeoObjectTypeSnapsh
     LocalizedValueConverter.populate(snapshot.getDescription(), description);
     snapshot.setParent(parent);
     snapshot.apply();
+    
+    snapshot.addversion(version).apply();
 
     this.assignPermissions(mdTableDAO);
 
@@ -373,8 +380,13 @@ public class GeoObjectTypeSnapshotBusinessService implements GeoObjectTypeSnapsh
   @Override
   public GeoObjectTypeSnapshot get(LabeledPropertyGraphTypeVersion version, String code)
   {
-    GeoObjectTypeSnapshotQuery query = new GeoObjectTypeSnapshotQuery(new QueryFactory());
-    query.WHERE(query.getVersion().EQ(version));
+    QueryFactory factory = new QueryFactory();
+
+    LabeledPropertyGraphTypeSnapshotQuery vQuery = new LabeledPropertyGraphTypeSnapshotQuery(factory);
+    vQuery.WHERE(vQuery.getParent().EQ(version));
+
+    GeoObjectTypeSnapshotQuery query = new GeoObjectTypeSnapshotQuery(factory);
+    query.LEFT_JOIN_EQ(vQuery.getChild());
     query.AND(query.getCode().EQ(code));
 
     try (OIterator<? extends GeoObjectTypeSnapshot> it = query.getIterator())
@@ -391,8 +403,13 @@ public class GeoObjectTypeSnapshotBusinessService implements GeoObjectTypeSnapsh
   @Override
   public GeoObjectTypeSnapshot get(LabeledPropertyGraphTypeVersion version, MdVertexDAOIF mdVertex)
   {
-    GeoObjectTypeSnapshotQuery query = new GeoObjectTypeSnapshotQuery(new QueryFactory());
-    query.WHERE(query.getVersion().EQ(version));
+    QueryFactory factory = new QueryFactory();
+
+    LabeledPropertyGraphTypeSnapshotQuery vQuery = new LabeledPropertyGraphTypeSnapshotQuery(factory);
+    vQuery.WHERE(vQuery.getParent().EQ(version));
+
+    GeoObjectTypeSnapshotQuery query = new GeoObjectTypeSnapshotQuery(factory);
+    query.LEFT_JOIN_EQ(vQuery.getChild());
     query.AND(query.getGraphMdVertex().EQ(mdVertex.getOid()));
 
     try (OIterator<? extends GeoObjectTypeSnapshot> it = query.getIterator())
@@ -403,14 +420,19 @@ public class GeoObjectTypeSnapshotBusinessService implements GeoObjectTypeSnapsh
       }
     }
 
-    return null;
+    return null;    
   }
 
   @Override
   public GeoObjectTypeSnapshot getRoot(LabeledPropertyGraphTypeVersion version)
   {
-    GeoObjectTypeSnapshotQuery query = new GeoObjectTypeSnapshotQuery(new QueryFactory());
-    query.WHERE(query.getVersion().EQ(version));
+    QueryFactory factory = new QueryFactory();
+
+    LabeledPropertyGraphTypeSnapshotQuery vQuery = new LabeledPropertyGraphTypeSnapshotQuery(factory);
+    vQuery.WHERE(vQuery.getParent().EQ(version));
+
+    GeoObjectTypeSnapshotQuery query = new GeoObjectTypeSnapshotQuery(factory);
+    query.LEFT_JOIN_EQ(vQuery.getChild());
     query.AND(query.getIsRoot().EQ(true));
 
     try (OIterator<? extends GeoObjectTypeSnapshot> it = query.getIterator())
@@ -421,7 +443,7 @@ public class GeoObjectTypeSnapshotBusinessService implements GeoObjectTypeSnapsh
       }
     }
 
-    return null;
+    return null;    
   }
 
   public MdAttributeConcrete createMdAttributeFromAttributeType(MdClass mdClass, AttributeType attributeType)

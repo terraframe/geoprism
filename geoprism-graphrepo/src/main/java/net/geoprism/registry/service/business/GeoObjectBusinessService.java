@@ -301,7 +301,7 @@ public class GeoObjectBusinessService extends RegistryLocalizedValueConverter im
     {
       throw new GeometryUpdateException();
     }
-    
+
     if (validateOrigin)
     {
       if (!sgo.getType().getOrigin().equals(GeoprismProperties.getOrigin()))
@@ -309,7 +309,6 @@ public class GeoObjectBusinessService extends RegistryLocalizedValueConverter im
         throw new OriginException();
       }
     }
-
 
     final boolean isNew = sgo.isNew() || sgo.getValue(GeoVertex.CREATEDATE) == null;
 
@@ -601,7 +600,7 @@ public class GeoObjectBusinessService extends RegistryLocalizedValueConverter im
     populate(target, toGeoObject(source, view.getDate()), view.getDate(), view.getDate());
     target.setCode(view.getTargetCode());
     target.setDisplayLabel(view.getLabel());
-    
+
     apply(target, false, true);
 
     final ServerParentTreeNode sNode = getParentGeoObjects(source, null, null, false, false, view.getDate());
@@ -1819,7 +1818,7 @@ public class GeoObjectBusinessService extends RegistryLocalizedValueConverter im
       ServerGeoObjectType parentType = ServerGeoObjectType.get(mdVertex);
       final VertexServerGeoObject edgeGo = new VertexServerGeoObject(parentType, parentVertex, new TreeMap<>(), startDate);
 
-      Optional<EdgeValueOverTime> existing = votc.stream().map(vot -> (EdgeValueOverTime) vot).filter(vot -> vot.getUid().equals(uid)).findFirst();
+      Optional<EdgeValueOverTime> existing = votc.stream().filter(vot -> vot instanceof EdgeValueOverTime).map(vot -> (EdgeValueOverTime) vot).filter(vot -> vot.getUid().equals(uid)).findFirst();
 
       existing.ifPresentOrElse(inVot -> {
         VertexServerGeoObject inGo = (VertexServerGeoObject) inVot.getValue();
@@ -1866,6 +1865,8 @@ public class GeoObjectBusinessService extends RegistryLocalizedValueConverter im
           {
             edge.apply();
           }
+          
+          resultEdges.add(edge);
         }
       }, () -> {
         edge.delete();
@@ -1875,7 +1876,14 @@ public class GeoObjectBusinessService extends RegistryLocalizedValueConverter im
     // Handle new edges
     List<String> edgeUids = existingEdges.stream().map(e -> (String) e.getObjectValue(DefaultAttribute.UID.getName())).toList();
 
-    votc.stream().map(vot -> (EdgeValueOverTime) vot).filter(vot -> !edgeUids.contains(vot.getUid())).forEach(vot -> {
+    votc.stream().map(vot -> {
+      if (vot instanceof EdgeValueOverTime)
+      {
+        return (EdgeValueOverTime) vot;
+      }
+      
+      return new EdgeValueOverTime(vot.getStartDate(), vot.getEndDate(), vot.getValue(), UUID.randomUUID().toString());
+    }).filter(vot -> !edgeUids.contains(vot.getUid())).forEach(vot -> {
       EdgeObject newEdge = addParentRaw(sgo, ( (VertexServerGeoObject) vot.getValue() ).getVertex(), hierarchyType.getObjectEdge(), vot.getStartDate(), vot.getEndDate(), vot.getUid(), validateOrigin);
 
       resultEdges.add(newEdge);

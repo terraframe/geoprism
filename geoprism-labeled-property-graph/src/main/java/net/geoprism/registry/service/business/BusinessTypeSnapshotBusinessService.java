@@ -3,18 +3,18 @@
  *
  * This file is part of Geoprism(tm).
  *
- * Geoprism(tm) is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
+ * Geoprism(tm) is free software: you can redistribute it and/or modify it under
+ * the terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation, either version 3 of the License, or (at your option) any
+ * later version.
  *
- * Geoprism(tm) is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
+ * Geoprism(tm) is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with Geoprism(tm).  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with Geoprism(tm). If not, see <http://www.gnu.org/licenses/>.
  */
 package net.geoprism.registry.service.business;
 
@@ -22,6 +22,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
+import org.apache.commons.lang.StringUtils;
 import org.commongeoregistry.adapter.Term;
 import org.commongeoregistry.adapter.constants.DefaultAttribute;
 import org.commongeoregistry.adapter.dataaccess.LocalizedValue;
@@ -51,6 +52,7 @@ import com.runwaysdk.dataaccess.MdAttributeConcreteDAOIF;
 import com.runwaysdk.dataaccess.MdAttributeTermDAOIF;
 import com.runwaysdk.dataaccess.MdVertexDAOIF;
 import com.runwaysdk.dataaccess.graph.GraphDBService;
+import com.runwaysdk.dataaccess.metadata.graph.MdGraphClassDAO;
 import com.runwaysdk.dataaccess.metadata.graph.MdVertexDAO;
 import com.runwaysdk.dataaccess.transaction.Transaction;
 import com.runwaysdk.query.OIterator;
@@ -72,6 +74,7 @@ import com.runwaysdk.system.metadata.MdVertex;
 
 import net.geoprism.graph.BusinessTypeSnapshot;
 import net.geoprism.graph.BusinessTypeSnapshotQuery;
+import net.geoprism.graph.LabeledPropertyGraphTypeSnapshotQuery;
 import net.geoprism.graph.LabeledPropertyGraphTypeVersion;
 import net.geoprism.registry.DateFormatter;
 import net.geoprism.registry.conversion.LocalizedValueConverter;
@@ -99,11 +102,14 @@ public class BusinessTypeSnapshotBusinessService implements BusinessTypeSnapshot
   @Transaction
   public void delete(BusinessTypeSnapshot snapshot)
   {
-    MdVertex mdVertex = snapshot.getGraphMdVertex();
+    String mdVertexOid = snapshot.getGraphMdVertexOid();
 
     snapshot.delete();
 
-    mdVertex.delete();
+    if (!StringUtils.isBlank(mdVertexOid))
+    {
+      MdGraphClassDAO.get(mdVertexOid).getBusinessDAO().delete();
+    }
   }
 
   @Override
@@ -170,7 +176,7 @@ public class BusinessTypeSnapshotBusinessService implements BusinessTypeSnapshot
     mdTableDAO.apply();
 
     MdVertex mdTable = (MdVertex) BusinessFacade.get(mdTableDAO);
-    
+
     JsonArray attributes = typeDto.get("attributes").getAsJsonArray();
 
     attributes.forEach(joAttr -> {
@@ -183,13 +189,14 @@ public class BusinessTypeSnapshotBusinessService implements BusinessTypeSnapshot
     });
 
     BusinessTypeSnapshot snapshot = new BusinessTypeSnapshot();
-    snapshot.setVersion(version);
     snapshot.setGraphMdVertex(mdTable);
     snapshot.setLabelAttribute(typeDto.get(BusinessTypeSnapshot.LABELATTRIBUTE).getAsString());
     snapshot.setCode(code);
     snapshot.setOrgCode(orgCode);
     LocalizedValueConverter.populate(snapshot.getDisplayLabel(), label);
     snapshot.apply();
+    
+    snapshot.addversion(version).apply();
 
     this.assignPermissions(mdTableDAO);
 
@@ -199,8 +206,13 @@ public class BusinessTypeSnapshotBusinessService implements BusinessTypeSnapshot
   @Override
   public BusinessTypeSnapshot get(LabeledPropertyGraphTypeVersion version, String code)
   {
-    BusinessTypeSnapshotQuery query = new BusinessTypeSnapshotQuery(new QueryFactory());
-    query.WHERE(query.getVersion().EQ(version));
+    QueryFactory factory = new QueryFactory();
+
+    LabeledPropertyGraphTypeSnapshotQuery vQuery = new LabeledPropertyGraphTypeSnapshotQuery(factory);
+    vQuery.WHERE(vQuery.getParent().EQ(version));
+
+    BusinessTypeSnapshotQuery query = new BusinessTypeSnapshotQuery(factory);
+    query.WHERE(query.EQ(vQuery.getChild()));
     query.AND(query.getCode().EQ(code));
 
     try (OIterator<? extends BusinessTypeSnapshot> it = query.getIterator())
@@ -217,8 +229,13 @@ public class BusinessTypeSnapshotBusinessService implements BusinessTypeSnapshot
   @Override
   public BusinessTypeSnapshot get(LabeledPropertyGraphTypeVersion version, MdVertexDAOIF mdVertex)
   {
-    BusinessTypeSnapshotQuery query = new BusinessTypeSnapshotQuery(new QueryFactory());
-    query.WHERE(query.getVersion().EQ(version));
+    QueryFactory factory = new QueryFactory();
+
+    LabeledPropertyGraphTypeSnapshotQuery vQuery = new LabeledPropertyGraphTypeSnapshotQuery(factory);
+    vQuery.WHERE(vQuery.getParent().EQ(version));
+
+    BusinessTypeSnapshotQuery query = new BusinessTypeSnapshotQuery(factory);
+    query.LEFT_JOIN_EQ(vQuery.getChild());
     query.AND(query.getGraphMdVertex().EQ(mdVertex.getOid()));
 
     try (OIterator<? extends BusinessTypeSnapshot> it = query.getIterator())
@@ -382,7 +399,7 @@ public class BusinessTypeSnapshotBusinessService implements BusinessTypeSnapshot
         {
           if (mdAttribute instanceof MdAttributeTermDAOIF)
           {
-//            throw new UnsupportedOperationException();
+            // throw new UnsupportedOperationException();
           }
           else if (value instanceof Number)
           {
@@ -415,7 +432,6 @@ public class BusinessTypeSnapshotBusinessService implements BusinessTypeSnapshot
 
     return json;
   }
-
 
   protected void assignPermissions(ComponentIF component)
   {

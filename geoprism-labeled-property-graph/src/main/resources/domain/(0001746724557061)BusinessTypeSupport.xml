@@ -20,56 +20,6 @@
 -->
 <version xsi:noNamespaceSchemaLocation="classpath:com/runwaysdk/resources/xsd/version.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <doIt>
-    <create>
-      <mdBusiness
-        name="net.geoprism.graph.BusinessTypeSnapshot"
-        label="Business Type Snapshot"
-        generateController="false">
-        <attributes>
-          <char
-            name="code"
-            size="32"
-            required="true"
-            label="Code" />
-          <char
-            name="orgCode"
-            size="32"
-            required="true"
-            label="Organization Code" />
-          <char
-            name="labelAttribute"
-            size="32"
-            required="false"
-            label="Label Attribute" />
-          <reference
-            name="graphMdVertex"
-            type="com.runwaysdk.system.metadata.MdVertex"
-            required="true"
-            label="MdVertex" />
-          <localChar
-            name="displayLabel"
-            label="Label"
-            required="true" />
-          <reference name="version" type="net.geoprism.graph.LabeledPropertyGraphTypeVersion" required="true" label="Version" />                
-        </attributes>
-      </mdBusiness>
-
-      <mdBusiness name="net.geoprism.graph.BusinessEdgeTypeSnapshot" label="Business Edge Type Snapshot" generateController="false" publish="true">
-        <attributes>
-          <char name="code" size="255" required="true" label="Code" />
-          <localChar name="displayLabel" label="Label" required="true" />
-          <localChar name="description" label="Description" required="false" />            
-          <reference name="parentType" type="com.runwaysdk.system.metadata.MdVertex" required="true" label="Parent Vertex" />          
-          <reference name="childType" type="com.runwaysdk.system.metadata.MdVertex" required="true" label="Child Vertex" />           
-          <reference name="graphMdEdge" type="com.runwaysdk.system.metadata.MdEdge" required="true" label="MdEdge" />
-          <reference name="version" type="net.geoprism.graph.LabeledPropertyGraphTypeVersion" required="true" label="Version" />                          
-          <boolean name="isParentGeoObject" required="true" label="is Parent a GeoObject" />          
-          <boolean name="isChildGeoObject" required="true" label="is Parent a GeoObject" />          
-        </attributes>
-      </mdBusiness>      
-
-      
-    </create>
     <update>
       <mdBusiness name="net.geoprism.graph.LabeledPropertyGraphType">
         <create>
@@ -80,27 +30,9 @@
         </create>
       </mdBusiness>    
     </update>
-    <permissions>
-      <role roleName="geoprism.admin.Administrator">
-        <grant>
-          <mdBusinessPermission type="net.geoprism.graph.BusinessEdgeTypeSnapshot">
-            <operation name="ALL" />
-          </mdBusinessPermission>
-          <mdBusinessPermission type="net.geoprism.graph.BusinessTypeSnapshot">
-            <operation name="ALL" />
-          </mdBusinessPermission>
-        </grant>
-      </role>
-    </permissions>
   </doIt>
   <undoIt>
     <delete>
-      <object
-        key="net.geoprism.graph.BusinessEdgeTypeSnapshot"
-        type="com.runwaysdk.system.metadata.MdBusiness"></object>
-      <object
-        key="net.geoprism.graph.BusinessTypeSnapshot"
-        type="com.runwaysdk.system.metadata.MdBusiness"></object>
     </delete>
   </undoIt>
 </version>

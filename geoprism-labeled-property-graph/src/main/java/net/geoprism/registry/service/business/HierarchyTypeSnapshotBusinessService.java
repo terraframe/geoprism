@@ -3,21 +3,22 @@
  *
  * This file is part of Geoprism(tm).
  *
- * Geoprism(tm) is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
+ * Geoprism(tm) is free software: you can redistribute it and/or modify it under
+ * the terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation, either version 3 of the License, or (at your option) any
+ * later version.
  *
- * Geoprism(tm) is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
+ * Geoprism(tm) is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with Geoprism(tm).  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with Geoprism(tm). If not, see <http://www.gnu.org/licenses/>.
  */
 package net.geoprism.registry.service.business;
 
+import org.apache.commons.lang.StringUtils;
 import org.commongeoregistry.adapter.constants.DefaultAttribute;
 import org.commongeoregistry.adapter.dataaccess.LocalizedValue;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,9 +39,9 @@ import com.runwaysdk.system.metadata.MdEdge;
 import com.runwaysdk.system.metadata.MdGraphClassQuery;
 
 import net.geoprism.graph.GeoObjectTypeSnapshot;
-import net.geoprism.graph.GraphTypeSnapshot;
 import net.geoprism.graph.HierarchyTypeSnapshot;
 import net.geoprism.graph.HierarchyTypeSnapshotQuery;
+import net.geoprism.graph.LabeledPropertyGraphTypeSnapshotQuery;
 import net.geoprism.graph.LabeledPropertyGraphTypeVersion;
 import net.geoprism.registry.RegistryConstants;
 import net.geoprism.registry.conversion.LocalizedValueConverter;
@@ -63,7 +64,10 @@ public class HierarchyTypeSnapshotBusinessService implements HierarchyTypeSnapsh
 
     snapshot.delete();
 
-    MdEdgeDAO.get(mdEdgeOid).getBusinessDAO().delete();
+    if (!StringUtils.isBlank(mdEdgeOid))
+    {
+      MdEdgeDAO.get(mdEdgeOid).getBusinessDAO().delete();
+    }
   }
 
   @Override
@@ -119,7 +123,7 @@ public class HierarchyTypeSnapshotBusinessService implements HierarchyTypeSnapsh
     LocalizedValueConverter.populate(mdEdgeDAO, MdEdgeInfo.DESCRIPTION, description);
     mdEdgeDAO.setValue(MdEdgeInfo.ENABLE_CHANGE_OVER_TIME, MdAttributeBooleanInfo.FALSE);
     mdEdgeDAO.apply();
-    
+
     MdAttributeUUIDDAO uidAttr = MdAttributeUUIDDAO.newInstance();
     uidAttr.setValue(MdAttributeConcreteInfo.NAME, DefaultAttribute.UID.getName());
     uidAttr.setStructValue(MdAttributeBooleanInfo.DISPLAY_LABEL, LocalizedValue.DEFAULT_LOCALE, DefaultAttribute.UID.getDefaultLocalizedName());
@@ -133,12 +137,13 @@ public class HierarchyTypeSnapshotBusinessService implements HierarchyTypeSnapsh
     this.assignPermissions(mdEdge);
 
     HierarchyTypeSnapshot snapshot = new HierarchyTypeSnapshot();
-    snapshot.setVersion(version);
     snapshot.setGraphMdEdge(mdEdge);
     snapshot.setCode(code);
     LocalizedValueConverter.populate(snapshot.getDisplayLabel(), label);
     LocalizedValueConverter.populate(snapshot.getDescription(), description);
     snapshot.apply();
+
+    snapshot.addversion(version).apply();
 
     // Assign the relationship information
     createHierarchyRelationship(version, type, root);
@@ -164,8 +169,13 @@ public class HierarchyTypeSnapshotBusinessService implements HierarchyTypeSnapsh
   @Override
   public HierarchyTypeSnapshot get(LabeledPropertyGraphTypeVersion version, String code)
   {
-    HierarchyTypeSnapshotQuery query = new HierarchyTypeSnapshotQuery(new QueryFactory());
-    query.WHERE(query.getVersion().EQ(version));
+    QueryFactory factory = new QueryFactory();
+
+    LabeledPropertyGraphTypeSnapshotQuery vQuery = new LabeledPropertyGraphTypeSnapshotQuery(factory);
+    vQuery.WHERE(vQuery.getParent().EQ(version));
+
+    HierarchyTypeSnapshotQuery query = new HierarchyTypeSnapshotQuery(factory);
+    query.LEFT_JOIN_EQ(vQuery.getChild());
     query.AND(query.getCode().EQ(code));
 
     try (OIterator<? extends HierarchyTypeSnapshot> it = query.getIterator())

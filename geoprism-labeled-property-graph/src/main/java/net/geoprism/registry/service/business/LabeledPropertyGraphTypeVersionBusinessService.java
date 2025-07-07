@@ -51,6 +51,7 @@ import net.geoprism.graph.BusinessEdgeTypeSnapshot;
 import net.geoprism.graph.BusinessEdgeTypeSnapshotQuery;
 import net.geoprism.graph.BusinessTypeSnapshot;
 import net.geoprism.graph.BusinessTypeSnapshotQuery;
+import net.geoprism.graph.DirectedAcyclicGraphTypeSnapshot;
 import net.geoprism.graph.DirectedAcyclicGraphTypeSnapshotQuery;
 import net.geoprism.graph.GeoObjectTypeSnapshot;
 import net.geoprism.graph.GeoObjectTypeSnapshotQuery;
@@ -59,9 +60,11 @@ import net.geoprism.graph.HierarchyTypeSnapshot;
 import net.geoprism.graph.HierarchyTypeSnapshotQuery;
 import net.geoprism.graph.LabeledPropertyGraphType;
 import net.geoprism.graph.LabeledPropertyGraphTypeEntry;
+import net.geoprism.graph.LabeledPropertyGraphTypeSnapshotQuery;
 import net.geoprism.graph.LabeledPropertyGraphTypeVersion;
 import net.geoprism.graph.LabeledPropertyGraphTypeVersionQuery;
 import net.geoprism.graph.LabeledPropertyGraphUtil;
+import net.geoprism.graph.UndirectedGraphTypeSnapshot;
 import net.geoprism.graph.UndirectedGraphTypeSnapshotQuery;
 import net.geoprism.registry.DateUtil;
 import net.geoprism.registry.LPGTileCache;
@@ -102,7 +105,7 @@ public class LabeledPropertyGraphTypeVersionBusinessService implements LabeledPr
 
     // Delete all business edge types
     this.getBusinessEdgeTypes(version).stream().forEach(v -> this.bEdgeTypeService.delete(v));
-    
+
     // Delete all business types
     this.getBusinessTypes(version).stream().forEach(v -> this.businessService.delete(v));
 
@@ -170,8 +173,13 @@ public class LabeledPropertyGraphTypeVersionBusinessService implements LabeledPr
   @Override
   public List<GeoObjectTypeSnapshot> getTypes(LabeledPropertyGraphTypeVersion version)
   {
-    GeoObjectTypeSnapshotQuery query = new GeoObjectTypeSnapshotQuery(new QueryFactory());
-    query.WHERE(query.getVersion().EQ(version));
+    QueryFactory factory = new QueryFactory();
+
+    LabeledPropertyGraphTypeSnapshotQuery vQuery = new LabeledPropertyGraphTypeSnapshotQuery(factory);
+    vQuery.WHERE(vQuery.getParent().EQ(version));
+
+    GeoObjectTypeSnapshotQuery query = new GeoObjectTypeSnapshotQuery(factory);
+    query.LEFT_JOIN_EQ(vQuery.getChild());
 
     try (OIterator<? extends GeoObjectTypeSnapshot> it = query.getIterator())
     {
@@ -182,8 +190,13 @@ public class LabeledPropertyGraphTypeVersionBusinessService implements LabeledPr
   @Override
   public List<BusinessTypeSnapshot> getBusinessTypes(LabeledPropertyGraphTypeVersion version)
   {
-    BusinessTypeSnapshotQuery query = new BusinessTypeSnapshotQuery(new QueryFactory());
-    query.WHERE(query.getVersion().EQ(version));
+    QueryFactory factory = new QueryFactory();
+
+    LabeledPropertyGraphTypeSnapshotQuery vQuery = new LabeledPropertyGraphTypeSnapshotQuery(factory);
+    vQuery.WHERE(vQuery.getParent().EQ(version));
+
+    BusinessTypeSnapshotQuery query = new BusinessTypeSnapshotQuery(factory);
+    query.LEFT_JOIN_EQ(vQuery.getChild());
 
     try (OIterator<? extends BusinessTypeSnapshot> it = query.getIterator())
     {
@@ -194,8 +207,13 @@ public class LabeledPropertyGraphTypeVersionBusinessService implements LabeledPr
   @Override
   public List<BusinessEdgeTypeSnapshot> getBusinessEdgeTypes(LabeledPropertyGraphTypeVersion version)
   {
-    BusinessEdgeTypeSnapshotQuery query = new BusinessEdgeTypeSnapshotQuery(new QueryFactory());
-    query.WHERE(query.getVersion().EQ(version));
+    QueryFactory factory = new QueryFactory();
+
+    LabeledPropertyGraphTypeSnapshotQuery vQuery = new LabeledPropertyGraphTypeSnapshotQuery(factory);
+    vQuery.WHERE(vQuery.getParent().EQ(version));
+
+    BusinessEdgeTypeSnapshotQuery query = new BusinessEdgeTypeSnapshotQuery(factory);
+    query.LEFT_JOIN_EQ(vQuery.getChild());
 
     try (OIterator<? extends BusinessEdgeTypeSnapshot> it = query.getIterator())
     {
@@ -203,6 +221,60 @@ public class LabeledPropertyGraphTypeVersionBusinessService implements LabeledPr
     }
   }
 
+  @SuppressWarnings("unchecked")
+  @Override
+  public <T extends GraphTypeSnapshot> List<T> getHiearchyTypes(LabeledPropertyGraphTypeVersion version)
+  {
+    QueryFactory factory = new QueryFactory();
+
+    LabeledPropertyGraphTypeSnapshotQuery vQuery = new LabeledPropertyGraphTypeSnapshotQuery(factory);
+    vQuery.WHERE(vQuery.getParent().EQ(version));
+
+    HierarchyTypeSnapshotQuery query = new HierarchyTypeSnapshotQuery(factory);
+    query.LEFT_JOIN_EQ(vQuery.getChild());
+
+    try (OIterator<? extends HierarchyTypeSnapshot> it = query.getIterator())
+    {
+      return it.getAll().stream().map(b -> (T) b).collect(Collectors.toList());
+    }
+  }
+
+  @SuppressWarnings("unchecked")
+  @Override
+  public <T extends GraphTypeSnapshot> List<T> getDirectedAcyclicGraphTypes(LabeledPropertyGraphTypeVersion version)
+  {
+    QueryFactory factory = new QueryFactory();
+    
+    LabeledPropertyGraphTypeSnapshotQuery vQuery = new LabeledPropertyGraphTypeSnapshotQuery(factory);
+    vQuery.WHERE(vQuery.getParent().EQ(version));
+
+    DirectedAcyclicGraphTypeSnapshotQuery query = new DirectedAcyclicGraphTypeSnapshotQuery(factory);
+    query.LEFT_JOIN_EQ(vQuery.getChild());
+    
+    try (OIterator<? extends DirectedAcyclicGraphTypeSnapshot> it = query.getIterator())
+    {
+      return it.getAll().stream().map(b -> (T) b).collect(Collectors.toList());
+    }
+  }
+  
+  @SuppressWarnings("unchecked")
+  @Override
+  public <T extends GraphTypeSnapshot> List<T> getUndirectedGraphTypes(LabeledPropertyGraphTypeVersion version)
+  {
+    QueryFactory factory = new QueryFactory();
+    
+    LabeledPropertyGraphTypeSnapshotQuery vQuery = new LabeledPropertyGraphTypeSnapshotQuery(factory);
+    vQuery.WHERE(vQuery.getParent().EQ(version));
+
+    UndirectedGraphTypeSnapshotQuery query = new UndirectedGraphTypeSnapshotQuery(factory);
+    query.LEFT_JOIN_EQ(vQuery.getChild());
+    
+    try (OIterator<? extends UndirectedGraphTypeSnapshot> it = query.getIterator())
+    {
+      return it.getAll().stream().map(b -> (T) b).collect(Collectors.toList());
+    }
+  }
+  
   @Override
   public List<GraphTypeSnapshot> getGraphSnapshots(LabeledPropertyGraphTypeVersion version)
   {
@@ -210,41 +282,15 @@ public class LabeledPropertyGraphTypeVersionBusinessService implements LabeledPr
 
     if (strategy.equals(LabeledPropertyGraphType.TREE))
     {
-      HierarchyTypeSnapshotQuery query = new HierarchyTypeSnapshotQuery(new QueryFactory());
-      query.WHERE(query.getVersion().EQ(version));
-
-      try (OIterator<? extends GraphTypeSnapshot> it = query.getIterator())
-      {
-        return it.getAll().stream().map(b -> (GraphTypeSnapshot) b).collect(Collectors.toList());
-      }
+      return this.getHiearchyTypes(version);
     }
     else
     {
       List<GraphTypeSnapshot> snapshots = new ArrayList<GraphTypeSnapshot>();
 
-      HierarchyTypeSnapshotQuery query = new HierarchyTypeSnapshotQuery(new QueryFactory());
-      query.WHERE(query.getVersion().EQ(version));
-
-      try (OIterator<? extends GraphTypeSnapshot> it = query.getIterator())
-      {
-        snapshots.addAll(it.getAll().stream().map(b -> (GraphTypeSnapshot) b).collect(Collectors.toList()));
-      }
-
-      DirectedAcyclicGraphTypeSnapshotQuery query2 = new DirectedAcyclicGraphTypeSnapshotQuery(new QueryFactory());
-      query2.WHERE(query2.getVersion().EQ(version));
-
-      try (OIterator<? extends GraphTypeSnapshot> it = query2.getIterator())
-      {
-        snapshots.addAll(it.getAll().stream().map(b -> (GraphTypeSnapshot) b).collect(Collectors.toList()));
-      }
-
-      UndirectedGraphTypeSnapshotQuery query3 = new UndirectedGraphTypeSnapshotQuery(new QueryFactory());
-      query3.WHERE(query3.getVersion().EQ(version));
-
-      try (OIterator<? extends GraphTypeSnapshot> it = query3.getIterator())
-      {
-        snapshots.addAll(it.getAll().stream().map(b -> (GraphTypeSnapshot) b).collect(Collectors.toList()));
-      }
+      snapshots.addAll(this.getHiearchyTypes(version));
+      snapshots.addAll(this.getDirectedAcyclicGraphTypes(version));
+      snapshots.addAll(this.getUndirectedGraphTypes(version));
 
       return snapshots;
     }
@@ -253,8 +299,13 @@ public class LabeledPropertyGraphTypeVersionBusinessService implements LabeledPr
   @Override
   public GeoObjectTypeSnapshot getSnapshot(LabeledPropertyGraphTypeVersion version, String typeCode)
   {
-    GeoObjectTypeSnapshotQuery query = new GeoObjectTypeSnapshotQuery(new QueryFactory());
-    query.WHERE(query.getVersion().EQ(version));
+    QueryFactory factory = new QueryFactory();
+
+    LabeledPropertyGraphTypeSnapshotQuery vQuery = new LabeledPropertyGraphTypeSnapshotQuery(factory);
+    vQuery.WHERE(vQuery.getParent().EQ(version));
+
+    GeoObjectTypeSnapshotQuery query = new GeoObjectTypeSnapshotQuery(factory);
+    query.LEFT_JOIN_EQ(vQuery.getChild());
     query.AND(query.getCode().EQ(typeCode));
 
     try (OIterator<? extends GeoObjectTypeSnapshot> it = query.getIterator())
@@ -271,8 +322,13 @@ public class LabeledPropertyGraphTypeVersionBusinessService implements LabeledPr
   @Override
   public GraphTypeSnapshot getGraphTypeSnapshot(LabeledPropertyGraphTypeVersion version, String typeCode)
   {
-    HierarchyTypeSnapshotQuery query = new HierarchyTypeSnapshotQuery(new QueryFactory());
-    query.WHERE(query.getVersion().EQ(version));
+    QueryFactory factory = new QueryFactory();
+
+    LabeledPropertyGraphTypeSnapshotQuery vQuery = new LabeledPropertyGraphTypeSnapshotQuery(factory);
+    vQuery.WHERE(vQuery.getParent().EQ(version));
+
+    HierarchyTypeSnapshotQuery query = new HierarchyTypeSnapshotQuery(factory);
+    query.LEFT_JOIN_EQ(vQuery.getChild());
     query.AND(query.getCode().EQ(typeCode));
 
     try (OIterator<? extends HierarchyTypeSnapshot> it = query.getIterator())
@@ -522,7 +578,7 @@ public class LabeledPropertyGraphTypeVersionBusinessService implements LabeledPr
     {
       this.graphService.create(version, element.getAsJsonObject(), root);
     }
-    
+
     JsonArray businessEdges = json.get("businessEdges").getAsJsonArray();
 
     for (JsonElement element : businessEdges)
@@ -571,42 +627,33 @@ public class LabeledPropertyGraphTypeVersionBusinessService implements LabeledPr
   @Override
   public void createTiles(LabeledPropertyGraphTypeVersion version)
   {
-    GeoObjectTypeSnapshotQuery query = new GeoObjectTypeSnapshotQuery(new QueryFactory());
-    query.WHERE(query.getVersion().EQ(version));
-
-    try (OIterator<? extends GeoObjectTypeSnapshot> it = query.getIterator())
-    {
-      while (it.hasNext())
+    this.getTypes(version).forEach(snapshot -> {
+      if (!snapshot.getIsAbstract())
       {
-        GeoObjectTypeSnapshot snapshot = it.next();
+        // Ensure there is at least one geometry defined for the type
 
-        if (!snapshot.getIsAbstract())
+        for (int z = 0; z < 4; z++)
         {
-          // Ensure there is at least one geometry defined for the type
+          int tiles = (int) Math.pow(2, z);
 
-          for (int z = 0; z < 4; z++)
+          for (int x = 0; x < tiles; x++)
           {
-            int tiles = (int) Math.pow(2, z);
 
-            for (int x = 0; x < tiles; x++)
+            for (int y = 0; y < tiles; y++)
             {
+              JSONObject config = new JSONObject();
+              config.put("oid", version.getOid());
+              config.put("typeCode", snapshot.getCode());
+              config.put("x", x);
+              config.put("y", y);
+              config.put("z", z);
 
-              for (int y = 0; y < tiles; y++)
-              {
-                JSONObject config = new JSONObject();
-                config.put("oid", version.getOid());
-                config.put("typeCode", snapshot.getCode());
-                config.put("x", x);
-                config.put("y", y);
-                config.put("z", z);
-
-                LPGTileCache.getTile(config);
-              }
+              LPGTileCache.getTile(config);
             }
           }
         }
       }
-    }
+    });
   }
 
 }

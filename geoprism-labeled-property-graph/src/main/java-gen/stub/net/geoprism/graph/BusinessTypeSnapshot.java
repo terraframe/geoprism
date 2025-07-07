@@ -25,7 +25,6 @@ import org.commongeoregistry.adapter.metadata.AttributeType;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
-import com.runwaysdk.dataaccess.MdAttributeConcreteDAOIF;
 import com.runwaysdk.dataaccess.MdVertexDAOIF;
 import com.runwaysdk.dataaccess.metadata.graph.MdVertexDAO;
 import com.runwaysdk.gis.dataaccess.MdAttributeGeometryDAOIF;
@@ -47,6 +46,12 @@ public class BusinessTypeSnapshot extends BusinessTypeSnapshotBase
   public BusinessTypeSnapshot()
   {
     super();
+  }
+  
+  @Override
+  public String getKey()
+  {
+    return super.getCode();
   }
 
   @Override
