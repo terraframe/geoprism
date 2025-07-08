@@ -36,7 +36,7 @@
   <dependencies>
     <dependency>
       <groupId>net.geoprism</groupId>
-      <artifactId>geoprism-common</artifactId>
+      <artifactId>geoprism-classifier</artifactId>
       <version>${project.version}</version>
     </dependency>
     <dependency>

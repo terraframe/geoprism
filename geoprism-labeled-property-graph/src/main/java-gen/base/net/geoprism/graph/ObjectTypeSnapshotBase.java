@@ -1,6 +1,6 @@
 package net.geoprism.graph;
 
-@com.runwaysdk.business.ClassSignature(hash = -282598510)
+@com.runwaysdk.business.ClassSignature(hash = -754252340)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -12,7 +12,7 @@ public abstract class ObjectTypeSnapshotBase extends net.geoprism.graph.Metadata
 {
   public final static String CLASS = "net.geoprism.graph.ObjectTypeSnapshot";
   @SuppressWarnings("unused")
-  private static final long serialVersionUID = -282598510;
+  private static final long serialVersionUID = -754252340;
   
   public ObjectTypeSnapshotBase()
   {
@@ -29,6 +29,34 @@ public abstract class ObjectTypeSnapshotBase extends net.geoprism.graph.Metadata
     ObjectTypeSnapshotQuery query = new ObjectTypeSnapshotQuery(new com.runwaysdk.query.QueryFactory());
     com.runwaysdk.business.Entity.getAllInstances(query, sortAttribute, ascending, pageSize, pageNumber);
     return query;
+  }
+  
+  public net.geoprism.graph.SnapshotHasAttribute addAttribute(net.geoprism.graph.AttributeTypeSnapshot attributeTypeSnapshot)
+  {
+    return (net.geoprism.graph.SnapshotHasAttribute) addChild(attributeTypeSnapshot, net.geoprism.graph.SnapshotHasAttribute.CLASS);
+  }
+  
+  public void removeAttribute(net.geoprism.graph.AttributeTypeSnapshot attributeTypeSnapshot)
+  {
+    removeAllChildren(attributeTypeSnapshot, net.geoprism.graph.SnapshotHasAttribute.CLASS);
+  }
+  
+  @SuppressWarnings("unchecked")
+  public com.runwaysdk.query.OIterator<? extends net.geoprism.graph.AttributeTypeSnapshot> getAllAttribute()
+  {
+    return (com.runwaysdk.query.OIterator<? extends net.geoprism.graph.AttributeTypeSnapshot>) getChildren(net.geoprism.graph.SnapshotHasAttribute.CLASS);
+  }
+  
+  @SuppressWarnings("unchecked")
+  public com.runwaysdk.query.OIterator<? extends net.geoprism.graph.SnapshotHasAttribute> getAllAttributeRel()
+  {
+    return (com.runwaysdk.query.OIterator<? extends net.geoprism.graph.SnapshotHasAttribute>) getChildRelationships(net.geoprism.graph.SnapshotHasAttribute.CLASS);
+  }
+  
+  @SuppressWarnings("unchecked")
+  public com.runwaysdk.query.OIterator<? extends net.geoprism.graph.SnapshotHasAttribute> getAttributeRel(net.geoprism.graph.AttributeTypeSnapshot attributeTypeSnapshot)
+  {
+    return (com.runwaysdk.query.OIterator<? extends net.geoprism.graph.SnapshotHasAttribute>) getRelationshipsWithChild(attributeTypeSnapshot, net.geoprism.graph.SnapshotHasAttribute.CLASS);
   }
   
   public static ObjectTypeSnapshot get(String oid)

@@ -156,7 +156,7 @@ public class GraphTypeSnapshotBusinessService implements GraphTypeSnapshotBusine
       LocalizedValueConverter.populate(htsnapshot.getDescription(), description);
       htsnapshot.apply();
 
-      htsnapshot.addversion(version).apply();
+      htsnapshot.addVersion(version).apply();
 
       snapshot = htsnapshot;
     }
@@ -169,7 +169,7 @@ public class GraphTypeSnapshotBusinessService implements GraphTypeSnapshotBusine
       LocalizedValueConverter.populate(htsnapshot.getDescription(), description);
       htsnapshot.apply();
 
-      htsnapshot.addversion(version).apply();
+      htsnapshot.addVersion(version).apply();
 
       snapshot = htsnapshot;
     }
@@ -182,7 +182,7 @@ public class GraphTypeSnapshotBusinessService implements GraphTypeSnapshotBusine
       LocalizedValueConverter.populate(htsnapshot.getDescription(), description);
       htsnapshot.apply();
       
-      htsnapshot.addversion(version).apply();
+      htsnapshot.addVersion(version).apply();
       
       snapshot = htsnapshot;
     }

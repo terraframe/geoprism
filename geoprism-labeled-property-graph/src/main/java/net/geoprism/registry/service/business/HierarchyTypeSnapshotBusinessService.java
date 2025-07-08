@@ -143,7 +143,7 @@ public class HierarchyTypeSnapshotBusinessService implements HierarchyTypeSnapsh
     LocalizedValueConverter.populate(snapshot.getDescription(), description);
     snapshot.apply();
 
-    snapshot.addversion(version).apply();
+    snapshot.addVersion(version).apply();
 
     // Assign the relationship information
     createHierarchyRelationship(version, type, root);

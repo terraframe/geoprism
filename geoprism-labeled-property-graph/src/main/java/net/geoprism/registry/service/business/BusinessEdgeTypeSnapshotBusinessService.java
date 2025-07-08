@@ -273,7 +273,7 @@ public class BusinessEdgeTypeSnapshotBusinessService implements BusinessEdgeType
 
   public LabeledPropertyGraphTypeVersion getVersion(BusinessEdgeTypeSnapshot snapshot)
   {
-    try (OIterator<? extends LabeledPropertyGraphTypeVersion> iterator = snapshot.getAllversion())
+    try (OIterator<? extends LabeledPropertyGraphTypeVersion> iterator = snapshot.getAllVersion())
     {
       if (iterator.hasNext())
       {

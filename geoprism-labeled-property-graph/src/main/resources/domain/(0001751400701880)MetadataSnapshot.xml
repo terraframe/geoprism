@@ -134,9 +134,75 @@
       </mdBusiness>      
       
       <mdRelationship name="net.geoprism.graph.LabeledPropertyGraphTypeSnapshot" label="Labeled Property Graph Type Snapshot" table="lpg_type_snapshot" generateController="false" exported="false" publish="true">
-        <parent cardinality="*" name="net.geoprism.graph.LabeledPropertyGraphTypeVersion" method="version" />
+        <parent cardinality="*" name="net.geoprism.graph.LabeledPropertyGraphTypeVersion" method="Version" />
         <child cardinality="*" name="net.geoprism.graph.MetadataSnapshot"  method="Snapshot" />
       </mdRelationship>
+      
+      <mdBusiness name="net.geoprism.graph.AttributeTypeSnapshot" isAbstract="true" label="AttributeTypeSnapshot">
+        <attributes>
+          <char name="code" label="Code" required="true" size="255" />
+          <localChar name="label" label="Label" required="true" />        
+          <localChar name="description" label="Description" />        
+          <boolean name="isRequired" label="Required" />
+          <boolean name="isUnique" label="Unique" />
+          <boolean name="isDefault" label="Is Default" />
+          <boolean name="isChangeOverTime" label="Is Change Over Time" />
+        </attributes>
+      </mdBusiness>    
+      <mdBusiness name="net.geoprism.graph.AttributeBooleanTypeSnapshot" extends="net.geoprism.graph.AttributeTypeSnapshot" label="Attribute Boolean TypeSnapshot">
+        <attributes>
+        </attributes>
+      </mdBusiness>    
+      <mdBusiness name="net.geoprism.graph.AttributeUUIDTypeSnapshot" extends="net.geoprism.graph.AttributeTypeSnapshot" label="Attribute Character TypeSnapshot">
+        <attributes>
+        </attributes>
+      </mdBusiness>    
+      <mdBusiness name="net.geoprism.graph.AttributeCharacterTypeSnapshot" extends="net.geoprism.graph.AttributeTypeSnapshot" label="Attribute Character TypeSnapshot">
+        <attributes>
+        </attributes>
+      </mdBusiness>    
+      <mdBusiness name="net.geoprism.graph.AttributeDateTypeSnapshot" extends="net.geoprism.graph.AttributeTypeSnapshot" label="Attribute Date TypeSnapshot">
+        <attributes>
+        </attributes>
+      </mdBusiness>    
+      <mdBusiness name="net.geoprism.graph.AttributeLongTypeSnapshot" extends="net.geoprism.graph.AttributeTypeSnapshot" label="Attribute Long TypeSnapshot">
+        <attributes>
+        </attributes>
+      </mdBusiness>    
+      <mdBusiness name="net.geoprism.graph.AttributeDoubleTypeSnapshot" extends="net.geoprism.graph.AttributeTypeSnapshot" label="Attribute Double TypeSnapshot">
+        <attributes>
+          <integer name="precision" label="Precision" required="true"  />          
+          <integer name="scale" label="Scale" required="true"  />          
+        </attributes>
+      </mdBusiness>    
+      <mdBusiness name="net.geoprism.graph.AttributeLocalTypeSnapshot" extends="net.geoprism.graph.AttributeTypeSnapshot" label="Attribute Local TypeSnapshot">
+        <attributes>
+        </attributes>
+      </mdBusiness>    
+      <mdBusiness name="net.geoprism.graph.AttributeTermTypeSnapshot" extends="net.geoprism.graph.AttributeTypeSnapshot" label="Attribute Term TypeSnapshot">
+        <attributes>
+          <reference name="rootTerm" label="Root Term" required="false" type="net.geoprism.ontology.Classifier"  />     
+        </attributes>
+      </mdBusiness>    
+      <mdBusiness name="net.geoprism.graph.AttributeClassificationTypeSnapshot" extends="net.geoprism.graph.AttributeTypeSnapshot" label="Attribute Classification TypeSnapshot">
+        <attributes>
+          <text name="classificationType" label="Classification Type" required="true"/>          
+          <text name="rootTerm" label="Root Term" required="false"/>  
+        </attributes>
+      </mdBusiness>    
+      
+      
+      <mdBusiness name="net.geoprism.graph.AttributeGeometryTypeSnapshot" extends="net.geoprism.graph.AttributeTypeSnapshot" label="Attribute Geometry TypeSnapshot">
+        <attributes>
+          <char name="geometryType" label="Geometry Type" required="true" size="255"  />          
+        </attributes>
+      </mdBusiness>    
+
+      <mdRelationship name="net.geoprism.graph.SnapshotHasAttribute" label="Snapshot Has Attribute" table="snapshot_has_attribute" generateController="false" exported="false" publish="true">
+        <parent cardinality="*" name="net.geoprism.graph.ObjectTypeSnapshot" method="Snapshot" />
+        <child cardinality="*" name="net.geoprism.graph.AttributeTypeSnapshot"  method="Attribute" />
+      </mdRelationship>
+      
       
     </create>
     <permissions>
@@ -166,14 +232,22 @@
           <mdBusinessPermission type="net.geoprism.graph.UndirectedGraphTypeSnapshot">
             <operation name="ALL" />
           </mdBusinessPermission>          
+          <mdBusinessPermission type="net.geoprism.graph.AttributeTypeSnapshot">
+            <operation name="ALL" />
+          </mdBusinessPermission>          
+          <mdRelationshipPermission type="net.geoprism.graph.SnapshotHasAttribute">
+            <operation name="ALL" />
+          </mdRelationshipPermission>     
         </grant>        
       </role>
     </permissions>
   </doIt>
   <undoIt>
     <delete>
+      <object key="net.geoprism.graph.SnapshotHasAttribute" type="com.runwaysdk.system.metadata.MdRelationship"></object>
       <object key="net.geoprism.graph.LabeledPropertyGraphTypeSnapshot" type="com.runwaysdk.system.metadata.MdRelationship"></object>
       <object key="net.geoprism.graph.SnapshotHierarchy" type="com.runwaysdk.system.metadata.MdRelationship"></object>
+      <object key="net.geoprism.graph.AttributeTypeSnapshot" type="com.runwaysdk.system.metadata.MdBusiness"></object>
       <object key="net.geoprism.graph.HierarchyTypeSnapshot" type="com.runwaysdk.system.metadata.MdBusiness"></object>
       <object key="net.geoprism.graph.DirectedAcyclicGraphTypeSnapshot" type="com.runwaysdk.system.metadata.MdBusiness"></object>
       <object key="net.geoprism.graph.UndirectedGraphTypeSnapshot" type="com.runwaysdk.system.metadata.MdBusiness"></object>

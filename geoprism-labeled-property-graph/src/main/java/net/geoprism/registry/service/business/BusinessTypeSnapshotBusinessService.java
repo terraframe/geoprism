@@ -19,23 +19,12 @@
 package net.geoprism.registry.service.business;
 
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 
-import org.apache.commons.lang.StringUtils;
-import org.commongeoregistry.adapter.Term;
 import org.commongeoregistry.adapter.constants.DefaultAttribute;
 import org.commongeoregistry.adapter.dataaccess.LocalizedValue;
-import org.commongeoregistry.adapter.metadata.AttributeBooleanType;
-import org.commongeoregistry.adapter.metadata.AttributeCharacterType;
-import org.commongeoregistry.adapter.metadata.AttributeClassificationType;
-import org.commongeoregistry.adapter.metadata.AttributeDateType;
-import org.commongeoregistry.adapter.metadata.AttributeFloatType;
-import org.commongeoregistry.adapter.metadata.AttributeIntegerType;
-import org.commongeoregistry.adapter.metadata.AttributeLocalType;
 import org.commongeoregistry.adapter.metadata.AttributeTermType;
 import org.commongeoregistry.adapter.metadata.AttributeType;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.google.gson.JsonArray;
@@ -44,32 +33,14 @@ import com.runwaysdk.ComponentIF;
 import com.runwaysdk.business.BusinessFacade;
 import com.runwaysdk.business.graph.VertexObject;
 import com.runwaysdk.constants.MdAttributeBooleanInfo;
-import com.runwaysdk.constants.MdAttributeCharacterInfo;
-import com.runwaysdk.constants.MdAttributeConcreteInfo;
-import com.runwaysdk.constants.MdAttributeDoubleInfo;
 import com.runwaysdk.constants.graph.MdVertexInfo;
 import com.runwaysdk.dataaccess.MdAttributeConcreteDAOIF;
 import com.runwaysdk.dataaccess.MdAttributeTermDAOIF;
 import com.runwaysdk.dataaccess.MdVertexDAOIF;
-import com.runwaysdk.dataaccess.graph.GraphDBService;
-import com.runwaysdk.dataaccess.metadata.graph.MdGraphClassDAO;
 import com.runwaysdk.dataaccess.metadata.graph.MdVertexDAO;
 import com.runwaysdk.dataaccess.transaction.Transaction;
 import com.runwaysdk.query.OIterator;
 import com.runwaysdk.query.QueryFactory;
-import com.runwaysdk.system.metadata.MdAttributeBoolean;
-import com.runwaysdk.system.metadata.MdAttributeCharacter;
-import com.runwaysdk.system.metadata.MdAttributeClassification;
-import com.runwaysdk.system.metadata.MdAttributeConcrete;
-import com.runwaysdk.system.metadata.MdAttributeDateTime;
-import com.runwaysdk.system.metadata.MdAttributeDouble;
-import com.runwaysdk.system.metadata.MdAttributeIndices;
-import com.runwaysdk.system.metadata.MdAttributeLocalCharacterEmbedded;
-import com.runwaysdk.system.metadata.MdAttributeLocalText;
-import com.runwaysdk.system.metadata.MdAttributeLong;
-import com.runwaysdk.system.metadata.MdClass;
-import com.runwaysdk.system.metadata.MdGraphClass;
-import com.runwaysdk.system.metadata.MdGraphClassQuery;
 import com.runwaysdk.system.metadata.MdVertex;
 
 import net.geoprism.graph.BusinessTypeSnapshot;
@@ -78,84 +49,10 @@ import net.geoprism.graph.LabeledPropertyGraphTypeSnapshotQuery;
 import net.geoprism.graph.LabeledPropertyGraphTypeVersion;
 import net.geoprism.registry.DateFormatter;
 import net.geoprism.registry.conversion.LocalizedValueConverter;
-import net.geoprism.registry.model.Classification;
-import net.geoprism.registry.model.ClassificationType;
 
 @Service
-public class BusinessTypeSnapshotBusinessService implements BusinessTypeSnapshotBusinessServiceIF
+public class BusinessTypeSnapshotBusinessService extends ObjectTypeBusinessService<BusinessTypeSnapshot> implements BusinessTypeSnapshotBusinessServiceIF
 {
-  public final String                         TABLE_PACKAGE = "net.geoprism.lpg";
-
-  public final String                         PREFIX        = "g_";
-
-  public final String                         SPLIT         = "__";
-
-  public final String                         ROOT          = "__ROOT__";
-
-  @Autowired
-  private ClassificationBusinessServiceIF     classificationService;
-
-  @Autowired
-  private ClassificationTypeBusinessServiceIF typeService;
-
-  @Override
-  @Transaction
-  public void delete(BusinessTypeSnapshot snapshot)
-  {
-    String mdVertexOid = snapshot.getGraphMdVertexOid();
-
-    snapshot.delete();
-
-    if (!StringUtils.isBlank(mdVertexOid))
-    {
-      MdGraphClassDAO.get(mdVertexOid).getBusinessDAO().delete();
-    }
-  }
-
-  @Override
-  public void truncate(BusinessTypeSnapshot snapshot)
-  {
-    MdVertex mdVertex = snapshot.getGraphMdVertex();
-
-    GraphDBService service = GraphDBService.getInstance();
-    service.command(service.getGraphDBRequest(), "DELETE VERTEX FROM " + mdVertex.getDbClassName(), new HashMap<>());
-  }
-
-  @Override
-  public String getTableName(String className)
-  {
-    int count = 0;
-
-    String name = PREFIX + count + SPLIT + className;
-
-    if (name.length() > 25)
-    {
-      name = name.substring(0, 25);
-    }
-
-    while (isTableNameInUse(name))
-    {
-      count++;
-
-      name = PREFIX + count + className;
-
-      if (name.length() > 25)
-      {
-        name = name.substring(0, 25);
-      }
-    }
-
-    return name;
-  }
-
-  private boolean isTableNameInUse(String name)
-  {
-    MdGraphClassQuery query = new MdGraphClassQuery(new QueryFactory());
-    query.WHERE(query.getDbClassName().EQ(name));
-
-    return query.getCount() > 0;
-  }
-
   @Transaction
   @Override
   public BusinessTypeSnapshot create(LabeledPropertyGraphTypeVersion version, JsonObject typeDto)
@@ -177,6 +74,16 @@ public class BusinessTypeSnapshotBusinessService implements BusinessTypeSnapshot
 
     MdVertex mdTable = (MdVertex) BusinessFacade.get(mdTableDAO);
 
+    BusinessTypeSnapshot snapshot = new BusinessTypeSnapshot();
+    snapshot.setGraphMdVertex(mdTable);
+    snapshot.setLabelAttribute(typeDto.get(BusinessTypeSnapshot.LABELATTRIBUTE).getAsString());
+    snapshot.setCode(code);
+    snapshot.setOrgCode(orgCode);
+    LocalizedValueConverter.populate(snapshot.getDisplayLabel(), label);
+    snapshot.apply();
+
+    snapshot.addVersion(version).apply();
+
     JsonArray attributes = typeDto.get("attributes").getAsJsonArray();
 
     attributes.forEach(joAttr -> {
@@ -185,18 +92,10 @@ public class BusinessTypeSnapshotBusinessService implements BusinessTypeSnapshot
       if (! ( attributeType instanceof AttributeTermType ))
       {
         this.createMdAttributeFromAttributeType(mdTable, attributeType);
+
+        this.createAttributeTypeSnapshot(snapshot, attributeType);
       }
     });
-
-    BusinessTypeSnapshot snapshot = new BusinessTypeSnapshot();
-    snapshot.setGraphMdVertex(mdTable);
-    snapshot.setLabelAttribute(typeDto.get(BusinessTypeSnapshot.LABELATTRIBUTE).getAsString());
-    snapshot.setCode(code);
-    snapshot.setOrgCode(orgCode);
-    LocalizedValueConverter.populate(snapshot.getDisplayLabel(), label);
-    snapshot.apply();
-    
-    snapshot.addversion(version).apply();
 
     this.assignPermissions(mdTableDAO);
 
@@ -247,136 +146,6 @@ public class BusinessTypeSnapshotBusinessService implements BusinessTypeSnapshot
     }
 
     return null;
-  }
-
-  public MdAttributeConcrete createMdAttributeFromAttributeType(MdClass mdClass, AttributeType attributeType)
-  {
-    MdAttributeConcrete mdAttribute = null;
-
-    if (attributeType.getType().equals(AttributeCharacterType.TYPE))
-    {
-      mdAttribute = new MdAttributeCharacter();
-      MdAttributeCharacter mdAttributeCharacter = (MdAttributeCharacter) mdAttribute;
-      mdAttributeCharacter.setDatabaseSize(MdAttributeCharacterInfo.MAX_CHARACTER_SIZE);
-    }
-    else if (attributeType.getType().equals(AttributeDateType.TYPE))
-    {
-      mdAttribute = new MdAttributeDateTime();
-    }
-    else if (attributeType.getType().equals(AttributeIntegerType.TYPE))
-    {
-      mdAttribute = new MdAttributeLong();
-    }
-    else if (attributeType.getType().equals(AttributeFloatType.TYPE))
-    {
-      AttributeFloatType attributeFloatType = (AttributeFloatType) attributeType;
-
-      mdAttribute = new MdAttributeDouble();
-      mdAttribute.setValue(MdAttributeDoubleInfo.LENGTH, Integer.toString(attributeFloatType.getPrecision()));
-      mdAttribute.setValue(MdAttributeDoubleInfo.DECIMAL, Integer.toString(attributeFloatType.getScale()));
-    }
-    else if (attributeType.getType().equals(AttributeTermType.TYPE))
-    {
-      // mdAttribute = new MdAttributeTerm();
-      // MdAttributeTerm mdAttributeTerm = (MdAttributeTerm) mdAttribute;
-      //
-      // MdBusiness classifierMdBusiness =
-      // MdBusiness.getMdBusiness(Classifier.CLASS);
-      // mdAttributeTerm.setMdBusiness(classifierMdBusiness);
-    }
-    else if (attributeType.getType().equals(AttributeClassificationType.TYPE))
-    {
-      AttributeClassificationType attributeClassificationType = (AttributeClassificationType) attributeType;
-      String classificationTypeCode = attributeClassificationType.getClassificationType();
-
-      ClassificationType classificationType = this.typeService.getByCode(classificationTypeCode);
-
-      mdAttribute = new MdAttributeClassification();
-      MdAttributeClassification mdAttributeTerm = (MdAttributeClassification) mdAttribute;
-      mdAttributeTerm.setReferenceMdClassification(classificationType.getMdClassificationObject());
-
-      Term root = attributeClassificationType.getRootTerm();
-
-      if (root != null)
-      {
-        Classification classification = this.classificationService.get(classificationType, root.getCode());
-
-        if (classification == null)
-        {
-          net.geoprism.registry.DataNotFoundException ex = new net.geoprism.registry.DataNotFoundException();
-          ex.setTypeLabel(classificationType.getDisplayLabel().getValue());
-          ex.setDataIdentifier(root.getCode());
-          ex.setAttributeLabel("BusinessType.attr.code");
-
-          throw ex;
-
-        }
-
-        mdAttributeTerm.setValue(MdAttributeClassification.ROOT, classification.getOid());
-      }
-    }
-    else if (attributeType.getType().equals(AttributeBooleanType.TYPE))
-    {
-      mdAttribute = new MdAttributeBoolean();
-    }
-    else if (attributeType.getType().equals(AttributeLocalType.TYPE))
-    {
-      if (mdClass instanceof MdGraphClass)
-      {
-        mdAttribute = new MdAttributeLocalCharacterEmbedded();
-      }
-      else
-      {
-        mdAttribute = new MdAttributeLocalText();
-      }
-    }
-    else
-    {
-      throw new UnsupportedOperationException();
-    }
-
-    mdAttribute.setAttributeName(attributeType.getName());
-    mdAttribute.setValue(MdAttributeConcreteInfo.REQUIRED, Boolean.toString(attributeType.isRequired()));
-
-    if (attributeType.isUnique())
-    {
-      mdAttribute.addIndexType(MdAttributeIndices.UNIQUE_INDEX);
-    }
-
-    LocalizedValueConverter.populate(mdAttribute.getDisplayLabel(), attributeType.getLabel());
-    LocalizedValueConverter.populate(mdAttribute.getDescription(), attributeType.getDescription());
-
-    mdAttribute.setDefiningMdClass(mdClass);
-    mdAttribute.apply();
-
-    if (attributeType.getType().equals(AttributeTermType.TYPE))
-    {
-      // MdAttributeTerm mdAttributeTerm = (MdAttributeTerm) mdAttribute;
-      //
-      // // Build the parent class term root if it does not exist.
-      // Classifier classTerm =
-      // TermConverter.buildIfNotExistdMdBusinessClassifier(mdClass);
-      //
-      // // Create the root term node for this attribute
-      // Classifier attributeTermRoot =
-      // TermConverter.buildIfNotExistAttribute(mdClass,
-      // mdAttributeTerm.getAttributeName(), classTerm);
-      //
-      // // Make this the root term of the multi-attribute
-      // attributeTermRoot.addClassifierTermAttributeRoots(mdAttributeTerm).apply();
-      //
-      // AttributeTermType attributeTermType = (AttributeTermType)
-      // attributeType;
-      //
-      // LocalizedValue label =
-      // LocalizedValueConverter.convert(attributeTermRoot.getDisplayLabel());
-      //
-      // org.commongeoregistry.adapter.Term term = new
-      // org.commongeoregistry.adapter.Term(attributeTermRoot.getClassifierId(),
-      // label, new LocalizedValue(""));
-      // attributeTermType.setRootTerm(term);
-    }
-    return mdAttribute;
   }
 
   @Override

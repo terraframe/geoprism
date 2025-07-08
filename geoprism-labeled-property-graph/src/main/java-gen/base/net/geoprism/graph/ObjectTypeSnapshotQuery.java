@@ -1,6 +1,6 @@
 package net.geoprism.graph;
 
-@com.runwaysdk.business.ClassSignature(hash = 606625161)
+@com.runwaysdk.business.ClassSignature(hash = -558553803)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -63,6 +63,122 @@ public  class ObjectTypeSnapshotQuery extends net.geoprism.graph.MetadataSnapsho
   }
 
 
+  public com.runwaysdk.query.Condition attribute()
+  {
+    com.runwaysdk.query.QueryFactory queryFactory = this.getQueryFactory();
+    com.runwaysdk.business.RelationshipQuery relationshipQuery = queryFactory.relationshipQuery(net.geoprism.graph.SnapshotHasAttribute.CLASS);
+
+    return this.getBusinessQuery().isParentIn(relationshipQuery);
+  }
+
+
+  public com.runwaysdk.query.Condition SUBSELECT_attribute()
+  {
+    com.runwaysdk.query.QueryFactory queryFactory = this.getQueryFactory();
+    com.runwaysdk.business.RelationshipQuery relationshipQuery = queryFactory.relationshipQuery(net.geoprism.graph.SnapshotHasAttribute.CLASS);
+
+    return this.getBusinessQuery().isParentIn_SUBSELECT(relationshipQuery);
+  }
+
+  public com.runwaysdk.query.Condition attribute(net.geoprism.graph.SnapshotHasAttributeQuery snapshotHasAttributeQuery)
+  {
+    return this.getBusinessQuery().isParentIn(snapshotHasAttributeQuery);
+  }
+
+  public com.runwaysdk.query.Condition SUBSELECT_attribute(net.geoprism.graph.SnapshotHasAttributeQuery snapshotHasAttributeQuery)
+  {
+    return this.getBusinessQuery().isParentIn_SUBSELECT(snapshotHasAttributeQuery);
+  }
+
+  public com.runwaysdk.query.Condition attribute(net.geoprism.graph.AttributeTypeSnapshotQuery attributeTypeSnapshotQuery)
+  {
+    com.runwaysdk.query.QueryFactory queryFactory = this.getQueryFactory();
+    com.runwaysdk.business.RelationshipQuery relationshipQuery = queryFactory.relationshipQuery(net.geoprism.graph.SnapshotHasAttribute.CLASS);
+    relationshipQuery.AND(relationshipQuery.hasChild(attributeTypeSnapshotQuery));
+
+    return this.getBusinessQuery().isParentIn(relationshipQuery);
+  }
+
+  public com.runwaysdk.query.Condition SUBSELECT_attribute(net.geoprism.graph.AttributeTypeSnapshotQuery attributeTypeSnapshotQuery)
+  {
+    com.runwaysdk.query.QueryFactory queryFactory = this.getQueryFactory();
+    com.runwaysdk.business.RelationshipQuery relationshipQuery = queryFactory.relationshipQuery(net.geoprism.graph.SnapshotHasAttribute.CLASS);
+    relationshipQuery.AND(relationshipQuery.hasChild(attributeTypeSnapshotQuery));
+
+    return this.getBusinessQuery().isParentIn_SUBSELECT(relationshipQuery);
+  }
+
+  public com.runwaysdk.query.Condition attribute(net.geoprism.graph.AttributeTypeSnapshotQuery attributeTypeSnapshotQuery, net.geoprism.graph.SnapshotHasAttributeQuery snapshotHasAttributeQuery)
+  {
+    snapshotHasAttributeQuery.AND(snapshotHasAttributeQuery.hasChild(attributeTypeSnapshotQuery));
+    return this.getBusinessQuery().isParentIn(snapshotHasAttributeQuery);
+  }
+
+  public com.runwaysdk.query.Condition SUBSELECT_attribute(net.geoprism.graph.AttributeTypeSnapshotQuery attributeTypeSnapshotQuery, net.geoprism.graph.SnapshotHasAttributeQuery snapshotHasAttributeQuery)
+  {
+    snapshotHasAttributeQuery.AND(snapshotHasAttributeQuery.hasChild(attributeTypeSnapshotQuery));
+    return this.getBusinessQuery().isParentIn_SUBSELECT(snapshotHasAttributeQuery);
+  }
+
+
+  public com.runwaysdk.query.Condition NOT_IN_attribute()
+  {
+    com.runwaysdk.query.QueryFactory queryFactory = this.getQueryFactory();
+    com.runwaysdk.business.RelationshipQuery relationshipQuery = queryFactory.relationshipQuery(net.geoprism.graph.SnapshotHasAttribute.CLASS);
+
+    return this.getBusinessQuery().isNotParentIn(relationshipQuery);
+  }
+
+
+  public com.runwaysdk.query.Condition SUBSELECT_NOT_IN_attribute()
+  {
+    com.runwaysdk.query.QueryFactory queryFactory = this.getQueryFactory();
+    com.runwaysdk.business.RelationshipQuery relationshipQuery = queryFactory.relationshipQuery(net.geoprism.graph.SnapshotHasAttribute.CLASS);
+
+    return this.getBusinessQuery().isNotParentIn_SUBSELECT(relationshipQuery);
+  }
+
+  public com.runwaysdk.query.Condition NOT_IN_attribute(net.geoprism.graph.SnapshotHasAttributeQuery snapshotHasAttributeQuery)
+  {
+    return this.getBusinessQuery().isNotParentIn(snapshotHasAttributeQuery);
+  }
+
+  public com.runwaysdk.query.Condition SUBSELECT_NOT_IN_attribute(net.geoprism.graph.SnapshotHasAttributeQuery snapshotHasAttributeQuery)
+  {
+    return this.getBusinessQuery().isNotParentIn_SUBSELECT(snapshotHasAttributeQuery);
+  }
+
+  public com.runwaysdk.query.Condition NOT_IN_attribute(net.geoprism.graph.AttributeTypeSnapshotQuery attributeTypeSnapshotQuery)
+  {
+    com.runwaysdk.query.QueryFactory queryFactory = this.getQueryFactory();
+    com.runwaysdk.business.RelationshipQuery relationshipQuery = queryFactory.relationshipQuery(net.geoprism.graph.SnapshotHasAttribute.CLASS);
+    relationshipQuery.AND(relationshipQuery.hasChild(attributeTypeSnapshotQuery));
+
+    return this.getBusinessQuery().isNotParentIn(relationshipQuery);
+  }
+
+  public com.runwaysdk.query.Condition SUBSELECT_NOT_IN_attribute(net.geoprism.graph.AttributeTypeSnapshotQuery attributeTypeSnapshotQuery)
+  {
+    com.runwaysdk.query.QueryFactory queryFactory = this.getQueryFactory();
+    com.runwaysdk.business.RelationshipQuery relationshipQuery = queryFactory.relationshipQuery(net.geoprism.graph.SnapshotHasAttribute.CLASS);
+    relationshipQuery.AND(relationshipQuery.hasChild(attributeTypeSnapshotQuery));
+
+    return this.getBusinessQuery().isNotParentIn_SUBSELECT(relationshipQuery);
+  }
+
+  public com.runwaysdk.query.Condition NOT_IN_attribute(net.geoprism.graph.AttributeTypeSnapshotQuery attributeTypeSnapshotQuery, net.geoprism.graph.SnapshotHasAttributeQuery snapshotHasAttributeQuery)
+  {
+    snapshotHasAttributeQuery.AND(snapshotHasAttributeQuery.hasChild(attributeTypeSnapshotQuery));
+    return this.getBusinessQuery().isNotParentIn(snapshotHasAttributeQuery);
+  }
+
+  public com.runwaysdk.query.Condition SUBSELECT_NOT_IN_attribute(net.geoprism.graph.AttributeTypeSnapshotQuery attributeTypeSnapshotQuery, net.geoprism.graph.SnapshotHasAttributeQuery snapshotHasAttributeQuery)
+  {
+    snapshotHasAttributeQuery.AND(snapshotHasAttributeQuery.hasChild(attributeTypeSnapshotQuery));
+    return this.getBusinessQuery().isNotParentIn_SUBSELECT(snapshotHasAttributeQuery);
+  }
+
+
 /**
  * Interface that masks all type unsafe query methods and defines all type safe methods.
  * This type is used when a join is performed on this class as a reference.
@@ -74,6 +190,34 @@ public  class ObjectTypeSnapshotQuery extends net.geoprism.graph.MetadataSnapsho
     public com.runwaysdk.query.BasicCondition EQ(net.geoprism.graph.ObjectTypeSnapshot objectTypeSnapshot);
 
     public com.runwaysdk.query.BasicCondition NE(net.geoprism.graph.ObjectTypeSnapshot objectTypeSnapshot);
+
+
+  public com.runwaysdk.query.Condition attribute();
+
+  public com.runwaysdk.query.Condition attribute(net.geoprism.graph.AttributeTypeSnapshotQuery attributeTypeSnapshotQuery);
+
+  public com.runwaysdk.query.Condition attribute(net.geoprism.graph.AttributeTypeSnapshotQuery attributeTypeSnapshotQuery, net.geoprism.graph.SnapshotHasAttributeQuery snapshotHasAttributeQuery);
+
+
+  public com.runwaysdk.query.Condition SUBSELECT_attribute();
+
+  public com.runwaysdk.query.Condition SUBSELECT_attribute(net.geoprism.graph.AttributeTypeSnapshotQuery attributeTypeSnapshotQuery);
+
+  public com.runwaysdk.query.Condition SUBSELECT_attribute(net.geoprism.graph.AttributeTypeSnapshotQuery attributeTypeSnapshotQuery, net.geoprism.graph.SnapshotHasAttributeQuery snapshotHasAttributeQuery);
+
+
+  public com.runwaysdk.query.Condition NOT_IN_attribute();
+
+  public com.runwaysdk.query.Condition NOT_IN_attribute(net.geoprism.graph.AttributeTypeSnapshotQuery attributeTypeSnapshotQuery);
+
+  public com.runwaysdk.query.Condition NOT_IN_attribute(net.geoprism.graph.AttributeTypeSnapshotQuery attributeTypeSnapshotQuery, net.geoprism.graph.SnapshotHasAttributeQuery snapshotHasAttributeQuery);
+
+
+  public com.runwaysdk.query.Condition SUBSELECT_NOT_IN_attribute();
+
+  public com.runwaysdk.query.Condition SUBSELECT_NOT_IN_attribute(net.geoprism.graph.AttributeTypeSnapshotQuery attributeTypeSnapshotQuery);
+
+  public com.runwaysdk.query.Condition SUBSELECT_NOT_IN_attribute(net.geoprism.graph.AttributeTypeSnapshotQuery attributeTypeSnapshotQuery, net.geoprism.graph.SnapshotHasAttributeQuery snapshotHasAttributeQuery);
 
   }
 
@@ -104,6 +248,122 @@ public  class ObjectTypeSnapshotQuery extends net.geoprism.graph.MetadataSnapsho
       if(objectTypeSnapshot == null) return this.NE((java.lang.String)null);
       return this.NE(objectTypeSnapshot.getOid());
     }
+
+
+  public com.runwaysdk.query.Condition attribute()
+  {
+    com.runwaysdk.query.QueryFactory queryFactory = this.getQueryFactory();
+    com.runwaysdk.business.RelationshipQuery relationshipQuery = queryFactory.relationshipQuery(net.geoprism.graph.SnapshotHasAttribute.CLASS);
+
+    return this.isParentIn(relationshipQuery);
+  }
+
+
+  public com.runwaysdk.query.Condition SUBSELECT_attribute()
+  {
+    com.runwaysdk.query.QueryFactory queryFactory = this.getQueryFactory();
+    com.runwaysdk.business.RelationshipQuery relationshipQuery = queryFactory.relationshipQuery(net.geoprism.graph.SnapshotHasAttribute.CLASS);
+
+    return this.isParentIn_SUBSELECT(relationshipQuery);
+  }
+
+  public com.runwaysdk.query.Condition attribute(net.geoprism.graph.SnapshotHasAttributeQuery snapshotHasAttributeQuery)
+  {
+    return this.isParentIn(snapshotHasAttributeQuery);
+  }
+
+  public com.runwaysdk.query.Condition SUBSELECT_attribute(net.geoprism.graph.SnapshotHasAttributeQuery snapshotHasAttributeQuery)
+  {
+    return this.isParentIn_SUBSELECT(snapshotHasAttributeQuery);
+  }
+
+  public com.runwaysdk.query.Condition attribute(net.geoprism.graph.AttributeTypeSnapshotQuery attributeTypeSnapshotQuery)
+  {
+    com.runwaysdk.query.QueryFactory queryFactory = this.getQueryFactory();
+    com.runwaysdk.business.RelationshipQuery relationshipQuery = queryFactory.relationshipQuery(net.geoprism.graph.SnapshotHasAttribute.CLASS);
+    relationshipQuery.AND(relationshipQuery.hasChild(attributeTypeSnapshotQuery));
+
+    return this.isParentIn(relationshipQuery);
+  }
+
+  public com.runwaysdk.query.Condition SUBSELECT_attribute(net.geoprism.graph.AttributeTypeSnapshotQuery attributeTypeSnapshotQuery)
+  {
+    com.runwaysdk.query.QueryFactory queryFactory = this.getQueryFactory();
+    com.runwaysdk.business.RelationshipQuery relationshipQuery = queryFactory.relationshipQuery(net.geoprism.graph.SnapshotHasAttribute.CLASS);
+    relationshipQuery.AND(relationshipQuery.hasChild(attributeTypeSnapshotQuery));
+
+    return this.isParentIn_SUBSELECT(relationshipQuery);
+  }
+
+  public com.runwaysdk.query.Condition attribute(net.geoprism.graph.AttributeTypeSnapshotQuery attributeTypeSnapshotQuery, net.geoprism.graph.SnapshotHasAttributeQuery snapshotHasAttributeQuery)
+  {
+    snapshotHasAttributeQuery.AND(snapshotHasAttributeQuery.hasChild(attributeTypeSnapshotQuery));
+    return this.isParentIn(snapshotHasAttributeQuery);
+  }
+
+  public com.runwaysdk.query.Condition SUBSELECT_attribute(net.geoprism.graph.AttributeTypeSnapshotQuery attributeTypeSnapshotQuery, net.geoprism.graph.SnapshotHasAttributeQuery snapshotHasAttributeQuery)
+  {
+    snapshotHasAttributeQuery.AND(snapshotHasAttributeQuery.hasChild(attributeTypeSnapshotQuery));
+    return this.isParentIn_SUBSELECT(snapshotHasAttributeQuery);
+  }
+
+
+  public com.runwaysdk.query.Condition NOT_IN_attribute()
+  {
+    com.runwaysdk.query.QueryFactory queryFactory = this.getQueryFactory();
+    com.runwaysdk.business.RelationshipQuery relationshipQuery = queryFactory.relationshipQuery(net.geoprism.graph.SnapshotHasAttribute.CLASS);
+
+    return this.isNotParentIn(relationshipQuery);
+  }
+
+
+  public com.runwaysdk.query.Condition SUBSELECT_NOT_IN_attribute()
+  {
+    com.runwaysdk.query.QueryFactory queryFactory = this.getQueryFactory();
+    com.runwaysdk.business.RelationshipQuery relationshipQuery = queryFactory.relationshipQuery(net.geoprism.graph.SnapshotHasAttribute.CLASS);
+
+    return this.isNotParentIn_SUBSELECT(relationshipQuery);
+  }
+
+  public com.runwaysdk.query.Condition NOT_IN_attribute(net.geoprism.graph.SnapshotHasAttributeQuery snapshotHasAttributeQuery)
+  {
+    return this.isNotParentIn(snapshotHasAttributeQuery);
+  }
+
+  public com.runwaysdk.query.Condition SUBSELECT_NOT_IN_attribute(net.geoprism.graph.SnapshotHasAttributeQuery snapshotHasAttributeQuery)
+  {
+    return this.isNotParentIn_SUBSELECT(snapshotHasAttributeQuery);
+  }
+
+  public com.runwaysdk.query.Condition NOT_IN_attribute(net.geoprism.graph.AttributeTypeSnapshotQuery attributeTypeSnapshotQuery)
+  {
+    com.runwaysdk.query.QueryFactory queryFactory = this.getQueryFactory();
+    com.runwaysdk.business.RelationshipQuery relationshipQuery = queryFactory.relationshipQuery(net.geoprism.graph.SnapshotHasAttribute.CLASS);
+    relationshipQuery.AND(relationshipQuery.hasChild(attributeTypeSnapshotQuery));
+
+    return this.isNotParentIn(relationshipQuery);
+  }
+
+  public com.runwaysdk.query.Condition SUBSELECT_NOT_IN_attribute(net.geoprism.graph.AttributeTypeSnapshotQuery attributeTypeSnapshotQuery)
+  {
+    com.runwaysdk.query.QueryFactory queryFactory = this.getQueryFactory();
+    com.runwaysdk.business.RelationshipQuery relationshipQuery = queryFactory.relationshipQuery(net.geoprism.graph.SnapshotHasAttribute.CLASS);
+    relationshipQuery.AND(relationshipQuery.hasChild(attributeTypeSnapshotQuery));
+
+    return this.isNotParentIn_SUBSELECT(relationshipQuery);
+  }
+
+  public com.runwaysdk.query.Condition NOT_IN_attribute(net.geoprism.graph.AttributeTypeSnapshotQuery attributeTypeSnapshotQuery, net.geoprism.graph.SnapshotHasAttributeQuery snapshotHasAttributeQuery)
+  {
+    snapshotHasAttributeQuery.AND(snapshotHasAttributeQuery.hasChild(attributeTypeSnapshotQuery));
+    return this.isNotParentIn(snapshotHasAttributeQuery);
+  }
+
+  public com.runwaysdk.query.Condition SUBSELECT_NOT_IN_attribute(net.geoprism.graph.AttributeTypeSnapshotQuery attributeTypeSnapshotQuery, net.geoprism.graph.SnapshotHasAttributeQuery snapshotHasAttributeQuery)
+  {
+    snapshotHasAttributeQuery.AND(snapshotHasAttributeQuery.hasChild(attributeTypeSnapshotQuery));
+    return this.isNotParentIn_SUBSELECT(snapshotHasAttributeQuery);
+  }
 
   }
 
