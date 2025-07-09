@@ -55,6 +55,7 @@ import net.geoprism.graph.LabeledPropertyGraphTypeVersion;
 import net.geoprism.registry.conversion.LocalizedValueConverter;
 import net.geoprism.registry.model.Classification;
 import net.geoprism.registry.model.ClassificationType;
+import net.geoprism.registry.model.SnapshotContainer;
 
 @Service
 public class GeoObjectTypeSnapshotBusinessService extends ObjectTypeBusinessService<GeoObjectTypeSnapshot> implements GeoObjectTypeSnapshotBusinessServiceIF
@@ -69,22 +70,27 @@ public class GeoObjectTypeSnapshotBusinessService extends ObjectTypeBusinessServ
 
   @Transaction
   @Override
-  public GeoObjectTypeSnapshot createRoot(LabeledPropertyGraphTypeVersion version)
+  public GeoObjectTypeSnapshot createRoot(SnapshotContainer<?> version)
   {
-    String viewName = getTableName("root_vertex");
+    MdVertex graphMdVertex = null;
 
-    // Create the MdTable
-    MdVertexDAO rootMdVertexDAO = MdVertexDAO.newInstance();
-    rootMdVertexDAO.setValue(MdVertexInfo.NAME, viewName);
-    rootMdVertexDAO.setValue(MdVertexInfo.PACKAGE, TABLE_PACKAGE);
-    rootMdVertexDAO.setStructValue(MdVertexInfo.DISPLAY_LABEL, MdAttributeLocalInfo.DEFAULT_LOCALE, "Root Type");
-    rootMdVertexDAO.setValue(MdVertexInfo.DB_CLASS_NAME, viewName);
-    rootMdVertexDAO.setValue(MdVertexInfo.GENERATE_SOURCE, MdAttributeBooleanInfo.FALSE);
-    rootMdVertexDAO.setValue(MdVertexInfo.ENABLE_CHANGE_OVER_TIME, MdAttributeBooleanInfo.FALSE);
-    rootMdVertexDAO.setValue(MdVertexInfo.ABSTRACT, MdAttributeBooleanInfo.TRUE);
-    rootMdVertexDAO.apply();
+    if (version.createTablesWithSnapshot())
+    {
+      String viewName = getTableName("root_vertex");
 
-    MdVertex graphMdVertex = (MdVertex) BusinessFacade.get(rootMdVertexDAO);
+      // Create the MdTable
+      MdVertexDAO rootMdVertexDAO = MdVertexDAO.newInstance();
+      rootMdVertexDAO.setValue(MdVertexInfo.NAME, viewName);
+      rootMdVertexDAO.setValue(MdVertexInfo.PACKAGE, TABLE_PACKAGE);
+      rootMdVertexDAO.setStructValue(MdVertexInfo.DISPLAY_LABEL, MdAttributeLocalInfo.DEFAULT_LOCALE, "Root Type");
+      rootMdVertexDAO.setValue(MdVertexInfo.DB_CLASS_NAME, viewName);
+      rootMdVertexDAO.setValue(MdVertexInfo.GENERATE_SOURCE, MdAttributeBooleanInfo.FALSE);
+      rootMdVertexDAO.setValue(MdVertexInfo.ENABLE_CHANGE_OVER_TIME, MdAttributeBooleanInfo.FALSE);
+      rootMdVertexDAO.setValue(MdVertexInfo.ABSTRACT, MdAttributeBooleanInfo.TRUE);
+      rootMdVertexDAO.apply();
+
+      graphMdVertex = (MdVertex) BusinessFacade.get(rootMdVertexDAO);
+    }
 
     GeoObjectTypeSnapshot snapshot = new GeoObjectTypeSnapshot();
     snapshot.setGraphMdVertex(graphMdVertex);
@@ -92,11 +98,11 @@ public class GeoObjectTypeSnapshotBusinessService extends ObjectTypeBusinessServ
     snapshot.setIsAbstract(true);
     snapshot.setIsRoot(true);
     snapshot.setIsPrivate(true);
-    LocalizedValueConverter.populate(snapshot.getDisplayLabel(), LocalizedValueConverter.convertNoAutoCoalesce(graphMdVertex.getDisplayLabel()));
-    LocalizedValueConverter.populate(snapshot.getDescription(), LocalizedValueConverter.convertNoAutoCoalesce(graphMdVertex.getDescription()));
+    LocalizedValueConverter.populate(snapshot.getDisplayLabel(), new LocalizedValue("Root Type"));
+    LocalizedValueConverter.populate(snapshot.getDescription(), new LocalizedValue("Root Type"));
     snapshot.apply();
 
-    snapshot.addVersion(version).apply();
+    version.addSnapshot(snapshot).apply();
 
     return snapshot;
   }
