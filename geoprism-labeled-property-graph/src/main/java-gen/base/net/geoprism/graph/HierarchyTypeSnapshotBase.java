@@ -1,6 +1,6 @@
 package net.geoprism.graph;
 
-@com.runwaysdk.business.ClassSignature(hash = -1016775951)
+@com.runwaysdk.business.ClassSignature(hash = 172951766)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -22,11 +22,12 @@ public abstract class HierarchyTypeSnapshotBase extends net.geoprism.graph.Relat
   private com.runwaysdk.business.Struct displayLabel = null;
   
   public final static java.lang.String GRAPHMDEDGE = "graphMdEdge";
+  public final static java.lang.String ORGCODE = "orgCode";
   public final static java.lang.String PROGRESS = "progress";
   public final static java.lang.String SUPERHIERARCHY = "superHierarchy";
   public final static java.lang.String USECONSTRAINTS = "useConstraints";
   @SuppressWarnings("unused")
-  private static final long serialVersionUID = -1016775951;
+  private static final long serialVersionUID = 172951766;
   
   public HierarchyTypeSnapshotBase()
   {
@@ -228,6 +229,34 @@ public abstract class HierarchyTypeSnapshotBase extends net.geoprism.graph.Relat
     else
     {
       setValue(GRAPHMDEDGE, oid);
+    }
+  }
+  
+  public String getOrgCode()
+  {
+    return getValue(ORGCODE);
+  }
+  
+  public void validateOrgCode()
+  {
+    this.validateAttribute(ORGCODE);
+  }
+  
+  public static com.runwaysdk.dataaccess.MdAttributeTextDAOIF getOrgCodeMd()
+  {
+    com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(net.geoprism.graph.HierarchyTypeSnapshot.CLASS);
+    return (com.runwaysdk.dataaccess.MdAttributeTextDAOIF)mdClassIF.definesAttribute(ORGCODE);
+  }
+  
+  public void setOrgCode(String value)
+  {
+    if(value == null)
+    {
+      setValue(ORGCODE, "");
+    }
+    else
+    {
+      setValue(ORGCODE, value);
     }
   }
   

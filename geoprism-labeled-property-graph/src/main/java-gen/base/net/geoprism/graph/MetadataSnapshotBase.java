@@ -1,6 +1,6 @@
 package net.geoprism.graph;
 
-@com.runwaysdk.business.ClassSignature(hash = 924701650)
+@com.runwaysdk.business.ClassSignature(hash = 658754413)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -19,12 +19,13 @@ public abstract class MetadataSnapshotBase extends com.runwaysdk.business.Busine
   public final static java.lang.String LASTUPDATEDBY = "lastUpdatedBy";
   public final static java.lang.String LOCKEDBY = "lockedBy";
   public final static java.lang.String OID = "oid";
+  public final static java.lang.String ORIGIN = "origin";
   public final static java.lang.String OWNER = "owner";
   public final static java.lang.String SEQ = "seq";
   public final static java.lang.String SITEMASTER = "siteMaster";
   public final static java.lang.String TYPE = "type";
   @SuppressWarnings("unused")
-  private static final long serialVersionUID = 924701650;
+  private static final long serialVersionUID = 658754413;
   
   public MetadataSnapshotBase()
   {
@@ -241,6 +242,34 @@ public abstract class MetadataSnapshotBase extends com.runwaysdk.business.Busine
   {
     com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(net.geoprism.graph.MetadataSnapshot.CLASS);
     return (com.runwaysdk.dataaccess.MdAttributeUUIDDAOIF)mdClassIF.definesAttribute(OID);
+  }
+  
+  public String getOrigin()
+  {
+    return getValue(ORIGIN);
+  }
+  
+  public void validateOrigin()
+  {
+    this.validateAttribute(ORIGIN);
+  }
+  
+  public static com.runwaysdk.dataaccess.MdAttributeTextDAOIF getOriginMd()
+  {
+    com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(net.geoprism.graph.MetadataSnapshot.CLASS);
+    return (com.runwaysdk.dataaccess.MdAttributeTextDAOIF)mdClassIF.definesAttribute(ORIGIN);
+  }
+  
+  public void setOrigin(String value)
+  {
+    if(value == null)
+    {
+      setValue(ORIGIN, "");
+    }
+    else
+    {
+      setValue(ORIGIN, value);
+    }
   }
   
   public com.runwaysdk.system.Actor getOwner()

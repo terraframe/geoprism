@@ -1,6 +1,6 @@
 package net.geoprism.graph;
 
-@com.runwaysdk.business.ClassSignature(hash = -1059646936)
+@com.runwaysdk.business.ClassSignature(hash = 69445887)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -175,6 +175,23 @@ public  class HierarchyTypeSnapshotQuery extends net.geoprism.graph.Relationship
     return (com.runwaysdk.system.metadata.MdEdgeQuery.MdEdgeQueryReferenceIF)this.getComponentQuery().internalAttributeFactory(net.geoprism.graph.HierarchyTypeSnapshot.GRAPHMDEDGE, mdAttributeIF, this, alias, displayLabel);
 
   }
+  public com.runwaysdk.query.SelectableChar getOrgCode()
+  {
+    return getOrgCode(null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableChar getOrgCode(String alias)
+  {
+    return (com.runwaysdk.query.SelectableChar)this.getComponentQuery().get(net.geoprism.graph.HierarchyTypeSnapshot.ORGCODE, alias, null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableChar getOrgCode(String alias, String displayLabel)
+  {
+    return (com.runwaysdk.query.SelectableChar)this.getComponentQuery().get(net.geoprism.graph.HierarchyTypeSnapshot.ORGCODE, alias, displayLabel);
+
+  }
   public com.runwaysdk.query.SelectableChar getProgress()
   {
     return getProgress(null);
@@ -311,6 +328,9 @@ public  class HierarchyTypeSnapshotQuery extends net.geoprism.graph.Relationship
     public com.runwaysdk.system.metadata.MdEdgeQuery.MdEdgeQueryReferenceIF getGraphMdEdge();
     public com.runwaysdk.system.metadata.MdEdgeQuery.MdEdgeQueryReferenceIF getGraphMdEdge(String alias);
     public com.runwaysdk.system.metadata.MdEdgeQuery.MdEdgeQueryReferenceIF getGraphMdEdge(String alias, String displayLabel);
+    public com.runwaysdk.query.SelectableChar getOrgCode();
+    public com.runwaysdk.query.SelectableChar getOrgCode(String alias);
+    public com.runwaysdk.query.SelectableChar getOrgCode(String alias, String displayLabel);
     public com.runwaysdk.query.SelectableChar getProgress();
     public com.runwaysdk.query.SelectableChar getProgress(String alias);
     public com.runwaysdk.query.SelectableChar getProgress(String alias, String displayLabel);
@@ -474,6 +494,23 @@ public  class HierarchyTypeSnapshotQuery extends net.geoprism.graph.Relationship
     return (com.runwaysdk.system.metadata.MdEdgeQuery.MdEdgeQueryReferenceIF)this.get(net.geoprism.graph.HierarchyTypeSnapshot.GRAPHMDEDGE,  alias, displayLabel);
 
   }
+  public com.runwaysdk.query.SelectableChar getOrgCode()
+  {
+    return getOrgCode(null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableChar getOrgCode(String alias)
+  {
+    return (com.runwaysdk.query.SelectableChar)this.get(net.geoprism.graph.HierarchyTypeSnapshot.ORGCODE, alias, null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableChar getOrgCode(String alias, String displayLabel)
+  {
+    return (com.runwaysdk.query.SelectableChar)this.get(net.geoprism.graph.HierarchyTypeSnapshot.ORGCODE, alias, displayLabel);
+
+  }
   public com.runwaysdk.query.SelectableChar getProgress()
   {
     return getProgress(null);
@@ -587,6 +624,9 @@ public  class HierarchyTypeSnapshotQuery extends net.geoprism.graph.Relationship
     public com.runwaysdk.system.metadata.MdEdgeQuery.MdEdgeQueryReferenceIF getGraphMdEdge();
     public com.runwaysdk.system.metadata.MdEdgeQuery.MdEdgeQueryReferenceIF getGraphMdEdge(String alias);
     public com.runwaysdk.system.metadata.MdEdgeQuery.MdEdgeQueryReferenceIF getGraphMdEdge(String alias, String displayLabel);
+    public com.runwaysdk.query.SelectableChar getOrgCode();
+    public com.runwaysdk.query.SelectableChar getOrgCode(String alias);
+    public com.runwaysdk.query.SelectableChar getOrgCode(String alias, String displayLabel);
     public com.runwaysdk.query.SelectableChar getProgress();
     public com.runwaysdk.query.SelectableChar getProgress(String alias);
     public com.runwaysdk.query.SelectableChar getProgress(String alias, String displayLabel);
@@ -797,6 +837,23 @@ public  class HierarchyTypeSnapshotQuery extends net.geoprism.graph.Relationship
   public com.runwaysdk.system.metadata.MdEdgeQuery.MdEdgeQueryReferenceIF getGraphMdEdge(String alias, String displayLabel)
   {
     return (com.runwaysdk.system.metadata.MdEdgeQuery.MdEdgeQueryReferenceIF)this.get(net.geoprism.graph.HierarchyTypeSnapshot.GRAPHMDEDGE,  alias, displayLabel);
+
+  }
+  public com.runwaysdk.query.SelectableChar getOrgCode()
+  {
+    return getOrgCode(null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableChar getOrgCode(String alias)
+  {
+    return (com.runwaysdk.query.SelectableChar)this.get(net.geoprism.graph.HierarchyTypeSnapshot.ORGCODE, alias, null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableChar getOrgCode(String alias, String displayLabel)
+  {
+    return (com.runwaysdk.query.SelectableChar)this.get(net.geoprism.graph.HierarchyTypeSnapshot.ORGCODE, alias, displayLabel);
 
   }
   public com.runwaysdk.query.SelectableChar getProgress()

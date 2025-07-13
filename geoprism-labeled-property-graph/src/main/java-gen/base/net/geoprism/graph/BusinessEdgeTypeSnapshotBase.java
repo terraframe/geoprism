@@ -1,6 +1,6 @@
 package net.geoprism.graph;
 
-@com.runwaysdk.business.ClassSignature(hash = -1999885884)
+@com.runwaysdk.business.ClassSignature(hash = -1227413819)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -22,9 +22,10 @@ public abstract class BusinessEdgeTypeSnapshotBase extends net.geoprism.graph.Re
   public final static java.lang.String GRAPHMDEDGE = "graphMdEdge";
   public final static java.lang.String ISCHILDGEOOBJECT = "isChildGeoObject";
   public final static java.lang.String ISPARENTGEOOBJECT = "isParentGeoObject";
+  public final static java.lang.String ORGCODE = "orgCode";
   public final static java.lang.String PARENTTYPE = "parentType";
   @SuppressWarnings("unused")
-  private static final long serialVersionUID = -1999885884;
+  private static final long serialVersionUID = -1227413819;
   
   public BusinessEdgeTypeSnapshotBase()
   {
@@ -250,6 +251,34 @@ public abstract class BusinessEdgeTypeSnapshotBase extends net.geoprism.graph.Re
     else
     {
       setValue(ISPARENTGEOOBJECT, java.lang.Boolean.toString(value));
+    }
+  }
+  
+  public String getOrgCode()
+  {
+    return getValue(ORGCODE);
+  }
+  
+  public void validateOrgCode()
+  {
+    this.validateAttribute(ORGCODE);
+  }
+  
+  public static com.runwaysdk.dataaccess.MdAttributeTextDAOIF getOrgCodeMd()
+  {
+    com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(net.geoprism.graph.BusinessEdgeTypeSnapshot.CLASS);
+    return (com.runwaysdk.dataaccess.MdAttributeTextDAOIF)mdClassIF.definesAttribute(ORGCODE);
+  }
+  
+  public void setOrgCode(String value)
+  {
+    if(value == null)
+    {
+      setValue(ORGCODE, "");
+    }
+    else
+    {
+      setValue(ORGCODE, value);
     }
   }
   

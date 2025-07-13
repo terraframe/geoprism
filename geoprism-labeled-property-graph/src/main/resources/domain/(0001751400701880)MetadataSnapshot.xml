@@ -23,6 +23,9 @@
     <create>
       
       <mdBusiness name="net.geoprism.graph.MetadataSnapshot" table="metadata_snapshot" isAbstract="true" label="Metadata Snapshot" generateController="false" publish="true">
+        <attributes>
+          <text name="origin" label="Origin"  />                  
+        </attributes>
       </mdBusiness>      
       
       <mdBusiness name="net.geoprism.graph.RelationshipTypeSnapshot" extends="net.geoprism.graph.MetadataSnapshot" table="relationship_type_snapshot" isAbstract="true" label="Object Type Snapshot" generateController="false">
@@ -89,6 +92,7 @@
       <mdBusiness name="net.geoprism.graph.HierarchyTypeSnapshot" extends="net.geoprism.graph.RelationshipTypeSnapshot" table="hierarchy_type_snapshot" label="Hierarchy Type Snapshot" generateController="false">
         <attributes>
           <char name="code" label="Code" size="255" required="true" />
+          <text name="orgCode" label="Organization Code" required="false" />                    
           <localChar name="displayLabel" label="Label" required="true" />
           <localText name="description"/>          
           <text name="progress" label="progress" />
@@ -117,12 +121,12 @@
           <localText name="description"/>
           <reference name="graphMdEdge" type="com.runwaysdk.system.metadata.MdEdge" required="true" label="MdEdge" />
         </attributes>
-      </mdBusiness>
-      
+      </mdBusiness>     
 
       <mdBusiness name="net.geoprism.graph.BusinessEdgeTypeSnapshot" extends="net.geoprism.graph.RelationshipTypeSnapshot" table="business_edge_type_snapshot" label="Business Edge Type Snapshot" generateController="false">
         <attributes>
           <char name="code" size="255" required="true" label="Code" />
+          <text name="orgCode" label="Organization Code" required="false" />                  
           <localChar name="displayLabel" label="Label" required="true" />
           <localChar name="description" label="Description" required="false" />            
           <reference name="parentType" type="net.geoprism.graph.ObjectTypeSnapshot" required="true" label="Parent Vertex" />          

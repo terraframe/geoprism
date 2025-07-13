@@ -22,7 +22,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.runwaysdk.query.OIterator;
 
-import net.geoprism.registry.conversion.AttributeTypeConverter;
+import net.geoprism.registry.conversion.LocalizedValueConverter;
 
 public class UndirectedGraphTypeSnapshot extends UndirectedGraphTypeSnapshotBase implements GraphTypeSnapshot
 {
@@ -54,9 +54,10 @@ public class UndirectedGraphTypeSnapshot extends UndirectedGraphTypeSnapshotBase
 
     JsonObject hierarchyObject = new JsonObject();
     hierarchyObject.addProperty(HierarchyTypeSnapshotBase.CODE, this.getCode());
+    hierarchyObject.addProperty(ORIGIN, this.getOrigin());
     hierarchyObject.addProperty(GraphTypeSnapshot.TYPE_CODE, GraphTypeSnapshot.UNDIRECTED_GRAPH_TYPE);
-    hierarchyObject.add(HierarchyTypeSnapshotBase.DISPLAYLABEL, AttributeTypeConverter.convertNoAutoCoalesce(this.getDisplayLabel()).toJSON());
-    hierarchyObject.add(HierarchyTypeSnapshotBase.DESCRIPTION, AttributeTypeConverter.convertNoAutoCoalesce(this.getDescription()).toJSON());
+    hierarchyObject.add(HierarchyTypeSnapshotBase.DISPLAYLABEL, LocalizedValueConverter.convertNoAutoCoalesce(this.getDisplayLabel()).toJSON());
+    hierarchyObject.add(HierarchyTypeSnapshotBase.DESCRIPTION, LocalizedValueConverter.convertNoAutoCoalesce(this.getDescription()).toJSON());
     hierarchyObject.add("nodes", nodes);
 
     return hierarchyObject;

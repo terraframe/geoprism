@@ -25,7 +25,7 @@ import com.google.gson.JsonObject;
 import net.geoprism.graph.BusinessEdgeTypeSnapshot;
 import net.geoprism.graph.BusinessTypeSnapshot;
 import net.geoprism.graph.GeoObjectTypeSnapshot;
-import net.geoprism.graph.LabeledPropertyGraphTypeVersion;
+import net.geoprism.registry.model.SnapshotContainer;
 
 @Component
 public interface BusinessEdgeTypeSnapshotBusinessServiceIF
@@ -35,13 +35,13 @@ public interface BusinessEdgeTypeSnapshotBusinessServiceIF
 
   String getTableName(String className);
 
-  BusinessEdgeTypeSnapshot create(LabeledPropertyGraphTypeVersion version, JsonObject type);
+  BusinessEdgeTypeSnapshot create(SnapshotContainer<?> version, JsonObject type);
   
-  BusinessEdgeTypeSnapshot create(LabeledPropertyGraphTypeVersion version, JsonObject type, BusinessTypeSnapshot parent, BusinessTypeSnapshot child);
+  BusinessEdgeTypeSnapshot create(SnapshotContainer<?> version, JsonObject type, BusinessTypeSnapshot parent, BusinessTypeSnapshot child);
   
-  BusinessEdgeTypeSnapshot create(LabeledPropertyGraphTypeVersion version, JsonObject type, BusinessTypeSnapshot bType, GeoObjectTypeSnapshot gType, String direction);
+  BusinessEdgeTypeSnapshot create(SnapshotContainer<?> version, JsonObject type, BusinessTypeSnapshot bType, GeoObjectTypeSnapshot gType, String direction);
 
-  BusinessEdgeTypeSnapshot get(LabeledPropertyGraphTypeVersion versione, String code);
+  BusinessEdgeTypeSnapshot get(SnapshotContainer<?> version, String code);
 
   JsonObject toJSON(BusinessEdgeTypeSnapshot snapshot);
 

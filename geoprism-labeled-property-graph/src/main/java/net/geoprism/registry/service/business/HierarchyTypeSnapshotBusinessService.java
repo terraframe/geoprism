@@ -21,6 +21,7 @@ package net.geoprism.registry.service.business;
 import org.apache.commons.lang.StringUtils;
 import org.commongeoregistry.adapter.constants.DefaultAttribute;
 import org.commongeoregistry.adapter.dataaccess.LocalizedValue;
+import org.commongeoregistry.adapter.metadata.HierarchyType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -45,6 +46,7 @@ import net.geoprism.graph.LabeledPropertyGraphTypeSnapshotQuery;
 import net.geoprism.graph.LabeledPropertyGraphTypeVersion;
 import net.geoprism.registry.RegistryConstants;
 import net.geoprism.registry.conversion.LocalizedValueConverter;
+import net.geoprism.registry.model.SnapshotContainer;
 
 @Service
 public class HierarchyTypeSnapshotBusinessService implements HierarchyTypeSnapshotBusinessServiceIF
@@ -106,44 +108,28 @@ public class HierarchyTypeSnapshotBusinessService implements HierarchyTypeSnapsh
   }
 
   @Override
-  public HierarchyTypeSnapshot create(LabeledPropertyGraphTypeVersion version, JsonObject type, GeoObjectTypeSnapshot root)
+  public HierarchyTypeSnapshot create(SnapshotContainer<?> version, JsonObject type, GeoObjectTypeSnapshot root)
   {
     String code = type.get(HierarchyTypeSnapshot.CODE).getAsString();
+    String orgCode = type.get(HierarchyTypeSnapshot.ORGCODE).getAsString();
+    String origin = type.get(HierarchyTypeSnapshot.ORIGIN).getAsString();
+
     String viewName = getTableName(code);
     LocalizedValue label = LocalizedValue.fromJSON(type.get(HierarchyTypeSnapshot.DISPLAYLABEL).getAsJsonObject());
     LocalizedValue description = LocalizedValue.fromJSON(type.get(HierarchyTypeSnapshot.DESCRIPTION).getAsJsonObject());
 
-    MdEdgeDAO mdEdgeDAO = MdEdgeDAO.newInstance();
-    mdEdgeDAO.setValue(MdEdgeInfo.PACKAGE, RegistryConstants.UNIVERSAL_GRAPH_PACKAGE);
-    mdEdgeDAO.setValue(MdEdgeInfo.NAME, viewName);
-    mdEdgeDAO.setValue(MdEdgeInfo.DB_CLASS_NAME, viewName);
-    mdEdgeDAO.setValue(MdEdgeInfo.PARENT_MD_VERTEX, root.getGraphMdVertexOid());
-    mdEdgeDAO.setValue(MdEdgeInfo.CHILD_MD_VERTEX, root.getGraphMdVertexOid());
-    LocalizedValueConverter.populate(mdEdgeDAO, MdEdgeInfo.DISPLAY_LABEL, label);
-    LocalizedValueConverter.populate(mdEdgeDAO, MdEdgeInfo.DESCRIPTION, description);
-    mdEdgeDAO.setValue(MdEdgeInfo.ENABLE_CHANGE_OVER_TIME, MdAttributeBooleanInfo.FALSE);
-    mdEdgeDAO.apply();
-
-    MdAttributeUUIDDAO uidAttr = MdAttributeUUIDDAO.newInstance();
-    uidAttr.setValue(MdAttributeConcreteInfo.NAME, DefaultAttribute.UID.getName());
-    uidAttr.setStructValue(MdAttributeBooleanInfo.DISPLAY_LABEL, LocalizedValue.DEFAULT_LOCALE, DefaultAttribute.UID.getDefaultLocalizedName());
-    uidAttr.setStructValue(MdAttributeBooleanInfo.DESCRIPTION, LocalizedValue.DEFAULT_LOCALE, DefaultAttribute.UID.getDefaultDescription());
-    uidAttr.setValue(MdAttributeConcreteInfo.DEFINING_MD_CLASS, mdEdgeDAO.getOid());
-    uidAttr.setValue(MdAttributeConcreteInfo.REQUIRED, true);
-    uidAttr.apply();
-
-    MdEdge mdEdge = (MdEdge) BusinessFacade.get(mdEdgeDAO);
-
-    this.assignPermissions(mdEdge);
+    MdEdge mdEdge = createMdEdge(version, root, viewName, label, description);
 
     HierarchyTypeSnapshot snapshot = new HierarchyTypeSnapshot();
     snapshot.setGraphMdEdge(mdEdge);
     snapshot.setCode(code);
+    snapshot.setOrgCode(orgCode);
+    snapshot.setOrigin(origin);
     LocalizedValueConverter.populate(snapshot.getDisplayLabel(), label);
     LocalizedValueConverter.populate(snapshot.getDescription(), description);
     snapshot.apply();
 
-    snapshot.addVersion(version).apply();
+    version.addSnapshot(snapshot).apply();
 
     // Assign the relationship information
     createHierarchyRelationship(version, type, root);
@@ -152,7 +138,40 @@ public class HierarchyTypeSnapshotBusinessService implements HierarchyTypeSnapsh
 
   }
 
-  private void createHierarchyRelationship(LabeledPropertyGraphTypeVersion version, JsonObject type, GeoObjectTypeSnapshot parent)
+  protected MdEdge createMdEdge(SnapshotContainer<?> version, GeoObjectTypeSnapshot root, String viewName, LocalizedValue label, LocalizedValue description)
+  {
+    MdEdge mdEdge = null;
+
+    if (version.createTablesWithSnapshot())
+    {
+
+      MdEdgeDAO mdEdgeDAO = MdEdgeDAO.newInstance();
+      mdEdgeDAO.setValue(MdEdgeInfo.PACKAGE, RegistryConstants.UNIVERSAL_GRAPH_PACKAGE);
+      mdEdgeDAO.setValue(MdEdgeInfo.NAME, viewName);
+      mdEdgeDAO.setValue(MdEdgeInfo.DB_CLASS_NAME, viewName);
+      mdEdgeDAO.setValue(MdEdgeInfo.PARENT_MD_VERTEX, root.getGraphMdVertexOid());
+      mdEdgeDAO.setValue(MdEdgeInfo.CHILD_MD_VERTEX, root.getGraphMdVertexOid());
+      LocalizedValueConverter.populate(mdEdgeDAO, MdEdgeInfo.DISPLAY_LABEL, label);
+      LocalizedValueConverter.populate(mdEdgeDAO, MdEdgeInfo.DESCRIPTION, description);
+      mdEdgeDAO.setValue(MdEdgeInfo.ENABLE_CHANGE_OVER_TIME, MdAttributeBooleanInfo.FALSE);
+      mdEdgeDAO.apply();
+
+      MdAttributeUUIDDAO uidAttr = MdAttributeUUIDDAO.newInstance();
+      uidAttr.setValue(MdAttributeConcreteInfo.NAME, DefaultAttribute.UID.getName());
+      uidAttr.setStructValue(MdAttributeBooleanInfo.DISPLAY_LABEL, LocalizedValue.DEFAULT_LOCALE, DefaultAttribute.UID.getDefaultLocalizedName());
+      uidAttr.setStructValue(MdAttributeBooleanInfo.DESCRIPTION, LocalizedValue.DEFAULT_LOCALE, DefaultAttribute.UID.getDefaultDescription());
+      uidAttr.setValue(MdAttributeConcreteInfo.DEFINING_MD_CLASS, mdEdgeDAO.getOid());
+      uidAttr.setValue(MdAttributeConcreteInfo.REQUIRED, true);
+      uidAttr.apply();
+
+      mdEdge = (MdEdge) BusinessFacade.get(mdEdgeDAO);
+
+      this.assignPermissions(mdEdge);
+    }
+    return mdEdge;
+  }
+
+  private void createHierarchyRelationship(SnapshotContainer<?> version, JsonObject type, GeoObjectTypeSnapshot parent)
   {
     type.get("nodes").getAsJsonArray().forEach(node -> {
       JsonObject object = node.getAsJsonObject();
@@ -167,12 +186,12 @@ public class HierarchyTypeSnapshotBusinessService implements HierarchyTypeSnapsh
   }
 
   @Override
-  public HierarchyTypeSnapshot get(LabeledPropertyGraphTypeVersion version, String code)
+  public HierarchyTypeSnapshot get(SnapshotContainer<?> version, String code)
   {
     QueryFactory factory = new QueryFactory();
 
     LabeledPropertyGraphTypeSnapshotQuery vQuery = new LabeledPropertyGraphTypeSnapshotQuery(factory);
-    vQuery.WHERE(vQuery.getParent().EQ(version));
+    vQuery.WHERE(vQuery.getParent().EQ((LabeledPropertyGraphTypeVersion) version));
 
     HierarchyTypeSnapshotQuery query = new HierarchyTypeSnapshotQuery(factory);
     query.LEFT_JOIN_EQ(vQuery.getChild());
@@ -187,6 +206,15 @@ public class HierarchyTypeSnapshotBusinessService implements HierarchyTypeSnapsh
     }
 
     return null;
+  }
+
+  public HierarchyType toHierarchyType(HierarchyTypeSnapshot snapshot)
+  {
+    String code = snapshot.getCode();
+    LocalizedValue label = LocalizedValueConverter.convertNoAutoCoalesce(snapshot.getDisplayLabel());
+    LocalizedValue description = LocalizedValueConverter.convertNoAutoCoalesce(snapshot.getDescription());
+
+    return new HierarchyType(code, label, description, snapshot.getOrgCode());
   }
 
   protected void assignPermissions(ComponentIF component)

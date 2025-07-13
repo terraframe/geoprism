@@ -23,9 +23,8 @@ import org.springframework.stereotype.Component;
 import com.google.gson.JsonObject;
 
 import net.geoprism.graph.GeoObjectTypeSnapshot;
-import net.geoprism.graph.GraphTypeReference;
 import net.geoprism.graph.GraphTypeSnapshot;
-import net.geoprism.graph.LabeledPropertyGraphTypeVersion;
+import net.geoprism.registry.model.SnapshotContainer;
 
 @Component
 public interface GraphTypeSnapshotBusinessServiceIF
@@ -35,8 +34,8 @@ public interface GraphTypeSnapshotBusinessServiceIF
 
   String getTableName(String className);
 
-  GraphTypeSnapshot create(LabeledPropertyGraphTypeVersion version, JsonObject type, GeoObjectTypeSnapshot root);
+  GraphTypeSnapshot create(SnapshotContainer<?> version, JsonObject type, GeoObjectTypeSnapshot root);
 
-  GraphTypeSnapshot get(LabeledPropertyGraphTypeVersion version, String typeCode, String code);
+  GraphTypeSnapshot get(SnapshotContainer<?> version, String typeCode, String code);
 
 }

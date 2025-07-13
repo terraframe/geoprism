@@ -91,21 +91,32 @@ public class BusinessEdgeTypeBusinessService implements BusinessEdgeTypeBusiness
   @Transaction
   public void update(BusinessEdgeType edgeType, JsonObject object)
   {
+      LocalizedValue label = object.has(BusinessEdgeType.DISPLAYLABEL) ? //
+          LocalizedValue.fromJSON(object.getAsJsonObject(BusinessEdgeType.DISPLAYLABEL))://
+            null;
+            
+      LocalizedValue description = object.has(BusinessEdgeType.DESCRIPTION) ? //
+          LocalizedValue.fromJSON(object.getAsJsonObject(BusinessEdgeType.DESCRIPTION))://
+            null;
+      
+      this.update(edgeType, label, description);      
+  }
+
+  @Override
+  @Transaction
+  public void update(BusinessEdgeType edgeType, LocalizedValue label, LocalizedValue description)
+  {
     try
     {
       edgeType.appLock();
 
-      if (object.has(BusinessEdgeType.DISPLAYLABEL))
+      if (label != null)
       {
-        LocalizedValue label = LocalizedValue.fromJSON(object.getAsJsonObject(BusinessEdgeType.DISPLAYLABEL));
-
         RegistryLocalizedValueConverter.populate(edgeType.getDisplayLabel(), label);
       }
 
-      if (object.has(BusinessEdgeType.DESCRIPTION))
+      if (description != null)
       {
-        LocalizedValue description = LocalizedValue.fromJSON(object.getAsJsonObject(BusinessEdgeType.DESCRIPTION));
-
         RegistryLocalizedValueConverter.populate(edgeType.getDescription(), description);
       }
 
@@ -250,12 +261,12 @@ public class BusinessEdgeTypeBusinessService implements BusinessEdgeTypeBusiness
     MdVertexDAO mdVertexDAO = MdVertexDAO.getMdVertexDAO(GeoVertex.CLASS).getBusinessDAO();
 
     Organization organization = Organization.getByCode(organizationCode);
-    
+
     try
     {
       String parentOid = direction.equals(EdgeDirection.PARENT) ? mdVertexDAO.getOid() : buisnessType.getMdVertexOid();
       String childOid = direction.equals(EdgeDirection.PARENT) ? buisnessType.getMdVertexOid() : mdVertexDAO.getOid();
-      
+
       MdEdgeDAO mdEdgeDAO = MdEdgeDAO.newInstance();
       mdEdgeDAO.setValue(MdEdgeInfo.PACKAGE, RegistryConstants.DAG_PACKAGE);
       mdEdgeDAO.setValue(MdEdgeInfo.NAME, code);
@@ -265,7 +276,6 @@ public class BusinessEdgeTypeBusinessService implements BusinessEdgeTypeBusiness
       RegistryLocalizedValueConverter.populate(mdEdgeDAO, MdEdgeInfo.DESCRIPTION, description);
       mdEdgeDAO.setValue(MdEdgeInfo.ENABLE_CHANGE_OVER_TIME, MdAttributeBooleanInfo.FALSE);
       mdEdgeDAO.apply();
-      
 
       MdAttributeUUIDDAO uidAttr = MdAttributeUUIDDAO.newInstance();
       uidAttr.setValue(MdAttributeConcreteInfo.NAME, DefaultAttribute.UID.getName());
@@ -275,9 +285,8 @@ public class BusinessEdgeTypeBusinessService implements BusinessEdgeTypeBusiness
       uidAttr.setValue(MdAttributeConcreteInfo.REQUIRED, true);
       uidAttr.apply();
 
-      
       hierarchyService.grantWritePermissionsOnMdTermRel(mdEdgeDAO);
-      
+
       BusinessEdgeType businessEdgeType = new BusinessEdgeType();
       businessEdgeType.setOrganization(organization);
       businessEdgeType.setCode(code);
@@ -288,7 +297,7 @@ public class BusinessEdgeTypeBusinessService implements BusinessEdgeTypeBusiness
       RegistryLocalizedValueConverter.populate(businessEdgeType.getDescription(), description);
       businessEdgeType.setOrigin(GeoprismProperties.getOrigin());
       businessEdgeType.apply();
-      
+
       return businessEdgeType;
     }
     catch (DuplicateDataException ex)
@@ -298,5 +307,5 @@ public class BusinessEdgeTypeBusinessService implements BusinessEdgeTypeBusiness
       throw ex2;
     }
   }
-  
+
 }

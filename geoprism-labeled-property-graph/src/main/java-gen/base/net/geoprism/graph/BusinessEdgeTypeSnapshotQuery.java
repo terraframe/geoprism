@@ -1,6 +1,6 @@
 package net.geoprism.graph;
 
-@com.runwaysdk.business.ClassSignature(hash = 1228944507)
+@com.runwaysdk.business.ClassSignature(hash = 1598833518)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -181,6 +181,23 @@ public  class BusinessEdgeTypeSnapshotQuery extends net.geoprism.graph.Relations
     return (com.runwaysdk.query.SelectableBoolean)this.getComponentQuery().get(net.geoprism.graph.BusinessEdgeTypeSnapshot.ISPARENTGEOOBJECT, alias, displayLabel);
 
   }
+  public com.runwaysdk.query.SelectableChar getOrgCode()
+  {
+    return getOrgCode(null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableChar getOrgCode(String alias)
+  {
+    return (com.runwaysdk.query.SelectableChar)this.getComponentQuery().get(net.geoprism.graph.BusinessEdgeTypeSnapshot.ORGCODE, alias, null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableChar getOrgCode(String alias, String displayLabel)
+  {
+    return (com.runwaysdk.query.SelectableChar)this.getComponentQuery().get(net.geoprism.graph.BusinessEdgeTypeSnapshot.ORGCODE, alias, displayLabel);
+
+  }
   public net.geoprism.graph.ObjectTypeSnapshotQuery.ObjectTypeSnapshotQueryReferenceIF getParentType()
   {
     return getParentType(null);
@@ -297,6 +314,9 @@ public  class BusinessEdgeTypeSnapshotQuery extends net.geoprism.graph.Relations
     public com.runwaysdk.query.SelectableBoolean getIsParentGeoObject();
     public com.runwaysdk.query.SelectableBoolean getIsParentGeoObject(String alias);
     public com.runwaysdk.query.SelectableBoolean getIsParentGeoObject(String alias, String displayLabel);
+    public com.runwaysdk.query.SelectableChar getOrgCode();
+    public com.runwaysdk.query.SelectableChar getOrgCode(String alias);
+    public com.runwaysdk.query.SelectableChar getOrgCode(String alias, String displayLabel);
     public net.geoprism.graph.ObjectTypeSnapshotQuery.ObjectTypeSnapshotQueryReferenceIF getParentType();
     public net.geoprism.graph.ObjectTypeSnapshotQuery.ObjectTypeSnapshotQueryReferenceIF getParentType(String alias);
     public net.geoprism.graph.ObjectTypeSnapshotQuery.ObjectTypeSnapshotQueryReferenceIF getParentType(String alias, String displayLabel);
@@ -454,6 +474,23 @@ public  class BusinessEdgeTypeSnapshotQuery extends net.geoprism.graph.Relations
     return (com.runwaysdk.query.SelectableBoolean)this.get(net.geoprism.graph.BusinessEdgeTypeSnapshot.ISPARENTGEOOBJECT, alias, displayLabel);
 
   }
+  public com.runwaysdk.query.SelectableChar getOrgCode()
+  {
+    return getOrgCode(null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableChar getOrgCode(String alias)
+  {
+    return (com.runwaysdk.query.SelectableChar)this.get(net.geoprism.graph.BusinessEdgeTypeSnapshot.ORGCODE, alias, null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableChar getOrgCode(String alias, String displayLabel)
+  {
+    return (com.runwaysdk.query.SelectableChar)this.get(net.geoprism.graph.BusinessEdgeTypeSnapshot.ORGCODE, alias, displayLabel);
+
+  }
   public net.geoprism.graph.ObjectTypeSnapshotQuery.ObjectTypeSnapshotQueryReferenceIF getParentType()
   {
     return getParentType(null);
@@ -541,6 +578,9 @@ public  class BusinessEdgeTypeSnapshotQuery extends net.geoprism.graph.Relations
     public com.runwaysdk.query.SelectableBoolean getIsParentGeoObject();
     public com.runwaysdk.query.SelectableBoolean getIsParentGeoObject(String alias);
     public com.runwaysdk.query.SelectableBoolean getIsParentGeoObject(String alias, String displayLabel);
+    public com.runwaysdk.query.SelectableChar getOrgCode();
+    public com.runwaysdk.query.SelectableChar getOrgCode(String alias);
+    public com.runwaysdk.query.SelectableChar getOrgCode(String alias, String displayLabel);
     public net.geoprism.graph.ObjectTypeSnapshotQuery.ObjectTypeSnapshotQueryReferenceIF getParentType();
     public net.geoprism.graph.ObjectTypeSnapshotQuery.ObjectTypeSnapshotQueryReferenceIF getParentType(String alias);
     public net.geoprism.graph.ObjectTypeSnapshotQuery.ObjectTypeSnapshotQueryReferenceIF getParentType(String alias, String displayLabel);
@@ -745,6 +785,23 @@ public  class BusinessEdgeTypeSnapshotQuery extends net.geoprism.graph.Relations
   public com.runwaysdk.query.SelectableBoolean getIsParentGeoObject(String alias, String displayLabel)
   {
     return (com.runwaysdk.query.SelectableBoolean)this.get(net.geoprism.graph.BusinessEdgeTypeSnapshot.ISPARENTGEOOBJECT, alias, displayLabel);
+
+  }
+  public com.runwaysdk.query.SelectableChar getOrgCode()
+  {
+    return getOrgCode(null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableChar getOrgCode(String alias)
+  {
+    return (com.runwaysdk.query.SelectableChar)this.get(net.geoprism.graph.BusinessEdgeTypeSnapshot.ORGCODE, alias, null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableChar getOrgCode(String alias, String displayLabel)
+  {
+    return (com.runwaysdk.query.SelectableChar)this.get(net.geoprism.graph.BusinessEdgeTypeSnapshot.ORGCODE, alias, displayLabel);
 
   }
   public net.geoprism.graph.ObjectTypeSnapshotQuery.ObjectTypeSnapshotQueryReferenceIF getParentType()

@@ -18,18 +18,9 @@
  */
 package net.geoprism.graph;
 
-import java.util.LinkedList;
-import java.util.List;
-
-import org.commongeoregistry.adapter.metadata.AttributeType;
-
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
-import com.runwaysdk.dataaccess.MdVertexDAOIF;
-import com.runwaysdk.dataaccess.metadata.graph.MdVertexDAO;
-import com.runwaysdk.gis.dataaccess.MdAttributeGeometryDAOIF;
 
-import net.geoprism.registry.conversion.AttributeTypeConverter;
 import net.geoprism.registry.conversion.LocalizedValueConverter;
 
 public class BusinessTypeSnapshot extends BusinessTypeSnapshotBase
@@ -60,23 +51,6 @@ public class BusinessTypeSnapshot extends BusinessTypeSnapshotBase
     return this.getCode();
   }
 
-  public List<org.commongeoregistry.adapter.metadata.AttributeType> getAttributeTypes()
-  {
-    AttributeTypeConverter converter = new AttributeTypeConverter();
-
-    List<AttributeType> attributes = new LinkedList<>();
-
-    MdVertexDAOIF mdVertex = MdVertexDAO.get(this.getGraphMdVertexOid());
-
-    mdVertex.definesAttributes().stream().filter(attribute -> {
-      return ! ( attribute instanceof MdAttributeGeometryDAOIF ) && !attribute.isSystem() && !attribute.definesAttribute().equals("seq");
-    }).forEach(attribute -> {
-      attributes.add(converter.build(attribute));
-    });
-    
-    return attributes;
-  }
-
   public JsonObject toJSON()
   {
     JsonArray attributes = new JsonArray();
@@ -86,6 +60,7 @@ public class BusinessTypeSnapshot extends BusinessTypeSnapshotBase
     JsonObject typeObject = new JsonObject();
     typeObject.addProperty(CODE, this.getCode());
     typeObject.addProperty(ORGCODE, this.getOrgCode());
+    typeObject.addProperty(ORIGIN, this.getOrigin());
     typeObject.addProperty(LABELATTRIBUTE, this.getLabelAttribute());
     typeObject.add(DISPLAYLABEL, LocalizedValueConverter.convertNoAutoCoalesce(this.getDisplayLabel()).toJSON());
     typeObject.add("attributes", attributes);

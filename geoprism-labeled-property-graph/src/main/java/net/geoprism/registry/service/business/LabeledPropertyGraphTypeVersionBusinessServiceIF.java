@@ -47,10 +47,6 @@ public interface LabeledPropertyGraphTypeVersionBusinessServiceIF
 
   public void remove(LabeledPropertyGraphTypeVersion version);
 
-  GeoObjectTypeSnapshot getRootType(LabeledPropertyGraphTypeVersion version);
-
-  GeoObjectTypeSnapshot getSnapshot(LabeledPropertyGraphTypeVersion version, String typeCode);
-
   List<BusinessTypeSnapshot> getBusinessTypes(LabeledPropertyGraphTypeVersion version);
 
   List<GeoObjectTypeSnapshot> getTypes(LabeledPropertyGraphTypeVersion version);
@@ -88,6 +84,10 @@ public interface LabeledPropertyGraphTypeVersionBusinessServiceIF
   void createTiles(LabeledPropertyGraphTypeVersion version);
 
   VertexObject getBusinessVertex(LabeledPropertyGraphTypeVersion version, String code, String typeCode);
+
+  GeoObjectTypeSnapshot getRootType(LabeledPropertyGraphTypeVersion version);
+
+  GeoObjectTypeSnapshot getSnapshot(LabeledPropertyGraphTypeVersion version, String typeCode);
 
   <T extends GraphTypeSnapshot> List<T> getHiearchyTypes(LabeledPropertyGraphTypeVersion version);
 

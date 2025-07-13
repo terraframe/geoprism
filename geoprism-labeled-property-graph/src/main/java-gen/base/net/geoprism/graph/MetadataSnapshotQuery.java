@@ -1,6 +1,6 @@
 package net.geoprism.graph;
 
-@com.runwaysdk.business.ClassSignature(hash = -1450356933)
+@com.runwaysdk.business.ClassSignature(hash = -909316956)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -196,6 +196,23 @@ public  class MetadataSnapshotQuery extends com.runwaysdk.query.GeneratedBusines
   public com.runwaysdk.query.SelectableUUID getOid(String alias, String displayLabel)
   {
     return (com.runwaysdk.query.SelectableUUID)this.getComponentQuery().get(net.geoprism.graph.MetadataSnapshot.OID, alias, displayLabel);
+
+  }
+  public com.runwaysdk.query.SelectableChar getOrigin()
+  {
+    return getOrigin(null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableChar getOrigin(String alias)
+  {
+    return (com.runwaysdk.query.SelectableChar)this.getComponentQuery().get(net.geoprism.graph.MetadataSnapshot.ORIGIN, alias, null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableChar getOrigin(String alias, String displayLabel)
+  {
+    return (com.runwaysdk.query.SelectableChar)this.getComponentQuery().get(net.geoprism.graph.MetadataSnapshot.ORIGIN, alias, displayLabel);
 
   }
   public com.runwaysdk.system.ActorQuery.ActorQueryReferenceIF getOwner()
@@ -475,6 +492,9 @@ public  class MetadataSnapshotQuery extends com.runwaysdk.query.GeneratedBusines
     public com.runwaysdk.query.SelectableUUID getOid();
     public com.runwaysdk.query.SelectableUUID getOid(String alias);
     public com.runwaysdk.query.SelectableUUID getOid(String alias, String displayLabel);
+    public com.runwaysdk.query.SelectableChar getOrigin();
+    public com.runwaysdk.query.SelectableChar getOrigin(String alias);
+    public com.runwaysdk.query.SelectableChar getOrigin(String alias, String displayLabel);
     public com.runwaysdk.system.ActorQuery.ActorQueryReferenceIF getOwner();
     public com.runwaysdk.system.ActorQuery.ActorQueryReferenceIF getOwner(String alias);
     public com.runwaysdk.system.ActorQuery.ActorQueryReferenceIF getOwner(String alias, String displayLabel);
@@ -680,6 +700,23 @@ public  class MetadataSnapshotQuery extends com.runwaysdk.query.GeneratedBusines
   public com.runwaysdk.query.SelectableUUID getOid(String alias, String displayLabel)
   {
     return (com.runwaysdk.query.SelectableUUID)this.get(net.geoprism.graph.MetadataSnapshot.OID, alias, displayLabel);
+
+  }
+  public com.runwaysdk.query.SelectableChar getOrigin()
+  {
+    return getOrigin(null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableChar getOrigin(String alias)
+  {
+    return (com.runwaysdk.query.SelectableChar)this.get(net.geoprism.graph.MetadataSnapshot.ORIGIN, alias, null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableChar getOrigin(String alias, String displayLabel)
+  {
+    return (com.runwaysdk.query.SelectableChar)this.get(net.geoprism.graph.MetadataSnapshot.ORIGIN, alias, displayLabel);
 
   }
   public com.runwaysdk.system.ActorQuery.ActorQueryReferenceIF getOwner()
@@ -930,6 +967,9 @@ public  class MetadataSnapshotQuery extends com.runwaysdk.query.GeneratedBusines
     public com.runwaysdk.query.SelectableUUID getOid();
     public com.runwaysdk.query.SelectableUUID getOid(String alias);
     public com.runwaysdk.query.SelectableUUID getOid(String alias, String displayLabel);
+    public com.runwaysdk.query.SelectableChar getOrigin();
+    public com.runwaysdk.query.SelectableChar getOrigin(String alias);
+    public com.runwaysdk.query.SelectableChar getOrigin(String alias, String displayLabel);
     public com.runwaysdk.system.ActorQuery.ActorQueryReferenceIF getOwner();
     public com.runwaysdk.system.ActorQuery.ActorQueryReferenceIF getOwner(String alias);
     public com.runwaysdk.system.ActorQuery.ActorQueryReferenceIF getOwner(String alias, String displayLabel);
@@ -1160,6 +1200,23 @@ public  class MetadataSnapshotQuery extends com.runwaysdk.query.GeneratedBusines
   public com.runwaysdk.query.SelectableUUID getOid(String alias, String displayLabel)
   {
     return (com.runwaysdk.query.SelectableUUID)this.get(net.geoprism.graph.MetadataSnapshot.OID, alias, displayLabel);
+
+  }
+  public com.runwaysdk.query.SelectableChar getOrigin()
+  {
+    return getOrigin(null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableChar getOrigin(String alias)
+  {
+    return (com.runwaysdk.query.SelectableChar)this.get(net.geoprism.graph.MetadataSnapshot.ORIGIN, alias, null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableChar getOrigin(String alias, String displayLabel)
+  {
+    return (com.runwaysdk.query.SelectableChar)this.get(net.geoprism.graph.MetadataSnapshot.ORIGIN, alias, displayLabel);
 
   }
   public com.runwaysdk.system.ActorQuery.ActorQueryReferenceIF getOwner()

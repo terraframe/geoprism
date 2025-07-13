@@ -29,11 +29,10 @@ import com.runwaysdk.dataaccess.MdVertexDAOIF;
 import com.runwaysdk.dataaccess.metadata.graph.MdVertexDAO;
 
 import net.geoprism.graph.GeoObjectTypeSnapshot;
-import net.geoprism.graph.LabeledPropertyGraphTypeVersion;
 import net.geoprism.registry.model.SnapshotContainer;
 
 @Component
-public interface GeoObjectTypeSnapshotBusinessServiceIF
+public interface GeoObjectTypeSnapshotBusinessServiceIF extends ObjectTypeBusinessServiceIF<GeoObjectTypeSnapshot>
 {
 
   void truncate(GeoObjectTypeSnapshot snapshot);
@@ -46,16 +45,16 @@ public interface GeoObjectTypeSnapshotBusinessServiceIF
 
   GeoObjectTypeSnapshot createRoot(SnapshotContainer<?> version);
 
-  GeoObjectTypeSnapshot create(LabeledPropertyGraphTypeVersion version, JsonObject type);
+  GeoObjectTypeSnapshot create(SnapshotContainer<?> version, JsonObject type);
 
   GeoObject toGeoObject(GeoObjectTypeSnapshot snapshot, VertexObject vertex);
 
   GeoObject toGeoObject(VertexObject vertex, GeoObjectType type);
 
-  GeoObjectTypeSnapshot get(LabeledPropertyGraphTypeVersion version, MdVertexDAOIF mdVertex);
+  GeoObjectTypeSnapshot get(SnapshotContainer<?> version, MdVertexDAOIF mdVertex);
 
-  GeoObjectTypeSnapshot get(LabeledPropertyGraphTypeVersion version, String code);
+  GeoObjectTypeSnapshot get(SnapshotContainer<?> version, String code);
 
-  GeoObjectTypeSnapshot getRoot(LabeledPropertyGraphTypeVersion version);
+  GeoObjectTypeSnapshot getRoot(SnapshotContainer<?> version);
 
 }

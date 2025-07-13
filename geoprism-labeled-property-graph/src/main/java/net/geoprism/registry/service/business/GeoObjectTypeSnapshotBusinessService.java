@@ -109,7 +109,7 @@ public class GeoObjectTypeSnapshotBusinessService extends ObjectTypeBusinessServ
 
   @Transaction
   @Override
-  public GeoObjectTypeSnapshot create(LabeledPropertyGraphTypeVersion version, JsonObject type)
+  public GeoObjectTypeSnapshot create(SnapshotContainer<?> version, JsonObject type)
   {
     GeoObjectTypeSnapshot parent = this.get(version, type.get(GeoObjectTypeSnapshot.PARENT).getAsString());
 
@@ -122,20 +122,9 @@ public class GeoObjectTypeSnapshotBusinessService extends ObjectTypeBusinessServ
     GeometryType geometryType = GeometryType.valueOf(type.get(GeoObjectTypeSnapshot.GEOMETRYTYPE).getAsString());
     LocalizedValue label = LocalizedValue.fromJSON(type.get(GeoObjectTypeSnapshot.DISPLAYLABEL).getAsJsonObject());
     LocalizedValue description = LocalizedValue.fromJSON(type.get(GeoObjectTypeSnapshot.DESCRIPTION).getAsJsonObject());
+    JsonArray attributes = type.get("attributes").getAsJsonArray();
 
-    // Create the MdTable
-    MdVertexDAO mdTableDAO = MdVertexDAO.newInstance();
-    mdTableDAO.setValue(MdVertexInfo.NAME, viewName);
-    mdTableDAO.setValue(MdVertexInfo.PACKAGE, TABLE_PACKAGE);
-    LocalizedValueConverter.populate(mdTableDAO, MdVertexInfo.DISPLAY_LABEL, label);
-    LocalizedValueConverter.populate(mdTableDAO, MdVertexInfo.DESCRIPTION, description);
-    mdTableDAO.setValue(MdVertexInfo.DB_CLASS_NAME, viewName);
-    mdTableDAO.setValue(MdVertexInfo.GENERATE_SOURCE, MdAttributeBooleanInfo.FALSE);
-    mdTableDAO.setValue(MdVertexInfo.ENABLE_CHANGE_OVER_TIME, MdAttributeBooleanInfo.FALSE);
-    mdTableDAO.setValue(MdVertexInfo.SUPER_MD_VERTEX, parent.getGraphMdVertexOid());
-    mdTableDAO.apply();
-
-    MdVertex mdTable = (MdVertex) BusinessFacade.get(mdTableDAO);
+    MdVertex mdTable = createMdVertex(version, parent, viewName, isAbstract, geometryType, label, description, attributes);
 
     GeoObjectTypeSnapshot snapshot = new GeoObjectTypeSnapshot();
     snapshot.setGraphMdVertex(mdTable);
@@ -150,14 +139,10 @@ public class GeoObjectTypeSnapshotBusinessService extends ObjectTypeBusinessServ
     snapshot.setParent(parent);
     snapshot.apply();
 
-    snapshot.addVersion(version).apply();
-
-    JsonArray attributes = type.get("attributes").getAsJsonArray();
+    version.addSnapshot(snapshot).apply();
 
     if (!isAbstract)
     {
-      createGeometryAttribute(geometryType, mdTableDAO);
-
       this.createAttributeTypeSnapshot(snapshot, geometryType);
     }
 
@@ -172,18 +157,56 @@ public class GeoObjectTypeSnapshotBusinessService extends ObjectTypeBusinessServ
       }
     });
 
-    this.assignPermissions(mdTableDAO);
-
     return snapshot;
   }
 
+  protected MdVertex createMdVertex(SnapshotContainer<?> version, GeoObjectTypeSnapshot parent, String viewName, boolean isAbstract, GeometryType geometryType, LocalizedValue label, LocalizedValue description, JsonArray attributes)
+  {
+    if (version.createTablesWithSnapshot())
+    {
+      // Create the MdTable
+      MdVertexDAO mdTableDAO = MdVertexDAO.newInstance();
+      mdTableDAO.setValue(MdVertexInfo.NAME, viewName);
+      mdTableDAO.setValue(MdVertexInfo.PACKAGE, TABLE_PACKAGE);
+      LocalizedValueConverter.populate(mdTableDAO, MdVertexInfo.DISPLAY_LABEL, label);
+      LocalizedValueConverter.populate(mdTableDAO, MdVertexInfo.DESCRIPTION, description);
+      mdTableDAO.setValue(MdVertexInfo.DB_CLASS_NAME, viewName);
+      mdTableDAO.setValue(MdVertexInfo.GENERATE_SOURCE, MdAttributeBooleanInfo.FALSE);
+      mdTableDAO.setValue(MdVertexInfo.ENABLE_CHANGE_OVER_TIME, MdAttributeBooleanInfo.FALSE);
+      mdTableDAO.setValue(MdVertexInfo.SUPER_MD_VERTEX, parent.getGraphMdVertexOid());
+      mdTableDAO.apply();
+
+      final MdVertex mdTable = (MdVertex) BusinessFacade.get(mdTableDAO);
+
+      if (!isAbstract)
+      {
+        createGeometryAttribute(geometryType, mdTableDAO);
+      }
+
+      attributes.forEach(joAttr -> {
+        AttributeType attributeType = AttributeType.parse(joAttr.getAsJsonObject());
+
+        if (! ( attributeType instanceof AttributeTermType ))
+        {
+          this.createMdAttributeFromAttributeType(mdTable, attributeType);
+        }
+      });
+
+      this.assignPermissions(mdTableDAO);
+
+      return mdTable;
+    }
+
+    return null;
+  }
+
   @Override
-  public GeoObjectTypeSnapshot get(LabeledPropertyGraphTypeVersion version, String code)
+  public GeoObjectTypeSnapshot get(SnapshotContainer<?> version, String code)
   {
     QueryFactory factory = new QueryFactory();
 
     LabeledPropertyGraphTypeSnapshotQuery vQuery = new LabeledPropertyGraphTypeSnapshotQuery(factory);
-    vQuery.WHERE(vQuery.getParent().EQ(version));
+    vQuery.WHERE(vQuery.getParent().EQ((LabeledPropertyGraphTypeVersion) version));
 
     GeoObjectTypeSnapshotQuery query = new GeoObjectTypeSnapshotQuery(factory);
     query.LEFT_JOIN_EQ(vQuery.getChild());
@@ -201,12 +224,12 @@ public class GeoObjectTypeSnapshotBusinessService extends ObjectTypeBusinessServ
   }
 
   @Override
-  public GeoObjectTypeSnapshot get(LabeledPropertyGraphTypeVersion version, MdVertexDAOIF mdVertex)
+  public GeoObjectTypeSnapshot get(SnapshotContainer<?> version, MdVertexDAOIF mdVertex)
   {
     QueryFactory factory = new QueryFactory();
 
     LabeledPropertyGraphTypeSnapshotQuery vQuery = new LabeledPropertyGraphTypeSnapshotQuery(factory);
-    vQuery.WHERE(vQuery.getParent().EQ(version));
+    vQuery.WHERE(vQuery.getParent().EQ((LabeledPropertyGraphTypeVersion) version));
 
     GeoObjectTypeSnapshotQuery query = new GeoObjectTypeSnapshotQuery(factory);
     query.LEFT_JOIN_EQ(vQuery.getChild());
@@ -224,12 +247,12 @@ public class GeoObjectTypeSnapshotBusinessService extends ObjectTypeBusinessServ
   }
 
   @Override
-  public GeoObjectTypeSnapshot getRoot(LabeledPropertyGraphTypeVersion version)
+  public GeoObjectTypeSnapshot getRoot(SnapshotContainer<?> version)
   {
     QueryFactory factory = new QueryFactory();
 
     LabeledPropertyGraphTypeSnapshotQuery vQuery = new LabeledPropertyGraphTypeSnapshotQuery(factory);
-    vQuery.WHERE(vQuery.getParent().EQ(version));
+    vQuery.WHERE(vQuery.getParent().EQ((LabeledPropertyGraphTypeVersion) version));
 
     GeoObjectTypeSnapshotQuery query = new GeoObjectTypeSnapshotQuery(factory);
     query.LEFT_JOIN_EQ(vQuery.getChild());

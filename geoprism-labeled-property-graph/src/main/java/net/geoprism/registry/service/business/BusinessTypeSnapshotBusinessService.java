@@ -43,72 +43,95 @@ import com.runwaysdk.query.OIterator;
 import com.runwaysdk.query.QueryFactory;
 import com.runwaysdk.system.metadata.MdVertex;
 
+import net.geoprism.graph.BusinessEdgeTypeSnapshot;
 import net.geoprism.graph.BusinessTypeSnapshot;
 import net.geoprism.graph.BusinessTypeSnapshotQuery;
 import net.geoprism.graph.LabeledPropertyGraphTypeSnapshotQuery;
 import net.geoprism.graph.LabeledPropertyGraphTypeVersion;
 import net.geoprism.registry.DateFormatter;
 import net.geoprism.registry.conversion.LocalizedValueConverter;
+import net.geoprism.registry.model.SnapshotContainer;
 
 @Service
 public class BusinessTypeSnapshotBusinessService extends ObjectTypeBusinessService<BusinessTypeSnapshot> implements BusinessTypeSnapshotBusinessServiceIF
 {
   @Transaction
   @Override
-  public BusinessTypeSnapshot create(LabeledPropertyGraphTypeVersion version, JsonObject typeDto)
+  public BusinessTypeSnapshot create(SnapshotContainer<?> version, JsonObject typeDto)
   {
     String code = typeDto.get(BusinessTypeSnapshot.CODE).getAsString();
+    String origin = typeDto.get(BusinessEdgeTypeSnapshot.ORIGIN).getAsString();
     String orgCode = typeDto.get(BusinessTypeSnapshot.ORGCODE).getAsString();
     String viewName = getTableName(code);
     LocalizedValue label = LocalizedValue.fromJSON(typeDto.get(BusinessTypeSnapshot.DISPLAYLABEL).getAsJsonObject());
 
-    // Create the MdTable
-    MdVertexDAO mdTableDAO = MdVertexDAO.newInstance();
-    mdTableDAO.setValue(MdVertexInfo.NAME, viewName);
-    mdTableDAO.setValue(MdVertexInfo.PACKAGE, TABLE_PACKAGE);
-    LocalizedValueConverter.populate(mdTableDAO, MdVertexInfo.DISPLAY_LABEL, label);
-    mdTableDAO.setValue(MdVertexInfo.DB_CLASS_NAME, viewName);
-    mdTableDAO.setValue(MdVertexInfo.GENERATE_SOURCE, MdAttributeBooleanInfo.FALSE);
-    mdTableDAO.setValue(MdVertexInfo.ENABLE_CHANGE_OVER_TIME, MdAttributeBooleanInfo.FALSE);
-    mdTableDAO.apply();
+    JsonArray attributes = typeDto.get("attributes").getAsJsonArray();
 
-    MdVertex mdTable = (MdVertex) BusinessFacade.get(mdTableDAO);
+    MdVertex mdTable = createMdVertex(version, viewName, label, attributes);
 
     BusinessTypeSnapshot snapshot = new BusinessTypeSnapshot();
     snapshot.setGraphMdVertex(mdTable);
     snapshot.setLabelAttribute(typeDto.get(BusinessTypeSnapshot.LABELATTRIBUTE).getAsString());
     snapshot.setCode(code);
     snapshot.setOrgCode(orgCode);
+    snapshot.setOrigin(origin);
     LocalizedValueConverter.populate(snapshot.getDisplayLabel(), label);
     snapshot.apply();
 
-    snapshot.addVersion(version).apply();
-
-    JsonArray attributes = typeDto.get("attributes").getAsJsonArray();
+    version.addSnapshot(snapshot).apply();
 
     attributes.forEach(joAttr -> {
       AttributeType attributeType = AttributeType.parse(joAttr.getAsJsonObject());
 
       if (! ( attributeType instanceof AttributeTermType ))
       {
-        this.createMdAttributeFromAttributeType(mdTable, attributeType);
-
         this.createAttributeTypeSnapshot(snapshot, attributeType);
       }
     });
 
-    this.assignPermissions(mdTableDAO);
-
     return snapshot;
   }
 
+  protected MdVertex createMdVertex(SnapshotContainer<?> version, String viewName, LocalizedValue label, JsonArray attributes)
+  {
+    // Create the MdTable
+    if (version.createTablesWithSnapshot())
+    {
+      MdVertexDAO mdTableDAO = MdVertexDAO.newInstance();
+      mdTableDAO.setValue(MdVertexInfo.NAME, viewName);
+      mdTableDAO.setValue(MdVertexInfo.PACKAGE, TABLE_PACKAGE);
+      LocalizedValueConverter.populate(mdTableDAO, MdVertexInfo.DISPLAY_LABEL, label);
+      mdTableDAO.setValue(MdVertexInfo.DB_CLASS_NAME, viewName);
+      mdTableDAO.setValue(MdVertexInfo.GENERATE_SOURCE, MdAttributeBooleanInfo.FALSE);
+      mdTableDAO.setValue(MdVertexInfo.ENABLE_CHANGE_OVER_TIME, MdAttributeBooleanInfo.FALSE);
+      mdTableDAO.apply();
+
+      MdVertex mdTable = (MdVertex) BusinessFacade.get(mdTableDAO);
+
+      attributes.forEach(joAttr -> {
+        AttributeType attributeType = AttributeType.parse(joAttr.getAsJsonObject());
+
+        if (! ( attributeType instanceof AttributeTermType ))
+        {
+          this.createMdAttributeFromAttributeType(mdTable, attributeType);
+        }
+      });
+
+      this.assignPermissions(mdTableDAO);
+
+      return mdTable;
+    }
+    
+    return null;
+  }
+
   @Override
-  public BusinessTypeSnapshot get(LabeledPropertyGraphTypeVersion version, String code)
+  public BusinessTypeSnapshot get(SnapshotContainer<?> version, String code)
   {
     QueryFactory factory = new QueryFactory();
 
     LabeledPropertyGraphTypeSnapshotQuery vQuery = new LabeledPropertyGraphTypeSnapshotQuery(factory);
-    vQuery.WHERE(vQuery.getParent().EQ(version));
+    vQuery.WHERE(vQuery.getParent().EQ((LabeledPropertyGraphTypeVersion) version));
 
     BusinessTypeSnapshotQuery query = new BusinessTypeSnapshotQuery(factory);
     query.WHERE(query.EQ(vQuery.getChild()));
@@ -126,12 +149,12 @@ public class BusinessTypeSnapshotBusinessService extends ObjectTypeBusinessServi
   }
 
   @Override
-  public BusinessTypeSnapshot get(LabeledPropertyGraphTypeVersion version, MdVertexDAOIF mdVertex)
+  public BusinessTypeSnapshot get(SnapshotContainer<?> version, MdVertexDAOIF mdVertex)
   {
     QueryFactory factory = new QueryFactory();
 
     LabeledPropertyGraphTypeSnapshotQuery vQuery = new LabeledPropertyGraphTypeSnapshotQuery(factory);
-    vQuery.WHERE(vQuery.getParent().EQ(version));
+    vQuery.WHERE(vQuery.getParent().EQ((LabeledPropertyGraphTypeVersion) version));
 
     BusinessTypeSnapshotQuery query = new BusinessTypeSnapshotQuery(factory);
     query.LEFT_JOIN_EQ(vQuery.getChild());
