@@ -52,7 +52,12 @@ public class RegistryBridge
     this.connector = connector;
     this.versionApiCompat = apiVersion;
   }
-
+  
+  public RegistryConnectorIF getConnector()
+  {
+    return connector;
+  }
+  
   public void initialize() throws UnexpectedResponseException, HTTPException, IncompatibleServerVersionException, BadServerUriException
   {
     // fetchVersionRemoteServer();
