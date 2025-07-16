@@ -18,14 +18,10 @@
  */
 package net.geoprism.registry.service.request;
 
-import java.util.List;
-
 import org.springframework.stereotype.Component;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
-
-import net.geoprism.registry.model.graph.EdgeVertexType;
 
 @Component
 public interface BusinessEdgeTypeServiceIF

@@ -76,7 +76,9 @@ public class GeoObjectType implements Serializable
   public static final String         JSON_SUPER_TYPE_CODE       = "superTypeCode";
   
   public static final String         JSON_IS_PRIVATE            = "isPrivate";
-
+  
+  public static final String         JSON_ORIGIN                = "origin";
+  
   /**
    * Unique but human readable identifier. It could be VILLAGE or HOUSEHOLD.
    */
@@ -120,6 +122,8 @@ public class GeoObjectType implements Serializable
    * null.
    */
   private String                     organizationCode;
+  
+  private String                     origin;
   
   /**
    * Whether or not the GeoObjectType is publicly viewable, or restricted to their organization.
@@ -406,7 +410,17 @@ public class GeoObjectType implements Serializable
   {
     this.superTypeCode = superTypeCode;
   }
-
+  
+  public String getOrigin()
+  {
+    return origin;
+  }
+  
+  public void setOrigin(String origin)
+  {
+    this.origin = origin;
+  }
+  
   /**
    * Returns the {@link AttributeType} defined on this {@link GeoObjectType}
    * with the given name.
@@ -547,6 +561,7 @@ public class GeoObjectType implements Serializable
     JsonArray oJsonAttrs = oJson.getAsJsonArray(JSON_ATTRIBUTES);
 
     String code = oJson.get(JSON_CODE).getAsString();
+    String origin = oJson.has(JSON_ORIGIN) ? oJson.get(JSON_ORIGIN).getAsString() : null;
     LocalizedValue label = LocalizedValue.fromJSON(oJson.get(JSON_LOCALIZED_LABEL).getAsJsonObject());
     LocalizedValue description = LocalizedValue.fromJSON(oJson.get(JSON_LOCALIZED_DESCRIPTION).getAsJsonObject());
     GeometryType geometryType = GeometryType.valueOf(oJson.get(JSON_GEOMETRY_TYPE).getAsString());
@@ -572,6 +587,7 @@ public class GeoObjectType implements Serializable
 
     // TODO Need to validate that the default attributes are still defined.
     GeoObjectType geoObjType = new GeoObjectType(code, geometryType, label, description, isGeometryEditable, organizationCode, attributeMap);
+    geoObjType.setOrigin(origin);
 
     if (oJson.has(JSON_SUPER_TYPE_CODE))
     {
@@ -627,6 +643,9 @@ public class GeoObjectType implements Serializable
     json.addProperty(JSON_IS_GEOMETRY_EDITABLE, this.isGeometryEditable());
     
     json.addProperty(JSON_IS_PRIVATE, this.getIsPrivate());
+    
+    json.addProperty(JSON_ORIGIN, this.origin == null ? "" : this.origin);
+
 
     String organizationString;
     if (this.organizationCode == null)

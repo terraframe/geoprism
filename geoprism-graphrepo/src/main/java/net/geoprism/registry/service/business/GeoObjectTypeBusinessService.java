@@ -3,18 +3,18 @@
  *
  * This file is part of Geoprism(tm).
  *
- * Geoprism(tm) is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
+ * Geoprism(tm) is free software: you can redistribute it and/or modify it under
+ * the terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation, either version 3 of the License, or (at your option) any
+ * later version.
  *
- * Geoprism(tm) is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
+ * Geoprism(tm) is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with Geoprism(tm).  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with Geoprism(tm). If not, see <http://www.gnu.org/licenses/>.
  */
 package net.geoprism.registry.service.business;
 
@@ -55,7 +55,6 @@ import com.runwaysdk.dataaccess.MdAttributeConcreteDAOIF;
 import com.runwaysdk.dataaccess.MdClassDAOIF;
 import com.runwaysdk.dataaccess.ProgrammingErrorException;
 import com.runwaysdk.dataaccess.attributes.AttributeValueException;
-import com.runwaysdk.dataaccess.cache.ObjectCache;
 import com.runwaysdk.dataaccess.metadata.graph.MdVertexDAO;
 import com.runwaysdk.dataaccess.transaction.Transaction;
 import com.runwaysdk.session.Session;
@@ -306,10 +305,10 @@ public class GeoObjectTypeBusinessService implements GeoObjectTypeBusinessServic
         return getTypeAncestors(superType, hierarchyType, includeInheritedTypes);
       }
     }
-    
+
     Collections.reverse(ancestors);
-    
-    return  ancestors;
+
+    return ancestors;
   }
 
   /**
@@ -902,15 +901,17 @@ public class GeoObjectTypeBusinessService implements GeoObjectTypeBusinessServic
    *          JSON of the {@link GeoObjectType} to be updated.
    * @return updated {@link GeoObjectType}
    */
+  @Override
   public GeoObjectType updateGeoObjectType(String gtJSON)
   {
     GeoObjectType dto = GeoObjectType.fromJSON(gtJSON, ServiceFactory.getAdapter());
     ServerGeoObjectType type = ServerGeoObjectType.get(dto.getCode());
 
-    return this.update(type, dto);
+    return this.updateGeoObjectType(type, dto);
   }
 
-  protected GeoObjectType update(ServerGeoObjectType type, GeoObjectType dto)
+  @Override
+  public GeoObjectType updateGeoObjectType(ServerGeoObjectType type, GeoObjectType dto)
   {
     ServiceFactory.getGeoObjectTypePermissionService().enforceCanWrite(dto.getOrganizationCode(), type, dto.getIsPrivate());
 

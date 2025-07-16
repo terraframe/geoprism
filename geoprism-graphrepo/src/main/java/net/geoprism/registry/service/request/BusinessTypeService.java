@@ -31,9 +31,11 @@ import com.runwaysdk.session.Request;
 import com.runwaysdk.session.RequestType;
 import com.runwaysdk.session.Session;
 
+import net.geoprism.configuration.GeoprismProperties;
 import net.geoprism.registry.BusinessEdgeType;
 import net.geoprism.registry.BusinessType;
 import net.geoprism.registry.JsonCollectors;
+import net.geoprism.registry.OriginException;
 import net.geoprism.registry.service.business.BusinessEdgeTypeBusinessServiceIF;
 import net.geoprism.registry.service.business.BusinessTypeBusinessServiceIF;
 
@@ -91,6 +93,11 @@ public class BusinessTypeService
   public void remove(String sessionId, String oid)
   {
     BusinessType type = BusinessType.get(oid);
+    
+    if (!type.getOrigin().equals(GeoprismProperties.getOrigin()))
+    {
+      throw new OriginException();
+    }
 
     this.typeService.delete(type);
 
@@ -102,6 +109,12 @@ public class BusinessTypeService
   public JsonObject edit(String sessionId, String oid)
   {
     BusinessType type = BusinessType.get(oid);
+    
+    if (!type.getOrigin().equals(GeoprismProperties.getOrigin()))
+    {
+      throw new OriginException();
+    }
+
     type.lock();
 
     return this.typeService.toJSON(type, true, false);
@@ -130,12 +143,17 @@ public class BusinessTypeService
   @Request(RequestType.SESSION)
   public AttributeType createAttributeType(String sessionId, String businessTypeCode, JsonObject attributeType)
   {
-    BusinessType got = this.typeService.getByCode(businessTypeCode);
+    BusinessType type = this.typeService.getByCode(businessTypeCode);
+    
+    if (!type.getOrigin().equals(GeoprismProperties.getOrigin()))
+    {
+      throw new OriginException();
+    }
 
-    // ServiceFactory.getBusinessTypePermissionService().enforceCanWrite(got.getOrganization().getCode(),
-    // got, got.getIsPrivate());
+    // ServiceFactory.getBusinessTypePermissionService().enforceCanWrite(type.getOrganization().getCode(),
+    // type, type.getIsPrivate());
 
-    AttributeType attrType = this.typeService.createAttributeType(got, attributeType);
+    AttributeType attrType = this.typeService.createAttributeType(type, attributeType);
 
     return attrType;
   }
@@ -155,12 +173,17 @@ public class BusinessTypeService
   @Request(RequestType.SESSION)
   public AttributeType updateAttributeType(String sessionId, String businessTypeCode, JsonObject attributeType)
   {
-    BusinessType got = this.typeService.getByCode(businessTypeCode);
+    BusinessType type = this.typeService.getByCode(businessTypeCode);
 
-    // ServiceFactory.getBusinessTypePermissionService().enforceCanWrite(got.getOrganization().getCode(),
-    // got, got.getIsPrivate());
+    if (!type.getOrigin().equals(GeoprismProperties.getOrigin()))
+    {
+      throw new OriginException();
+    }
 
-    AttributeType attrType = this.typeService.updateAttributeType(got, attributeType);
+    // ServiceFactory.getBusinessTypePermissionService().enforceCanWrite(type.getOrganization().getCode(),
+    // type, type.getIsPrivate());
+
+    AttributeType attrType = this.typeService.updateAttributeType(type, attributeType);
 
     return attrType;
   }
@@ -181,27 +204,32 @@ public class BusinessTypeService
   @Request(RequestType.SESSION)
   public void removeAttributeType(String sessionId, String businessTypeCode, String attributeName)
   {
-    BusinessType got = this.typeService.getByCode(businessTypeCode);
+    BusinessType type = this.typeService.getByCode(businessTypeCode);
 
-    // ServiceFactory.getBusinessTypePermissionService().enforceCanWrite(got.getOrganization().getCode(),
-    // got, got.getIsPrivate());
+    if (!type.getOrigin().equals(GeoprismProperties.getOrigin()))
+    {
+      throw new OriginException();
+    }
 
-    this.typeService.removeAttribute(got, attributeName);
+    // ServiceFactory.getBusinessTypePermissionService().enforceCanWrite(type.getOrganization().getCode(),
+    // type, type.getIsPrivate());
+
+    this.typeService.removeAttribute(type, attributeName);
   }
 
   @Request(RequestType.SESSION)
   public JsonObject data(String sessionId, String businessTypeCode, String json)
   {
-    BusinessType got = this.typeService.getByCode(businessTypeCode);
+    BusinessType type = this.typeService.getByCode(businessTypeCode);
 
-    return this.typeService.data(got, JsonParser.parseString(json).getAsJsonObject()).toJSON();
+    return this.typeService.data(type, JsonParser.parseString(json).getAsJsonObject()).toJSON();
   }
 
   @Request(RequestType.SESSION)
   public JsonArray getEdgeTypes(String sessionId, String businessTypeCode)
   {
-    BusinessType got = this.typeService.getByCode(businessTypeCode);
-    List<BusinessEdgeType> edgeTypes = this.typeService.getEdgeTypes(got);
+    BusinessType type = this.typeService.getByCode(businessTypeCode);
+    List<BusinessEdgeType> edgeTypes = this.typeService.getEdgeTypes(type);
 
     return edgeTypes.stream().map(object -> this.edgeService.toJSON(object)).collect(JsonCollectors.toJsonArray());
   }

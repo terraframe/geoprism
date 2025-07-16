@@ -1,8 +1,5 @@
 package net.geoprism.registry.service.request;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -11,8 +8,10 @@ import com.google.gson.JsonObject;
 import com.runwaysdk.session.Request;
 import com.runwaysdk.session.RequestType;
 
+import net.geoprism.configuration.GeoprismProperties;
 import net.geoprism.registry.BusinessEdgeType;
 import net.geoprism.registry.JsonCollectors;
+import net.geoprism.registry.OriginException;
 import net.geoprism.registry.service.business.BusinessEdgeTypeBusinessServiceIF;
 
 @Service
@@ -27,6 +26,11 @@ public class BusinesEdgeTypeService implements BusinessEdgeTypeServiceIF
   {
     BusinessEdgeType type = this.service.getByCode(code);
 
+    if (!type.getOrigin().equals(GeoprismProperties.getOrigin()))
+    {
+      throw new OriginException();
+    }
+
     this.service.update(type, object);
   }
 
@@ -35,6 +39,11 @@ public class BusinesEdgeTypeService implements BusinessEdgeTypeServiceIF
   public void delete(String sessionId, String code)
   {
     BusinessEdgeType type = this.service.getByCode(code);
+
+    if (!type.getOrigin().equals(GeoprismProperties.getOrigin()))
+    {
+      throw new OriginException();
+    }
 
     this.service.delete(type);
   }

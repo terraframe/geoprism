@@ -78,6 +78,8 @@ public class HierarchyType extends GraphTypeDTO implements Serializable, Cloneab
   public static final String  JSON_GEOOBJECTTYPE         = "geoObjectType";
 
   public static final String  JSON_CHILDREN              = "children";
+  
+  public static final String  JSON_ORIGIN                = "origin";
 
   /**
    * Invariant: Is either an empty string or is the code of a valid
@@ -108,6 +110,8 @@ public class HierarchyType extends GraphTypeDTO implements Serializable, Cloneab
   private String              phoneNumber;
 
   private String              email;
+
+  private String              origin;
 
   private List<HierarchyNode> rootGeoObjectTypes;
 
@@ -233,6 +237,16 @@ public class HierarchyType extends GraphTypeDTO implements Serializable, Cloneab
   {
     this.email = email;
   }
+  
+  public String getOrigin()
+  {
+    return origin;
+  }
+  
+  public void setOrigin(String origin)
+  {
+    this.origin = origin;
+  }
 
   public List<HierarchyNode> getRootGeoObjectTypes()
   {
@@ -326,6 +340,7 @@ public class HierarchyType extends GraphTypeDTO implements Serializable, Cloneab
     jsonObj.addProperty(JSON_EMAIL, this.email == null ? "" : this.email);
     jsonObj.addProperty(JSON_ACCESS_CONSTRAINTS, this.accessConstraints == null ? "" : this.accessConstraints);
     jsonObj.addProperty(JSON_USE_CONSTRAINTS, this.useConstraints == null ? "" : this.useConstraints);
+    jsonObj.addProperty(JSON_ORIGIN, this.origin == null ? "" : this.origin);
 
     JsonArray jaRoots = new JsonArray();
     for (int i = 0; i < rootGeoObjectTypes.size(); ++i)
@@ -368,6 +383,7 @@ public class HierarchyType extends GraphTypeDTO implements Serializable, Cloneab
     String email = oJson.has(JSON_EMAIL) ? oJson.get(JSON_EMAIL).getAsString() : null;
     String accessConstraints = oJson.has(JSON_ACCESS_CONSTRAINTS) ? oJson.get(JSON_ACCESS_CONSTRAINTS).getAsString() : null;
     String useConstraints = oJson.has(JSON_USE_CONSTRAINTS) ? oJson.get(JSON_USE_CONSTRAINTS).getAsString() : null;
+    String origin = oJson.has(JSON_ORIGIN) ? oJson.get(JSON_ORIGIN).getAsString() : null;
 
     String organizationCode = null;
 
@@ -387,6 +403,7 @@ public class HierarchyType extends GraphTypeDTO implements Serializable, Cloneab
     ht.setEmail(email);
     ht.setAccessConstraints(accessConstraints);
     ht.setUseConstraints(useConstraints);
+    ht.setOrigin(origin);
 
     JsonArray rootGeoObjectTypes = oJson.getAsJsonArray(JSON_ROOT_GEOOBJECTTYPES);
     if (rootGeoObjectTypes != null)
