@@ -88,7 +88,7 @@ public class GeoObjectTypeService implements GeoObjectTypeServiceIF
       throw new OriginException();
     }
 
-    return this.service.updateGeoObjectType(type, dto);
+    return this.service.updateGeoObjectType(type, dto).toDTO();
   }
 
   @Override

@@ -902,7 +902,7 @@ public class GeoObjectTypeBusinessService implements GeoObjectTypeBusinessServic
    * @return updated {@link GeoObjectType}
    */
   @Override
-  public GeoObjectType updateGeoObjectType(String gtJSON)
+  public ServerGeoObjectType updateGeoObjectType(String gtJSON)
   {
     GeoObjectType dto = GeoObjectType.fromJSON(gtJSON, ServiceFactory.getAdapter());
     ServerGeoObjectType type = ServerGeoObjectType.get(dto.getCode());
@@ -911,13 +911,13 @@ public class GeoObjectTypeBusinessService implements GeoObjectTypeBusinessServic
   }
 
   @Override
-  public GeoObjectType updateGeoObjectType(ServerGeoObjectType type, GeoObjectType dto)
+  public ServerGeoObjectType updateGeoObjectType(ServerGeoObjectType type, GeoObjectType dto)
   {
     ServiceFactory.getGeoObjectTypePermissionService().enforceCanWrite(dto.getOrganizationCode(), type, dto.getIsPrivate());
 
     updateFromDTO(type, dto);
 
-    return type.toDTO();
+    return type;
   }
 
   @Transaction

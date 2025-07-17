@@ -18,6 +18,8 @@
  */
 package net.geoprism.registry.service.business;
 
+import java.util.List;
+
 import org.springframework.stereotype.Component;
 
 import com.google.gson.JsonObject;
@@ -37,5 +39,9 @@ public interface HierarchyTypeSnapshotBusinessServiceIF
   HierarchyTypeSnapshot create(SnapshotContainer<?> version, JsonObject type, GeoObjectTypeSnapshot root);
 
   HierarchyTypeSnapshot get(SnapshotContainer<?> version, String code);
+
+  List<GeoObjectTypeSnapshot> getChildren(HierarchyTypeSnapshot hierarchy, GeoObjectTypeSnapshot parent);
+
+  void createHierarchyRelationship(HierarchyTypeSnapshot hierarchy, GeoObjectTypeSnapshot parent, GeoObjectTypeSnapshot child);
 
 }

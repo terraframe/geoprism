@@ -1,6 +1,6 @@
 package net.geoprism.graph;
 
-@com.runwaysdk.business.ClassSignature(hash = -1710161797)
+@com.runwaysdk.business.ClassSignature(hash = -2089673567)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -165,6 +165,23 @@ public  class SnapshotHierarchyQuery extends com.runwaysdk.query.GeneratedRelati
     com.runwaysdk.dataaccess.MdAttributeDAOIF mdAttributeIF = this.getComponentQuery().getMdAttributeROfromMap(net.geoprism.graph.SnapshotHierarchy.ENTITYDOMAIN);
 
     return (com.runwaysdk.system.metadata.MdDomainQuery.MdDomainQueryReferenceIF)this.getComponentQuery().internalAttributeFactory(net.geoprism.graph.SnapshotHierarchy.ENTITYDOMAIN, mdAttributeIF, this, alias, displayLabel);
+
+  }
+  public com.runwaysdk.query.SelectableChar getHierarchyTypeCode()
+  {
+    return getHierarchyTypeCode(null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableChar getHierarchyTypeCode(String alias)
+  {
+    return (com.runwaysdk.query.SelectableChar)this.getComponentQuery().get(net.geoprism.graph.SnapshotHierarchy.HIERARCHYTYPECODE, alias, null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableChar getHierarchyTypeCode(String alias, String displayLabel)
+  {
+    return (com.runwaysdk.query.SelectableChar)this.getComponentQuery().get(net.geoprism.graph.SnapshotHierarchy.HIERARCHYTYPECODE, alias, displayLabel);
 
   }
   public com.runwaysdk.query.SelectableChar getKeyName()

@@ -109,9 +109,9 @@ public interface GeoObjectTypeBusinessServiceIF
 
   public void deleteAttributeType(ServerGeoObjectType type, String attributeName);
 
-  public GeoObjectType updateGeoObjectType(String gtJSON);
+  public ServerGeoObjectType updateGeoObjectType(String gtJSON);
 
-  public GeoObjectType updateGeoObjectType(ServerGeoObjectType type, GeoObjectType dto);
+  public ServerGeoObjectType updateGeoObjectType(ServerGeoObjectType type, GeoObjectType dto);
 
   public List<GeoObjectType> getGeoObjectTypes(String[] codes, PermissionContext context);
 

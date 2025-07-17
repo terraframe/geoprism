@@ -18,6 +18,9 @@
  */
 package net.geoprism.registry.service.business;
 
+import java.util.LinkedList;
+import java.util.List;
+
 import org.apache.commons.lang.StringUtils;
 import org.commongeoregistry.adapter.constants.DefaultAttribute;
 import org.commongeoregistry.adapter.dataaccess.LocalizedValue;
@@ -40,10 +43,13 @@ import com.runwaysdk.system.metadata.MdEdge;
 import com.runwaysdk.system.metadata.MdGraphClassQuery;
 
 import net.geoprism.graph.GeoObjectTypeSnapshot;
+import net.geoprism.graph.GeoObjectTypeSnapshotQuery;
 import net.geoprism.graph.HierarchyTypeSnapshot;
 import net.geoprism.graph.HierarchyTypeSnapshotQuery;
 import net.geoprism.graph.LabeledPropertyGraphTypeSnapshotQuery;
 import net.geoprism.graph.LabeledPropertyGraphTypeVersion;
+import net.geoprism.graph.SnapshotHierarchy;
+import net.geoprism.graph.SnapshotHierarchyQuery;
 import net.geoprism.registry.RegistryConstants;
 import net.geoprism.registry.conversion.LocalizedValueConverter;
 import net.geoprism.registry.model.SnapshotContainer;
@@ -132,7 +138,7 @@ public class HierarchyTypeSnapshotBusinessService implements HierarchyTypeSnapsh
     version.addSnapshot(snapshot).apply();
 
     // Assign the relationship information
-    createHierarchyRelationship(version, type, root);
+    createHierarchyRelationship(version, snapshot, type, root);
 
     return snapshot;
 
@@ -171,18 +177,26 @@ public class HierarchyTypeSnapshotBusinessService implements HierarchyTypeSnapsh
     return mdEdge;
   }
 
-  private void createHierarchyRelationship(SnapshotContainer<?> version, JsonObject type, GeoObjectTypeSnapshot parent)
+  private void createHierarchyRelationship(SnapshotContainer<?> version, HierarchyTypeSnapshot hierarchy, JsonObject type, GeoObjectTypeSnapshot parent)
   {
     type.get("nodes").getAsJsonArray().forEach(node -> {
       JsonObject object = node.getAsJsonObject();
-      String code = object.get(HierarchyTypeSnapshot.CODE).getAsString();
+      String code = object.get(GeoObjectTypeSnapshot.CODE).getAsString();
 
       GeoObjectTypeSnapshot child = this.service.get(version, code);
 
-      parent.addChildSnapshot(child).apply();
+      createHierarchyRelationship(hierarchy, parent, child);
 
-      createHierarchyRelationship(version, object, child);
+      createHierarchyRelationship(version, hierarchy, object, child);
     });
+  }
+
+  @Override
+  public void createHierarchyRelationship(HierarchyTypeSnapshot hierarchy, GeoObjectTypeSnapshot parent, GeoObjectTypeSnapshot child)
+  {
+    SnapshotHierarchy relationship = parent.addChildSnapshot(child);
+    relationship.setHierarchyTypeCode(hierarchy.getCode());
+    relationship.apply();
   }
 
   @Override
@@ -206,6 +220,24 @@ public class HierarchyTypeSnapshotBusinessService implements HierarchyTypeSnapsh
     }
 
     return null;
+  }
+
+  @Override
+  public List<GeoObjectTypeSnapshot> getChildren(HierarchyTypeSnapshot hierarchy, GeoObjectTypeSnapshot parent)
+  {
+    QueryFactory factory = new QueryFactory();
+
+    SnapshotHierarchyQuery vQuery = new SnapshotHierarchyQuery(factory);
+    vQuery.WHERE(vQuery.getParent().EQ(parent));
+    vQuery.AND(vQuery.getHierarchyTypeCode().EQ(hierarchy.getCode()));
+
+    GeoObjectTypeSnapshotQuery query = new GeoObjectTypeSnapshotQuery(factory);
+    query.LEFT_JOIN_EQ(vQuery.getChild());
+
+    try (OIterator<? extends GeoObjectTypeSnapshot> it = query.getIterator())
+    {
+      return new LinkedList<>(it.getAll());
+    }
   }
 
   public HierarchyType toHierarchyType(HierarchyTypeSnapshot snapshot)

@@ -53,6 +53,9 @@
       <mdRelationship name="net.geoprism.graph.SnapshotHierarchy" table="snapshot_hierarchy" label="Snapshot Hierarchy" generateController="false" exported="false" publish="true">
         <parent cardinality="1" name="net.geoprism.graph.GeoObjectTypeSnapshot" method="ParentSnapshot" />
         <child cardinality="*" name="net.geoprism.graph.GeoObjectTypeSnapshot" method="ChildSnapshot" />
+        <attributes>
+          <char name="hierarchyTypeCode" label="Hierarchy Type Code" size="255" required="true" />
+        </attributes>        
       </mdRelationship>
       
       <mdBusiness

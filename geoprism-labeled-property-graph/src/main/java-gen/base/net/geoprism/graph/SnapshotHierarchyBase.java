@@ -1,6 +1,6 @@
 package net.geoprism.graph;
 
-@com.runwaysdk.business.ClassSignature(hash = 227028306)
+@com.runwaysdk.business.ClassSignature(hash = -1011062024)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -14,6 +14,7 @@ public abstract class SnapshotHierarchyBase extends com.runwaysdk.business.Relat
   public final static java.lang.String CREATEDATE = "createDate";
   public final static java.lang.String CREATEDBY = "createdBy";
   public final static java.lang.String ENTITYDOMAIN = "entityDomain";
+  public final static java.lang.String HIERARCHYTYPECODE = "hierarchyTypeCode";
   public final static java.lang.String KEYNAME = "keyName";
   public final static java.lang.String LASTUPDATEDATE = "lastUpdateDate";
   public final static java.lang.String LASTUPDATEDBY = "lastUpdatedBy";
@@ -24,7 +25,7 @@ public abstract class SnapshotHierarchyBase extends com.runwaysdk.business.Relat
   public final static java.lang.String SITEMASTER = "siteMaster";
   public final static java.lang.String TYPE = "type";
   @SuppressWarnings("unused")
-  private static final long serialVersionUID = 227028306;
+  private static final long serialVersionUID = -1011062024;
   
   public SnapshotHierarchyBase(String parentOid, String childOid)
   {
@@ -124,6 +125,34 @@ public abstract class SnapshotHierarchyBase extends com.runwaysdk.business.Relat
     else
     {
       setValue(ENTITYDOMAIN, oid);
+    }
+  }
+  
+  public String getHierarchyTypeCode()
+  {
+    return getValue(HIERARCHYTYPECODE);
+  }
+  
+  public void validateHierarchyTypeCode()
+  {
+    this.validateAttribute(HIERARCHYTYPECODE);
+  }
+  
+  public static com.runwaysdk.dataaccess.MdAttributeCharacterDAOIF getHierarchyTypeCodeMd()
+  {
+    com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(net.geoprism.graph.SnapshotHierarchy.CLASS);
+    return (com.runwaysdk.dataaccess.MdAttributeCharacterDAOIF)mdClassIF.definesAttribute(HIERARCHYTYPECODE);
+  }
+  
+  public void setHierarchyTypeCode(String value)
+  {
+    if(value == null)
+    {
+      setValue(HIERARCHYTYPECODE, "");
+    }
+    else
+    {
+      setValue(HIERARCHYTYPECODE, value);
     }
   }
   
