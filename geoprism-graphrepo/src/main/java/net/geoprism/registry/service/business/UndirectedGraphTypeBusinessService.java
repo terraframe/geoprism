@@ -54,12 +54,19 @@ public class UndirectedGraphTypeBusinessService implements UndirectedGraphTypeBu
     LocalizedValue label = LocalizedValue.fromJSON(object.getAsJsonObject(UndirectedGraphType.JSON_LABEL));
     LocalizedValue description = LocalizedValue.fromJSON(object.getAsJsonObject(UndirectedGraphType.DESCRIPTION));
 
-    return create(code, label, description);
+    return create(code, label, description, GeoprismProperties.getOrigin());
   }
 
   @Override
   @Transaction
   public UndirectedGraphType create(String code, LocalizedValue label, LocalizedValue description)
+  {
+    return create(code, label, description, GeoprismProperties.getOrigin());    
+  }
+  
+  @Override
+  @Transaction
+  public UndirectedGraphType create(String code, LocalizedValue label, LocalizedValue description, String origin)
   {
     try
     {
@@ -104,7 +111,7 @@ public class UndirectedGraphTypeBusinessService implements UndirectedGraphTypeBu
       graphType.setMdEdgeId(mdEdgeDAO.getOid());
       RegistryLocalizedValueConverter.populate(graphType.getDisplayLabel(), label);
       RegistryLocalizedValueConverter.populate(graphType.getDescription(), description);
-      graphType.setOrigin(GeoprismProperties.getOrigin());
+      graphType.setOrigin(origin);
       graphType.apply();
 
       return graphType;

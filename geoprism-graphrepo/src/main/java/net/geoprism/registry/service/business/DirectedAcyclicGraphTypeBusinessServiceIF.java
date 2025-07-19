@@ -35,6 +35,8 @@ public interface DirectedAcyclicGraphTypeBusinessServiceIF
 
   public DirectedAcyclicGraphType create(JsonObject object);
 
+  public DirectedAcyclicGraphType create(String code, LocalizedValue label, LocalizedValue description, String origin);
+
   public DirectedAcyclicGraphType create(String code, LocalizedValue label, LocalizedValue description);
 
 }

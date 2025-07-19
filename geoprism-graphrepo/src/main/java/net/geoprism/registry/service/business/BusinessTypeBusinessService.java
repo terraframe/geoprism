@@ -244,6 +244,7 @@ public class BusinessTypeBusinessService implements BusinessTypeBusinessServiceI
     JsonObject object = new JsonObject();
     object.addProperty(BusinessType.CODE, type.getCode());
     object.addProperty(BusinessType.ORGANIZATION, organization.getCode());
+    object.addProperty(BusinessType.ORIGIN, type.getOrigin());
     object.addProperty("organizationLabel", organization.getDisplayLabel().getValue());
     object.add(BusinessType.DISPLAYLABEL, RegistryLocalizedValueConverter.convertNoAutoCoalesce(type.getDisplayLabel()).toJSON());
 
@@ -320,6 +321,7 @@ public class BusinessTypeBusinessService implements BusinessTypeBusinessServiceI
     String code = object.get(BusinessType.CODE).getAsString();
     String organizationCode = object.get(BusinessType.ORGANIZATION).getAsString();
     Organization organization = Organization.getByCode(organizationCode);
+    String origin = object.has(BusinessType.ORIGIN) ? object.get(BusinessType.ORIGIN).getAsString() : GeoprismProperties.getOrigin();
 
     ServiceFactory.getGeoObjectTypePermissionService().enforceCanCreate(organization.getCode(), false);
 
@@ -338,7 +340,6 @@ public class BusinessTypeBusinessService implements BusinessTypeBusinessServiceI
     BusinessType businessType = ( object.has(BusinessType.OID) && !object.get(BusinessType.OID).isJsonNull() ) ? BusinessType.get(object.get(BusinessType.OID).getAsString()) : new BusinessType();
     businessType.setCode(code);
     businessType.setOrganization(organization);
-    businessType.setOrigin(GeoprismProperties.getOrigin());
     RegistryLocalizedValueConverter.populate(businessType.getDisplayLabel(), localizedValue);
 
     boolean isNew = businessType.isNew();
@@ -365,6 +366,7 @@ public class BusinessTypeBusinessService implements BusinessTypeBusinessServiceI
       vertexCodeMdAttr.apply();
 
       businessType.setMdVertexId(mdVertex.getOid());
+      businessType.setOrigin(origin);
     }
 
     if (object.has(BusinessType.LABELATTRIBUTE) && !object.get(BusinessType.LABELATTRIBUTE).isJsonNull())

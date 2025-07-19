@@ -95,12 +95,19 @@ public class DirectedAcyclicGraphTypeBusinessService implements DirectedAcyclicG
     LocalizedValue label = LocalizedValue.fromJSON(object.getAsJsonObject(DirectedAcyclicGraphType.JSON_LABEL));
     LocalizedValue description = LocalizedValue.fromJSON(object.getAsJsonObject(DirectedAcyclicGraphType.DESCRIPTION));
 
-    return create(code, label, description);
+    return create(code, label, description, GeoprismProperties.getOrigin());
+  }
+  
+  @Override
+  @Transaction
+  public DirectedAcyclicGraphType create(String code, LocalizedValue label, LocalizedValue description)
+  {    
+    return create(code, label, description, GeoprismProperties.getOrigin());
   }
 
   @Override
   @Transaction
-  public DirectedAcyclicGraphType create(String code, LocalizedValue label, LocalizedValue description)
+  public DirectedAcyclicGraphType create(String code, LocalizedValue label, LocalizedValue description, String origin)
   {
     try
     {
@@ -146,7 +153,7 @@ public class DirectedAcyclicGraphTypeBusinessService implements DirectedAcyclicG
       graphType.setMdEdgeId(mdEdgeDAO.getOid());
       RegistryLocalizedValueConverter.populate(graphType.getDisplayLabel(), label);
       RegistryLocalizedValueConverter.populate(graphType.getDescription(), description);
-      graphType.setOrigin(GeoprismProperties.getOrigin());
+      graphType.setOrigin(origin);
       graphType.apply();
 
       return graphType;

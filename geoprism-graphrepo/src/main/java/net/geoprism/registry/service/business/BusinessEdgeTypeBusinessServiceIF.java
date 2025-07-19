@@ -54,8 +54,13 @@ public interface BusinessEdgeTypeBusinessServiceIF
 
   BusinessEdgeType create(JsonObject object);
 
+
   BusinessEdgeType create(String organizationCode, String code, LocalizedValue label, LocalizedValue description, String parentTypeCode, String childTypeCode);
 
+  BusinessEdgeType create(String organizationCode, String code, LocalizedValue label, LocalizedValue description, String parentTypeCode, String childTypeCode, String origin);
+
   BusinessEdgeType createGeoEdge(String organizationCode, String code, LocalizedValue label, LocalizedValue description, String typeCode, EdgeDirection direction);
+  
+  BusinessEdgeType createGeoEdge(String organizationCode, String code, LocalizedValue label, LocalizedValue description, String typeCode, EdgeDirection direction, String origin);
 
 }

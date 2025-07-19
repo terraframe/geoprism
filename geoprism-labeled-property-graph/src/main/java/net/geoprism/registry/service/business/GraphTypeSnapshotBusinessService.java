@@ -166,9 +166,6 @@ public class GraphTypeSnapshotBusinessService implements GraphTypeSnapshotBusine
       throw new UnsupportedOperationException();
     }
 
-    // Assign the relationship information
-    createHierarchyRelationship(version, type, root);
-
     return snapshot;
   }
 
@@ -204,20 +201,6 @@ public class GraphTypeSnapshotBusinessService implements GraphTypeSnapshotBusine
       this.assignPermissions(mdEdge);
     }
     return mdEdge;
-  }
-
-  private void createHierarchyRelationship(SnapshotContainer<?> version, JsonObject type, GeoObjectTypeSnapshot parent)
-  {
-    type.get("nodes").getAsJsonArray().forEach(node -> {
-      JsonObject object = node.getAsJsonObject();
-      String code = object.get(HierarchyTypeSnapshot.CODE).getAsString();
-
-      GeoObjectTypeSnapshot child = this.service.get(version, code);
-
-      parent.addChildSnapshot(child).apply();
-
-      createHierarchyRelationship(version, object, child);
-    });
   }
 
   @Override
