@@ -48,6 +48,7 @@ import com.runwaysdk.query.OIterator;
 import com.runwaysdk.query.QueryFactory;
 import com.runwaysdk.system.metadata.MdVertex;
 
+import net.geoprism.configuration.GeoprismProperties;
 import net.geoprism.graph.GeoObjectTypeSnapshot;
 import net.geoprism.graph.GeoObjectTypeSnapshotQuery;
 import net.geoprism.graph.LabeledPropertyGraphTypeSnapshotQuery;
@@ -115,6 +116,7 @@ public class GeoObjectTypeSnapshotBusinessService extends ObjectTypeBusinessServ
 
     String code = type.get(GeoObjectTypeSnapshot.CODE).getAsString();
     String orgCode = type.has(GeoObjectTypeSnapshot.ORGCODE) ? type.get(GeoObjectTypeSnapshot.ORGCODE).getAsString() : null;
+    String origin = type.has(GeoObjectTypeSnapshot.ORIGIN) ? type.get(GeoObjectTypeSnapshot.ORIGIN).getAsString() : GeoprismProperties.getOrigin();
     String viewName = getTableName(code);
     boolean isAbstract = type.get(GeoObjectTypeSnapshot.ISABSTRACT).getAsBoolean();
     boolean isRoot = type.get(GeoObjectTypeSnapshot.ISROOT).getAsBoolean();
@@ -130,6 +132,7 @@ public class GeoObjectTypeSnapshotBusinessService extends ObjectTypeBusinessServ
     snapshot.setGraphMdVertex(mdTable);
     snapshot.setCode(code);
     snapshot.setOrgCode(orgCode);
+    snapshot.setOrigin(origin);
     snapshot.setGeometryType(geometryType.name());
     snapshot.setIsAbstract(isAbstract);
     snapshot.setIsRoot(isRoot);

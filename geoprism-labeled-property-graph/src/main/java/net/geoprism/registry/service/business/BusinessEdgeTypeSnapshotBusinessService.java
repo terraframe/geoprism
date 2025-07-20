@@ -39,6 +39,7 @@ import com.runwaysdk.query.QueryFactory;
 import com.runwaysdk.system.metadata.MdEdge;
 import com.runwaysdk.system.metadata.MdGraphClassQuery;
 
+import net.geoprism.configuration.GeoprismProperties;
 import net.geoprism.graph.BusinessEdgeTypeSnapshot;
 import net.geoprism.graph.BusinessEdgeTypeSnapshotBase;
 import net.geoprism.graph.BusinessEdgeTypeSnapshotQuery;
@@ -166,7 +167,7 @@ public class BusinessEdgeTypeSnapshotBusinessService implements BusinessEdgeType
   private BusinessEdgeTypeSnapshot create(SnapshotContainer<?> version, JsonObject typeDTO, ObjectTypeSnapshot parent, ObjectTypeSnapshot child)
   {
     String code = typeDTO.get(BusinessEdgeTypeSnapshot.CODE).getAsString();
-    String origin = typeDTO.get(BusinessEdgeTypeSnapshot.ORIGIN).getAsString();
+    String origin = typeDTO.has(BusinessEdgeTypeSnapshot.ORIGIN) ? typeDTO.get(BusinessEdgeTypeSnapshot.ORIGIN).getAsString() : GeoprismProperties.getOrigin();
     String orgCode = typeDTO.get(HierarchyTypeSnapshot.ORGCODE).getAsString();
     String viewName = getTableName(code);
     LocalizedValue label = LocalizedValue.fromJSON(typeDTO.get(HierarchyTypeSnapshot.DISPLAYLABEL).getAsJsonObject());

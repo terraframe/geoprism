@@ -43,7 +43,7 @@ import com.runwaysdk.query.OIterator;
 import com.runwaysdk.query.QueryFactory;
 import com.runwaysdk.system.metadata.MdVertex;
 
-import net.geoprism.graph.BusinessEdgeTypeSnapshot;
+import net.geoprism.configuration.GeoprismProperties;
 import net.geoprism.graph.BusinessTypeSnapshot;
 import net.geoprism.graph.BusinessTypeSnapshotQuery;
 import net.geoprism.graph.LabeledPropertyGraphTypeSnapshotQuery;
@@ -60,7 +60,7 @@ public class BusinessTypeSnapshotBusinessService extends ObjectTypeBusinessServi
   public BusinessTypeSnapshot create(SnapshotContainer<?> version, JsonObject typeDto)
   {
     String code = typeDto.get(BusinessTypeSnapshot.CODE).getAsString();
-    String origin = typeDto.get(BusinessEdgeTypeSnapshot.ORIGIN).getAsString();
+    String origin = typeDto.has(BusinessTypeSnapshot.ORIGIN) ? typeDto.get(BusinessTypeSnapshot.ORIGIN).getAsString() : GeoprismProperties.getOrigin();
     String orgCode = typeDto.get(BusinessTypeSnapshot.ORGCODE).getAsString();
     String viewName = getTableName(code);
     LocalizedValue label = LocalizedValue.fromJSON(typeDto.get(BusinessTypeSnapshot.DISPLAYLABEL).getAsJsonObject());

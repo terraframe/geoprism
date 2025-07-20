@@ -438,7 +438,7 @@ public class HierarchyTypeBusinessService implements HierarchyTypeBusinessServic
       hierarchicalRelationship.setDefinitionEdge(defitionEdge);
       hierarchicalRelationship.setOrganization(organization.getGraphOrganization());
       hierarchicalRelationship.setDbClassName(objectEdge.getDbClassName());
-      hierarchicalRelationship.setOrigin(GeoprismProperties.getOrigin());
+      hierarchicalRelationship.setOrigin(StringUtils.isBlank(dto.getOrigin()) ? GeoprismProperties.getOrigin() : dto.getOrigin());
       hierarchicalRelationship.apply();
 
       ServerHierarchyType sht = this.get(hierarchicalRelationship);

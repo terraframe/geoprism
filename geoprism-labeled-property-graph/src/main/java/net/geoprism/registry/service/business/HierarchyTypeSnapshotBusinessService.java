@@ -18,7 +18,6 @@
  */
 package net.geoprism.registry.service.business;
 
-import java.util.LinkedList;
 import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
@@ -42,8 +41,8 @@ import com.runwaysdk.query.QueryFactory;
 import com.runwaysdk.system.metadata.MdEdge;
 import com.runwaysdk.system.metadata.MdGraphClassQuery;
 
+import net.geoprism.configuration.GeoprismProperties;
 import net.geoprism.graph.GeoObjectTypeSnapshot;
-import net.geoprism.graph.GeoObjectTypeSnapshotQuery;
 import net.geoprism.graph.HierarchyTypeSnapshot;
 import net.geoprism.graph.HierarchyTypeSnapshotQuery;
 import net.geoprism.graph.LabeledPropertyGraphTypeSnapshotQuery;
@@ -118,7 +117,7 @@ public class HierarchyTypeSnapshotBusinessService implements HierarchyTypeSnapsh
   {
     String code = type.get(HierarchyTypeSnapshot.CODE).getAsString();
     String orgCode = type.get(HierarchyTypeSnapshot.ORGCODE).getAsString();
-    String origin = type.get(HierarchyTypeSnapshot.ORIGIN).getAsString();
+    String origin = type.has(HierarchyTypeSnapshot.ORIGIN) ? type.get(HierarchyTypeSnapshot.ORIGIN).getAsString() : GeoprismProperties.getOrigin();
 
     String viewName = getTableName(code);
     LocalizedValue label = LocalizedValue.fromJSON(type.get(HierarchyTypeSnapshot.DISPLAYLABEL).getAsJsonObject());
@@ -230,14 +229,19 @@ public class HierarchyTypeSnapshotBusinessService implements HierarchyTypeSnapsh
     SnapshotHierarchyQuery vQuery = new SnapshotHierarchyQuery(factory);
     vQuery.WHERE(vQuery.getParent().EQ(parent));
     vQuery.AND(vQuery.getHierarchyTypeCode().EQ(hierarchy.getCode()));
-
-    GeoObjectTypeSnapshotQuery query = new GeoObjectTypeSnapshotQuery(factory);
-    query.LEFT_JOIN_EQ(vQuery.getChild());
-
-    try (OIterator<? extends GeoObjectTypeSnapshot> it = query.getIterator())
+    
+    try (OIterator<? extends SnapshotHierarchy> iterator = vQuery.getIterator())
     {
-      return new LinkedList<>(it.getAll());
+      return iterator.getAll().stream().map(rel -> rel.getChild()).toList();
     }
+
+//    GeoObjectTypeSnapshotQuery query = new GeoObjectTypeSnapshotQuery(factory);
+//    query.LEFT_JOIN_EQ(vQuery.getChild());
+//
+//    try (OIterator<? extends GeoObjectTypeSnapshot> it = query.getIterator())
+//    {
+//      return new LinkedList<>(it.getAll());
+//    }
   }
 
   public HierarchyType toHierarchyType(HierarchyTypeSnapshot snapshot)

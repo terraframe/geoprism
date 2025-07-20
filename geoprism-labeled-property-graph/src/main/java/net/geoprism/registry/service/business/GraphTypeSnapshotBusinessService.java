@@ -39,6 +39,8 @@ import com.runwaysdk.query.QueryFactory;
 import com.runwaysdk.system.metadata.MdEdge;
 import com.runwaysdk.system.metadata.MdGraphClassQuery;
 
+import net.geoprism.configuration.GeoprismProperties;
+import net.geoprism.graph.BusinessEdgeTypeSnapshot;
 import net.geoprism.graph.DirectedAcyclicGraphTypeSnapshot;
 import net.geoprism.graph.DirectedAcyclicGraphTypeSnapshotQuery;
 import net.geoprism.graph.GeoObjectTypeSnapshot;
@@ -119,7 +121,7 @@ public class GraphTypeSnapshotBusinessService implements GraphTypeSnapshotBusine
   {
     String code = type.get(HierarchyTypeSnapshot.CODE).getAsString();
     String typeCode = type.get(GraphTypeSnapshot.TYPE_CODE).getAsString();
-    String origin = type.get(HierarchyTypeSnapshot.ORIGIN).getAsString();
+    String origin = type.has(HierarchyTypeSnapshot.ORIGIN) ? type.get(HierarchyTypeSnapshot.ORIGIN).getAsString() : GeoprismProperties.getOrigin();
     LocalizedValue label = LocalizedValue.fromJSON(type.get(HierarchyTypeSnapshot.DISPLAYLABEL).getAsJsonObject());
     LocalizedValue description = LocalizedValue.fromJSON(type.get(HierarchyTypeSnapshot.DESCRIPTION).getAsJsonObject());
 
