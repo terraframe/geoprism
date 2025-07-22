@@ -18,6 +18,7 @@
  */
 package net.geoprism.registry.service.business;
 
+import java.util.List;
 import java.util.Map;
 
 import org.commongeoregistry.adapter.constants.DefaultAttribute;
@@ -154,8 +155,6 @@ public class GeoObjectTypeSnapshotBusinessService extends ObjectTypeBusinessServ
 
       if (! ( attributeType instanceof AttributeTermType ))
       {
-        this.createMdAttributeFromAttributeType(mdTable, attributeType);
-
         this.createAttributeTypeSnapshot(snapshot, attributeType);
       }
     });
@@ -181,6 +180,8 @@ public class GeoObjectTypeSnapshotBusinessService extends ObjectTypeBusinessServ
 
       final MdVertex mdTable = (MdVertex) BusinessFacade.get(mdTableDAO);
 
+      List<String> existingAttributes = mdTableDAO.getAllDefinedMdAttributes().stream().map(a -> a.definesAttribute()).toList();
+
       if (!isAbstract)
       {
         createGeometryAttribute(geometryType, mdTableDAO);
@@ -189,7 +190,9 @@ public class GeoObjectTypeSnapshotBusinessService extends ObjectTypeBusinessServ
       attributes.forEach(joAttr -> {
         AttributeType attributeType = AttributeType.parse(joAttr.getAsJsonObject());
 
-        if (! ( attributeType instanceof AttributeTermType ))
+        // If the geo object type extends another geo object type then it could
+        // already have defined some of the attribute definitions
+        if (! ( attributeType instanceof AttributeTermType ) && !existingAttributes.contains(attributeType.getName()))
         {
           this.createMdAttributeFromAttributeType(mdTable, attributeType);
         }
