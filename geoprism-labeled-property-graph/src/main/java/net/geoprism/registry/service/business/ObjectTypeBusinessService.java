@@ -65,6 +65,7 @@ import net.geoprism.graph.AttributeClassificationTypeSnapshot;
 import net.geoprism.graph.AttributeDateTypeSnapshot;
 import net.geoprism.graph.AttributeDoubleTypeSnapshot;
 import net.geoprism.graph.AttributeGeometryTypeSnapshot;
+import net.geoprism.graph.AttributeLocalTypeSnapshot;
 import net.geoprism.graph.AttributeLongTypeSnapshot;
 import net.geoprism.graph.AttributeTypeSnapshot;
 import net.geoprism.graph.AttributeTypeSnapshotQuery;
@@ -74,7 +75,7 @@ import net.geoprism.registry.conversion.LocalizedValueConverter;
 import net.geoprism.registry.model.Classification;
 import net.geoprism.registry.model.ClassificationType;
 
-public abstract class ObjectTypeBusinessService<T extends ObjectTypeSnapshot>
+public abstract class ObjectTypeBusinessService<T extends ObjectTypeSnapshot> implements ObjectTypeBusinessServiceIF<T>
 {
   public final String                         TABLE_PACKAGE = "net.geoprism.lpg";
 
@@ -177,7 +178,7 @@ public abstract class ObjectTypeBusinessService<T extends ObjectTypeSnapshot>
     }
     else if (attributeType.getType().equals(AttributeLocalType.TYPE))
     {
-      attributeTypeSnapshot = new AttributeLongTypeSnapshot();
+      attributeTypeSnapshot = new AttributeLocalTypeSnapshot();
     }
     else
     {

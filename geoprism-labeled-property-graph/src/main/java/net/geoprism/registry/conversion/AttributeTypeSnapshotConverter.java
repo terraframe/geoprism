@@ -111,7 +111,7 @@ public class AttributeTypeSnapshotConverter
         ClassificationTypeBusinessServiceIF typeService = ApplicationContextHolder.getBean(ClassificationTypeBusinessServiceIF.class);
         ClassificationBusinessServiceIF service = ApplicationContextHolder.getBean(ClassificationBusinessServiceIF.class);
 
-        ClassificationType type = typeService.getByCode(attributeClassification.getCode());
+        ClassificationType type = typeService.getByCode(attributeClassification.getClassificationType());
 
         Classification classification = service.get(type, attributeClassification.getRootTerm());
 
