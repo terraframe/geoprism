@@ -47,7 +47,7 @@ public interface BusinessObjectBusinessServiceIF
 
   public boolean exists(BusinessObject object, BusinessEdgeType edgeType, ServerGeoObjectIF geoObject, EdgeDirection direction);
 
-  public void addGeoObject(BusinessObject object, BusinessEdgeType edgeType, ServerGeoObjectIF geoObject, EdgeDirection direction, boolean validateOrigin);
+  public void addGeoObject(BusinessObject object, BusinessEdgeType edgeType, ServerGeoObjectIF geoObject, EdgeDirection direction, String uid, boolean validateOrigin);
 
   public void removeGeoObject(BusinessObject object, BusinessEdgeType edgeType, ServerGeoObjectIF geoObject, EdgeDirection direction, boolean validateOrigin);
 
@@ -55,21 +55,21 @@ public interface BusinessObjectBusinessServiceIF
 
   public boolean exists(BusinessEdgeType type, BusinessObject parent, BusinessObject child);
 
-  public void addParent(BusinessObject object, BusinessEdgeType type, BusinessObject parent);
+  public void addParent(BusinessObject object, BusinessEdgeType type, BusinessObject parent, String uid);
 
   public void removeParent(BusinessObject object, BusinessEdgeType type, BusinessObject parent);
 
-  public void addParent(BusinessObject object, BusinessEdgeType type, BusinessObject parent, boolean validateOrigin);
+  public void addParent(BusinessObject object, BusinessEdgeType type, BusinessObject parent, String uid, boolean validateOrigin);
 
   public void removeParent(BusinessObject object, BusinessEdgeType type, BusinessObject parent, boolean validateOrigin);
 
   public List<BusinessObject> getParents(BusinessObject object, BusinessEdgeType type);
 
-  public void addChild(BusinessObject object, BusinessEdgeType type, BusinessObject child);
+  public void addChild(BusinessObject object, BusinessEdgeType type, BusinessObject child, String uid);
 
   public void removeChild(BusinessObject object, BusinessEdgeType type, BusinessObject child);
 
-  public void addChild(BusinessObject object, BusinessEdgeType type, BusinessObject child, boolean validateOrigin);
+  public void addChild(BusinessObject object, BusinessEdgeType type, BusinessObject child, String uid, boolean validateOrigin);
 
   public void removeChild(BusinessObject object, BusinessEdgeType type, BusinessObject child, boolean validateOrigin);
 

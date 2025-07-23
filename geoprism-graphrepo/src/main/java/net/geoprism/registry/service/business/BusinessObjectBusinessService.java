@@ -257,7 +257,7 @@ public class BusinessObjectBusinessService implements BusinessObjectBusinessServ
   }
 
   @Override
-  public void addGeoObject(BusinessObject object, BusinessEdgeType edgeType, ServerGeoObjectIF geoObject, EdgeDirection direction, boolean validateOrigin)
+  public void addGeoObject(BusinessObject object, BusinessEdgeType edgeType, ServerGeoObjectIF geoObject, EdgeDirection direction, String uid, boolean validateOrigin)
   {
     if (validateOrigin)
     {
@@ -357,13 +357,13 @@ public class BusinessObjectBusinessService implements BusinessObjectBusinessServ
   }
 
   @Override
-  public void addParent(BusinessObject object, BusinessEdgeType type, BusinessObject parent)
+  public void addParent(BusinessObject object, BusinessEdgeType type, BusinessObject parent, String uid)
   {
-    this.addParent(object, type, parent, true);
+    this.addParent(object, type, parent, uid, true);
   }
 
   @Override
-  public void addParent(BusinessObject object, BusinessEdgeType type, BusinessObject parent, boolean validateOrigin)
+  public void addParent(BusinessObject object, BusinessEdgeType type, BusinessObject parent, String uid, boolean validateOrigin)
   {
     if (validateOrigin)
     {
@@ -376,7 +376,7 @@ public class BusinessObjectBusinessService implements BusinessObjectBusinessServ
     if (parent != null && !this.exists(type, parent, object))
     {
       EdgeObject newEdge = object.getVertex().addParent(parent.getVertex(), type.getMdEdgeDAO());
-      newEdge.setValue(DefaultAttribute.UID.getName(), UUID.randomUUID().toString());
+      newEdge.setValue(DefaultAttribute.UID.getName(), uid);
       newEdge.apply();
     }
   }
@@ -421,13 +421,13 @@ public class BusinessObjectBusinessService implements BusinessObjectBusinessServ
   }
 
   @Override
-  public void addChild(BusinessObject object, BusinessEdgeType type, BusinessObject child)
+  public void addChild(BusinessObject object, BusinessEdgeType type, BusinessObject child, String uid)
   {
-    this.addChild(object, type, child, true);
+    this.addChild(object, type, child, uid, true);
   }
 
   @Override
-  public void addChild(BusinessObject object, BusinessEdgeType type, BusinessObject child, boolean validateOrigin)
+  public void addChild(BusinessObject object, BusinessEdgeType type, BusinessObject child, String uid, boolean validateOrigin)
   {
     if (validateOrigin)
     {
@@ -440,7 +440,7 @@ public class BusinessObjectBusinessService implements BusinessObjectBusinessServ
     if (child != null && !this.exists(type, object, child))
     {
       EdgeObject newEdge = object.getVertex().addChild(child.getVertex(), type.getMdEdgeDAO());
-      newEdge.setValue(DefaultAttribute.UID.getName(), UUID.randomUUID().toString());
+      newEdge.setValue(DefaultAttribute.UID.getName(), uid);
       newEdge.apply();
     }
   }
