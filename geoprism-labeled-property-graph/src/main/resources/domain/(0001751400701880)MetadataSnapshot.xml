@@ -122,7 +122,7 @@
           <char name="code" label="Code" size="255" required="true" />
           <localChar name="displayLabel" label="Label" required="true" />
           <localText name="description"/>
-          <reference name="graphMdEdge" type="com.runwaysdk.system.metadata.MdEdge" required="true" label="MdEdge" />
+          <reference name="graphMdEdge" type="com.runwaysdk.system.metadata.MdEdge" required="false" label="MdEdge" />
         </attributes>
       </mdBusiness>     
 
