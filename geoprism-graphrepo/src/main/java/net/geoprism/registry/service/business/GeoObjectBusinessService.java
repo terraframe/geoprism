@@ -1865,7 +1865,7 @@ public class GeoObjectBusinessService extends RegistryLocalizedValueConverter im
           {
             edge.apply();
           }
-          
+
           resultEdges.add(edge);
         }
       }, () -> {
@@ -1881,7 +1881,7 @@ public class GeoObjectBusinessService extends RegistryLocalizedValueConverter im
       {
         return (EdgeValueOverTime) vot;
       }
-      
+
       return new EdgeValueOverTime(vot.getStartDate(), vot.getEndDate(), vot.getValue(), UUID.randomUUID().toString());
     }).filter(vot -> !edgeUids.contains(vot.getUid())).forEach(vot -> {
       EdgeObject newEdge = addParentRaw(sgo, ( (VertexServerGeoObject) vot.getValue() ).getVertex(), hierarchyType.getObjectEdge(), vot.getStartDate(), vot.getEndDate(), vot.getUid(), validateOrigin);
@@ -2060,7 +2060,7 @@ public class GeoObjectBusinessService extends RegistryLocalizedValueConverter im
 
     List<BusinessObject> objects = null;
 
-    BusinessEdgeType edgeType = this.businessEdgeTypeService.getByCode(edgeTypeCode);
+    BusinessEdgeType edgeType = this.businessEdgeTypeService.getByCodeOrThrow(edgeTypeCode);
 
     objects = this.getBusinessObjects(vsgo, edgeType, EdgeDirection.valueOf(direction));
 

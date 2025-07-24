@@ -82,7 +82,7 @@ public class BusinessObjectService
   public JsonArray getParents(String sessionId, String businessTypeCode, String code, String businessEdgeTypeCode)
   {
     BusinessType type = this.typeService.getByCode(businessTypeCode);
-    BusinessEdgeType relationshipType = this.edgeService.getByCode(businessEdgeTypeCode);
+    BusinessEdgeType relationshipType = this.edgeService.getByCodeOrThrow(businessEdgeTypeCode);
 
     BusinessObject object = this.objectService.getByCode(type, code);
 
@@ -97,7 +97,7 @@ public class BusinessObjectService
   public JsonArray getChildren(String sessionId, String businessTypeCode, String code, String businessEdgeTypeCode)
   {
     BusinessType type = this.typeService.getByCode(businessTypeCode);
-    BusinessEdgeType relationshipType = this.edgeService.getByCode(businessEdgeTypeCode);
+    BusinessEdgeType relationshipType = this.edgeService.getByCodeOrThrow(businessEdgeTypeCode);
 
     BusinessObject object = this.objectService.getByCode(type, code);
 
@@ -113,7 +113,7 @@ public class BusinessObjectService
   {
     BusinessType type = this.typeService.getByCode(businessTypeCode);
     BusinessObject object = this.objectService.getByCode(type, code);
-    BusinessEdgeType edgeType = this.edgeService.getByCode(edgeTypeCode);
+    BusinessEdgeType edgeType = this.edgeService.getByCodeOrThrow(edgeTypeCode);
     Date date = DateUtil.parseDate(dateStr, true);
 
     List<VertexServerGeoObject> geoObjects = this.objectService.getGeoObjects(object, edgeType, EdgeDirection.valueOf(direction));

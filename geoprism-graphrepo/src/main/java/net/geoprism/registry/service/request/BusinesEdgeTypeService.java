@@ -10,6 +10,7 @@ import com.runwaysdk.session.RequestType;
 
 import net.geoprism.configuration.GeoprismProperties;
 import net.geoprism.registry.BusinessEdgeType;
+import net.geoprism.registry.DataNotFoundException;
 import net.geoprism.registry.JsonCollectors;
 import net.geoprism.registry.OriginException;
 import net.geoprism.registry.service.business.BusinessEdgeTypeBusinessServiceIF;
@@ -24,7 +25,7 @@ public class BusinesEdgeTypeService implements BusinessEdgeTypeServiceIF
   @Request(RequestType.SESSION)
   public void update(String sessionId, String code, JsonObject object)
   {
-    BusinessEdgeType type = this.service.getByCode(code);
+    BusinessEdgeType type = this.service.getByCodeOrThrow(code);
 
     if (!type.getOrigin().equals(GeoprismProperties.getOrigin()))
     {
@@ -38,7 +39,7 @@ public class BusinesEdgeTypeService implements BusinessEdgeTypeServiceIF
   @Request(RequestType.SESSION)
   public void delete(String sessionId, String code)
   {
-    BusinessEdgeType type = this.service.getByCode(code);
+    BusinessEdgeType type = this.service.getByCodeOrThrow(code);
 
     if (!type.getOrigin().equals(GeoprismProperties.getOrigin()))
     {
@@ -59,7 +60,9 @@ public class BusinesEdgeTypeService implements BusinessEdgeTypeServiceIF
   @Request(RequestType.SESSION)
   public JsonObject getByCode(String sessionId, String code)
   {
-    return this.service.toJSON(this.service.getByCode(code));
+    return this.service.getByCode(code).map(type -> this.service.toJSON(type)).orElseThrow(() -> {
+      throw new DataNotFoundException("Unable to find business edge type with code [" + code + "]");
+    });
   }
 
   @Override

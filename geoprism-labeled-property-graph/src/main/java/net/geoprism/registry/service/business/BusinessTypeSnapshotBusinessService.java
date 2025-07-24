@@ -53,7 +53,7 @@ import net.geoprism.registry.conversion.LocalizedValueConverter;
 import net.geoprism.registry.model.SnapshotContainer;
 
 @Service
-public class BusinessTypeSnapshotBusinessService extends ObjectTypeBusinessService<BusinessTypeSnapshot> implements BusinessTypeSnapshotBusinessServiceIF
+public class BusinessTypeSnapshotBusinessService extends ObjectTypeSnapshotBusinessService<BusinessTypeSnapshot> implements BusinessTypeSnapshotBusinessServiceIF
 {
   @Transaction
   @Override

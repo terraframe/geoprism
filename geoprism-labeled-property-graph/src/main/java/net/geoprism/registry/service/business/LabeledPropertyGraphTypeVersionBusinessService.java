@@ -67,6 +67,7 @@ import net.geoprism.graph.LabeledPropertyGraphUtil;
 import net.geoprism.graph.UndirectedGraphTypeSnapshot;
 import net.geoprism.graph.UndirectedGraphTypeSnapshotQuery;
 import net.geoprism.registry.DateUtil;
+import net.geoprism.registry.JsonCollectors;
 import net.geoprism.registry.LPGTileCache;
 import net.geoprism.registry.lpg.LPGPublishProgressMonitorIF;
 import net.geoprism.registry.model.ClassificationType;
@@ -83,8 +84,8 @@ public class LabeledPropertyGraphTypeVersionBusinessService implements LabeledPr
   @Autowired
   private BusinessEdgeTypeSnapshotBusinessServiceIF bEdgeTypeService;
 
-  // @Autowired
-  // private HierarchyTypeSnapshotBusinessServiceIF hierarchyService;
+  @Autowired
+  private HierarchyTypeSnapshotBusinessServiceIF    hierarchyService;
 
   @Autowired
   private GraphTypeSnapshotBusinessServiceIF        graphService;
@@ -244,37 +245,37 @@ public class LabeledPropertyGraphTypeVersionBusinessService implements LabeledPr
   public <T extends GraphTypeSnapshot> List<T> getDirectedAcyclicGraphTypes(LabeledPropertyGraphTypeVersion version)
   {
     QueryFactory factory = new QueryFactory();
-    
+
     LabeledPropertyGraphTypeSnapshotQuery vQuery = new LabeledPropertyGraphTypeSnapshotQuery(factory);
     vQuery.WHERE(vQuery.getParent().EQ(version));
 
     DirectedAcyclicGraphTypeSnapshotQuery query = new DirectedAcyclicGraphTypeSnapshotQuery(factory);
     query.LEFT_JOIN_EQ(vQuery.getChild());
-    
+
     try (OIterator<? extends DirectedAcyclicGraphTypeSnapshot> it = query.getIterator())
     {
       return it.getAll().stream().map(b -> (T) b).collect(Collectors.toList());
     }
   }
-  
+
   @SuppressWarnings("unchecked")
   @Override
   public <T extends GraphTypeSnapshot> List<T> getUndirectedGraphTypes(LabeledPropertyGraphTypeVersion version)
   {
     QueryFactory factory = new QueryFactory();
-    
+
     LabeledPropertyGraphTypeSnapshotQuery vQuery = new LabeledPropertyGraphTypeSnapshotQuery(factory);
     vQuery.WHERE(vQuery.getParent().EQ(version));
 
     UndirectedGraphTypeSnapshotQuery query = new UndirectedGraphTypeSnapshotQuery(factory);
     query.LEFT_JOIN_EQ(vQuery.getChild());
-    
+
     try (OIterator<? extends UndirectedGraphTypeSnapshot> it = query.getIterator())
     {
       return it.getAll().stream().map(b -> (T) b).collect(Collectors.toList());
     }
   }
-  
+
   @Override
   public List<GraphTypeSnapshot> getGraphSnapshots(LabeledPropertyGraphTypeVersion version)
   {
@@ -435,13 +436,22 @@ public class LabeledPropertyGraphTypeVersionBusinessService implements LabeledPr
 
       object.add("types", types);
 
-      JsonArray graphTypes = new JsonArray();
-
       GeoObjectTypeSnapshot root = this.getRootType(version);
 
-      this.getGraphSnapshots(version).forEach(graphType -> {
-        graphTypes.add(graphType.toJSON(root));
-      });
+      JsonArray graphTypes = this.getGraphSnapshots(version).stream().map(graphType -> {
+        if (graphType instanceof HierarchyTypeSnapshot)
+        {
+          return this.hierarchyService.toJSON((HierarchyTypeSnapshot) graphType, root);
+        }
+        else if (graphType instanceof DirectedAcyclicGraphTypeSnapshot)
+        {
+          return ( (DirectedAcyclicGraphTypeSnapshot) graphType ).toJSON();
+        }
+        else
+        {
+          return ( (UndirectedGraphTypeSnapshot) graphType ).toJSON();
+        }
+      }).collect(JsonCollectors.toJsonArray());
 
       object.add("graphTypes", graphTypes);
 
@@ -494,6 +504,7 @@ public class LabeledPropertyGraphTypeVersionBusinessService implements LabeledPr
     }
 
     return object;
+
   }
 
   @Override

@@ -56,15 +56,15 @@ import net.geoprism.registry.model.SnapshotContainer;
 @Service
 public class BusinessEdgeTypeSnapshotBusinessService implements BusinessEdgeTypeSnapshotBusinessServiceIF
 {
-  public static final String                               PREFIX = "g_";
+  public static final String                     PREFIX = "g_";
 
-  public static final String                               SPLIT  = "__";
-
-  @Autowired
-  private BusinessTypeSnapshotBusinessServiceIF            typeService;
+  public static final String                     SPLIT  = "__";
 
   @Autowired
-  private GeoObjectTypeSnapshotBusinessServiceIF           gTypeService;
+  private BusinessTypeSnapshotBusinessServiceIF  typeService;
+
+  @Autowired
+  private GeoObjectTypeSnapshotBusinessServiceIF gTypeService;
 
   @Override
   @Transaction
@@ -173,28 +173,7 @@ public class BusinessEdgeTypeSnapshotBusinessService implements BusinessEdgeType
     LocalizedValue label = LocalizedValue.fromJSON(typeDTO.get(HierarchyTypeSnapshot.DISPLAYLABEL).getAsJsonObject());
     LocalizedValue description = LocalizedValue.fromJSON(typeDTO.get(HierarchyTypeSnapshot.DESCRIPTION).getAsJsonObject());
 
-    MdEdgeDAO mdEdgeDAO = MdEdgeDAO.newInstance();
-    mdEdgeDAO.setValue(MdEdgeInfo.PACKAGE, RegistryConstants.UNIVERSAL_GRAPH_PACKAGE);
-    mdEdgeDAO.setValue(MdEdgeInfo.NAME, viewName);
-    mdEdgeDAO.setValue(MdEdgeInfo.DB_CLASS_NAME, viewName);
-    mdEdgeDAO.setValue(MdEdgeInfo.PARENT_MD_VERTEX, parent.getGraphMdVertexOid());
-    mdEdgeDAO.setValue(MdEdgeInfo.CHILD_MD_VERTEX, child.getGraphMdVertexOid());
-    LocalizedValueConverter.populate(mdEdgeDAO, MdEdgeInfo.DISPLAY_LABEL, label);
-    LocalizedValueConverter.populate(mdEdgeDAO, MdEdgeInfo.DESCRIPTION, description);
-    mdEdgeDAO.setValue(MdEdgeInfo.ENABLE_CHANGE_OVER_TIME, MdAttributeBooleanInfo.FALSE);
-    mdEdgeDAO.apply();
-
-    MdAttributeUUIDDAO uidAttr = MdAttributeUUIDDAO.newInstance();
-    uidAttr.setValue(MdAttributeConcreteInfo.NAME, DefaultAttribute.UID.getName());
-    uidAttr.setStructValue(MdAttributeBooleanInfo.DISPLAY_LABEL, LocalizedValue.DEFAULT_LOCALE, DefaultAttribute.UID.getDefaultLocalizedName());
-    uidAttr.setStructValue(MdAttributeBooleanInfo.DESCRIPTION, LocalizedValue.DEFAULT_LOCALE, DefaultAttribute.UID.getDefaultDescription());
-    uidAttr.setValue(MdAttributeConcreteInfo.DEFINING_MD_CLASS, mdEdgeDAO.getOid());
-    uidAttr.setValue(MdAttributeConcreteInfo.REQUIRED, true);
-    uidAttr.apply();
-
-    MdEdge mdEdge = (MdEdge) BusinessFacade.get(mdEdgeDAO);
-
-    this.assignPermissions(mdEdge);
+    MdEdge mdEdge = createMdEdge(version, parent, child, viewName, label, description);
 
     BusinessEdgeTypeSnapshot snapshot = new BusinessEdgeTypeSnapshot();
     snapshot.setGraphMdEdge(mdEdge);
@@ -212,6 +191,39 @@ public class BusinessEdgeTypeSnapshotBusinessService implements BusinessEdgeType
     version.addSnapshot(snapshot).apply();
 
     return snapshot;
+  }
+
+  protected MdEdge createMdEdge(SnapshotContainer<?> version, ObjectTypeSnapshot parent, ObjectTypeSnapshot child, String viewName, LocalizedValue label, LocalizedValue description)
+  {
+    if (version.createTablesWithSnapshot())
+    {
+      MdEdgeDAO mdEdgeDAO = MdEdgeDAO.newInstance();
+      mdEdgeDAO.setValue(MdEdgeInfo.PACKAGE, RegistryConstants.UNIVERSAL_GRAPH_PACKAGE);
+      mdEdgeDAO.setValue(MdEdgeInfo.NAME, viewName);
+      mdEdgeDAO.setValue(MdEdgeInfo.DB_CLASS_NAME, viewName);
+      mdEdgeDAO.setValue(MdEdgeInfo.PARENT_MD_VERTEX, parent.getGraphMdVertexOid());
+      mdEdgeDAO.setValue(MdEdgeInfo.CHILD_MD_VERTEX, child.getGraphMdVertexOid());
+      LocalizedValueConverter.populate(mdEdgeDAO, MdEdgeInfo.DISPLAY_LABEL, label);
+      LocalizedValueConverter.populate(mdEdgeDAO, MdEdgeInfo.DESCRIPTION, description);
+      mdEdgeDAO.setValue(MdEdgeInfo.ENABLE_CHANGE_OVER_TIME, MdAttributeBooleanInfo.FALSE);
+      mdEdgeDAO.apply();
+
+      MdAttributeUUIDDAO uidAttr = MdAttributeUUIDDAO.newInstance();
+      uidAttr.setValue(MdAttributeConcreteInfo.NAME, DefaultAttribute.UID.getName());
+      uidAttr.setStructValue(MdAttributeBooleanInfo.DISPLAY_LABEL, LocalizedValue.DEFAULT_LOCALE, DefaultAttribute.UID.getDefaultLocalizedName());
+      uidAttr.setStructValue(MdAttributeBooleanInfo.DESCRIPTION, LocalizedValue.DEFAULT_LOCALE, DefaultAttribute.UID.getDefaultDescription());
+      uidAttr.setValue(MdAttributeConcreteInfo.DEFINING_MD_CLASS, mdEdgeDAO.getOid());
+      uidAttr.setValue(MdAttributeConcreteInfo.REQUIRED, true);
+      uidAttr.apply();
+
+      MdEdge mdEdge = (MdEdge) BusinessFacade.get(mdEdgeDAO);
+
+      this.assignPermissions(mdEdge);
+
+      return mdEdge;
+    }
+
+    return null;
   }
 
   @Override
@@ -248,6 +260,7 @@ public class BusinessEdgeTypeSnapshotBusinessService implements BusinessEdgeType
     json.addProperty(BusinessEdgeTypeSnapshot.CODE, snapshot.getCode());
     json.addProperty(BusinessEdgeTypeSnapshot.ORGCODE, snapshot.getOrgCode());
     json.addProperty(BusinessEdgeTypeSnapshot.ORIGIN, snapshot.getOrigin());
+    json.addProperty(BusinessEdgeTypeSnapshot.ORGCODE, snapshot.getOrgCode());
     json.add(BusinessEdgeTypeSnapshot.DISPLAYLABEL, LocalizedValueConverter.convertNoAutoCoalesce(snapshot.getDisplayLabel()).toJSON());
     json.add(BusinessEdgeTypeSnapshot.DESCRIPTION, LocalizedValueConverter.convertNoAutoCoalesce(snapshot.getDescription()).toJSON());
     json.addProperty(BusinessEdgeTypeSnapshot.ISPARENTGEOOBJECT, snapshot.getIsParentGeoObject());

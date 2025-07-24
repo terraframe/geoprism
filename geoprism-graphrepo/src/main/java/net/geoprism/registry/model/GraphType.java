@@ -22,6 +22,7 @@ import org.commongeoregistry.adapter.dataaccess.LocalizedValue;
 import org.commongeoregistry.adapter.metadata.GraphTypeDTO;
 
 import com.runwaysdk.dataaccess.MdEdgeDAOIF;
+import com.runwaysdk.dataaccess.ProgrammingErrorException;
 
 import net.geoprism.graph.GraphTypeReference;
 import net.geoprism.graph.GraphTypeSnapshot;
@@ -47,11 +48,15 @@ public interface GraphType
     {
       if (relationshipType.equals(GraphTypeSnapshot.UNDIRECTED_GRAPH_TYPE) || relationshipType.equals(UndirectedGraphType.CLASS))
       {
-        return UndirectedGraphType.getByCode(code);
+        return UndirectedGraphType.getByCode(code).orElseThrow(() -> {
+          throw new ProgrammingErrorException("Unable to find undirected graph with the code [" + code + "]");
+        });
       }
       else if (relationshipType.equals(GraphTypeSnapshot.DIRECTED_ACYCLIC_GRAPH_TYPE) || relationshipType.equals(DirectedAcyclicGraphType.CLASS))
       {
-        return DirectedAcyclicGraphType.getByCode(code);
+        return DirectedAcyclicGraphType.getByCode(code).orElseThrow(() -> {
+          throw new ProgrammingErrorException("Unable to find undirected graph with the code [" + code + "]");
+        });
       }
       else if (relationshipType.equals(GraphTypeSnapshot.HIERARCHY_TYPE))
       {

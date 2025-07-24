@@ -19,6 +19,7 @@
 package net.geoprism.registry.service.business;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.commongeoregistry.adapter.dataaccess.LocalizedValue;
 import org.springframework.stereotype.Component;
@@ -48,19 +49,20 @@ public interface BusinessEdgeTypeBusinessServiceIF
 
   List<BusinessEdgeType> getAll();
 
-  BusinessEdgeType getByCode(String code);
+  Optional<BusinessEdgeType> getByCode(String code);
+
+  BusinessEdgeType getByCodeOrThrow(String code);
 
   BusinessEdgeType getByMdEdge(MdEdge mdEdge);
 
   BusinessEdgeType create(JsonObject object);
-
 
   BusinessEdgeType create(String organizationCode, String code, LocalizedValue label, LocalizedValue description, String parentTypeCode, String childTypeCode);
 
   BusinessEdgeType create(String organizationCode, String code, LocalizedValue label, LocalizedValue description, String parentTypeCode, String childTypeCode, String origin);
 
   BusinessEdgeType createGeoEdge(String organizationCode, String code, LocalizedValue label, LocalizedValue description, String typeCode, EdgeDirection direction);
-  
+
   BusinessEdgeType createGeoEdge(String organizationCode, String code, LocalizedValue label, LocalizedValue description, String typeCode, EdgeDirection direction, String origin);
 
 }

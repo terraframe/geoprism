@@ -60,7 +60,7 @@ import net.geoprism.registry.model.ClassificationType;
 import net.geoprism.registry.model.SnapshotContainer;
 
 @Service
-public class GeoObjectTypeSnapshotBusinessService extends ObjectTypeBusinessService<GeoObjectTypeSnapshot> implements GeoObjectTypeSnapshotBusinessServiceIF
+public class GeoObjectTypeSnapshotBusinessService extends ObjectTypeSnapshotBusinessService<GeoObjectTypeSnapshot> implements GeoObjectTypeSnapshotBusinessServiceIF
 {
   public final String                         ROOT = "__ROOT__";
 

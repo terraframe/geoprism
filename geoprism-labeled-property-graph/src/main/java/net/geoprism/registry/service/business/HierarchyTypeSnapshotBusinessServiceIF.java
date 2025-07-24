@@ -44,4 +44,6 @@ public interface HierarchyTypeSnapshotBusinessServiceIF
 
   void createHierarchyRelationship(HierarchyTypeSnapshot hierarchy, GeoObjectTypeSnapshot parent, GeoObjectTypeSnapshot child);
 
+  JsonObject toJSON(HierarchyTypeSnapshot hierarchy, GeoObjectTypeSnapshot root);
+
 }

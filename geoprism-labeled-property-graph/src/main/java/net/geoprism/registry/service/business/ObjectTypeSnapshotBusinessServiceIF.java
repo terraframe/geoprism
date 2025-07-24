@@ -13,7 +13,7 @@ import net.geoprism.graph.AttributeGeometryTypeSnapshot;
 import net.geoprism.graph.AttributeTypeSnapshot;
 import net.geoprism.graph.ObjectTypeSnapshot;
 
-public interface ObjectTypeBusinessServiceIF<T extends ObjectTypeSnapshot>
+public interface ObjectTypeSnapshotBusinessServiceIF<T extends ObjectTypeSnapshot>
 {
   public List<AttributeTypeSnapshot> getAttributeTypes(T snapshot);
   

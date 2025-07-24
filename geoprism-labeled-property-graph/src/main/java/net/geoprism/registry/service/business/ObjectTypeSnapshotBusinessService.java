@@ -75,7 +75,7 @@ import net.geoprism.registry.conversion.LocalizedValueConverter;
 import net.geoprism.registry.model.Classification;
 import net.geoprism.registry.model.ClassificationType;
 
-public abstract class ObjectTypeBusinessService<T extends ObjectTypeSnapshot> implements ObjectTypeBusinessServiceIF<T>
+public abstract class ObjectTypeSnapshotBusinessService<T extends ObjectTypeSnapshot> implements ObjectTypeSnapshotBusinessServiceIF<T>
 {
   public final String                         TABLE_PACKAGE = "net.geoprism.lpg";
 
@@ -169,7 +169,7 @@ public abstract class ObjectTypeBusinessService<T extends ObjectTypeSnapshot> im
       AttributeClassificationTypeSnapshot attributeSnapshot = new AttributeClassificationTypeSnapshot();
       attributeSnapshot.setClassificationType(classificationTypeCode);
       attributeSnapshot.setRootTerm(attributeClassificationType.getRootTerm().getCode());
-      
+
       attributeTypeSnapshot = attributeSnapshot;
     }
     else if (attributeType.getType().equals(AttributeBooleanType.TYPE))
@@ -188,6 +188,8 @@ public abstract class ObjectTypeBusinessService<T extends ObjectTypeSnapshot> im
     attributeTypeSnapshot.setCode(attributeType.getName());
     attributeTypeSnapshot.setIsRequired(attributeType.isRequired());
     attributeTypeSnapshot.setIsUnique(attributeType.isUnique());
+    attributeTypeSnapshot.setIsDefault(attributeType.getIsDefault());
+    attributeTypeSnapshot.setIsChangeOverTime(attributeType.isChangeOverTime());
 
     LocalizedValueConverter.populate(attributeTypeSnapshot.getLabel(), attributeType.getLabel());
     LocalizedValueConverter.populate(attributeTypeSnapshot.getDescription(), attributeType.getDescription());
@@ -206,6 +208,10 @@ public abstract class ObjectTypeBusinessService<T extends ObjectTypeSnapshot> im
     attributeType.setCode(DefaultAttribute.GEOMETRY.getName());
     attributeType.getLabel().setDefaultValue(DefaultAttribute.GEOMETRY.getName());
     attributeType.getDescription().setDefaultValue(DefaultAttribute.GEOMETRY.getName());
+    attributeType.setIsRequired(false);
+    attributeType.setIsUnique(false);
+    attributeType.setIsDefault(true);
+    attributeType.setIsChangeOverTime(true);
     attributeType.apply();
 
     attributeType.addSnapshot(snapshot).apply();

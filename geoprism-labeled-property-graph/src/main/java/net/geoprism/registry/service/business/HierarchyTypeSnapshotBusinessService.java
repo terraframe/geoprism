@@ -27,6 +27,7 @@ import org.commongeoregistry.adapter.metadata.HierarchyType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.runwaysdk.ComponentIF;
 import com.runwaysdk.business.BusinessFacade;
@@ -43,7 +44,9 @@ import com.runwaysdk.system.metadata.MdGraphClassQuery;
 
 import net.geoprism.configuration.GeoprismProperties;
 import net.geoprism.graph.GeoObjectTypeSnapshot;
+import net.geoprism.graph.GraphTypeSnapshot;
 import net.geoprism.graph.HierarchyTypeSnapshot;
+import net.geoprism.graph.HierarchyTypeSnapshotBase;
 import net.geoprism.graph.HierarchyTypeSnapshotQuery;
 import net.geoprism.graph.LabeledPropertyGraphTypeSnapshotQuery;
 import net.geoprism.graph.LabeledPropertyGraphTypeVersion;
@@ -229,19 +232,20 @@ public class HierarchyTypeSnapshotBusinessService implements HierarchyTypeSnapsh
     SnapshotHierarchyQuery vQuery = new SnapshotHierarchyQuery(factory);
     vQuery.WHERE(vQuery.getParent().EQ(parent));
     vQuery.AND(vQuery.getHierarchyTypeCode().EQ(hierarchy.getCode()));
-    
+
     try (OIterator<? extends SnapshotHierarchy> iterator = vQuery.getIterator())
     {
       return iterator.getAll().stream().map(rel -> rel.getChild()).toList();
     }
 
-//    GeoObjectTypeSnapshotQuery query = new GeoObjectTypeSnapshotQuery(factory);
-//    query.LEFT_JOIN_EQ(vQuery.getChild());
-//
-//    try (OIterator<? extends GeoObjectTypeSnapshot> it = query.getIterator())
-//    {
-//      return new LinkedList<>(it.getAll());
-//    }
+    // GeoObjectTypeSnapshotQuery query = new
+    // GeoObjectTypeSnapshotQuery(factory);
+    // query.LEFT_JOIN_EQ(vQuery.getChild());
+    //
+    // try (OIterator<? extends GeoObjectTypeSnapshot> it = query.getIterator())
+    // {
+    // return new LinkedList<>(it.getAll());
+    // }
   }
 
   public HierarchyType toHierarchyType(HierarchyTypeSnapshot snapshot)
@@ -251,6 +255,38 @@ public class HierarchyTypeSnapshotBusinessService implements HierarchyTypeSnapsh
     LocalizedValue description = LocalizedValueConverter.convertNoAutoCoalesce(snapshot.getDescription());
 
     return new HierarchyType(code, label, description, snapshot.getOrgCode());
+  }
+
+  @Override
+  public JsonObject toJSON(HierarchyTypeSnapshot hierarchy, GeoObjectTypeSnapshot root)
+  {
+    JsonArray nodes = new JsonArray();
+
+    this.getChildren(hierarchy, root).forEach(child -> nodes.add(this.toNode(hierarchy, child)));
+
+    JsonObject hierarchyObject = new JsonObject();
+    hierarchyObject.addProperty(HierarchyTypeSnapshotBase.CODE, hierarchy.getCode());
+    hierarchyObject.addProperty(HierarchyTypeSnapshotBase.ORGCODE, hierarchy.getOrgCode());
+    hierarchyObject.addProperty(HierarchyTypeSnapshotBase.ORIGIN, hierarchy.getOrigin());
+    hierarchyObject.addProperty(GraphTypeSnapshot.TYPE_CODE, GraphTypeSnapshot.HIERARCHY_TYPE);
+    hierarchyObject.add(HierarchyTypeSnapshotBase.DISPLAYLABEL, LocalizedValueConverter.convertNoAutoCoalesce(hierarchy.getDisplayLabel()).toJSON());
+    hierarchyObject.add(HierarchyTypeSnapshotBase.DESCRIPTION, LocalizedValueConverter.convertNoAutoCoalesce(hierarchy.getDescription()).toJSON());
+    hierarchyObject.add("nodes", nodes);
+
+    return hierarchyObject;
+  }
+
+  private JsonObject toNode(HierarchyTypeSnapshot hierarchy, GeoObjectTypeSnapshot snapshot)
+  {
+    JsonArray children = new JsonArray();
+
+    this.getChildren(hierarchy, snapshot).forEach(child -> children.add(this.toNode(hierarchy, child)));
+
+    JsonObject node = new JsonObject();
+    node.addProperty(GeoObjectTypeSnapshot.CODE, snapshot.getCode());
+    node.add("nodes", children);
+
+    return node;
   }
 
   protected void assignPermissions(ComponentIF component)

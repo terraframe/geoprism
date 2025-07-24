@@ -32,7 +32,7 @@ import net.geoprism.graph.GeoObjectTypeSnapshot;
 import net.geoprism.registry.model.SnapshotContainer;
 
 @Component
-public interface GeoObjectTypeSnapshotBusinessServiceIF extends ObjectTypeBusinessServiceIF<GeoObjectTypeSnapshot>
+public interface GeoObjectTypeSnapshotBusinessServiceIF extends ObjectTypeSnapshotBusinessServiceIF<GeoObjectTypeSnapshot>
 {
 
   void truncate(GeoObjectTypeSnapshot snapshot);
