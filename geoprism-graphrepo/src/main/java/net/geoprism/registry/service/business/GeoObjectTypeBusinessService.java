@@ -463,6 +463,11 @@ public class GeoObjectTypeBusinessService implements GeoObjectTypeBusinessServic
   public void removeAttribute(ServerGeoObjectType serverType, String attributeName)
   {
     serverType.removeAttribute(attributeName);
+    
+    // Update the sequence number of the type
+    net.geoprism.registry.graph.GeoObjectType baseType = serverType.getType();
+    baseType.setSequence(serverType.getSequenceNumber() + 1);
+    baseType.apply();
 
     new GeoObjectTypeCacheEventCommand(serverType, CacheEventType.UPDATE).doIt();
 
@@ -822,7 +827,13 @@ public class GeoObjectTypeBusinessService implements GeoObjectTypeBusinessServic
     attributeType.setIsDefault(false);
     attributeType.apply();
 
+    // Update the sequence number of the type
+    net.geoprism.registry.graph.GeoObjectType baseType = type.getType();
+    baseType.setSequence(type.getSequenceNumber() + 1);
+    baseType.apply();
+
     new GeoObjectTypeCacheEventCommand(type, CacheEventType.UPDATE).doIt();
+    
 
     // mdAttribute.setAttributeName(dto.getName());
     // mdAttribute.setValue(MdAttributeConcreteInfo.REQUIRED,

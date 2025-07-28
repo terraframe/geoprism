@@ -186,6 +186,10 @@ public class BusinessTypeBusinessService implements BusinessTypeBusinessServiceI
   public void removeAttribute(BusinessType type, String attributeName)
   {
     this.deleteMdAttributeFromAttributeType(type, attributeName);
+    
+    // Update the sequence number of the type
+    type.setSequence(type.getSequence() + 1);
+    type.apply();
 
     // Refresh the users session
     if (Session.getCurrentSession() != null)
@@ -688,6 +692,11 @@ public class BusinessTypeBusinessService implements BusinessTypeBusinessServiceI
       org.commongeoregistry.adapter.Term term = new org.commongeoregistry.adapter.Term(attributeTermRoot.getClassifierId(), label, new LocalizedValue(""));
       attributeTermType.setRootTerm(term);
     }
+    
+    // Update the sequence number of the type
+    type.setSequence(type.getSequence() + 1);
+    type.apply();
+    
     return mdAttribute;
   }
 
