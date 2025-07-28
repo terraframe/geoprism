@@ -1,6 +1,6 @@
 package net.geoprism.graph;
 
-@com.runwaysdk.business.ClassSignature(hash = -909316956)
+@com.runwaysdk.business.ClassSignature(hash = 743701783)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -255,6 +255,23 @@ public  class MetadataSnapshotQuery extends com.runwaysdk.query.GeneratedBusines
     return (com.runwaysdk.query.SelectableLong)this.getComponentQuery().get(net.geoprism.graph.MetadataSnapshot.SEQ, alias, displayLabel);
 
   }
+  public com.runwaysdk.query.SelectableLong getSequence()
+  {
+    return getSequence(null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableLong getSequence(String alias)
+  {
+    return (com.runwaysdk.query.SelectableLong)this.getComponentQuery().get(net.geoprism.graph.MetadataSnapshot.SEQUENCE, alias, null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableLong getSequence(String alias, String displayLabel)
+  {
+    return (com.runwaysdk.query.SelectableLong)this.getComponentQuery().get(net.geoprism.graph.MetadataSnapshot.SEQUENCE, alias, displayLabel);
+
+  }
   public com.runwaysdk.query.SelectableChar getSiteMaster()
   {
     return getSiteMaster(null);
@@ -501,6 +518,9 @@ public  class MetadataSnapshotQuery extends com.runwaysdk.query.GeneratedBusines
     public com.runwaysdk.query.SelectableLong getSeq();
     public com.runwaysdk.query.SelectableLong getSeq(String alias);
     public com.runwaysdk.query.SelectableLong getSeq(String alias, String displayLabel);
+    public com.runwaysdk.query.SelectableLong getSequence();
+    public com.runwaysdk.query.SelectableLong getSequence(String alias);
+    public com.runwaysdk.query.SelectableLong getSequence(String alias, String displayLabel);
     public com.runwaysdk.query.SelectableChar getSiteMaster();
     public com.runwaysdk.query.SelectableChar getSiteMaster(String alias);
     public com.runwaysdk.query.SelectableChar getSiteMaster(String alias, String displayLabel);
@@ -753,6 +773,23 @@ public  class MetadataSnapshotQuery extends com.runwaysdk.query.GeneratedBusines
     return (com.runwaysdk.query.SelectableLong)this.get(net.geoprism.graph.MetadataSnapshot.SEQ, alias, displayLabel);
 
   }
+  public com.runwaysdk.query.SelectableLong getSequence()
+  {
+    return getSequence(null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableLong getSequence(String alias)
+  {
+    return (com.runwaysdk.query.SelectableLong)this.get(net.geoprism.graph.MetadataSnapshot.SEQUENCE, alias, null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableLong getSequence(String alias, String displayLabel)
+  {
+    return (com.runwaysdk.query.SelectableLong)this.get(net.geoprism.graph.MetadataSnapshot.SEQUENCE, alias, displayLabel);
+
+  }
   public com.runwaysdk.query.SelectableChar getSiteMaster()
   {
     return getSiteMaster(null);
@@ -976,6 +1013,9 @@ public  class MetadataSnapshotQuery extends com.runwaysdk.query.GeneratedBusines
     public com.runwaysdk.query.SelectableLong getSeq();
     public com.runwaysdk.query.SelectableLong getSeq(String alias);
     public com.runwaysdk.query.SelectableLong getSeq(String alias, String displayLabel);
+    public com.runwaysdk.query.SelectableLong getSequence();
+    public com.runwaysdk.query.SelectableLong getSequence(String alias);
+    public com.runwaysdk.query.SelectableLong getSequence(String alias, String displayLabel);
     public com.runwaysdk.query.SelectableChar getSiteMaster();
     public com.runwaysdk.query.SelectableChar getSiteMaster(String alias);
     public com.runwaysdk.query.SelectableChar getSiteMaster(String alias, String displayLabel);
@@ -1251,6 +1291,23 @@ public  class MetadataSnapshotQuery extends com.runwaysdk.query.GeneratedBusines
   public com.runwaysdk.query.SelectableLong getSeq(String alias, String displayLabel)
   {
     return (com.runwaysdk.query.SelectableLong)this.get(net.geoprism.graph.MetadataSnapshot.SEQ, alias, displayLabel);
+
+  }
+  public com.runwaysdk.query.SelectableLong getSequence()
+  {
+    return getSequence(null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableLong getSequence(String alias)
+  {
+    return (com.runwaysdk.query.SelectableLong)this.get(net.geoprism.graph.MetadataSnapshot.SEQUENCE, alias, null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableLong getSequence(String alias, String displayLabel)
+  {
+    return (com.runwaysdk.query.SelectableLong)this.get(net.geoprism.graph.MetadataSnapshot.SEQUENCE, alias, displayLabel);
 
   }
   public com.runwaysdk.query.SelectableChar getSiteMaster()

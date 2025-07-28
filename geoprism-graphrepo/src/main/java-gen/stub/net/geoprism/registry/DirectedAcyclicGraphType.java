@@ -82,6 +82,7 @@ public class DirectedAcyclicGraphType extends DirectedAcyclicGraphTypeBase imple
     object.addProperty(DirectedAcyclicGraphType.OID, this.getOid());
     object.addProperty(DirectedAcyclicGraphType.TYPE, "DirectedAcyclicGraphType");
     object.addProperty(DirectedAcyclicGraphType.CODE, this.getCode());
+    object.addProperty(DirectedAcyclicGraphType.SEQ, this.getSeq());
     object.add(DirectedAcyclicGraphType.JSON_LABEL, RegistryLocalizedValueConverter.convertNoAutoCoalesce(this.getDisplayLabel()).toJSON());
     object.add(DirectedAcyclicGraphType.DESCRIPTION, RegistryLocalizedValueConverter.convertNoAutoCoalesce(this.getDescription()).toJSON());
 

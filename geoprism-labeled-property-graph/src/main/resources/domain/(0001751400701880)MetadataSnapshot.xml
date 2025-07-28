@@ -25,6 +25,7 @@
       <mdBusiness name="net.geoprism.graph.MetadataSnapshot" table="metadata_snapshot" isAbstract="true" label="Metadata Snapshot" generateController="false" publish="true">
         <attributes>
           <text name="origin" label="Origin"  />                  
+          <long name="sequence" label="Sequence"  />                  
         </attributes>
       </mdBusiness>      
       

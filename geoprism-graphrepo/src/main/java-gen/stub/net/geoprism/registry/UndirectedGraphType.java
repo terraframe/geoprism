@@ -82,6 +82,7 @@ public class UndirectedGraphType extends UndirectedGraphTypeBase implements Json
     object.addProperty(UndirectedGraphType.OID, this.getOid());
     object.addProperty(UndirectedGraphType.TYPE, "UndirectedGraphType");
     object.addProperty(UndirectedGraphType.CODE, this.getCode());
+    object.addProperty(UndirectedGraphType.SEQ, this.getSeq());
     object.add(UndirectedGraphType.JSON_LABEL, RegistryLocalizedValueConverter.convertNoAutoCoalesce(this.getDisplayLabel()).toJSON());
     object.add(UndirectedGraphType.DESCRIPTION, RegistryLocalizedValueConverter.convertNoAutoCoalesce(this.getDescription()).toJSON());
 

@@ -1,6 +1,6 @@
 package net.geoprism.registry.graph;
 
-@com.runwaysdk.business.ClassSignature(hash = 629628734)
+@com.runwaysdk.business.ClassSignature(hash = -124318214)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -22,9 +22,10 @@ public abstract class GeoObjectTypeBase extends net.geoprism.registry.graph.Base
   public final static java.lang.String ORGANIZATION = "organization";
   public final static java.lang.String ORIGIN = "origin";
   public final static java.lang.String ROOTTERM = "rootTerm";
+  public final static java.lang.String SEQUENCE = "sequence";
   public final static java.lang.String SUPERTYPE = "superType";
   @SuppressWarnings("unused")
-  private static final long serialVersionUID = 629628734;
+  private static final long serialVersionUID = -124318214;
   
   public GeoObjectTypeBase()
   {
@@ -239,6 +240,22 @@ public abstract class GeoObjectTypeBase extends net.geoprism.registry.graph.Base
   public void setRootTermId(java.lang.String oid)
   {
     this.setValue(ROOTTERM, oid);
+  }
+  
+  public Long getSequence()
+  {
+    return (Long) this.getObjectValue(SEQUENCE);
+  }
+  
+  public static com.runwaysdk.dataaccess.MdAttributeLongDAOIF getSequenceMd()
+  {
+    com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(net.geoprism.registry.graph.GeoObjectType.CLASS);
+    return (com.runwaysdk.dataaccess.MdAttributeLongDAOIF)mdClassIF.definesAttribute(SEQUENCE);
+  }
+  
+  public void setSequence(Long value)
+  {
+    this.setValue(SEQUENCE, value);
   }
   
   public net.geoprism.registry.graph.GeoObjectType getSuperType()

@@ -71,6 +71,8 @@ public class GeoObjectTypeSnapshot extends GeoObjectTypeSnapshotBase
     typeObject.addProperty(CODE, this.getCode());
     typeObject.addProperty(ORGCODE, this.getOrgCode());
     typeObject.addProperty(ORIGIN, this.getOrigin());
+    typeObject.addProperty(SEQUENCE, this.getSequence());
+    typeObject.add(DISPLAYLABEL, LocalizedValueConverter.convertNoAutoCoalesce(this.getDisplayLabel()).toJSON());
     typeObject.add(DISPLAYLABEL, LocalizedValueConverter.convertNoAutoCoalesce(this.getDisplayLabel()).toJSON());
     typeObject.add(DESCRIPTION, LocalizedValueConverter.convertNoAutoCoalesce(this.getDescription()).toJSON());
     typeObject.addProperty(GEOMETRYTYPE, this.getGeometryType());
@@ -99,6 +101,7 @@ public class GeoObjectTypeSnapshot extends GeoObjectTypeSnapshotBase
     GeoObjectType type = new GeoObjectType(code, geometryType, label, description, this.getIsGeometryEditable(), null, null);
     type.setIsAbstract(this.getIsAbstract());
     type.setIsPrivate(this.getIsPrivate());
+    type.setSequenceNumber(this.getSequence());
 
     List<AttributeType> attributes = this.getAttributeTypes();
 

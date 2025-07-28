@@ -1,6 +1,6 @@
 package net.geoprism.registry;
 
-@com.runwaysdk.business.ClassSignature(hash = -583262822)
+@com.runwaysdk.business.ClassSignature(hash = 755708638)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -341,6 +341,23 @@ public  class UndirectedGraphTypeQuery extends com.runwaysdk.query.GeneratedBusi
     return (com.runwaysdk.query.SelectableLong)this.getComponentQuery().get(net.geoprism.registry.UndirectedGraphType.SEQ, alias, displayLabel);
 
   }
+  public com.runwaysdk.query.SelectableLong getSequence()
+  {
+    return getSequence(null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableLong getSequence(String alias)
+  {
+    return (com.runwaysdk.query.SelectableLong)this.getComponentQuery().get(net.geoprism.registry.UndirectedGraphType.SEQUENCE, alias, null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableLong getSequence(String alias, String displayLabel)
+  {
+    return (com.runwaysdk.query.SelectableLong)this.getComponentQuery().get(net.geoprism.registry.UndirectedGraphType.SEQUENCE, alias, displayLabel);
+
+  }
   public com.runwaysdk.query.SelectableChar getSiteMaster()
   {
     return getSiteMaster(null);
@@ -506,6 +523,9 @@ public  class UndirectedGraphTypeQuery extends com.runwaysdk.query.GeneratedBusi
     public com.runwaysdk.query.SelectableLong getSeq();
     public com.runwaysdk.query.SelectableLong getSeq(String alias);
     public com.runwaysdk.query.SelectableLong getSeq(String alias, String displayLabel);
+    public com.runwaysdk.query.SelectableLong getSequence();
+    public com.runwaysdk.query.SelectableLong getSequence(String alias);
+    public com.runwaysdk.query.SelectableLong getSequence(String alias, String displayLabel);
     public com.runwaysdk.query.SelectableChar getSiteMaster();
     public com.runwaysdk.query.SelectableChar getSiteMaster(String alias);
     public com.runwaysdk.query.SelectableChar getSiteMaster(String alias, String displayLabel);
@@ -802,6 +822,23 @@ public  class UndirectedGraphTypeQuery extends com.runwaysdk.query.GeneratedBusi
     return (com.runwaysdk.query.SelectableLong)this.get(net.geoprism.registry.UndirectedGraphType.SEQ, alias, displayLabel);
 
   }
+  public com.runwaysdk.query.SelectableLong getSequence()
+  {
+    return getSequence(null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableLong getSequence(String alias)
+  {
+    return (com.runwaysdk.query.SelectableLong)this.get(net.geoprism.registry.UndirectedGraphType.SEQUENCE, alias, null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableLong getSequence(String alias, String displayLabel)
+  {
+    return (com.runwaysdk.query.SelectableLong)this.get(net.geoprism.registry.UndirectedGraphType.SEQUENCE, alias, displayLabel);
+
+  }
   public com.runwaysdk.query.SelectableChar getSiteMaster()
   {
     return getSiteMaster(null);
@@ -944,6 +981,9 @@ public  class UndirectedGraphTypeQuery extends com.runwaysdk.query.GeneratedBusi
     public com.runwaysdk.query.SelectableLong getSeq();
     public com.runwaysdk.query.SelectableLong getSeq(String alias);
     public com.runwaysdk.query.SelectableLong getSeq(String alias, String displayLabel);
+    public com.runwaysdk.query.SelectableLong getSequence();
+    public com.runwaysdk.query.SelectableLong getSequence(String alias);
+    public com.runwaysdk.query.SelectableLong getSequence(String alias, String displayLabel);
     public com.runwaysdk.query.SelectableChar getSiteMaster();
     public com.runwaysdk.query.SelectableChar getSiteMaster(String alias);
     public com.runwaysdk.query.SelectableChar getSiteMaster(String alias, String displayLabel);
@@ -1287,6 +1327,23 @@ public  class UndirectedGraphTypeQuery extends com.runwaysdk.query.GeneratedBusi
   public com.runwaysdk.query.SelectableLong getSeq(String alias, String displayLabel)
   {
     return (com.runwaysdk.query.SelectableLong)this.get(net.geoprism.registry.UndirectedGraphType.SEQ, alias, displayLabel);
+
+  }
+  public com.runwaysdk.query.SelectableLong getSequence()
+  {
+    return getSequence(null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableLong getSequence(String alias)
+  {
+    return (com.runwaysdk.query.SelectableLong)this.get(net.geoprism.registry.UndirectedGraphType.SEQUENCE, alias, null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableLong getSequence(String alias, String displayLabel)
+  {
+    return (com.runwaysdk.query.SelectableLong)this.get(net.geoprism.registry.UndirectedGraphType.SEQUENCE, alias, displayLabel);
 
   }
   public com.runwaysdk.query.SelectableChar getSiteMaster()

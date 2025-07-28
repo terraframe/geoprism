@@ -18,12 +18,6 @@
  */
 package net.geoprism.graph;
 
-import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
-import com.runwaysdk.query.OIterator;
-
-import net.geoprism.registry.conversion.LocalizedValueConverter;
-
 public class HierarchyTypeSnapshot extends HierarchyTypeSnapshotBase implements GraphTypeSnapshot
 {
   @SuppressWarnings("unused")

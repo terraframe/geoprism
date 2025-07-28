@@ -52,6 +52,7 @@ import com.runwaysdk.system.metadata.MdVertex;
 import net.geoprism.configuration.GeoprismProperties;
 import net.geoprism.graph.GeoObjectTypeSnapshot;
 import net.geoprism.graph.GeoObjectTypeSnapshotQuery;
+import net.geoprism.graph.HierarchyTypeSnapshot;
 import net.geoprism.graph.LabeledPropertyGraphTypeSnapshotQuery;
 import net.geoprism.graph.LabeledPropertyGraphTypeVersion;
 import net.geoprism.registry.conversion.LocalizedValueConverter;
@@ -118,6 +119,7 @@ public class GeoObjectTypeSnapshotBusinessService extends ObjectTypeSnapshotBusi
     String code = type.get(GeoObjectTypeSnapshot.CODE).getAsString();
     String orgCode = type.has(GeoObjectTypeSnapshot.ORGCODE) ? type.get(GeoObjectTypeSnapshot.ORGCODE).getAsString() : null;
     String origin = type.has(GeoObjectTypeSnapshot.ORIGIN) ? type.get(GeoObjectTypeSnapshot.ORIGIN).getAsString() : GeoprismProperties.getOrigin();
+    Long sequence = type.has(GeoObjectTypeSnapshot.SEQUENCE) ? type.get(GeoObjectTypeSnapshot.SEQUENCE).getAsLong() : 0;
     String viewName = getTableName(code);
     boolean isAbstract = type.get(GeoObjectTypeSnapshot.ISABSTRACT).getAsBoolean();
     boolean isRoot = type.get(GeoObjectTypeSnapshot.ISROOT).getAsBoolean();
@@ -134,6 +136,7 @@ public class GeoObjectTypeSnapshotBusinessService extends ObjectTypeSnapshotBusi
     snapshot.setCode(code);
     snapshot.setOrgCode(orgCode);
     snapshot.setOrigin(origin);
+    snapshot.setSequence(sequence);
     snapshot.setGeometryType(geometryType.name());
     snapshot.setIsAbstract(isAbstract);
     snapshot.setIsRoot(isRoot);

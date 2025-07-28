@@ -121,6 +121,7 @@ public class HierarchyTypeSnapshotBusinessService implements HierarchyTypeSnapsh
     String code = type.get(HierarchyTypeSnapshot.CODE).getAsString();
     String orgCode = type.get(HierarchyTypeSnapshot.ORGCODE).getAsString();
     String origin = type.has(HierarchyTypeSnapshot.ORIGIN) ? type.get(HierarchyTypeSnapshot.ORIGIN).getAsString() : GeoprismProperties.getOrigin();
+    Long sequence = type.has(HierarchyTypeSnapshot.SEQUENCE) ? type.get(HierarchyTypeSnapshot.SEQUENCE).getAsLong() : 0;
 
     String viewName = getTableName(code);
     LocalizedValue label = LocalizedValue.fromJSON(type.get(HierarchyTypeSnapshot.DISPLAYLABEL).getAsJsonObject());
@@ -133,6 +134,7 @@ public class HierarchyTypeSnapshotBusinessService implements HierarchyTypeSnapsh
     snapshot.setCode(code);
     snapshot.setOrgCode(orgCode);
     snapshot.setOrigin(origin);
+    snapshot.setSequence(sequence);
     LocalizedValueConverter.populate(snapshot.getDisplayLabel(), label);
     LocalizedValueConverter.populate(snapshot.getDescription(), description);
     snapshot.apply();
@@ -254,7 +256,10 @@ public class HierarchyTypeSnapshotBusinessService implements HierarchyTypeSnapsh
     LocalizedValue label = LocalizedValueConverter.convertNoAutoCoalesce(snapshot.getDisplayLabel());
     LocalizedValue description = LocalizedValueConverter.convertNoAutoCoalesce(snapshot.getDescription());
 
-    return new HierarchyType(code, label, description, snapshot.getOrgCode());
+    HierarchyType type = new HierarchyType(code, label, description, snapshot.getOrgCode());
+    type.setSequenceNumber(snapshot.getSequence());
+    
+    return type;
   }
 
   @Override
@@ -268,6 +273,7 @@ public class HierarchyTypeSnapshotBusinessService implements HierarchyTypeSnapsh
     hierarchyObject.addProperty(HierarchyTypeSnapshotBase.CODE, hierarchy.getCode());
     hierarchyObject.addProperty(HierarchyTypeSnapshotBase.ORGCODE, hierarchy.getOrgCode());
     hierarchyObject.addProperty(HierarchyTypeSnapshotBase.ORIGIN, hierarchy.getOrigin());
+    hierarchyObject.addProperty(HierarchyTypeSnapshotBase.SEQUENCE, hierarchy.getSequence());
     hierarchyObject.addProperty(GraphTypeSnapshot.TYPE_CODE, GraphTypeSnapshot.HIERARCHY_TYPE);
     hierarchyObject.add(HierarchyTypeSnapshotBase.DISPLAYLABEL, LocalizedValueConverter.convertNoAutoCoalesce(hierarchy.getDisplayLabel()).toJSON());
     hierarchyObject.add(HierarchyTypeSnapshotBase.DESCRIPTION, LocalizedValueConverter.convertNoAutoCoalesce(hierarchy.getDescription()).toJSON());

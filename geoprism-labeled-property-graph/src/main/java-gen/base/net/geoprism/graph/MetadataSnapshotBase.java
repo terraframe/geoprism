@@ -1,6 +1,6 @@
 package net.geoprism.graph;
 
-@com.runwaysdk.business.ClassSignature(hash = 658754413)
+@com.runwaysdk.business.ClassSignature(hash = 108975854)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -22,10 +22,11 @@ public abstract class MetadataSnapshotBase extends com.runwaysdk.business.Busine
   public final static java.lang.String ORIGIN = "origin";
   public final static java.lang.String OWNER = "owner";
   public final static java.lang.String SEQ = "seq";
+  public final static java.lang.String SEQUENCE = "sequence";
   public final static java.lang.String SITEMASTER = "siteMaster";
   public final static java.lang.String TYPE = "type";
   @SuppressWarnings("unused")
-  private static final long serialVersionUID = 658754413;
+  private static final long serialVersionUID = 108975854;
   
   public MetadataSnapshotBase()
   {
@@ -338,6 +339,34 @@ public abstract class MetadataSnapshotBase extends com.runwaysdk.business.Busine
   {
     com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(net.geoprism.graph.MetadataSnapshot.CLASS);
     return (com.runwaysdk.dataaccess.MdAttributeLongDAOIF)mdClassIF.definesAttribute(SEQ);
+  }
+  
+  public Long getSequence()
+  {
+    return com.runwaysdk.constants.MdAttributeLongUtil.getTypeSafeValue(getValue(SEQUENCE));
+  }
+  
+  public void validateSequence()
+  {
+    this.validateAttribute(SEQUENCE);
+  }
+  
+  public static com.runwaysdk.dataaccess.MdAttributeLongDAOIF getSequenceMd()
+  {
+    com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(net.geoprism.graph.MetadataSnapshot.CLASS);
+    return (com.runwaysdk.dataaccess.MdAttributeLongDAOIF)mdClassIF.definesAttribute(SEQUENCE);
+  }
+  
+  public void setSequence(Long value)
+  {
+    if(value == null)
+    {
+      setValue(SEQUENCE, "");
+    }
+    else
+    {
+      setValue(SEQUENCE, java.lang.Long.toString(value));
+    }
   }
   
   public String getSiteMaster()

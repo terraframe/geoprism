@@ -1,6 +1,6 @@
 package net.geoprism.registry;
 
-@com.runwaysdk.business.ClassSignature(hash = 1332598508)
+@com.runwaysdk.business.ClassSignature(hash = 376160432)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -11,7 +11,7 @@ package net.geoprism.registry;
 public class UndirectedGraphTypeQueryDTO extends com.runwaysdk.business.BusinessQueryDTO
 {
 @SuppressWarnings("unused")
-private static final long serialVersionUID = 1332598508;
+private static final long serialVersionUID = 376160432;
 
   protected UndirectedGraphTypeQueryDTO(String type)
   {

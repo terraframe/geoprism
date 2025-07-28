@@ -164,14 +164,15 @@ public class BusinessEdgeTypeSnapshotBusinessService implements BusinessEdgeType
     return create(version, typeDTO, parent, child);
   }
 
-  private BusinessEdgeTypeSnapshot create(SnapshotContainer<?> version, JsonObject typeDTO, ObjectTypeSnapshot parent, ObjectTypeSnapshot child)
+  private BusinessEdgeTypeSnapshot create(SnapshotContainer<?> version, JsonObject type, ObjectTypeSnapshot parent, ObjectTypeSnapshot child)
   {
-    String code = typeDTO.get(BusinessEdgeTypeSnapshot.CODE).getAsString();
-    String origin = typeDTO.has(BusinessEdgeTypeSnapshot.ORIGIN) ? typeDTO.get(BusinessEdgeTypeSnapshot.ORIGIN).getAsString() : GeoprismProperties.getOrigin();
-    String orgCode = typeDTO.get(HierarchyTypeSnapshot.ORGCODE).getAsString();
+    String code = type.get(BusinessEdgeTypeSnapshot.CODE).getAsString();
+    String orgCode = type.get(HierarchyTypeSnapshot.ORGCODE).getAsString();
+    String origin = type.has(BusinessEdgeTypeSnapshot.ORIGIN) ? type.get(BusinessEdgeTypeSnapshot.ORIGIN).getAsString() : GeoprismProperties.getOrigin();
+    Long sequence = type.has(BusinessEdgeTypeSnapshot.SEQUENCE) ? type.get(BusinessEdgeTypeSnapshot.SEQUENCE).getAsLong() : 0;    
     String viewName = getTableName(code);
-    LocalizedValue label = LocalizedValue.fromJSON(typeDTO.get(HierarchyTypeSnapshot.DISPLAYLABEL).getAsJsonObject());
-    LocalizedValue description = LocalizedValue.fromJSON(typeDTO.get(HierarchyTypeSnapshot.DESCRIPTION).getAsJsonObject());
+    LocalizedValue label = LocalizedValue.fromJSON(type.get(HierarchyTypeSnapshot.DISPLAYLABEL).getAsJsonObject());
+    LocalizedValue description = LocalizedValue.fromJSON(type.get(HierarchyTypeSnapshot.DESCRIPTION).getAsJsonObject());
 
     MdEdge mdEdge = createMdEdge(version, parent, child, viewName, label, description);
 
@@ -179,9 +180,10 @@ public class BusinessEdgeTypeSnapshotBusinessService implements BusinessEdgeType
     snapshot.setGraphMdEdge(mdEdge);
     snapshot.setCode(code);
     snapshot.setOrigin(origin);
+    snapshot.setSequence(sequence);
     snapshot.setOrgCode(orgCode);
-    snapshot.setIsChildGeoObject(typeDTO.get(BusinessEdgeTypeSnapshot.ISCHILDGEOOBJECT).getAsBoolean());
-    snapshot.setIsParentGeoObject(typeDTO.get(BusinessEdgeTypeSnapshot.ISPARENTGEOOBJECT).getAsBoolean());
+    snapshot.setIsChildGeoObject(type.get(BusinessEdgeTypeSnapshot.ISCHILDGEOOBJECT).getAsBoolean());
+    snapshot.setIsParentGeoObject(type.get(BusinessEdgeTypeSnapshot.ISPARENTGEOOBJECT).getAsBoolean());
     snapshot.setParentType(parent);
     snapshot.setChildType(child);
     LocalizedValueConverter.populate(snapshot.getDisplayLabel(), label);
@@ -260,6 +262,7 @@ public class BusinessEdgeTypeSnapshotBusinessService implements BusinessEdgeType
     json.addProperty(BusinessEdgeTypeSnapshot.CODE, snapshot.getCode());
     json.addProperty(BusinessEdgeTypeSnapshot.ORGCODE, snapshot.getOrgCode());
     json.addProperty(BusinessEdgeTypeSnapshot.ORIGIN, snapshot.getOrigin());
+    json.addProperty(BusinessEdgeTypeSnapshot.SEQUENCE, snapshot.getSequence());
     json.addProperty(BusinessEdgeTypeSnapshot.ORGCODE, snapshot.getOrgCode());
     json.add(BusinessEdgeTypeSnapshot.DISPLAYLABEL, LocalizedValueConverter.convertNoAutoCoalesce(snapshot.getDisplayLabel()).toJSON());
     json.add(BusinessEdgeTypeSnapshot.DESCRIPTION, LocalizedValueConverter.convertNoAutoCoalesce(snapshot.getDescription()).toJSON());

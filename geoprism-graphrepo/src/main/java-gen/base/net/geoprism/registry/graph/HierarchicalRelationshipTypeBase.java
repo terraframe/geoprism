@@ -1,6 +1,6 @@
 package net.geoprism.registry.graph;
 
-@com.runwaysdk.business.ClassSignature(hash = -964636949)
+@com.runwaysdk.business.ClassSignature(hash = 1480471279)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -29,9 +29,10 @@ public abstract class HierarchicalRelationshipTypeBase extends com.runwaysdk.bus
   public final static java.lang.String PHONENUMBER = "phoneNumber";
   public final static java.lang.String PROGRESS = "progress";
   public final static java.lang.String SEQ = "seq";
+  public final static java.lang.String SEQUENCE = "sequence";
   public final static java.lang.String USECONSTRAINTS = "useConstraints";
   @SuppressWarnings("unused")
-  private static final long serialVersionUID = -964636949;
+  private static final long serialVersionUID = 1480471279;
   
   public HierarchicalRelationshipTypeBase()
   {
@@ -353,6 +354,22 @@ public abstract class HierarchicalRelationshipTypeBase extends com.runwaysdk.bus
   public void setSeq(Long value)
   {
     this.setValue(SEQ, value);
+  }
+  
+  public Long getSequence()
+  {
+    return (Long) this.getObjectValue(SEQUENCE);
+  }
+  
+  public static com.runwaysdk.dataaccess.MdAttributeLongDAOIF getSequenceMd()
+  {
+    com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(net.geoprism.registry.graph.HierarchicalRelationshipType.CLASS);
+    return (com.runwaysdk.dataaccess.MdAttributeLongDAOIF)mdClassIF.definesAttribute(SEQUENCE);
+  }
+  
+  public void setSequence(Long value)
+  {
+    this.setValue(SEQUENCE, value);
   }
   
   public String getUseConstraints()

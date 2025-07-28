@@ -3,18 +3,18 @@
  *
  * This file is part of Geoprism(tm).
  *
- * Geoprism(tm) is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
+ * Geoprism(tm) is free software: you can redistribute it and/or modify it under
+ * the terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation, either version 3 of the License, or (at your option) any
+ * later version.
  *
- * Geoprism(tm) is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
+ * Geoprism(tm) is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with Geoprism(tm).  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with Geoprism(tm). If not, see <http://www.gnu.org/licenses/>.
  */
 package net.geoprism.registry.service.business;
 
@@ -55,7 +55,6 @@ import com.runwaysdk.dataaccess.MdAttributeDAOIF;
 import com.runwaysdk.dataaccess.MdAttributeMultiTermDAOIF;
 import com.runwaysdk.dataaccess.MdAttributeTermDAOIF;
 import com.runwaysdk.dataaccess.MdClassDAOIF;
-import com.runwaysdk.dataaccess.MdEdgeDAOIF;
 import com.runwaysdk.dataaccess.MdVertexDAOIF;
 import com.runwaysdk.dataaccess.cache.DataNotFoundException;
 import com.runwaysdk.dataaccess.metadata.MdAttributeCharacterDAO;
@@ -245,6 +244,7 @@ public class BusinessTypeBusinessService implements BusinessTypeBusinessServiceI
     object.addProperty(BusinessType.CODE, type.getCode());
     object.addProperty(BusinessType.ORGANIZATION, organization.getCode());
     object.addProperty(BusinessType.ORIGIN, type.getOrigin());
+    object.addProperty(BusinessType.SEQ, type.getSeq());
     object.addProperty("organizationLabel", organization.getDisplayLabel().getValue());
     object.add(BusinessType.DISPLAYLABEL, RegistryLocalizedValueConverter.convertNoAutoCoalesce(type.getDisplayLabel()).toJSON());
 
@@ -353,7 +353,7 @@ public class BusinessTypeBusinessService implements BusinessTypeBusinessServiceI
       mdVertex.setValue(MdGeoVertexInfo.GENERATE_SOURCE, MdAttributeBooleanInfo.FALSE);
       RegistryLocalizedValueConverter.populate(mdVertex, MdVertexInfo.DISPLAY_LABEL, localizedValue);
       mdVertex.apply();
-      
+
       // DefaultAttribute.CODE
       MdAttributeCharacterDAO vertexCodeMdAttr = MdAttributeCharacterDAO.newInstance();
       vertexCodeMdAttr.setValue(MdAttributeConcreteInfo.NAME, DefaultAttribute.CODE.getName());
@@ -367,6 +367,11 @@ public class BusinessTypeBusinessService implements BusinessTypeBusinessServiceI
 
       businessType.setMdVertexId(mdVertex.getOid());
       businessType.setOrigin(origin);
+      businessType.setSequence(object.has(BusinessType.SEQ) ? object.get(BusinessType.SEQ).getAsLong() : 0L);
+    }
+    else
+    {
+      businessType.setSequence(businessType.getSequence() + 1);
     }
 
     if (object.has(BusinessType.LABELATTRIBUTE) && !object.get(BusinessType.LABELATTRIBUTE).isJsonNull())

@@ -39,6 +39,8 @@ public interface GraphType
   public String getCode();
 
   public String getOrigin();
+  
+  public Long getSeq();
 
   public LocalizedValue getLabel();
 

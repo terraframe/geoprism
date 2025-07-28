@@ -1,6 +1,6 @@
 package net.geoprism.registry;
 
-@com.runwaysdk.business.ClassSignature(hash = -1765379636)
+@com.runwaysdk.business.ClassSignature(hash = -1276963952)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -30,10 +30,11 @@ public abstract class DirectedAcyclicGraphTypeBase extends com.runwaysdk.busines
   public final static java.lang.String ORIGIN = "origin";
   public final static java.lang.String OWNER = "owner";
   public final static java.lang.String SEQ = "seq";
+  public final static java.lang.String SEQUENCE = "sequence";
   public final static java.lang.String SITEMASTER = "siteMaster";
   public final static java.lang.String TYPE = "type";
   @SuppressWarnings("unused")
-  private static final long serialVersionUID = -1765379636;
+  private static final long serialVersionUID = -1276963952;
   
   public DirectedAcyclicGraphTypeBase()
   {
@@ -460,6 +461,34 @@ public abstract class DirectedAcyclicGraphTypeBase extends com.runwaysdk.busines
   {
     com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(net.geoprism.registry.DirectedAcyclicGraphType.CLASS);
     return (com.runwaysdk.dataaccess.MdAttributeLongDAOIF)mdClassIF.definesAttribute(SEQ);
+  }
+  
+  public Long getSequence()
+  {
+    return com.runwaysdk.constants.MdAttributeLongUtil.getTypeSafeValue(getValue(SEQUENCE));
+  }
+  
+  public void validateSequence()
+  {
+    this.validateAttribute(SEQUENCE);
+  }
+  
+  public static com.runwaysdk.dataaccess.MdAttributeLongDAOIF getSequenceMd()
+  {
+    com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(net.geoprism.registry.DirectedAcyclicGraphType.CLASS);
+    return (com.runwaysdk.dataaccess.MdAttributeLongDAOIF)mdClassIF.definesAttribute(SEQUENCE);
+  }
+  
+  public void setSequence(Long value)
+  {
+    if(value == null)
+    {
+      setValue(SEQUENCE, "");
+    }
+    else
+    {
+      setValue(SEQUENCE, java.lang.Long.toString(value));
+    }
   }
   
   public String getSiteMaster()

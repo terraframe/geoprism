@@ -3,18 +3,18 @@
  *
  * This file is part of Geoprism(tm).
  *
- * Geoprism(tm) is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
+ * Geoprism(tm) is free software: you can redistribute it and/or modify it under
+ * the terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation, either version 3 of the License, or (at your option) any
+ * later version.
  *
- * Geoprism(tm) is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
+ * Geoprism(tm) is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with Geoprism(tm).  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with Geoprism(tm). If not, see <http://www.gnu.org/licenses/>.
  */
 package net.geoprism.registry.service.business;
 
@@ -38,6 +38,7 @@ import com.runwaysdk.dataaccess.transaction.Transaction;
 import com.runwaysdk.system.metadata.MdEdge;
 
 import net.geoprism.configuration.GeoprismProperties;
+import net.geoprism.registry.BusinessType;
 import net.geoprism.registry.DuplicateHierarchyTypeException;
 import net.geoprism.registry.RegistryConstants;
 import net.geoprism.registry.UndirectedGraphType;
@@ -53,20 +54,21 @@ public class UndirectedGraphTypeBusinessService implements UndirectedGraphTypeBu
     String code = object.get(UndirectedGraphType.CODE).getAsString();
     LocalizedValue label = LocalizedValue.fromJSON(object.getAsJsonObject(UndirectedGraphType.JSON_LABEL));
     LocalizedValue description = LocalizedValue.fromJSON(object.getAsJsonObject(UndirectedGraphType.DESCRIPTION));
+    Long seq = object.has(BusinessType.SEQ) ? object.get(BusinessType.SEQ).getAsLong() : 0L;
 
-    return create(code, label, description, GeoprismProperties.getOrigin());
+    return create(code, label, description, GeoprismProperties.getOrigin(), seq);
   }
 
   @Override
   @Transaction
-  public UndirectedGraphType create(String code, LocalizedValue label, LocalizedValue description)
+  public UndirectedGraphType create(String code, LocalizedValue label, LocalizedValue description, Long seq)
   {
-    return create(code, label, description, GeoprismProperties.getOrigin());    
+    return create(code, label, description, GeoprismProperties.getOrigin(), seq);
   }
-  
+
   @Override
   @Transaction
-  public UndirectedGraphType create(String code, LocalizedValue label, LocalizedValue description, String origin)
+  public UndirectedGraphType create(String code, LocalizedValue label, LocalizedValue description, String origin, Long seq)
   {
     try
     {
@@ -81,7 +83,7 @@ public class UndirectedGraphTypeBusinessService implements UndirectedGraphTypeBu
       RegistryLocalizedValueConverter.populate(mdEdgeDAO, MdEdgeInfo.DESCRIPTION, description);
       mdEdgeDAO.setValue(MdEdgeInfo.ENABLE_CHANGE_OVER_TIME, MdAttributeBooleanInfo.FALSE);
       mdEdgeDAO.apply();
-      
+
       MdAttributeUUIDDAO uidAttr = MdAttributeUUIDDAO.newInstance();
       uidAttr.setValue(MdAttributeConcreteInfo.NAME, DefaultAttribute.UID.getName());
       uidAttr.setStructValue(MdAttributeBooleanInfo.DISPLAY_LABEL, LocalizedValue.DEFAULT_LOCALE, DefaultAttribute.UID.getDefaultLocalizedName());
@@ -103,7 +105,7 @@ public class UndirectedGraphTypeBusinessService implements UndirectedGraphTypeBu
       endDate.setStructValue(MdAttributeDateTimeInfo.DESCRIPTION, MdAttributeLocalInfo.DEFAULT_LOCALE, "End Date");
       endDate.setValue(MdAttributeDateTimeInfo.DEFINING_MD_CLASS, mdEdgeDAO.getOid());
       endDate.apply();
-      
+
       createPermissions(mdEdgeDAO);
 
       UndirectedGraphType graphType = new UndirectedGraphType();
@@ -112,6 +114,7 @@ public class UndirectedGraphTypeBusinessService implements UndirectedGraphTypeBu
       RegistryLocalizedValueConverter.populate(graphType.getDisplayLabel(), label);
       RegistryLocalizedValueConverter.populate(graphType.getDescription(), description);
       graphType.setOrigin(origin);
+      graphType.setSequence(seq);
       graphType.apply();
 
       return graphType;
@@ -123,39 +126,40 @@ public class UndirectedGraphTypeBusinessService implements UndirectedGraphTypeBu
       throw ex2;
     }
   }
-  
+
   protected void createPermissions(MdEdgeDAO mdEdgeDAO)
   {
     // None in the graph repo
   }
-  
+
   @Override
   @Transaction
-  public void update(UndirectedGraphType ugt, JsonObject object)
+  public void update(UndirectedGraphType type, JsonObject object)
   {
     try
     {
-      ugt.appLock();
+      type.appLock();
 
       if (object.has(UndirectedGraphType.JSON_LABEL))
       {
         LocalizedValue label = LocalizedValue.fromJSON(object.getAsJsonObject(UndirectedGraphType.JSON_LABEL));
 
-        RegistryLocalizedValueConverter.populate(ugt.getDisplayLabel(), label);
+        RegistryLocalizedValueConverter.populate(type.getDisplayLabel(), label);
       }
 
       if (object.has(UndirectedGraphType.DESCRIPTION))
       {
         LocalizedValue description = LocalizedValue.fromJSON(object.getAsJsonObject(UndirectedGraphType.DESCRIPTION));
 
-        RegistryLocalizedValueConverter.populate(ugt.getDescription(), description);
+        RegistryLocalizedValueConverter.populate(type.getDescription(), description);
       }
 
-      ugt.apply();
+      type.setSequence(type.getSequence() + 1);
+      type.apply();
     }
     finally
     {
-      ugt.unlock();
+      type.unlock();
     }
   }
 

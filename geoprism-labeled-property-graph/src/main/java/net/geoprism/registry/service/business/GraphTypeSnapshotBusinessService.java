@@ -122,6 +122,7 @@ public class GraphTypeSnapshotBusinessService implements GraphTypeSnapshotBusine
     String code = type.get(HierarchyTypeSnapshot.CODE).getAsString();
     String typeCode = type.get(GraphTypeSnapshot.TYPE_CODE).getAsString();
     String origin = type.has(HierarchyTypeSnapshot.ORIGIN) ? type.get(HierarchyTypeSnapshot.ORIGIN).getAsString() : GeoprismProperties.getOrigin();
+    Long sequence = type.has(HierarchyTypeSnapshot.SEQUENCE) ? type.get(HierarchyTypeSnapshot.SEQUENCE).getAsLong() : 0;
     LocalizedValue label = LocalizedValue.fromJSON(type.get(HierarchyTypeSnapshot.DISPLAYLABEL).getAsJsonObject());
     LocalizedValue description = LocalizedValue.fromJSON(type.get(HierarchyTypeSnapshot.DESCRIPTION).getAsJsonObject());
 
@@ -134,6 +135,7 @@ public class GraphTypeSnapshotBusinessService implements GraphTypeSnapshotBusine
       DirectedAcyclicGraphTypeSnapshot htsnapshot = new DirectedAcyclicGraphTypeSnapshot();
       htsnapshot.setGraphMdEdge(mdEdge);
       htsnapshot.setOrigin(origin);
+      htsnapshot.setSequence(sequence);
       htsnapshot.setCode(code);
       LocalizedValueConverter.populate(htsnapshot.getDisplayLabel(), label);
       LocalizedValueConverter.populate(htsnapshot.getDescription(), description);
@@ -151,6 +153,7 @@ public class GraphTypeSnapshotBusinessService implements GraphTypeSnapshotBusine
       htsnapshot.setGraphMdEdge(mdEdge);
       htsnapshot.setCode(code);
       htsnapshot.setOrigin(origin);
+      htsnapshot.setSequence(sequence);      
       LocalizedValueConverter.populate(htsnapshot.getDisplayLabel(), label);
       LocalizedValueConverter.populate(htsnapshot.getDescription(), description);
       htsnapshot.apply();

@@ -1,6 +1,6 @@
 package net.geoprism.registry;
 
-@com.runwaysdk.business.ClassSignature(hash = -535328413)
+@com.runwaysdk.business.ClassSignature(hash = -1565929241)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -30,10 +30,11 @@ public abstract class UndirectedGraphTypeBase extends com.runwaysdk.business.Bus
   public final static java.lang.String ORIGIN = "origin";
   public final static java.lang.String OWNER = "owner";
   public final static java.lang.String SEQ = "seq";
+  public final static java.lang.String SEQUENCE = "sequence";
   public final static java.lang.String SITEMASTER = "siteMaster";
   public final static java.lang.String TYPE = "type";
   @SuppressWarnings("unused")
-  private static final long serialVersionUID = -535328413;
+  private static final long serialVersionUID = -1565929241;
   
   public UndirectedGraphTypeBase()
   {
@@ -460,6 +461,34 @@ public abstract class UndirectedGraphTypeBase extends com.runwaysdk.business.Bus
   {
     com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(net.geoprism.registry.UndirectedGraphType.CLASS);
     return (com.runwaysdk.dataaccess.MdAttributeLongDAOIF)mdClassIF.definesAttribute(SEQ);
+  }
+  
+  public Long getSequence()
+  {
+    return com.runwaysdk.constants.MdAttributeLongUtil.getTypeSafeValue(getValue(SEQUENCE));
+  }
+  
+  public void validateSequence()
+  {
+    this.validateAttribute(SEQUENCE);
+  }
+  
+  public static com.runwaysdk.dataaccess.MdAttributeLongDAOIF getSequenceMd()
+  {
+    com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(net.geoprism.registry.UndirectedGraphType.CLASS);
+    return (com.runwaysdk.dataaccess.MdAttributeLongDAOIF)mdClassIF.definesAttribute(SEQUENCE);
+  }
+  
+  public void setSequence(Long value)
+  {
+    if(value == null)
+    {
+      setValue(SEQUENCE, "");
+    }
+    else
+    {
+      setValue(SEQUENCE, java.lang.Long.toString(value));
+    }
   }
   
   public String getSiteMaster()

@@ -1,6 +1,6 @@
 package net.geoprism.registry;
 
-@com.runwaysdk.business.ClassSignature(hash = 1869674077)
+@com.runwaysdk.business.ClassSignature(hash = 1073282145)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -11,7 +11,7 @@ package net.geoprism.registry;
 public class BusinessEdgeTypeQueryDTO extends com.runwaysdk.business.BusinessQueryDTO
 {
 @SuppressWarnings("unused")
-private static final long serialVersionUID = 1869674077;
+private static final long serialVersionUID = 1073282145;
 
   protected BusinessEdgeTypeQueryDTO(String type)
   {

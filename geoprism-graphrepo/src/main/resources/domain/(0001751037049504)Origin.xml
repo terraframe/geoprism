@@ -30,6 +30,7 @@
         <create>
           <attributes>
             <text name="origin" label="Origin"  />          
+            <long name="sequence" label="Sequence"  />                              
           </attributes>
         </create>
       </mdVertex>    
@@ -38,6 +39,7 @@
         <create>
           <attributes>
             <text name="origin" label="Origin"  />                   
+            <long name="sequence" label="Sequence"  />                  
           </attributes>
         </create>
       </mdVertex>    
@@ -46,6 +48,7 @@
         <create>
           <attributes>
             <text name="origin" label="Origin"  />                   
+            <long name="sequence" label="Sequence"  />                              
           </attributes>
         </create>
       </mdBusiness>    
@@ -54,6 +57,7 @@
         <create>
           <attributes>
             <text name="origin" label="Origin"  />                   
+            <long name="sequence" label="Sequence"  />                              
           </attributes>
         </create>
       </mdBusiness>    
@@ -62,6 +66,7 @@
         <create>
           <attributes>
             <text name="origin" label="Origin"  />                   
+            <long name="sequence" label="Sequence"  />                              
           </attributes>
         </create>
       </mdBusiness>    
@@ -70,6 +75,7 @@
         <create>
           <attributes>
             <text name="origin" label="Origin"  />                   
+            <long name="sequence" label="Sequence"  />                              
           </attributes>
         </create>
       </mdBusiness>    
@@ -77,8 +83,13 @@
   </doIt>
   <undoIt>
     <delete>
+      <object type="com.runwaysdk.system.metadata.MdAttribute" key="net.geoprism.registry.UndirectedGraphType.origin" />      
+      <object type="com.runwaysdk.system.metadata.MdAttribute" key="net.geoprism.registry.DirectedAcyclicGraphType.origin" />      
+      <object type="com.runwaysdk.system.metadata.MdAttribute" key="net.geoprism.registry.BusinessEdgeType.origin" />      
+      <object type="com.runwaysdk.system.metadata.MdAttribute" key="net.geoprism.registry.BusinessType.origin" />      
+      <object type="com.runwaysdk.system.metadata.MdAttribute" key="net.geoprism.registry.graph.HierarchicalRelationshipType.origin" />      
       <object type="com.runwaysdk.system.metadata.MdAttribute" key="net.geoprism.registry.graph.GeoObjectType.origin" />      
-      <object type="com.runwaysdk.system.metadata.MdAttribute" key="net.geoprism.registry.HierarchicalRelationshipType.origin" />      
+      <object type="com.runwaysdk.system.metadata.MdException" key="net.geoprism.registry.OriginException" />      
     </delete>
   </undoIt>
 </version>

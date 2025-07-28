@@ -46,6 +46,7 @@ import com.runwaysdk.system.metadata.MdVertex;
 import net.geoprism.configuration.GeoprismProperties;
 import net.geoprism.graph.BusinessTypeSnapshot;
 import net.geoprism.graph.BusinessTypeSnapshotQuery;
+import net.geoprism.graph.GeoObjectTypeSnapshot;
 import net.geoprism.graph.LabeledPropertyGraphTypeSnapshotQuery;
 import net.geoprism.graph.LabeledPropertyGraphTypeVersion;
 import net.geoprism.registry.DateFormatter;
@@ -57,24 +58,26 @@ public class BusinessTypeSnapshotBusinessService extends ObjectTypeSnapshotBusin
 {
   @Transaction
   @Override
-  public BusinessTypeSnapshot create(SnapshotContainer<?> version, JsonObject typeDto)
+  public BusinessTypeSnapshot create(SnapshotContainer<?> version, JsonObject type)
   {
-    String code = typeDto.get(BusinessTypeSnapshot.CODE).getAsString();
-    String origin = typeDto.has(BusinessTypeSnapshot.ORIGIN) ? typeDto.get(BusinessTypeSnapshot.ORIGIN).getAsString() : GeoprismProperties.getOrigin();
-    String orgCode = typeDto.get(BusinessTypeSnapshot.ORGCODE).getAsString();
+    String code = type.get(BusinessTypeSnapshot.CODE).getAsString();
+    String orgCode = type.get(BusinessTypeSnapshot.ORGCODE).getAsString();
+    String origin = type.has(BusinessTypeSnapshot.ORIGIN) ? type.get(BusinessTypeSnapshot.ORIGIN).getAsString() : GeoprismProperties.getOrigin();
+    Long sequence = type.has(GeoObjectTypeSnapshot.SEQUENCE) ? type.get(GeoObjectTypeSnapshot.SEQUENCE).getAsLong() : 0;    
     String viewName = getTableName(code);
-    LocalizedValue label = LocalizedValue.fromJSON(typeDto.get(BusinessTypeSnapshot.DISPLAYLABEL).getAsJsonObject());
+    LocalizedValue label = LocalizedValue.fromJSON(type.get(BusinessTypeSnapshot.DISPLAYLABEL).getAsJsonObject());
 
-    JsonArray attributes = typeDto.get("attributes").getAsJsonArray();
+    JsonArray attributes = type.get("attributes").getAsJsonArray();
 
     MdVertex mdTable = createMdVertex(version, viewName, label, attributes);
 
     BusinessTypeSnapshot snapshot = new BusinessTypeSnapshot();
     snapshot.setGraphMdVertex(mdTable);
-    snapshot.setLabelAttribute(typeDto.get(BusinessTypeSnapshot.LABELATTRIBUTE).getAsString());
+    snapshot.setLabelAttribute(type.get(BusinessTypeSnapshot.LABELATTRIBUTE).getAsString());
     snapshot.setCode(code);
     snapshot.setOrgCode(orgCode);
     snapshot.setOrigin(origin);
+    snapshot.setSequence(sequence);
     LocalizedValueConverter.populate(snapshot.getDisplayLabel(), label);
     snapshot.apply();
 

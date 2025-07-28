@@ -80,6 +80,12 @@ public class ServerHierarchyType extends CachableObjectWrapper<HierarchicalRelat
   {
     return this.getObject().getOrigin();
   }
+  
+  @Override
+  public Long getSeq()
+  {
+    return this.getObject().getSeq();
+  }
 
   @Transaction
   public void update(HierarchyType dto)

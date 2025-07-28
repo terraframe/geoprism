@@ -42,7 +42,6 @@ import com.runwaysdk.query.OIterator;
 import com.runwaysdk.query.QueryFactory;
 import com.runwaysdk.system.metadata.MdEdge;
 
-import net.geoprism.configuration.GeoprismProperties;
 import net.geoprism.registry.BusinessEdgeType;
 import net.geoprism.registry.BusinessEdgeTypeQuery;
 import net.geoprism.registry.BusinessType;
@@ -55,6 +54,8 @@ import net.geoprism.registry.graph.GeoVertex;
 import net.geoprism.registry.model.EdgeDirection;
 import net.geoprism.registry.model.graph.EdgeVertexType;
 import net.geoprism.registry.model.graph.GeoVertexEdgeType;
+import net.geoprism.registry.view.BusinessEdgeTypeView;
+import net.geoprism.registry.view.BusinessGeoEdgeTypeView;
 
 @Service
 public class BusinessEdgeTypeBusinessService implements BusinessEdgeTypeBusinessServiceIF
@@ -121,7 +122,8 @@ public class BusinessEdgeTypeBusinessService implements BusinessEdgeTypeBusiness
       {
         RegistryLocalizedValueConverter.populate(edgeType.getDescription(), description);
       }
-
+      
+      edgeType.setSequence(edgeType.getSequence() + 1);
       edgeType.apply();
     }
     finally
@@ -149,6 +151,7 @@ public class BusinessEdgeTypeBusinessService implements BusinessEdgeTypeBusiness
     object.addProperty(BusinessEdgeType.TYPE, "BusinessEdgeType");
     object.addProperty(BusinessEdgeType.CODE, edgeType.getCode());
     object.addProperty(BusinessEdgeType.ORIGIN, edgeType.getOrigin());
+    object.addProperty(BusinessEdgeType.SEQ, edgeType.getSeq());
     object.addProperty(BusinessEdgeType.ORGANIZATION, edgeType.getOrganization().getCode());
     object.addProperty(BusinessEdgeType.PARENTTYPE, edgeType.getParentType().getTypeName());
     object.addProperty(BusinessEdgeType.CHILDTYPE, edgeType.getChildType().getTypeName());
@@ -214,40 +217,26 @@ public class BusinessEdgeTypeBusinessService implements BusinessEdgeTypeBusiness
   @Override
   public BusinessEdgeType create(JsonObject object)
   {
-    String code = object.get(BusinessEdgeType.CODE).getAsString();
-    String parentTypeCode = object.get(BusinessEdgeType.PARENTTYPE).getAsString();
-    String childTypeCode = object.get(BusinessEdgeType.CHILDTYPE).getAsString();
-    LocalizedValue label = LocalizedValue.fromJSON(object.getAsJsonObject(BusinessEdgeType.JSON_LABEL));
-    LocalizedValue description = LocalizedValue.fromJSON(object.getAsJsonObject(BusinessEdgeType.DESCRIPTION));
-    String organizationCode = object.get(BusinessType.ORGANIZATION).getAsString();
-
-    return create(organizationCode, code, label, description, parentTypeCode, childTypeCode);
+    return create(BusinessEdgeTypeView.fromJSON(object));
   }
 
   @Override
   @Transaction
-  public BusinessEdgeType create(String organizationCode, String code, LocalizedValue label, LocalizedValue description, String parentTypeCode, String childTypeCode)
+  public BusinessEdgeType create(BusinessEdgeTypeView dto)
   {
-    return this.create(organizationCode, code, label, description, parentTypeCode, childTypeCode, GeoprismProperties.getOrigin());
-  }
-
-  @Override
-  @Transaction
-  public BusinessEdgeType create(String organizationCode, String code, LocalizedValue label, LocalizedValue description, String parentTypeCode, String childTypeCode, String origin)
-  {
-    BusinessType parentType = this.typeService.getByCode(parentTypeCode);
-    BusinessType childType = this.typeService.getByCode(childTypeCode);
-    Organization organization = Organization.getByCode(organizationCode);
+    BusinessType parentType = this.typeService.getByCode(dto.getParentTypeCode());
+    BusinessType childType = this.typeService.getByCode(dto.getChildTypeCode());
+    Organization organization = Organization.getByCode(dto.getOrganizationCode());
 
     try
     {
       MdEdgeDAO mdEdgeDAO = MdEdgeDAO.newInstance();
       mdEdgeDAO.setValue(MdEdgeInfo.PACKAGE, RegistryConstants.DAG_PACKAGE);
-      mdEdgeDAO.setValue(MdEdgeInfo.NAME, code);
+      mdEdgeDAO.setValue(MdEdgeInfo.NAME, dto.getCode());
       mdEdgeDAO.setValue(MdEdgeInfo.PARENT_MD_VERTEX, parentType.getMdVertexOid());
       mdEdgeDAO.setValue(MdEdgeInfo.CHILD_MD_VERTEX, childType.getMdVertexOid());
-      RegistryLocalizedValueConverter.populate(mdEdgeDAO, MdEdgeInfo.DISPLAY_LABEL, label);
-      RegistryLocalizedValueConverter.populate(mdEdgeDAO, MdEdgeInfo.DESCRIPTION, description);
+      RegistryLocalizedValueConverter.populate(mdEdgeDAO, MdEdgeInfo.DISPLAY_LABEL, dto.getLabel());
+      RegistryLocalizedValueConverter.populate(mdEdgeDAO, MdEdgeInfo.DESCRIPTION, dto.getDescription());
       mdEdgeDAO.setValue(MdEdgeInfo.ENABLE_CHANGE_OVER_TIME, MdAttributeBooleanInfo.FALSE);
       mdEdgeDAO.apply();
 
@@ -263,13 +252,14 @@ public class BusinessEdgeTypeBusinessService implements BusinessEdgeTypeBusiness
 
       BusinessEdgeType businessEdgeType = new BusinessEdgeType();
       businessEdgeType.setOrganization(organization);
-      businessEdgeType.setCode(code);
+      businessEdgeType.setCode(dto.getCode());
       businessEdgeType.setMdEdgeId(mdEdgeDAO.getOid());
       businessEdgeType.setParentTypeId(parentType.getMdVertexOid());
       businessEdgeType.setChildTypeId(childType.getMdVertexOid());
-      businessEdgeType.setOrigin(origin);
-      RegistryLocalizedValueConverter.populate(businessEdgeType.getDisplayLabel(), label);
-      RegistryLocalizedValueConverter.populate(businessEdgeType.getDescription(), description);
+      businessEdgeType.setOrigin(dto.getOrigin());
+      businessEdgeType.setSequence(dto.getSeq());
+      RegistryLocalizedValueConverter.populate(businessEdgeType.getDisplayLabel(), dto.getLabel());
+      RegistryLocalizedValueConverter.populate(businessEdgeType.getDescription(), dto.getDescription());
       businessEdgeType.apply();
 
       return businessEdgeType;
@@ -277,25 +267,22 @@ public class BusinessEdgeTypeBusinessService implements BusinessEdgeTypeBusiness
     catch (DuplicateDataException ex)
     {
       DuplicateHierarchyTypeException ex2 = new DuplicateHierarchyTypeException();
-      ex2.setDuplicateValue(code);
+      ex2.setDuplicateValue(dto.getCode());
       throw ex2;
     }
   }
 
   @Override
-  public BusinessEdgeType createGeoEdge(String organizationCode, String code, LocalizedValue label, LocalizedValue description, String typeCode, EdgeDirection direction)
-  {
-    return this.createGeoEdge(organizationCode, code, label, description, typeCode, direction, GeoprismProperties.getOrigin());
-  }
-
-  @Override
   @Transaction
-  public BusinessEdgeType createGeoEdge(String organizationCode, String code, LocalizedValue label, LocalizedValue description, String typeCode, EdgeDirection direction, String origin)
+  public BusinessEdgeType createGeoEdge(BusinessGeoEdgeTypeView dto)
   {
-    BusinessType buisnessType = this.typeService.getByCode(typeCode);
+    BusinessType buisnessType = this.typeService.getByCode(dto.getTypeCode());
     MdVertexDAO mdVertexDAO = MdVertexDAO.getMdVertexDAO(GeoVertex.CLASS).getBusinessDAO();
-
-    Organization organization = Organization.getByCode(organizationCode);
+    EdgeDirection direction = dto.getDirection();
+    String code = dto.getCode();
+    LocalizedValue label = dto.getLabel();
+    LocalizedValue description = dto.getDescription();
+    Organization organization = Organization.getByCode(dto.getOrganizationCode());
 
     try
     {
@@ -330,7 +317,8 @@ public class BusinessEdgeTypeBusinessService implements BusinessEdgeTypeBusiness
       businessEdgeType.setChildTypeId(childOid);
       RegistryLocalizedValueConverter.populate(businessEdgeType.getDisplayLabel(), label);
       RegistryLocalizedValueConverter.populate(businessEdgeType.getDescription(), description);
-      businessEdgeType.setOrigin(origin);
+      businessEdgeType.setOrigin(dto.getOrigin());
+      businessEdgeType.setSequence(dto.getSeq());
       businessEdgeType.apply();
 
       return businessEdgeType;

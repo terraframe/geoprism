@@ -38,6 +38,7 @@ import com.runwaysdk.dataaccess.transaction.Transaction;
 import com.runwaysdk.system.metadata.MdEdge;
 
 import net.geoprism.configuration.GeoprismProperties;
+import net.geoprism.registry.BusinessType;
 import net.geoprism.registry.DirectedAcyclicGraphType;
 import net.geoprism.registry.DuplicateHierarchyTypeException;
 import net.geoprism.registry.RegistryConstants;
@@ -49,31 +50,32 @@ public class DirectedAcyclicGraphTypeBusinessService implements DirectedAcyclicG
 {
   @Override
   @Transaction
-  public void update(DirectedAcyclicGraphType dagt, JsonObject object)
+  public void update(DirectedAcyclicGraphType type, JsonObject object)
   {
     try
     {
-      dagt.appLock();
+      type.appLock();
 
       if (object.has(DirectedAcyclicGraphType.DISPLAYLABEL))
       {
         LocalizedValue label = LocalizedValue.fromJSON(object.getAsJsonObject(DirectedAcyclicGraphType.DISPLAYLABEL));
 
-        RegistryLocalizedValueConverter.populate(dagt.getDisplayLabel(), label);
+        RegistryLocalizedValueConverter.populate(type.getDisplayLabel(), label);
       }
 
       if (object.has(DirectedAcyclicGraphType.DESCRIPTION))
       {
         LocalizedValue description = LocalizedValue.fromJSON(object.getAsJsonObject(DirectedAcyclicGraphType.DESCRIPTION));
 
-        RegistryLocalizedValueConverter.populate(dagt.getDescription(), description);
+        RegistryLocalizedValueConverter.populate(type.getDescription(), description);
       }
 
-      dagt.apply();
+      type.setSequence(type.getSequence() + 1);
+      type.apply();
     }
     finally
     {
-      dagt.unlock();
+      type.unlock();
     }
   }
 
@@ -94,20 +96,21 @@ public class DirectedAcyclicGraphTypeBusinessService implements DirectedAcyclicG
     String code = object.get(DirectedAcyclicGraphType.CODE).getAsString();
     LocalizedValue label = LocalizedValue.fromJSON(object.getAsJsonObject(DirectedAcyclicGraphType.JSON_LABEL));
     LocalizedValue description = LocalizedValue.fromJSON(object.getAsJsonObject(DirectedAcyclicGraphType.DESCRIPTION));
+    Long seq = object.has(BusinessType.SEQ) ? object.get(BusinessType.SEQ).getAsLong() : 0L;
 
-    return create(code, label, description, GeoprismProperties.getOrigin());
+    return create(code, label, description, GeoprismProperties.getOrigin(), seq);
   }
   
   @Override
   @Transaction
-  public DirectedAcyclicGraphType create(String code, LocalizedValue label, LocalizedValue description)
+  public DirectedAcyclicGraphType create(String code, LocalizedValue label, LocalizedValue description, Long seq)
   {    
-    return create(code, label, description, GeoprismProperties.getOrigin());
+    return create(code, label, description, GeoprismProperties.getOrigin(), seq);
   }
 
   @Override
   @Transaction
-  public DirectedAcyclicGraphType create(String code, LocalizedValue label, LocalizedValue description, String origin)
+  public DirectedAcyclicGraphType create(String code, LocalizedValue label, LocalizedValue description, String origin, Long seq)
   {
     try
     {
@@ -154,6 +157,7 @@ public class DirectedAcyclicGraphTypeBusinessService implements DirectedAcyclicG
       RegistryLocalizedValueConverter.populate(graphType.getDisplayLabel(), label);
       RegistryLocalizedValueConverter.populate(graphType.getDescription(), description);
       graphType.setOrigin(origin);
+      graphType.setSequence(seq);
       graphType.apply();
 
       return graphType;

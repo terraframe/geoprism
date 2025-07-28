@@ -411,6 +411,7 @@ public class GeoObjectTypeBusinessService implements GeoObjectTypeBusinessServic
     type.setValue(net.geoprism.registry.graph.GeoObjectType.MDVERTEX, mdVertex.getOid());
     type.setDbClassName(mdVertex.getDBClassName());
     type.setOrigin(StringUtils.isBlank(dto.getOrigin()) ? GeoprismProperties.getOrigin() : dto.getOrigin());
+    type.setSequence(dto.getSequenceNumber());
     type.fromDTO(dto);
 
     if (superType != null)
@@ -926,6 +927,7 @@ public class GeoObjectTypeBusinessService implements GeoObjectTypeBusinessServic
   {
     net.geoprism.registry.graph.GeoObjectType type = serverGeoObjectType.getType();
     type.fromDTO(dto);
+    type.setSequence(serverGeoObjectType.getSequenceNumber() + 1);
     type.apply();
 
     new GeoObjectTypeCacheEventCommand(serverGeoObjectType, CacheEventType.UPDATE).doIt();

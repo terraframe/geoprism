@@ -1,6 +1,6 @@
 package net.geoprism.registry;
 
-@com.runwaysdk.business.ClassSignature(hash = -776971162)
+@com.runwaysdk.business.ClassSignature(hash = 1510614186)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -364,6 +364,23 @@ public  class BusinessTypeQuery extends com.runwaysdk.query.GeneratedBusinessQue
     return (com.runwaysdk.query.SelectableLong)this.getComponentQuery().get(net.geoprism.registry.BusinessType.SEQ, alias, displayLabel);
 
   }
+  public com.runwaysdk.query.SelectableLong getSequence()
+  {
+    return getSequence(null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableLong getSequence(String alias)
+  {
+    return (com.runwaysdk.query.SelectableLong)this.getComponentQuery().get(net.geoprism.registry.BusinessType.SEQUENCE, alias, null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableLong getSequence(String alias, String displayLabel)
+  {
+    return (com.runwaysdk.query.SelectableLong)this.getComponentQuery().get(net.geoprism.registry.BusinessType.SEQUENCE, alias, displayLabel);
+
+  }
   public com.runwaysdk.query.SelectableChar getSiteMaster()
   {
     return getSiteMaster(null);
@@ -536,6 +553,9 @@ public  class BusinessTypeQuery extends com.runwaysdk.query.GeneratedBusinessQue
     public com.runwaysdk.query.SelectableLong getSeq();
     public com.runwaysdk.query.SelectableLong getSeq(String alias);
     public com.runwaysdk.query.SelectableLong getSeq(String alias, String displayLabel);
+    public com.runwaysdk.query.SelectableLong getSequence();
+    public com.runwaysdk.query.SelectableLong getSequence(String alias);
+    public com.runwaysdk.query.SelectableLong getSequence(String alias, String displayLabel);
     public com.runwaysdk.query.SelectableChar getSiteMaster();
     public com.runwaysdk.query.SelectableChar getSiteMaster(String alias);
     public com.runwaysdk.query.SelectableChar getSiteMaster(String alias, String displayLabel);
@@ -849,6 +869,23 @@ public  class BusinessTypeQuery extends com.runwaysdk.query.GeneratedBusinessQue
     return (com.runwaysdk.query.SelectableLong)this.get(net.geoprism.registry.BusinessType.SEQ, alias, displayLabel);
 
   }
+  public com.runwaysdk.query.SelectableLong getSequence()
+  {
+    return getSequence(null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableLong getSequence(String alias)
+  {
+    return (com.runwaysdk.query.SelectableLong)this.get(net.geoprism.registry.BusinessType.SEQUENCE, alias, null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableLong getSequence(String alias, String displayLabel)
+  {
+    return (com.runwaysdk.query.SelectableLong)this.get(net.geoprism.registry.BusinessType.SEQUENCE, alias, displayLabel);
+
+  }
   public com.runwaysdk.query.SelectableChar getSiteMaster()
   {
     return getSiteMaster(null);
@@ -998,6 +1035,9 @@ public  class BusinessTypeQuery extends com.runwaysdk.query.GeneratedBusinessQue
     public com.runwaysdk.query.SelectableLong getSeq();
     public com.runwaysdk.query.SelectableLong getSeq(String alias);
     public com.runwaysdk.query.SelectableLong getSeq(String alias, String displayLabel);
+    public com.runwaysdk.query.SelectableLong getSequence();
+    public com.runwaysdk.query.SelectableLong getSequence(String alias);
+    public com.runwaysdk.query.SelectableLong getSequence(String alias, String displayLabel);
     public com.runwaysdk.query.SelectableChar getSiteMaster();
     public com.runwaysdk.query.SelectableChar getSiteMaster(String alias);
     public com.runwaysdk.query.SelectableChar getSiteMaster(String alias, String displayLabel);
@@ -1358,6 +1398,23 @@ public  class BusinessTypeQuery extends com.runwaysdk.query.GeneratedBusinessQue
   public com.runwaysdk.query.SelectableLong getSeq(String alias, String displayLabel)
   {
     return (com.runwaysdk.query.SelectableLong)this.get(net.geoprism.registry.BusinessType.SEQ, alias, displayLabel);
+
+  }
+  public com.runwaysdk.query.SelectableLong getSequence()
+  {
+    return getSequence(null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableLong getSequence(String alias)
+  {
+    return (com.runwaysdk.query.SelectableLong)this.get(net.geoprism.registry.BusinessType.SEQUENCE, alias, null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableLong getSequence(String alias, String displayLabel)
+  {
+    return (com.runwaysdk.query.SelectableLong)this.get(net.geoprism.registry.BusinessType.SEQUENCE, alias, displayLabel);
 
   }
   public com.runwaysdk.query.SelectableChar getSiteMaster()

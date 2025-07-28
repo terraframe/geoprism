@@ -1,11 +1,11 @@
 package net.geoprism.registry;
 
-@com.runwaysdk.business.ClassSignature(hash = 897948102)
+@com.runwaysdk.business.ClassSignature(hash = -892945910)
 public abstract class BusinessEdgeTypeDTOBase extends com.runwaysdk.business.BusinessDTO
 {
   public final static String CLASS = "net.geoprism.registry.BusinessEdgeType";
   @SuppressWarnings("unused")
-  private static final long serialVersionUID = 897948102;
+  private static final long serialVersionUID = -892945910;
   
   protected BusinessEdgeTypeDTOBase(com.runwaysdk.constants.ClientRequestIF clientRequest)
   {
@@ -46,6 +46,7 @@ public abstract class BusinessEdgeTypeDTOBase extends com.runwaysdk.business.Bus
   public static java.lang.String OWNER = "owner";
   public static java.lang.String PARENTTYPE = "parentType";
   public static java.lang.String SEQ = "seq";
+  public static java.lang.String SEQUENCE = "sequence";
   public static java.lang.String SITEMASTER = "siteMaster";
   public static java.lang.String TYPE = "type";
   public com.runwaysdk.system.metadata.MdVertexDTO getChildType()
@@ -653,6 +654,43 @@ public abstract class BusinessEdgeTypeDTOBase extends com.runwaysdk.business.Bus
   public final com.runwaysdk.transport.metadata.AttributeNumberMdDTO getSeqMd()
   {
     return (com.runwaysdk.transport.metadata.AttributeNumberMdDTO) getAttributeDTO(SEQ).getAttributeMdDTO();
+  }
+  
+  public Long getSequence()
+  {
+    return com.runwaysdk.constants.MdAttributeLongUtil.getTypeSafeValue(getValue(SEQUENCE));
+  }
+  
+  public void setSequence(Long value)
+  {
+    if(value == null)
+    {
+      setValue(SEQUENCE, "");
+    }
+    else
+    {
+      setValue(SEQUENCE, java.lang.Long.toString(value));
+    }
+  }
+  
+  public boolean isSequenceWritable()
+  {
+    return isWritable(SEQUENCE);
+  }
+  
+  public boolean isSequenceReadable()
+  {
+    return isReadable(SEQUENCE);
+  }
+  
+  public boolean isSequenceModified()
+  {
+    return isModified(SEQUENCE);
+  }
+  
+  public final com.runwaysdk.transport.metadata.AttributeNumberMdDTO getSequenceMd()
+  {
+    return (com.runwaysdk.transport.metadata.AttributeNumberMdDTO) getAttributeDTO(SEQUENCE).getAttributeMdDTO();
   }
   
   public String getSiteMaster()

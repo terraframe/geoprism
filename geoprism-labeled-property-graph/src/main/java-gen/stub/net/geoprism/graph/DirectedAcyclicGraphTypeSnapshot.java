@@ -43,6 +43,7 @@ public class DirectedAcyclicGraphTypeSnapshot extends DirectedAcyclicGraphTypeSn
     JsonObject hierarchyObject = new JsonObject();
     hierarchyObject.addProperty(DirectedAcyclicGraphTypeSnapshot.CODE, this.getCode());
     hierarchyObject.addProperty(DirectedAcyclicGraphTypeSnapshot.ORIGIN, this.getOrigin());
+    hierarchyObject.addProperty(DirectedAcyclicGraphTypeSnapshot.SEQUENCE, this.getSequence());
     hierarchyObject.addProperty(GraphTypeSnapshot.TYPE_CODE, GraphTypeSnapshot.DIRECTED_ACYCLIC_GRAPH_TYPE);
     hierarchyObject.add(DirectedAcyclicGraphTypeSnapshot.DISPLAYLABEL, LocalizedValueConverter.convertNoAutoCoalesce(this.getDisplayLabel()).toJSON());
     hierarchyObject.add(DirectedAcyclicGraphTypeSnapshot.DESCRIPTION, LocalizedValueConverter.convertNoAutoCoalesce(this.getDescription()).toJSON());

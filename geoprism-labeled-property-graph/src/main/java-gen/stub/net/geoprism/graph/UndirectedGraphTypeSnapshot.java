@@ -43,6 +43,7 @@ public class UndirectedGraphTypeSnapshot extends UndirectedGraphTypeSnapshotBase
     JsonObject hierarchyObject = new JsonObject();
     hierarchyObject.addProperty(UndirectedGraphTypeSnapshot.CODE, this.getCode());
     hierarchyObject.addProperty(ORIGIN, this.getOrigin());
+    hierarchyObject.addProperty(UndirectedGraphTypeSnapshot.SEQUENCE, this.getSequence());
     hierarchyObject.addProperty(GraphTypeSnapshot.TYPE_CODE, GraphTypeSnapshot.UNDIRECTED_GRAPH_TYPE);
     hierarchyObject.add(UndirectedGraphTypeSnapshot.DISPLAYLABEL, LocalizedValueConverter.convertNoAutoCoalesce(this.getDisplayLabel()).toJSON());
     hierarchyObject.add(UndirectedGraphTypeSnapshot.DESCRIPTION, LocalizedValueConverter.convertNoAutoCoalesce(this.getDescription()).toJSON());

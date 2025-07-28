@@ -3,18 +3,19 @@
  *
  * This file is part of Common Geo Registry Adapter(tm).
  *
- * Common Geo Registry Adapter(tm) is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
+ * Common Geo Registry Adapter(tm) is free software: you can redistribute it
+ * and/or modify it under the terms of the GNU Lesser General Public License as
+ * published by the Free Software Foundation, either version 3 of the License,
+ * or (at your option) any later version.
  *
- * Common Geo Registry Adapter(tm) is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
+ * Common Geo Registry Adapter(tm) is distributed in the hope that it will be
+ * useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser
+ * General Public License for more details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with Common Geo Registry Adapter(tm).  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with Common Geo Registry Adapter(tm). If not, see
+ * <http://www.gnu.org/licenses/>.
  */
 package org.commongeoregistry.adapter.metadata;
 
@@ -74,11 +75,13 @@ public class GeoObjectType implements Serializable
   public static final String         JSON_IS_ABSTRACT           = "isAbstract";
 
   public static final String         JSON_SUPER_TYPE_CODE       = "superTypeCode";
-  
+
   public static final String         JSON_IS_PRIVATE            = "isPrivate";
-  
+
   public static final String         JSON_ORIGIN                = "origin";
-  
+
+  public static final String         JSON_SEQUENCE              = "sequence";
+
   /**
    * Unique but human readable identifier. It could be VILLAGE or HOUSEHOLD.
    */
@@ -122,13 +125,16 @@ public class GeoObjectType implements Serializable
    * null.
    */
   private String                     organizationCode;
-  
+
   private String                     origin;
-  
+
+  private Long                       sequenceNumber;
+
   /**
-   * Whether or not the GeoObjectType is publicly viewable, or restricted to their organization.
+   * Whether or not the GeoObjectType is publicly viewable, or restricted to
+   * their organization.
    */
-  private Boolean                    isPrivate = false;
+  private Boolean                    isPrivate                  = false;
 
   /**
    * Collection of {@link AttributeType} metadata attributes.
@@ -206,6 +212,7 @@ public class GeoObjectType implements Serializable
     this.code = code;
     this.label = label;
     this.description = description;
+    this.sequenceNumber = 0L;
 
     this.geometryType = geometryType;
 
@@ -249,7 +256,7 @@ public class GeoObjectType implements Serializable
   {
     return this.code;
   }
-  
+
   public Boolean getIsPrivate()
   {
     return isPrivate;
@@ -410,17 +417,27 @@ public class GeoObjectType implements Serializable
   {
     this.superTypeCode = superTypeCode;
   }
-  
+
   public String getOrigin()
   {
     return origin;
   }
-  
+
   public void setOrigin(String origin)
   {
     this.origin = origin;
   }
   
+  public Long getSequenceNumber()
+  {
+    return sequenceNumber;
+  }
+  
+  public void setSequenceNumber(Long sequenceNumber)
+  {
+    this.sequenceNumber = sequenceNumber;
+  }
+
   /**
    * Returns the {@link AttributeType} defined on this {@link GeoObjectType}
    * with the given name.
@@ -490,7 +507,7 @@ public class GeoObjectType implements Serializable
 
     AttributeCharacterType code = (AttributeCharacterType) DefaultAttribute.CODE.createAttributeType();
     defaultAttributeMap.put(DefaultAttribute.CODE.getName(), code);
-    
+
     AttributeBooleanType invalid = (AttributeBooleanType) DefaultAttribute.INVALID.createAttributeType();
     defaultAttributeMap.put(DefaultAttribute.INVALID.getName(), invalid);
 
@@ -511,9 +528,8 @@ public class GeoObjectType implements Serializable
 
     AttributeBooleanType exists = (AttributeBooleanType) DefaultAttribute.EXISTS.createAttributeType();
     defaultAttributeMap.put(DefaultAttribute.EXISTS.getName(), exists);
-    
-    @SuppressWarnings("unchecked")
-    AttributeListType<String> alternateIds = (AttributeListType<String>) DefaultAttribute.ALT_IDS.createAttributeType();
+
+    @SuppressWarnings("unchecked") AttributeListType<String> alternateIds = (AttributeListType<String>) DefaultAttribute.ALT_IDS.createAttributeType();
     defaultAttributeMap.put(DefaultAttribute.ALT_IDS.getName(), alternateIds);
 
     // AttributeCharacterType organization = (AttributeCharacterType)
@@ -555,13 +571,12 @@ public class GeoObjectType implements Serializable
    */
   public static GeoObjectType fromJSON(String sJson, RegistryAdapter registry)
   {
-    JsonParser parser = new JsonParser();
-
-    JsonObject oJson = parser.parse(sJson).getAsJsonObject();
+    JsonObject oJson = JsonParser.parseString(sJson).getAsJsonObject();
     JsonArray oJsonAttrs = oJson.getAsJsonArray(JSON_ATTRIBUTES);
 
     String code = oJson.get(JSON_CODE).getAsString();
     String origin = oJson.has(JSON_ORIGIN) ? oJson.get(JSON_ORIGIN).getAsString() : null;
+    Long sequenceNumber = oJson.has(JSON_SEQUENCE) ? oJson.get(JSON_SEQUENCE).getAsLong() : 0;
     LocalizedValue label = LocalizedValue.fromJSON(oJson.get(JSON_LOCALIZED_LABEL).getAsJsonObject());
     LocalizedValue description = LocalizedValue.fromJSON(oJson.get(JSON_LOCALIZED_DESCRIPTION).getAsJsonObject());
     GeometryType geometryType = GeometryType.valueOf(oJson.get(JSON_GEOMETRY_TYPE).getAsString());
@@ -588,6 +603,7 @@ public class GeoObjectType implements Serializable
     // TODO Need to validate that the default attributes are still defined.
     GeoObjectType geoObjType = new GeoObjectType(code, geometryType, label, description, isGeometryEditable, organizationCode, attributeMap);
     geoObjType.setOrigin(origin);
+    geoObjType.setSequenceNumber(sequenceNumber);
 
     if (oJson.has(JSON_SUPER_TYPE_CODE))
     {
@@ -598,7 +614,7 @@ public class GeoObjectType implements Serializable
     {
       geoObjType.setIsAbstract(oJson.get(JSON_IS_ABSTRACT).getAsBoolean());
     }
-    
+
     if (oJson.has(JSON_IS_PRIVATE))
     {
       geoObjType.setIsPrivate(oJson.get(JSON_IS_PRIVATE).getAsBoolean());
@@ -641,11 +657,11 @@ public class GeoObjectType implements Serializable
     json.addProperty(JSON_GEOMETRY_TYPE, this.geometryType.name());
 
     json.addProperty(JSON_IS_GEOMETRY_EDITABLE, this.isGeometryEditable());
-    
-    json.addProperty(JSON_IS_PRIVATE, this.getIsPrivate());
-    
-    json.addProperty(JSON_ORIGIN, this.origin == null ? "" : this.origin);
 
+    json.addProperty(JSON_IS_PRIVATE, this.getIsPrivate());
+
+    json.addProperty(JSON_ORIGIN, this.origin == null ? "" : this.origin);
+    json.addProperty(JSON_SEQUENCE, this.sequenceNumber == null ? 0L : this.sequenceNumber);
 
     String organizationString;
     if (this.organizationCode == null)

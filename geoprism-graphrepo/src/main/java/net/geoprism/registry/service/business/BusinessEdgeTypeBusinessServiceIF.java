@@ -28,8 +28,9 @@ import com.google.gson.JsonObject;
 import com.runwaysdk.system.metadata.MdEdge;
 
 import net.geoprism.registry.BusinessEdgeType;
-import net.geoprism.registry.model.EdgeDirection;
 import net.geoprism.registry.model.graph.EdgeVertexType;
+import net.geoprism.registry.view.BusinessEdgeTypeView;
+import net.geoprism.registry.view.BusinessGeoEdgeTypeView;
 
 @Component
 public interface BusinessEdgeTypeBusinessServiceIF
@@ -57,12 +58,8 @@ public interface BusinessEdgeTypeBusinessServiceIF
 
   BusinessEdgeType create(JsonObject object);
 
-  BusinessEdgeType create(String organizationCode, String code, LocalizedValue label, LocalizedValue description, String parentTypeCode, String childTypeCode);
+  BusinessEdgeType create(BusinessEdgeTypeView dto);
 
-  BusinessEdgeType create(String organizationCode, String code, LocalizedValue label, LocalizedValue description, String parentTypeCode, String childTypeCode, String origin);
-
-  BusinessEdgeType createGeoEdge(String organizationCode, String code, LocalizedValue label, LocalizedValue description, String typeCode, EdgeDirection direction);
-
-  BusinessEdgeType createGeoEdge(String organizationCode, String code, LocalizedValue label, LocalizedValue description, String typeCode, EdgeDirection direction, String origin);
+  BusinessEdgeType createGeoEdge(BusinessGeoEdgeTypeView dto);
 
 }

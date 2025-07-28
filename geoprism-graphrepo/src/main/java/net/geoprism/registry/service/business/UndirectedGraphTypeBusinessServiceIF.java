@@ -31,9 +31,9 @@ public interface UndirectedGraphTypeBusinessServiceIF
 
   public UndirectedGraphType create(JsonObject object);
 
-  public UndirectedGraphType create(String code, LocalizedValue label, LocalizedValue description);
+  public UndirectedGraphType create(String code, LocalizedValue label, LocalizedValue description, Long seq);
 
-  public UndirectedGraphType create(String code, LocalizedValue label, LocalizedValue description, String origin);
+  public UndirectedGraphType create(String code, LocalizedValue label, LocalizedValue description, String origin, Long seq);
 
   public void update(UndirectedGraphType ugt, JsonObject object);
 
