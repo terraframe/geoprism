@@ -463,11 +463,14 @@ public class GeoObjectTypeBusinessService implements GeoObjectTypeBusinessServic
   public void removeAttribute(ServerGeoObjectType serverType, String attributeName)
   {
     serverType.removeAttribute(attributeName);
-    
+
     // Update the sequence number of the type
-    net.geoprism.registry.graph.GeoObjectType baseType = serverType.getType();
-    baseType.setSequence(serverType.getSequenceNumber() + 1);
-    baseType.apply();
+    if (serverType.getOrigin().equals(GeoprismProperties.getOrigin()))
+    {
+      net.geoprism.registry.graph.GeoObjectType baseType = serverType.getType();
+      baseType.setSequence(serverType.getSequence() + 1);
+      baseType.apply();
+    }
 
     new GeoObjectTypeCacheEventCommand(serverType, CacheEventType.UPDATE).doIt();
 
@@ -828,12 +831,15 @@ public class GeoObjectTypeBusinessService implements GeoObjectTypeBusinessServic
     attributeType.apply();
 
     // Update the sequence number of the type
-    net.geoprism.registry.graph.GeoObjectType baseType = type.getType();
-    baseType.setSequence(type.getSequenceNumber() + 1);
-    baseType.apply();
+    if (type.getOrigin().equals(GeoprismProperties.getOrigin()))
+    {
+      net.geoprism.registry.graph.GeoObjectType baseType = type.getType();
+      baseType.setSequence(type.getSequence() + 1);
+      baseType.apply();
+
+    }
 
     new GeoObjectTypeCacheEventCommand(type, CacheEventType.UPDATE).doIt();
-    
 
     // mdAttribute.setAttributeName(dto.getName());
     // mdAttribute.setValue(MdAttributeConcreteInfo.REQUIRED,
@@ -934,14 +940,17 @@ public class GeoObjectTypeBusinessService implements GeoObjectTypeBusinessServic
   }
 
   @Transaction
-  protected void updateFromDTO(ServerGeoObjectType serverGeoObjectType, GeoObjectType dto)
+  protected void updateFromDTO(ServerGeoObjectType type, GeoObjectType dto)
   {
-    net.geoprism.registry.graph.GeoObjectType type = serverGeoObjectType.getType();
-    type.fromDTO(dto);
-    type.setSequence(serverGeoObjectType.getSequenceNumber() + 1);
-    type.apply();
+    if (type.getOrigin().equals(GeoprismProperties.getOrigin()))
+    {
+      net.geoprism.registry.graph.GeoObjectType baseType = type.getType();
+      baseType.fromDTO(dto);
+      baseType.setSequence(type.getSequence() + 1);
+      baseType.apply();
+    }
 
-    new GeoObjectTypeCacheEventCommand(serverGeoObjectType, CacheEventType.UPDATE).doIt();
+    new GeoObjectTypeCacheEventCommand(type, CacheEventType.UPDATE).doIt();
   }
 
   /**

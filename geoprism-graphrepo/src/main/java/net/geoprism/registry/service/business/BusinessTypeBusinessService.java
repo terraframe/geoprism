@@ -186,10 +186,13 @@ public class BusinessTypeBusinessService implements BusinessTypeBusinessServiceI
   public void removeAttribute(BusinessType type, String attributeName)
   {
     this.deleteMdAttributeFromAttributeType(type, attributeName);
-    
+
     // Update the sequence number of the type
-    type.setSequence(type.getSequence() + 1);
-    type.apply();
+    if (type.getOrigin().equals(GeoprismProperties.getOrigin()))
+    {
+      type.setSequence(type.getSequence() + 1);
+      type.apply();
+    }
 
     // Refresh the users session
     if (Session.getCurrentSession() != null)
@@ -248,7 +251,7 @@ public class BusinessTypeBusinessService implements BusinessTypeBusinessServiceI
     object.addProperty(BusinessType.CODE, type.getCode());
     object.addProperty(BusinessType.ORGANIZATION, organization.getCode());
     object.addProperty(BusinessType.ORIGIN, type.getOrigin());
-    object.addProperty(BusinessType.SEQ, type.getSeq());
+    object.addProperty(BusinessType.SEQUENCE, type.getSequence());
     object.addProperty("organizationLabel", organization.getDisplayLabel().getValue());
     object.add(BusinessType.DISPLAYLABEL, RegistryLocalizedValueConverter.convertNoAutoCoalesce(type.getDisplayLabel()).toJSON());
 
@@ -371,11 +374,18 @@ public class BusinessTypeBusinessService implements BusinessTypeBusinessServiceI
 
       businessType.setMdVertexId(mdVertex.getOid());
       businessType.setOrigin(origin);
-      businessType.setSequence(object.has(BusinessType.SEQ) ? object.get(BusinessType.SEQ).getAsLong() : 0L);
+      businessType.setSequence(object.has(BusinessType.SEQUENCE) ? object.get(BusinessType.SEQUENCE).getAsLong() : 0L);
     }
     else
     {
-      businessType.setSequence(businessType.getSequence() + 1);
+      if (businessType.getOrigin().equals(GeoprismProperties.getOrigin()))
+      {
+        businessType.setSequence(businessType.getSequence() + 1);
+      }
+      else if (object.has(BusinessType.SEQUENCE))
+      {
+        businessType.setSequence(object.get(BusinessType.SEQUENCE).getAsLong());
+      }
     }
 
     if (object.has(BusinessType.LABELATTRIBUTE) && !object.get(BusinessType.LABELATTRIBUTE).isJsonNull())
@@ -692,11 +702,14 @@ public class BusinessTypeBusinessService implements BusinessTypeBusinessServiceI
       org.commongeoregistry.adapter.Term term = new org.commongeoregistry.adapter.Term(attributeTermRoot.getClassifierId(), label, new LocalizedValue(""));
       attributeTermType.setRootTerm(term);
     }
-    
+
     // Update the sequence number of the type
-    type.setSequence(type.getSequence() + 1);
-    type.apply();
-    
+    if (type.getOrigin().equals(GeoprismProperties.getOrigin()))
+    {
+      type.setSequence(type.getSequence() + 1);
+      type.apply();
+    }
+
     return mdAttribute;
   }
 

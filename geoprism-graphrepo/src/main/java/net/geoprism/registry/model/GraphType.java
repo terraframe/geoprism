@@ -40,7 +40,7 @@ public interface GraphType
 
   public String getOrigin();
   
-  public Long getSeq();
+  public Long getSequence();
 
   public LocalizedValue getLabel();
 

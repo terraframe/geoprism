@@ -114,7 +114,7 @@ public class ServerGeoObjectType extends CachableObjectWrapper<BaseGeoObjectType
     return this.getType().getCode();
   }
 
-  public Long getSequenceNumber()
+  public Long getSequence()
   {
     return this.getType().getSequence();
   }

@@ -37,6 +37,8 @@ public interface GraphTypeSnapshot
   public String getType();
 
   public String getTypeCode();
+  
+  public Long getSequence();
 
   public void delete();
 
