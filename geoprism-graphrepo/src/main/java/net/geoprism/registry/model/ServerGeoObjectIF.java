@@ -43,11 +43,11 @@ public interface ServerGeoObjectIF
 
   public String getCode();
 
+  public void setCode(String code);
+
   public Boolean getInvalid();
 
   public void setInvalid(Boolean invalid);
-
-  public void setCode(String code);
 
   public Boolean getExists();
 

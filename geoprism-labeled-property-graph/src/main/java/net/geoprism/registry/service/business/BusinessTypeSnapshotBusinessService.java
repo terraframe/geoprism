@@ -160,7 +160,7 @@ public class BusinessTypeSnapshotBusinessService extends ObjectTypeSnapshotBusin
     vQuery.WHERE(vQuery.getParent().EQ((LabeledPropertyGraphTypeVersion) version));
 
     BusinessTypeSnapshotQuery query = new BusinessTypeSnapshotQuery(factory);
-    query.LEFT_JOIN_EQ(vQuery.getChild());
+    query.WHERE(query.EQ(vQuery.getChild()));;
     query.AND(query.getGraphMdVertex().EQ(mdVertex.getOid()));
 
     try (OIterator<? extends BusinessTypeSnapshot> it = query.getIterator())

@@ -18,6 +18,7 @@
  */
 package net.geoprism.registry.service.business;
 
+import java.util.LinkedList;
 import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
@@ -44,6 +45,7 @@ import com.runwaysdk.system.metadata.MdGraphClassQuery;
 
 import net.geoprism.configuration.GeoprismProperties;
 import net.geoprism.graph.GeoObjectTypeSnapshot;
+import net.geoprism.graph.GeoObjectTypeSnapshotQuery;
 import net.geoprism.graph.GraphTypeSnapshot;
 import net.geoprism.graph.HierarchyTypeSnapshot;
 import net.geoprism.graph.HierarchyTypeSnapshotBase;
@@ -212,7 +214,7 @@ public class HierarchyTypeSnapshotBusinessService implements HierarchyTypeSnapsh
     vQuery.WHERE(vQuery.getParent().EQ((LabeledPropertyGraphTypeVersion) version));
 
     HierarchyTypeSnapshotQuery query = new HierarchyTypeSnapshotQuery(factory);
-    query.LEFT_JOIN_EQ(vQuery.getChild());
+    query.WHERE(query.EQ(vQuery.getChild()));;
     query.AND(query.getCode().EQ(code));
 
     try (OIterator<? extends HierarchyTypeSnapshot> it = query.getIterator())
@@ -235,19 +237,13 @@ public class HierarchyTypeSnapshotBusinessService implements HierarchyTypeSnapsh
     vQuery.WHERE(vQuery.getParent().EQ(parent));
     vQuery.AND(vQuery.getHierarchyTypeCode().EQ(hierarchy.getCode()));
 
-    try (OIterator<? extends SnapshotHierarchy> iterator = vQuery.getIterator())
-    {
-      return iterator.getAll().stream().map(rel -> rel.getChild()).toList();
-    }
+    GeoObjectTypeSnapshotQuery query = new GeoObjectTypeSnapshotQuery(factory);
+    query.WHERE(query.EQ(vQuery.getChild()));;
 
-    // GeoObjectTypeSnapshotQuery query = new
-    // GeoObjectTypeSnapshotQuery(factory);
-    // query.LEFT_JOIN_EQ(vQuery.getChild());
-    //
-    // try (OIterator<? extends GeoObjectTypeSnapshot> it = query.getIterator())
-    // {
-    // return new LinkedList<>(it.getAll());
-    // }
+    try (OIterator<? extends GeoObjectTypeSnapshot> it = query.getIterator())
+    {
+      return new LinkedList<>(it.getAll());
+    }
   }
 
   public HierarchyType toHierarchyType(HierarchyTypeSnapshot snapshot)
@@ -258,7 +254,7 @@ public class HierarchyTypeSnapshotBusinessService implements HierarchyTypeSnapsh
 
     HierarchyType type = new HierarchyType(code, label, description, snapshot.getOrgCode());
     type.setSequenceNumber(snapshot.getSequence());
-    
+
     return type;
   }
 

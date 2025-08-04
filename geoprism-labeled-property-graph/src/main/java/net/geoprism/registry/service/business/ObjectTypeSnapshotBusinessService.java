@@ -126,7 +126,7 @@ public abstract class ObjectTypeSnapshotBusinessService<T extends ObjectTypeSnap
     vQuery.WHERE(vQuery.getParent().EQ(snapshot));
 
     AttributeTypeSnapshotQuery query = new AttributeTypeSnapshotQuery(factory);
-    query.LEFT_JOIN_EQ(vQuery.getChild());
+    query.WHERE(query.EQ(vQuery.getChild()));;
 
     try (OIterator<? extends AttributeTypeSnapshot> it = query.getIterator())
     {

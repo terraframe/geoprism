@@ -219,7 +219,7 @@ public class GraphTypeSnapshotBusinessService implements GraphTypeSnapshotBusine
       vQuery.WHERE(vQuery.getParent().EQ((LabeledPropertyGraphTypeVersion) version));
 
       DirectedAcyclicGraphTypeSnapshotQuery query = new DirectedAcyclicGraphTypeSnapshotQuery(factory);
-      query.LEFT_JOIN_EQ(vQuery.getChild());
+      query.WHERE(query.EQ(vQuery.getChild()));;
       query.AND(query.getCode().EQ(code));
 
       try (OIterator<? extends GraphTypeSnapshot> it = query.getIterator())
@@ -242,7 +242,7 @@ public class GraphTypeSnapshotBusinessService implements GraphTypeSnapshotBusine
       vQuery.WHERE(vQuery.getParent().EQ((LabeledPropertyGraphTypeVersion) version));
 
       UndirectedGraphTypeSnapshotQuery query = new UndirectedGraphTypeSnapshotQuery(factory);
-      query.LEFT_JOIN_EQ(vQuery.getChild());
+      query.WHERE(query.EQ(vQuery.getChild()));;
       query.AND(query.getCode().EQ(code));
 
       try (OIterator<? extends GraphTypeSnapshot> it = query.getIterator())

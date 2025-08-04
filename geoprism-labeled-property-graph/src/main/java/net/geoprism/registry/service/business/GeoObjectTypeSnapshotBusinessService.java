@@ -218,7 +218,7 @@ public class GeoObjectTypeSnapshotBusinessService extends ObjectTypeSnapshotBusi
     vQuery.WHERE(vQuery.getParent().EQ((LabeledPropertyGraphTypeVersion) version));
 
     GeoObjectTypeSnapshotQuery query = new GeoObjectTypeSnapshotQuery(factory);
-    query.LEFT_JOIN_EQ(vQuery.getChild());
+    query.WHERE(query.EQ(vQuery.getChild()));;
     query.AND(query.getCode().EQ(code));
 
     try (OIterator<? extends GeoObjectTypeSnapshot> it = query.getIterator())
@@ -241,7 +241,7 @@ public class GeoObjectTypeSnapshotBusinessService extends ObjectTypeSnapshotBusi
     vQuery.WHERE(vQuery.getParent().EQ((LabeledPropertyGraphTypeVersion) version));
 
     GeoObjectTypeSnapshotQuery query = new GeoObjectTypeSnapshotQuery(factory);
-    query.LEFT_JOIN_EQ(vQuery.getChild());
+    query.WHERE(query.EQ(vQuery.getChild()));;
     query.AND(query.getGraphMdVertex().EQ(mdVertex.getOid()));
 
     try (OIterator<? extends GeoObjectTypeSnapshot> it = query.getIterator())
@@ -264,7 +264,7 @@ public class GeoObjectTypeSnapshotBusinessService extends ObjectTypeSnapshotBusi
     vQuery.WHERE(vQuery.getParent().EQ((LabeledPropertyGraphTypeVersion) version));
 
     GeoObjectTypeSnapshotQuery query = new GeoObjectTypeSnapshotQuery(factory);
-    query.LEFT_JOIN_EQ(vQuery.getChild());
+    query.WHERE(query.EQ(vQuery.getChild()));;
     query.AND(query.getIsRoot().EQ(true));
 
     try (OIterator<? extends GeoObjectTypeSnapshot> it = query.getIterator())

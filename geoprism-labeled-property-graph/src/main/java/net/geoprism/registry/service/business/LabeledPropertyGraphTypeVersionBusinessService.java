@@ -180,7 +180,7 @@ public class LabeledPropertyGraphTypeVersionBusinessService implements LabeledPr
     vQuery.WHERE(vQuery.getParent().EQ(version));
 
     GeoObjectTypeSnapshotQuery query = new GeoObjectTypeSnapshotQuery(factory);
-    query.LEFT_JOIN_EQ(vQuery.getChild());
+    query.WHERE(query.EQ(vQuery.getChild()));;
 
     try (OIterator<? extends GeoObjectTypeSnapshot> it = query.getIterator())
     {
@@ -197,7 +197,7 @@ public class LabeledPropertyGraphTypeVersionBusinessService implements LabeledPr
     vQuery.WHERE(vQuery.getParent().EQ(version));
 
     BusinessTypeSnapshotQuery query = new BusinessTypeSnapshotQuery(factory);
-    query.LEFT_JOIN_EQ(vQuery.getChild());
+    query.WHERE(query.EQ(vQuery.getChild()));;
 
     try (OIterator<? extends BusinessTypeSnapshot> it = query.getIterator())
     {
@@ -214,7 +214,7 @@ public class LabeledPropertyGraphTypeVersionBusinessService implements LabeledPr
     vQuery.WHERE(vQuery.getParent().EQ(version));
 
     BusinessEdgeTypeSnapshotQuery query = new BusinessEdgeTypeSnapshotQuery(factory);
-    query.LEFT_JOIN_EQ(vQuery.getChild());
+    query.WHERE(query.EQ(vQuery.getChild()));;
 
     try (OIterator<? extends BusinessEdgeTypeSnapshot> it = query.getIterator())
     {
@@ -232,7 +232,7 @@ public class LabeledPropertyGraphTypeVersionBusinessService implements LabeledPr
     vQuery.WHERE(vQuery.getParent().EQ(version));
 
     HierarchyTypeSnapshotQuery query = new HierarchyTypeSnapshotQuery(factory);
-    query.LEFT_JOIN_EQ(vQuery.getChild());
+    query.WHERE(query.EQ(vQuery.getChild()));;
 
     try (OIterator<? extends HierarchyTypeSnapshot> it = query.getIterator())
     {
@@ -250,7 +250,7 @@ public class LabeledPropertyGraphTypeVersionBusinessService implements LabeledPr
     vQuery.WHERE(vQuery.getParent().EQ(version));
 
     DirectedAcyclicGraphTypeSnapshotQuery query = new DirectedAcyclicGraphTypeSnapshotQuery(factory);
-    query.LEFT_JOIN_EQ(vQuery.getChild());
+    query.WHERE(query.EQ(vQuery.getChild()));;
 
     try (OIterator<? extends DirectedAcyclicGraphTypeSnapshot> it = query.getIterator())
     {
@@ -268,7 +268,7 @@ public class LabeledPropertyGraphTypeVersionBusinessService implements LabeledPr
     vQuery.WHERE(vQuery.getParent().EQ(version));
 
     UndirectedGraphTypeSnapshotQuery query = new UndirectedGraphTypeSnapshotQuery(factory);
-    query.LEFT_JOIN_EQ(vQuery.getChild());
+    query.WHERE(query.EQ(vQuery.getChild()));;
 
     try (OIterator<? extends UndirectedGraphTypeSnapshot> it = query.getIterator())
     {
@@ -306,7 +306,7 @@ public class LabeledPropertyGraphTypeVersionBusinessService implements LabeledPr
     vQuery.WHERE(vQuery.getParent().EQ(version));
 
     GeoObjectTypeSnapshotQuery query = new GeoObjectTypeSnapshotQuery(factory);
-    query.LEFT_JOIN_EQ(vQuery.getChild());
+    query.WHERE(query.EQ(vQuery.getChild()));;
     query.AND(query.getCode().EQ(typeCode));
 
     try (OIterator<? extends GeoObjectTypeSnapshot> it = query.getIterator())
@@ -329,7 +329,7 @@ public class LabeledPropertyGraphTypeVersionBusinessService implements LabeledPr
     vQuery.WHERE(vQuery.getParent().EQ(version));
 
     HierarchyTypeSnapshotQuery query = new HierarchyTypeSnapshotQuery(factory);
-    query.LEFT_JOIN_EQ(vQuery.getChild());
+    query.WHERE(query.EQ(vQuery.getChild()));;
     query.AND(query.getCode().EQ(typeCode));
 
     try (OIterator<? extends HierarchyTypeSnapshot> it = query.getIterator())

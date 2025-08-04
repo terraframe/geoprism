@@ -445,7 +445,7 @@ public class VertexServerGeoObject extends AbstractServerGeoObject implements Se
   {
     return (String) this.getValue(DefaultAttribute.CODE.getName());
   }
-
+  
   @Override
   public String getUid()
   {
@@ -537,7 +537,7 @@ public class VertexServerGeoObject extends AbstractServerGeoObject implements Se
   {
     // Attributes created by the runway that do not have actual attribute type
     // metadata
-    return this.vertex.hasAttribute(attributeName) && ( attributeName.equals(DefaultAttribute.CREATE_DATE.getName()) || attributeName.equals(DefaultAttribute.LAST_UPDATE_DATE.getName()) || attributeName.equals(DefaultAttribute.SEQUENCE.getName()) );
+    return this.vertex.hasAttribute(attributeName) && ( attributeName.equals(DefaultAttribute.CREATE_DATE.getName()) || attributeName.equals(DefaultAttribute.LAST_UPDATE_DATE.getName())  );
   }
 
   @Override
@@ -571,7 +571,7 @@ public class VertexServerGeoObject extends AbstractServerGeoObject implements Se
 
     Collection<AttributeType> attributes = type.getAttributeMap().values();
 
-    String[] shouldNotProcessArray = new String[] { DefaultAttribute.UID.getName(), DefaultAttribute.SEQUENCE.getName(), DefaultAttribute.LAST_UPDATE_DATE.getName(), DefaultAttribute.CREATE_DATE.getName(), DefaultAttribute.TYPE.getName(), DefaultAttribute.EXISTS.getName() };
+    String[] shouldNotProcessArray = new String[] { DefaultAttribute.UID.getName(), DefaultAttribute.LAST_UPDATE_DATE.getName(), DefaultAttribute.CREATE_DATE.getName(), DefaultAttribute.TYPE.getName(), DefaultAttribute.EXISTS.getName() };
 
     Date startDate = null;
     Date endDate = null;

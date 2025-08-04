@@ -426,7 +426,6 @@ public class GeoObjectTypeBusinessService implements GeoObjectTypeBusinessServic
       type.apply();
 
       type.createDefaultAttributes();
-
     }
     catch (DuplicateDataException ex)
     {
