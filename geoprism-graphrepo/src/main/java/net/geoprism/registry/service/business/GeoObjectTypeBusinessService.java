@@ -3,18 +3,18 @@
  *
  * This file is part of Geoprism(tm).
  *
- * Geoprism(tm) is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
+ * Geoprism(tm) is free software: you can redistribute it and/or modify it under
+ * the terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation, either version 3 of the License, or (at your option) any
+ * later version.
  *
- * Geoprism(tm) is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
+ * Geoprism(tm) is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with Geoprism(tm).  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with Geoprism(tm). If not, see <http://www.gnu.org/licenses/>.
  */
 package net.geoprism.registry.service.business;
 
@@ -29,6 +29,7 @@ import java.util.Set;
 import java.util.TreeSet;
 import java.util.stream.Collectors;
 
+import org.apache.commons.lang3.StringUtils;
 import org.commongeoregistry.adapter.metadata.AttributeBooleanType;
 import org.commongeoregistry.adapter.metadata.AttributeCharacterType;
 import org.commongeoregistry.adapter.metadata.AttributeClassificationType;
@@ -56,7 +57,6 @@ import com.runwaysdk.dataaccess.MdAttributeConcreteDAOIF;
 import com.runwaysdk.dataaccess.MdClassDAOIF;
 import com.runwaysdk.dataaccess.ProgrammingErrorException;
 import com.runwaysdk.dataaccess.attributes.AttributeValueException;
-import com.runwaysdk.dataaccess.cache.ObjectCache;
 import com.runwaysdk.dataaccess.metadata.graph.MdVertexDAO;
 import com.runwaysdk.dataaccess.transaction.Transaction;
 import com.runwaysdk.session.Session;
@@ -66,6 +66,7 @@ import com.runwaysdk.system.metadata.MdAttributeConcrete;
 import com.runwaysdk.system.metadata.MdBusiness;
 import com.runwaysdk.system.metadata.MdClass;
 
+import net.geoprism.configuration.GeoprismProperties;
 import net.geoprism.registry.ChainInheritanceException;
 import net.geoprism.registry.CodeLengthException;
 import net.geoprism.registry.DuplicateGeoObjectTypeException;
@@ -306,10 +307,10 @@ public class GeoObjectTypeBusinessService implements GeoObjectTypeBusinessServic
         return getTypeAncestors(superType, hierarchyType, includeInheritedTypes);
       }
     }
-    
+
     Collections.reverse(ancestors);
-    
-    return  ancestors;
+
+    return ancestors;
   }
 
   /**
@@ -410,6 +411,8 @@ public class GeoObjectTypeBusinessService implements GeoObjectTypeBusinessServic
     type.setOrganization(organization.getGraphOrganization());
     type.setValue(net.geoprism.registry.graph.GeoObjectType.MDVERTEX, mdVertex.getOid());
     type.setDbClassName(mdVertex.getDBClassName());
+    type.setOrigin(StringUtils.isBlank(dto.getOrigin()) ? GeoprismProperties.getOrigin() : dto.getOrigin());
+    type.setSequence(dto.getSequenceNumber());
     type.fromDTO(dto);
 
     if (superType != null)
@@ -424,7 +427,6 @@ public class GeoObjectTypeBusinessService implements GeoObjectTypeBusinessServic
       type.apply();
 
       type.createDefaultAttributes();
-
     }
     catch (DuplicateDataException ex)
     {
@@ -461,6 +463,14 @@ public class GeoObjectTypeBusinessService implements GeoObjectTypeBusinessServic
   public void removeAttribute(ServerGeoObjectType serverType, String attributeName)
   {
     serverType.removeAttribute(attributeName);
+
+    // Update the sequence number of the type
+    if (serverType.getOrigin().equals(GeoprismProperties.getOrigin()))
+    {
+      net.geoprism.registry.graph.GeoObjectType baseType = serverType.getType();
+      baseType.setSequence(serverType.getSequence() + 1);
+      baseType.apply();
+    }
 
     new GeoObjectTypeCacheEventCommand(serverType, CacheEventType.UPDATE).doIt();
 
@@ -824,6 +834,15 @@ public class GeoObjectTypeBusinessService implements GeoObjectTypeBusinessServic
     attributeType.setIsDefault(false);
     attributeType.apply();
 
+    // Update the sequence number of the type
+    if (type.getOrigin().equals(GeoprismProperties.getOrigin()))
+    {
+      net.geoprism.registry.graph.GeoObjectType baseType = type.getType();
+      baseType.setSequence(type.getSequence() + 1);
+      baseType.apply();
+
+    }
+
     new GeoObjectTypeCacheEventCommand(type, CacheEventType.UPDATE).doIt();
 
     // mdAttribute.setAttributeName(dto.getName());
@@ -905,31 +924,37 @@ public class GeoObjectTypeBusinessService implements GeoObjectTypeBusinessServic
    *          JSON of the {@link GeoObjectType} to be updated.
    * @return updated {@link GeoObjectType}
    */
-  public GeoObjectType updateGeoObjectType(String gtJSON)
+  @Override
+  public ServerGeoObjectType updateGeoObjectType(String gtJSON)
   {
     GeoObjectType dto = GeoObjectType.fromJSON(gtJSON, ServiceFactory.getAdapter());
     ServerGeoObjectType type = ServerGeoObjectType.get(dto.getCode());
 
-    return this.update(type, dto);
+    return this.updateGeoObjectType(type, dto);
   }
 
-  protected GeoObjectType update(ServerGeoObjectType type, GeoObjectType dto)
+  @Override
+  public ServerGeoObjectType updateGeoObjectType(ServerGeoObjectType type, GeoObjectType dto)
   {
     ServiceFactory.getGeoObjectTypePermissionService().enforceCanWrite(dto.getOrganizationCode(), type, dto.getIsPrivate());
 
     updateFromDTO(type, dto);
 
-    return type.toDTO();
+    return type;
   }
 
   @Transaction
-  protected void updateFromDTO(ServerGeoObjectType serverGeoObjectType, GeoObjectType dto)
+  protected void updateFromDTO(ServerGeoObjectType type, GeoObjectType dto)
   {
-    net.geoprism.registry.graph.GeoObjectType type = serverGeoObjectType.getType();
-    type.fromDTO(dto);
-    type.apply();
+    if (type.getOrigin().equals(GeoprismProperties.getOrigin()))
+    {
+      net.geoprism.registry.graph.GeoObjectType baseType = type.getType();
+      baseType.fromDTO(dto);
+      baseType.setSequence(type.getSequence() + 1);
+      baseType.apply();
+    }
 
-    new GeoObjectTypeCacheEventCommand(serverGeoObjectType, CacheEventType.UPDATE).doIt();
+    new GeoObjectTypeCacheEventCommand(type, CacheEventType.UPDATE).doIt();
   }
 
   /**

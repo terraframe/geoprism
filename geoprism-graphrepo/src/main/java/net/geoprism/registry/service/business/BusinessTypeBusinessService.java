@@ -51,19 +51,18 @@ import com.runwaysdk.constants.MdAttributeConcreteInfo;
 import com.runwaysdk.constants.MdAttributeDoubleInfo;
 import com.runwaysdk.constants.MdAttributeGraphReferenceInfo;
 import com.runwaysdk.constants.MdAttributeLocalInfo;
-import com.runwaysdk.constants.graph.MdEdgeInfo;
+import com.runwaysdk.constants.MdAttributeLongInfo;
 import com.runwaysdk.constants.graph.MdVertexInfo;
 import com.runwaysdk.dataaccess.MdAttributeConcreteDAOIF;
 import com.runwaysdk.dataaccess.MdAttributeDAOIF;
 import com.runwaysdk.dataaccess.MdAttributeMultiTermDAOIF;
 import com.runwaysdk.dataaccess.MdAttributeTermDAOIF;
 import com.runwaysdk.dataaccess.MdClassDAOIF;
-import com.runwaysdk.dataaccess.MdEdgeDAOIF;
 import com.runwaysdk.dataaccess.MdVertexDAOIF;
 import com.runwaysdk.dataaccess.cache.DataNotFoundException;
 import com.runwaysdk.dataaccess.metadata.MdAttributeCharacterDAO;
 import com.runwaysdk.dataaccess.metadata.MdAttributeConcreteDAO;
-import com.runwaysdk.dataaccess.metadata.graph.MdEdgeDAO;
+import com.runwaysdk.dataaccess.metadata.MdAttributeLongDAO;
 import com.runwaysdk.dataaccess.metadata.graph.MdVertexDAO;
 import com.runwaysdk.dataaccess.transaction.Transaction;
 import com.runwaysdk.gis.constants.MdGeoVertexInfo;
@@ -86,10 +85,10 @@ import com.runwaysdk.system.metadata.MdAttributeLong;
 import com.runwaysdk.system.metadata.MdAttributeTerm;
 import com.runwaysdk.system.metadata.MdBusiness;
 import com.runwaysdk.system.metadata.MdClass;
-import com.runwaysdk.system.metadata.MdEdge;
 import com.runwaysdk.system.metadata.MdGraphClass;
 import com.runwaysdk.system.metadata.MdVertex;
 
+import net.geoprism.configuration.GeoprismProperties;
 import net.geoprism.ontology.Classifier;
 import net.geoprism.registry.BusinessEdgeType;
 import net.geoprism.registry.BusinessEdgeTypeQuery;
@@ -136,11 +135,9 @@ public class BusinessTypeBusinessService implements BusinessTypeBusinessServiceI
     classRootTerm.delete();
 
     MdVertex mdVertex = type.getMdVertex();
-    MdEdge mdEdge = type.getMdEdge();
 
     type.delete();
 
-    mdEdge.delete();
     mdVertex.delete();
   }
 
@@ -196,6 +193,13 @@ public class BusinessTypeBusinessService implements BusinessTypeBusinessServiceI
   public void removeAttribute(BusinessType type, String attributeName)
   {
     this.deleteMdAttributeFromAttributeType(type, attributeName);
+
+    // Update the sequence number of the type
+    if (type.getOrigin().equals(GeoprismProperties.getOrigin()))
+    {
+      type.setSequence(type.getSequence() + 1);
+      type.apply();
+    }
 
     // Refresh the users session
     if (Session.getCurrentSession() != null)
@@ -253,6 +257,8 @@ public class BusinessTypeBusinessService implements BusinessTypeBusinessServiceI
     JsonObject object = new JsonObject();
     object.addProperty(BusinessType.CODE, type.getCode());
     object.addProperty(BusinessType.ORGANIZATION, organization.getCode());
+    object.addProperty(BusinessType.ORIGIN, type.getOrigin());
+    object.addProperty(BusinessType.SEQUENCE, type.getSequence());
     object.addProperty("organizationLabel", organization.getDisplayLabel().getValue());
     object.add(BusinessType.DISPLAYLABEL, RegistryLocalizedValueConverter.convertNoAutoCoalesce(type.getDisplayLabel()).toJSON());
 
@@ -329,6 +335,7 @@ public class BusinessTypeBusinessService implements BusinessTypeBusinessServiceI
     String code = object.get(BusinessType.CODE).getAsString();
     String organizationCode = object.get(BusinessType.ORGANIZATION).getAsString();
     Organization organization = Organization.getByCode(organizationCode);
+    String origin = object.has(BusinessType.ORIGIN) ? object.get(BusinessType.ORIGIN).getAsString() : GeoprismProperties.getOrigin();
 
     ServiceFactory.getGeoObjectTypePermissionService().enforceCanCreate(organization.getCode(), false);
 
@@ -361,29 +368,6 @@ public class BusinessTypeBusinessService implements BusinessTypeBusinessServiceI
       RegistryLocalizedValueConverter.populate(mdVertex, MdVertexInfo.DISPLAY_LABEL, localizedValue);
       mdVertex.apply();
 
-      // TODO CREATE the edge between this class and GeoVertex??
-      MdVertexDAOIF mdGeoVertexDAO = MdVertexDAO.getMdVertexDAO(GeoVertex.CLASS);
-
-      MdEdgeDAO mdEdge = MdEdgeDAO.newInstance();
-      mdEdge.setValue(MdEdgeInfo.PACKAGE, RegistryConstants.BUSINESS_GRAPH_PACKAGE);
-      mdEdge.setValue(MdEdgeInfo.NAME, code + "Edge");
-      mdEdge.setValue(MdEdgeInfo.PARENT_MD_VERTEX, mdVertex.getOid());
-      mdEdge.setValue(MdEdgeInfo.CHILD_MD_VERTEX, mdGeoVertexDAO.getOid());
-      RegistryLocalizedValueConverter.populate(mdEdge, MdEdgeInfo.DISPLAY_LABEL, localizedValue);
-      mdEdge.setValue(MdEdgeInfo.ENABLE_CHANGE_OVER_TIME, MdAttributeBooleanInfo.FALSE);
-      mdEdge.apply();
-
-      // MdAttributeGraphReferenceDAO mdGeoObject =
-      // MdAttributeGraphReferenceDAO.newInstance();
-      // mdGeoObject.setValue(MdAttributeGraphReferenceInfo.REFERENCE_MD_VERTEX,
-      // mdGeoVertexDAO.getOid());
-      // mdGeoObject.setValue(MdAttributeGraphReferenceInfo.DEFINING_MD_CLASS,
-      // mdVertex.getOid());
-      // mdGeoObject.setValue(MdAttributeGraphReferenceInfo.NAME, GEO_OBJECT);
-      // mdGeoObject.setStructValue(MdAttributeGraphReferenceInfo.DESCRIPTION,
-      // MdAttributeLocalInfo.DEFAULT_LOCALE, "Geo Object");
-      // mdGeoObject.apply();
-
       // DefaultAttribute.CODE
       MdAttributeCharacterDAO vertexCodeMdAttr = MdAttributeCharacterDAO.newInstance();
       vertexCodeMdAttr.setValue(MdAttributeConcreteInfo.NAME, DefaultAttribute.CODE.getName());
@@ -396,7 +380,19 @@ public class BusinessTypeBusinessService implements BusinessTypeBusinessServiceI
       vertexCodeMdAttr.apply();
 
       businessType.setMdVertexId(mdVertex.getOid());
-      businessType.setMdEdgeId(mdEdge.getOid());
+      businessType.setOrigin(origin);
+      businessType.setSequence(object.has(BusinessType.SEQUENCE) ? object.get(BusinessType.SEQUENCE).getAsLong() : 0L);
+    }
+    else
+    {
+      if (businessType.getOrigin().equals(GeoprismProperties.getOrigin()))
+      {
+        businessType.setSequence(businessType.getSequence() + 1);
+      }
+      else if (object.has(BusinessType.SEQUENCE))
+      {
+        businessType.setSequence(object.get(BusinessType.SEQUENCE).getAsLong());
+      }
     }
 
     if (object.has(BusinessType.LABELATTRIBUTE) && !object.get(BusinessType.LABELATTRIBUTE).isJsonNull())
@@ -561,29 +557,6 @@ public class BusinessTypeBusinessService implements BusinessTypeBusinessServiceI
   }
 
   @Override
-  public boolean isEdgeABusinessType(MdEdgeDAOIF mdEdge)
-  {
-    return ( this.getByMdEdge(mdEdge) != null );
-  }
-
-  @Override
-  public BusinessType getByMdEdge(MdEdgeDAOIF mdEdge)
-  {
-    BusinessTypeQuery query = new BusinessTypeQuery(new QueryFactory());
-    query.WHERE(query.getMdEdge().EQ(mdEdge.getOid()));
-
-    try (OIterator<? extends BusinessType> it = query.getIterator())
-    {
-      if (it.hasNext())
-      {
-        return it.next();
-      }
-    }
-
-    return null;
-  }
-
-  @Override
   public BusinessType getByMdVertex(MdVertexDAOIF mdVertex)
   {
     BusinessTypeQuery query = new BusinessTypeQuery(new QueryFactory());
@@ -743,6 +716,14 @@ public class BusinessTypeBusinessService implements BusinessTypeBusinessServiceI
       org.commongeoregistry.adapter.Term term = new org.commongeoregistry.adapter.Term(attributeTermRoot.getClassifierId(), label, new LocalizedValue(""));
       attributeTermType.setRootTerm(term);
     }
+
+    // Update the sequence number of the type
+    if (type.getOrigin().equals(GeoprismProperties.getOrigin()))
+    {
+      type.setSequence(type.getSequence() + 1);
+      type.apply();
+    }
+
     return mdAttribute;
   }
 

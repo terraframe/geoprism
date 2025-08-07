@@ -1,0 +1,95 @@
+<!--
+
+    Copyright (c) 2023 TerraFrame, Inc. All rights reserved.
+
+    This file is part of Geoprism(tm).
+
+    Geoprism(tm) is free software: you can redistribute it and/or modify
+    it under the terms of the GNU Lesser General Public License as
+    published by the Free Software Foundation, either version 3 of the
+    License, or (at your option) any later version.
+
+    Geoprism(tm) is distributed in the hope that it will be useful, but
+    WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU Lesser General Public License for more details.
+
+    You should have received a copy of the GNU Lesser General Public
+    License along with Geoprism(tm).  If not, see <http://www.gnu.org/licenses/>.
+
+-->
+<version xsi:noNamespaceSchemaLocation="classpath:com/runwaysdk/resources/xsd/version.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <doIt>
+    <create>
+      <mdException name="net.geoprism.registry.OriginException" label="Origin Exception" message="Cannot modify object for types which originated from a different node">
+      </mdException>
+    </create>
+  
+    <update>
+      <mdVertex name="net.geoprism.registry.graph.GeoObjectType">
+        <create>
+          <attributes>
+            <text name="origin" label="Origin"  />          
+            <long name="sequence" label="Sequence"  />                              
+          </attributes>
+        </create>
+      </mdVertex>    
+      
+      <mdVertex name="net.geoprism.registry.graph.HierarchicalRelationshipType">
+        <create>
+          <attributes>
+            <text name="origin" label="Origin"  />                   
+            <long name="sequence" label="Sequence"  />                  
+          </attributes>
+        </create>
+      </mdVertex>    
+      
+      <mdBusiness name="net.geoprism.registry.BusinessType">
+        <create>
+          <attributes>
+            <text name="origin" label="Origin"  />                   
+            <long name="sequence" label="Sequence"  />                              
+          </attributes>
+        </create>
+      </mdBusiness>    
+      
+      <mdBusiness name="net.geoprism.registry.BusinessEdgeType">
+        <create>
+          <attributes>
+            <text name="origin" label="Origin"  />                   
+            <long name="sequence" label="Sequence"  />                              
+          </attributes>
+        </create>
+      </mdBusiness>    
+      
+      <mdBusiness name="net.geoprism.registry.DirectedAcyclicGraphType">
+        <create>
+          <attributes>
+            <text name="origin" label="Origin"  />                   
+            <long name="sequence" label="Sequence"  />                              
+          </attributes>
+        </create>
+      </mdBusiness>    
+      
+      <mdBusiness name="net.geoprism.registry.UndirectedGraphType">
+        <create>
+          <attributes>
+            <text name="origin" label="Origin"  />                   
+            <long name="sequence" label="Sequence"  />                              
+          </attributes>
+        </create>
+      </mdBusiness>    
+    </update>
+  </doIt>
+  <undoIt>
+    <delete>
+      <object type="com.runwaysdk.system.metadata.MdAttribute" key="net.geoprism.registry.UndirectedGraphType.origin" />      
+      <object type="com.runwaysdk.system.metadata.MdAttribute" key="net.geoprism.registry.DirectedAcyclicGraphType.origin" />      
+      <object type="com.runwaysdk.system.metadata.MdAttribute" key="net.geoprism.registry.BusinessEdgeType.origin" />      
+      <object type="com.runwaysdk.system.metadata.MdAttribute" key="net.geoprism.registry.BusinessType.origin" />      
+      <object type="com.runwaysdk.system.metadata.MdAttribute" key="net.geoprism.registry.graph.HierarchicalRelationshipType.origin" />      
+      <object type="com.runwaysdk.system.metadata.MdAttribute" key="net.geoprism.registry.graph.GeoObjectType.origin" />      
+      <object type="com.runwaysdk.system.metadata.MdException" key="net.geoprism.registry.OriginException" />      
+    </delete>
+  </undoIt>
+</version>

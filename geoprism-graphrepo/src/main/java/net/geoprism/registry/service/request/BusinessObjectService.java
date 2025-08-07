@@ -3,18 +3,18 @@
  *
  * This file is part of Geoprism(tm).
  *
- * Geoprism(tm) is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
+ * Geoprism(tm) is free software: you can redistribute it and/or modify it under
+ * the terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation, either version 3 of the License, or (at your option) any
+ * later version.
  *
- * Geoprism(tm) is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
+ * Geoprism(tm) is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with Geoprism(tm).  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with Geoprism(tm). If not, see <http://www.gnu.org/licenses/>.
  */
 package net.geoprism.registry.service.request;
 
@@ -34,6 +34,7 @@ import net.geoprism.registry.BusinessEdgeType;
 import net.geoprism.registry.BusinessType;
 import net.geoprism.registry.DateUtil;
 import net.geoprism.registry.model.BusinessObject;
+import net.geoprism.registry.model.EdgeDirection;
 import net.geoprism.registry.model.graph.VertexServerGeoObject;
 import net.geoprism.registry.service.business.BusinessEdgeTypeBusinessServiceIF;
 import net.geoprism.registry.service.business.BusinessObjectBusinessServiceIF;
@@ -81,7 +82,7 @@ public class BusinessObjectService
   public JsonArray getParents(String sessionId, String businessTypeCode, String code, String businessEdgeTypeCode)
   {
     BusinessType type = this.typeService.getByCode(businessTypeCode);
-    BusinessEdgeType relationshipType = this.edgeService.getByCode(businessEdgeTypeCode);
+    BusinessEdgeType relationshipType = this.edgeService.getByCodeOrThrow(businessEdgeTypeCode);
 
     BusinessObject object = this.objectService.getByCode(type, code);
 
@@ -96,7 +97,7 @@ public class BusinessObjectService
   public JsonArray getChildren(String sessionId, String businessTypeCode, String code, String businessEdgeTypeCode)
   {
     BusinessType type = this.typeService.getByCode(businessTypeCode);
-    BusinessEdgeType relationshipType = this.edgeService.getByCode(businessEdgeTypeCode);
+    BusinessEdgeType relationshipType = this.edgeService.getByCodeOrThrow(businessEdgeTypeCode);
 
     BusinessObject object = this.objectService.getByCode(type, code);
 
@@ -108,13 +109,15 @@ public class BusinessObjectService
   }
 
   @Request(RequestType.SESSION)
-  public JsonArray getGeoObjects(String sessionId, String businessTypeCode, String code, String dateStr)
+  public JsonArray getGeoObjects(String sessionId, String businessTypeCode, String code, String edgeTypeCode, String dateStr, String direction)
   {
     BusinessType type = this.typeService.getByCode(businessTypeCode);
     BusinessObject object = this.objectService.getByCode(type, code);
+    BusinessEdgeType edgeType = this.edgeService.getByCodeOrThrow(edgeTypeCode);
     Date date = DateUtil.parseDate(dateStr, true);
 
-    List<VertexServerGeoObject> geoObjects = this.objectService.getGeoObjects(object);
+    List<VertexServerGeoObject> geoObjects = this.objectService.getGeoObjects(object, edgeType, EdgeDirection.valueOf(direction));
+
     return geoObjects.stream().map(child -> {
       GeoObject geoObject = this.geoObjectService.toGeoObject(child, date);
       return geoObject.toJSON();

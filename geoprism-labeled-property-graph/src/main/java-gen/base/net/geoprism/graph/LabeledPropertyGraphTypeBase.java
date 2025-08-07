@@ -1,24 +1,6 @@
-/**
- * Copyright (c) 2023 TerraFrame, Inc. All rights reserved.
- *
- * This file is part of Geoprism(tm).
- *
- * Geoprism(tm) is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
- *
- * Geoprism(tm) is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with Geoprism(tm).  If not, see <http://www.gnu.org/licenses/>.
- */
 package net.geoprism.graph;
 
-@com.runwaysdk.business.ClassSignature(hash = 3247868)
+@com.runwaysdk.business.ClassSignature(hash = -568767463)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -29,6 +11,8 @@ package net.geoprism.graph;
 public abstract class LabeledPropertyGraphTypeBase extends com.runwaysdk.business.Business
 {
   public final static String CLASS = "net.geoprism.graph.LabeledPropertyGraphType";
+  public final static java.lang.String BUSINESSEDGECODES = "businessEdgeCodes";
+  public final static java.lang.String BUSINESSTYPECODES = "businessTypeCodes";
   public final static java.lang.String CODE = "code";
   public final static java.lang.String CREATEDATE = "createDate";
   public final static java.lang.String CREATEDBY = "createdBy";
@@ -56,13 +40,69 @@ public abstract class LabeledPropertyGraphTypeBase extends com.runwaysdk.busines
   public final static java.lang.String TYPE = "type";
   public final static java.lang.String VALID = "valid";
   @SuppressWarnings("unused")
-  private static final long serialVersionUID = 3247868;
+  private static final long serialVersionUID = -568767463;
   
   public LabeledPropertyGraphTypeBase()
   {
     super();
     description = super.getStruct("description");
     displayLabel = super.getStruct("displayLabel");
+  }
+  
+  public String getBusinessEdgeCodes()
+  {
+    return getValue(BUSINESSEDGECODES);
+  }
+  
+  public void validateBusinessEdgeCodes()
+  {
+    this.validateAttribute(BUSINESSEDGECODES);
+  }
+  
+  public static com.runwaysdk.dataaccess.MdAttributeTextDAOIF getBusinessEdgeCodesMd()
+  {
+    com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(net.geoprism.graph.LabeledPropertyGraphType.CLASS);
+    return (com.runwaysdk.dataaccess.MdAttributeTextDAOIF)mdClassIF.definesAttribute(BUSINESSEDGECODES);
+  }
+  
+  public void setBusinessEdgeCodes(String value)
+  {
+    if(value == null)
+    {
+      setValue(BUSINESSEDGECODES, "");
+    }
+    else
+    {
+      setValue(BUSINESSEDGECODES, value);
+    }
+  }
+  
+  public String getBusinessTypeCodes()
+  {
+    return getValue(BUSINESSTYPECODES);
+  }
+  
+  public void validateBusinessTypeCodes()
+  {
+    this.validateAttribute(BUSINESSTYPECODES);
+  }
+  
+  public static com.runwaysdk.dataaccess.MdAttributeTextDAOIF getBusinessTypeCodesMd()
+  {
+    com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(net.geoprism.graph.LabeledPropertyGraphType.CLASS);
+    return (com.runwaysdk.dataaccess.MdAttributeTextDAOIF)mdClassIF.definesAttribute(BUSINESSTYPECODES);
+  }
+  
+  public void setBusinessTypeCodes(String value)
+  {
+    if(value == null)
+    {
+      setValue(BUSINESSTYPECODES, "");
+    }
+    else
+    {
+      setValue(BUSINESSTYPECODES, value);
+    }
   }
   
   public String getCode()

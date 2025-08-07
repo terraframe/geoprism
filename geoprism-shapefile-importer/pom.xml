@@ -151,16 +151,18 @@
   <build>
     <plugins>
       <plugin>
-        <artifactId>maven-compiler-plugin</artifactId>
-        <version>3.1</version>
-        <configuration>
-          <source>1.8</source>
-          <target>1.8</target>
-        </configuration>
-      </plugin>
+	    <groupId>org.apache.maven.plugins</groupId>
+	    <artifactId>maven-compiler-plugin</artifactId>
+	    <version>3.13.0</version>
+	    <configuration>
+	        <compilerArgs>
+	            <arg>-parameters</arg>
+	        </compilerArgs>
+	    </configuration>
+	  </plugin>
       <!-- Weave Aspects -->
       <plugin>
-        <groupId>dev.aspectj</groupId>
+        <groupId>org.codehaus.mojo</groupId>
         <artifactId>aspectj-maven-plugin</artifactId>
         <version>${aspectj.plugin.version}</version>
         <dependencies>
@@ -195,6 +197,7 @@
           <fork>true</fork>
           <meminitial>512m</meminitial>
           <maxmem>1024m</maxmem>
+          <parameters>true</parameters>
         </configuration>
       </plugin>
     </plugins>

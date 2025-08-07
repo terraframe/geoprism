@@ -22,6 +22,8 @@ import java.util.Date;
 
 import com.runwaysdk.business.rbac.Authenticate;
 
+import net.geoprism.registry.lpg.LPGPublishProgressMonitorIF;
+import net.geoprism.registry.lpg.LPGPublishProgressMonitorNoOp;
 import net.geoprism.registry.service.business.LabeledPropertyGraphSynchronizationBusinessServiceIF;
 import net.geoprism.registry.service.business.LabeledPropertyGraphTypeBusinessServiceIF;
 import net.geoprism.registry.service.business.LabeledPropertyGraphTypeEntryBusinessServiceIF;
@@ -39,6 +41,8 @@ public class LabeledPropertyGraphUtil extends LabeledPropertyGraphUtilBase
   private LabeledPropertyGraphTypeVersionBusinessServiceIF     versionService;
 
   private LabeledPropertyGraphSynchronizationBusinessServiceIF synchronzationService;
+  
+  private LPGPublishProgressMonitorIF monitor = new LPGPublishProgressMonitorNoOp();
 
   public LabeledPropertyGraphUtil()
   {
@@ -53,6 +57,12 @@ public class LabeledPropertyGraphUtil extends LabeledPropertyGraphUtilBase
   public LabeledPropertyGraphUtil(LabeledPropertyGraphTypeVersionBusinessServiceIF versionService)
   {
     this.versionService = versionService;
+  }
+  
+  public LabeledPropertyGraphUtil(LabeledPropertyGraphTypeVersionBusinessServiceIF versionService, LPGPublishProgressMonitorIF monitor)
+  {
+    this.versionService = versionService;
+    this.monitor = monitor;
   }
 
   public LabeledPropertyGraphUtil(LabeledPropertyGraphTypeBusinessServiceIF typeService, LabeledPropertyGraphTypeEntryBusinessServiceIF entryService)
@@ -99,7 +109,7 @@ public class LabeledPropertyGraphUtil extends LabeledPropertyGraphUtilBase
   @Override
   public void publishVersion(LabeledPropertyGraphTypeVersion version)
   {
-    this.versionService.publishNoAuth(version);
+    this.versionService.publishNoAuth(monitor, version);
   }
 
 }

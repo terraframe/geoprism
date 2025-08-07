@@ -1,24 +1,6 @@
-/**
- * Copyright (c) 2023 TerraFrame, Inc. All rights reserved.
- *
- * This file is part of Geoprism(tm).
- *
- * Geoprism(tm) is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
- *
- * Geoprism(tm) is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with Geoprism(tm).  If not, see <http://www.gnu.org/licenses/>.
- */
 package net.geoprism.registry;
 
-@com.runwaysdk.business.ClassSignature(hash = -792297022)
+@com.runwaysdk.business.ClassSignature(hash = 755708638)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -302,6 +284,23 @@ public  class UndirectedGraphTypeQuery extends com.runwaysdk.query.GeneratedBusi
     return (com.runwaysdk.query.SelectableUUID)this.getComponentQuery().get(net.geoprism.registry.UndirectedGraphType.OID, alias, displayLabel);
 
   }
+  public com.runwaysdk.query.SelectableChar getOrigin()
+  {
+    return getOrigin(null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableChar getOrigin(String alias)
+  {
+    return (com.runwaysdk.query.SelectableChar)this.getComponentQuery().get(net.geoprism.registry.UndirectedGraphType.ORIGIN, alias, null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableChar getOrigin(String alias, String displayLabel)
+  {
+    return (com.runwaysdk.query.SelectableChar)this.getComponentQuery().get(net.geoprism.registry.UndirectedGraphType.ORIGIN, alias, displayLabel);
+
+  }
   public com.runwaysdk.system.ActorQuery.ActorQueryReferenceIF getOwner()
   {
     return getOwner(null);
@@ -340,6 +339,23 @@ public  class UndirectedGraphTypeQuery extends com.runwaysdk.query.GeneratedBusi
   public com.runwaysdk.query.SelectableLong getSeq(String alias, String displayLabel)
   {
     return (com.runwaysdk.query.SelectableLong)this.getComponentQuery().get(net.geoprism.registry.UndirectedGraphType.SEQ, alias, displayLabel);
+
+  }
+  public com.runwaysdk.query.SelectableLong getSequence()
+  {
+    return getSequence(null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableLong getSequence(String alias)
+  {
+    return (com.runwaysdk.query.SelectableLong)this.getComponentQuery().get(net.geoprism.registry.UndirectedGraphType.SEQUENCE, alias, null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableLong getSequence(String alias, String displayLabel)
+  {
+    return (com.runwaysdk.query.SelectableLong)this.getComponentQuery().get(net.geoprism.registry.UndirectedGraphType.SEQUENCE, alias, displayLabel);
 
   }
   public com.runwaysdk.query.SelectableChar getSiteMaster()
@@ -498,12 +514,18 @@ public  class UndirectedGraphTypeQuery extends com.runwaysdk.query.GeneratedBusi
     public com.runwaysdk.query.SelectableUUID getOid();
     public com.runwaysdk.query.SelectableUUID getOid(String alias);
     public com.runwaysdk.query.SelectableUUID getOid(String alias, String displayLabel);
+    public com.runwaysdk.query.SelectableChar getOrigin();
+    public com.runwaysdk.query.SelectableChar getOrigin(String alias);
+    public com.runwaysdk.query.SelectableChar getOrigin(String alias, String displayLabel);
     public com.runwaysdk.system.ActorQuery.ActorQueryReferenceIF getOwner();
     public com.runwaysdk.system.ActorQuery.ActorQueryReferenceIF getOwner(String alias);
     public com.runwaysdk.system.ActorQuery.ActorQueryReferenceIF getOwner(String alias, String displayLabel);
     public com.runwaysdk.query.SelectableLong getSeq();
     public com.runwaysdk.query.SelectableLong getSeq(String alias);
     public com.runwaysdk.query.SelectableLong getSeq(String alias, String displayLabel);
+    public com.runwaysdk.query.SelectableLong getSequence();
+    public com.runwaysdk.query.SelectableLong getSequence(String alias);
+    public com.runwaysdk.query.SelectableLong getSequence(String alias, String displayLabel);
     public com.runwaysdk.query.SelectableChar getSiteMaster();
     public com.runwaysdk.query.SelectableChar getSiteMaster(String alias);
     public com.runwaysdk.query.SelectableChar getSiteMaster(String alias, String displayLabel);
@@ -749,6 +771,23 @@ public  class UndirectedGraphTypeQuery extends com.runwaysdk.query.GeneratedBusi
     return (com.runwaysdk.query.SelectableUUID)this.get(net.geoprism.registry.UndirectedGraphType.OID, alias, displayLabel);
 
   }
+  public com.runwaysdk.query.SelectableChar getOrigin()
+  {
+    return getOrigin(null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableChar getOrigin(String alias)
+  {
+    return (com.runwaysdk.query.SelectableChar)this.get(net.geoprism.registry.UndirectedGraphType.ORIGIN, alias, null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableChar getOrigin(String alias, String displayLabel)
+  {
+    return (com.runwaysdk.query.SelectableChar)this.get(net.geoprism.registry.UndirectedGraphType.ORIGIN, alias, displayLabel);
+
+  }
   public com.runwaysdk.system.ActorQuery.ActorQueryReferenceIF getOwner()
   {
     return getOwner(null);
@@ -781,6 +820,23 @@ public  class UndirectedGraphTypeQuery extends com.runwaysdk.query.GeneratedBusi
   public com.runwaysdk.query.SelectableLong getSeq(String alias, String displayLabel)
   {
     return (com.runwaysdk.query.SelectableLong)this.get(net.geoprism.registry.UndirectedGraphType.SEQ, alias, displayLabel);
+
+  }
+  public com.runwaysdk.query.SelectableLong getSequence()
+  {
+    return getSequence(null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableLong getSequence(String alias)
+  {
+    return (com.runwaysdk.query.SelectableLong)this.get(net.geoprism.registry.UndirectedGraphType.SEQUENCE, alias, null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableLong getSequence(String alias, String displayLabel)
+  {
+    return (com.runwaysdk.query.SelectableLong)this.get(net.geoprism.registry.UndirectedGraphType.SEQUENCE, alias, displayLabel);
 
   }
   public com.runwaysdk.query.SelectableChar getSiteMaster()
@@ -916,12 +972,18 @@ public  class UndirectedGraphTypeQuery extends com.runwaysdk.query.GeneratedBusi
     public com.runwaysdk.query.SelectableUUID getOid();
     public com.runwaysdk.query.SelectableUUID getOid(String alias);
     public com.runwaysdk.query.SelectableUUID getOid(String alias, String displayLabel);
+    public com.runwaysdk.query.SelectableChar getOrigin();
+    public com.runwaysdk.query.SelectableChar getOrigin(String alias);
+    public com.runwaysdk.query.SelectableChar getOrigin(String alias, String displayLabel);
     public com.runwaysdk.system.ActorQuery.ActorQueryReferenceIF getOwner();
     public com.runwaysdk.system.ActorQuery.ActorQueryReferenceIF getOwner(String alias);
     public com.runwaysdk.system.ActorQuery.ActorQueryReferenceIF getOwner(String alias, String displayLabel);
     public com.runwaysdk.query.SelectableLong getSeq();
     public com.runwaysdk.query.SelectableLong getSeq(String alias);
     public com.runwaysdk.query.SelectableLong getSeq(String alias, String displayLabel);
+    public com.runwaysdk.query.SelectableLong getSequence();
+    public com.runwaysdk.query.SelectableLong getSequence(String alias);
+    public com.runwaysdk.query.SelectableLong getSequence(String alias, String displayLabel);
     public com.runwaysdk.query.SelectableChar getSiteMaster();
     public com.runwaysdk.query.SelectableChar getSiteMaster(String alias);
     public com.runwaysdk.query.SelectableChar getSiteMaster(String alias, String displayLabel);
@@ -1216,6 +1278,23 @@ public  class UndirectedGraphTypeQuery extends com.runwaysdk.query.GeneratedBusi
     return (com.runwaysdk.query.SelectableUUID)this.get(net.geoprism.registry.UndirectedGraphType.OID, alias, displayLabel);
 
   }
+  public com.runwaysdk.query.SelectableChar getOrigin()
+  {
+    return getOrigin(null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableChar getOrigin(String alias)
+  {
+    return (com.runwaysdk.query.SelectableChar)this.get(net.geoprism.registry.UndirectedGraphType.ORIGIN, alias, null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableChar getOrigin(String alias, String displayLabel)
+  {
+    return (com.runwaysdk.query.SelectableChar)this.get(net.geoprism.registry.UndirectedGraphType.ORIGIN, alias, displayLabel);
+
+  }
   public com.runwaysdk.system.ActorQuery.ActorQueryReferenceIF getOwner()
   {
     return getOwner(null);
@@ -1248,6 +1327,23 @@ public  class UndirectedGraphTypeQuery extends com.runwaysdk.query.GeneratedBusi
   public com.runwaysdk.query.SelectableLong getSeq(String alias, String displayLabel)
   {
     return (com.runwaysdk.query.SelectableLong)this.get(net.geoprism.registry.UndirectedGraphType.SEQ, alias, displayLabel);
+
+  }
+  public com.runwaysdk.query.SelectableLong getSequence()
+  {
+    return getSequence(null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableLong getSequence(String alias)
+  {
+    return (com.runwaysdk.query.SelectableLong)this.get(net.geoprism.registry.UndirectedGraphType.SEQUENCE, alias, null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableLong getSequence(String alias, String displayLabel)
+  {
+    return (com.runwaysdk.query.SelectableLong)this.get(net.geoprism.registry.UndirectedGraphType.SEQUENCE, alias, displayLabel);
 
   }
   public com.runwaysdk.query.SelectableChar getSiteMaster()

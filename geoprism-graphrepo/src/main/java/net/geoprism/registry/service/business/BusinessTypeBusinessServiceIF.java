@@ -79,10 +79,6 @@ public interface BusinessTypeBusinessServiceIF
 
   List<BusinessType> getForOrganization(Organization organization);
 
-  boolean isEdgeABusinessType(MdEdgeDAOIF mdEdge);
-
-  BusinessType getByMdEdge(MdEdgeDAOIF mdEdge);
-
   BusinessType getByMdVertex(MdVertexDAOIF mdVertex);
 
 }

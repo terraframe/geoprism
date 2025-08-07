@@ -21,6 +21,7 @@ package net.geoprism.registry.service.request;
 import java.util.Date;
 import java.util.Locale;
 import java.util.Set;
+import java.util.UUID;
 
 import org.apache.commons.lang3.StringUtils;
 import org.commongeoregistry.adapter.constants.DefaultAttribute;
@@ -99,7 +100,7 @@ public class GeoObjectService implements GeoObjectServiceIF
   {
     GeoObject geoObject = GeoObject.fromJSON(ServiceFactory.getAdapter(), jGeoObj);
 
-    ServerGeoObjectIF object = service.apply(geoObject, startDate, endDate, true, false);
+    ServerGeoObjectIF object = service.apply(geoObject, startDate, endDate, true, false, true);
 
     return service.toGeoObject(object, startDate);
   }
@@ -110,7 +111,7 @@ public class GeoObjectService implements GeoObjectServiceIF
   {
     GeoObject geoObject = GeoObject.fromJSON(ServiceFactory.getAdapter(), jGeoObj);
 
-    ServerGeoObjectIF object = service.apply(geoObject, startDate, endDate, false, false);
+    ServerGeoObjectIF object = service.apply(geoObject, startDate, endDate, false, false, true);
 
     return service.toGeoObject(object, startDate);
   }
@@ -147,7 +148,7 @@ public class GeoObjectService implements GeoObjectServiceIF
 
     this.permissionService.enforceCanWrite(goTime.getType().getOrganizationCode(), type);
 
-    ServerGeoObjectIF object = service.apply(goTime, false, false);
+    ServerGeoObjectIF object = service.apply(goTime, false, false, true);
 
     return service.toGeoObjectOverTime(object);
   }
@@ -161,7 +162,7 @@ public class GeoObjectService implements GeoObjectServiceIF
 
     this.permissionService.enforceCanCreate(type.getOrganizationCode(), type);
 
-    ServerGeoObjectIF object = service.apply(goTime, true, false);
+    ServerGeoObjectIF object = service.apply(goTime, true, false, true);
 
     return service.toGeoObjectOverTime(object);
   }
@@ -315,23 +316,23 @@ public class GeoObjectService implements GeoObjectServiceIF
 
   @Override
   @Request(RequestType.SESSION)
-  public JsonArray getBusinessObjects(String sessionId, String typeCode, String code, String businessTypeCode)
-  {
-    return this.service.getBusinessObjects(typeCode, code, businessTypeCode);
-  }
-
-  @Override
-  @Request(RequestType.SESSION)
   public ParentTreeNode addChild(String sessionId, String parentCode, String parentTypeCode, String childCode, String childTypeCode, String hierarchyCode, Date startDate, Date endDate)
   {
-    return this.service.addChild(parentCode, parentTypeCode, childCode, childTypeCode, hierarchyCode, startDate, endDate);
+    return this.service.addChild(parentCode, parentTypeCode, childCode, childTypeCode, hierarchyCode, startDate, endDate, UUID.randomUUID().toString(), true);
   }
 
   @Override
   @Request(RequestType.SESSION)
   public void removeChild(String sessionId, String parentCode, String parentTypeCode, String childCode, String childTypeCode, String hierarchyCode, Date startDate, Date endDate)
   {
-    this.service.removeChild(parentCode, parentTypeCode, childCode, childTypeCode, hierarchyCode, startDate, endDate);
+    this.service.removeChild(parentCode, parentTypeCode, childCode, childTypeCode, hierarchyCode, startDate, endDate, true);
+  }
+
+  @Override
+  @Request(RequestType.SESSION)
+  public JsonArray getBusinessObjects(String sessionId, String typeCode, String code, String edgeTypeCode, String direction)
+  {
+    return this.service.getBusinessObjects(typeCode, code, edgeTypeCode, direction);
   }
 
 }

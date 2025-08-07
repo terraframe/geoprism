@@ -1,29 +1,11 @@
-/**
- * Copyright (c) 2023 TerraFrame, Inc. All rights reserved.
- *
- * This file is part of Geoprism(tm).
- *
- * Geoprism(tm) is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
- *
- * Geoprism(tm) is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with Geoprism(tm).  If not, see <http://www.gnu.org/licenses/>.
- */
 package net.geoprism.registry;
 
-@com.runwaysdk.business.ClassSignature(hash = 1020633582)
+@com.runwaysdk.business.ClassSignature(hash = -892945910)
 public abstract class BusinessEdgeTypeDTOBase extends com.runwaysdk.business.BusinessDTO
 {
   public final static String CLASS = "net.geoprism.registry.BusinessEdgeType";
   @SuppressWarnings("unused")
-  private static final long serialVersionUID = 1020633582;
+  private static final long serialVersionUID = -892945910;
   
   protected BusinessEdgeTypeDTOBase(com.runwaysdk.constants.ClientRequestIF clientRequest)
   {
@@ -46,25 +28,27 @@ public abstract class BusinessEdgeTypeDTOBase extends com.runwaysdk.business.Bus
     return CLASS;
   }
   
-  public static final java.lang.String CHILDTYPE = "childType";
-  public static final java.lang.String CODE = "code";
-  public static final java.lang.String CREATEDATE = "createDate";
-  public static final java.lang.String CREATEDBY = "createdBy";
-  public static final java.lang.String DESCRIPTION = "description";
-  public static final java.lang.String DISPLAYLABEL = "displayLabel";
-  public static final java.lang.String ENTITYDOMAIN = "entityDomain";
-  public static final java.lang.String KEYNAME = "keyName";
-  public static final java.lang.String LASTUPDATEDATE = "lastUpdateDate";
-  public static final java.lang.String LASTUPDATEDBY = "lastUpdatedBy";
-  public static final java.lang.String LOCKEDBY = "lockedBy";
-  public static final java.lang.String MDEDGE = "mdEdge";
-  public static final java.lang.String OID = "oid";
-  public static final java.lang.String ORGANIZATION = "organization";
-  public static final java.lang.String OWNER = "owner";
-  public static final java.lang.String PARENTTYPE = "parentType";
-  public static final java.lang.String SEQ = "seq";
-  public static final java.lang.String SITEMASTER = "siteMaster";
-  public static final java.lang.String TYPE = "type";
+  public static java.lang.String CHILDTYPE = "childType";
+  public static java.lang.String CODE = "code";
+  public static java.lang.String CREATEDATE = "createDate";
+  public static java.lang.String CREATEDBY = "createdBy";
+  public static java.lang.String DESCRIPTION = "description";
+  public static java.lang.String DISPLAYLABEL = "displayLabel";
+  public static java.lang.String ENTITYDOMAIN = "entityDomain";
+  public static java.lang.String KEYNAME = "keyName";
+  public static java.lang.String LASTUPDATEDATE = "lastUpdateDate";
+  public static java.lang.String LASTUPDATEDBY = "lastUpdatedBy";
+  public static java.lang.String LOCKEDBY = "lockedBy";
+  public static java.lang.String MDEDGE = "mdEdge";
+  public static java.lang.String OID = "oid";
+  public static java.lang.String ORGANIZATION = "organization";
+  public static java.lang.String ORIGIN = "origin";
+  public static java.lang.String OWNER = "owner";
+  public static java.lang.String PARENTTYPE = "parentType";
+  public static java.lang.String SEQ = "seq";
+  public static java.lang.String SEQUENCE = "sequence";
+  public static java.lang.String SITEMASTER = "siteMaster";
+  public static java.lang.String TYPE = "type";
   public com.runwaysdk.system.metadata.MdVertexDTO getChildType()
   {
     if(getValue(CHILDTYPE) == null || getValue(CHILDTYPE).trim().equals(""))
@@ -512,6 +496,43 @@ public abstract class BusinessEdgeTypeDTOBase extends com.runwaysdk.business.Bus
     return isModified(ORGANIZATION);
   }
   
+  public String getOrigin()
+  {
+    return getValue(ORIGIN);
+  }
+  
+  public void setOrigin(String value)
+  {
+    if(value == null)
+    {
+      setValue(ORIGIN, "");
+    }
+    else
+    {
+      setValue(ORIGIN, value);
+    }
+  }
+  
+  public boolean isOriginWritable()
+  {
+    return isWritable(ORIGIN);
+  }
+  
+  public boolean isOriginReadable()
+  {
+    return isReadable(ORIGIN);
+  }
+  
+  public boolean isOriginModified()
+  {
+    return isModified(ORIGIN);
+  }
+  
+  public final com.runwaysdk.transport.metadata.AttributeTextMdDTO getOriginMd()
+  {
+    return (com.runwaysdk.transport.metadata.AttributeTextMdDTO) getAttributeDTO(ORIGIN).getAttributeMdDTO();
+  }
+  
   public com.runwaysdk.system.ActorDTO getOwner()
   {
     if(getValue(OWNER) == null || getValue(OWNER).trim().equals(""))
@@ -633,6 +654,43 @@ public abstract class BusinessEdgeTypeDTOBase extends com.runwaysdk.business.Bus
   public final com.runwaysdk.transport.metadata.AttributeNumberMdDTO getSeqMd()
   {
     return (com.runwaysdk.transport.metadata.AttributeNumberMdDTO) getAttributeDTO(SEQ).getAttributeMdDTO();
+  }
+  
+  public Long getSequence()
+  {
+    return com.runwaysdk.constants.MdAttributeLongUtil.getTypeSafeValue(getValue(SEQUENCE));
+  }
+  
+  public void setSequence(Long value)
+  {
+    if(value == null)
+    {
+      setValue(SEQUENCE, "");
+    }
+    else
+    {
+      setValue(SEQUENCE, java.lang.Long.toString(value));
+    }
+  }
+  
+  public boolean isSequenceWritable()
+  {
+    return isWritable(SEQUENCE);
+  }
+  
+  public boolean isSequenceReadable()
+  {
+    return isReadable(SEQUENCE);
+  }
+  
+  public boolean isSequenceModified()
+  {
+    return isModified(SEQUENCE);
+  }
+  
+  public final com.runwaysdk.transport.metadata.AttributeNumberMdDTO getSequenceMd()
+  {
+    return (com.runwaysdk.transport.metadata.AttributeNumberMdDTO) getAttributeDTO(SEQUENCE).getAttributeMdDTO();
   }
   
   public String getSiteMaster()

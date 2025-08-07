@@ -18,13 +18,15 @@
  */
 package net.geoprism.registry.service.business;
 
+import java.util.List;
+
 import org.springframework.stereotype.Component;
 
 import com.google.gson.JsonObject;
 
 import net.geoprism.graph.GeoObjectTypeSnapshot;
 import net.geoprism.graph.HierarchyTypeSnapshot;
-import net.geoprism.graph.LabeledPropertyGraphTypeVersion;
+import net.geoprism.registry.model.SnapshotContainer;
 
 @Component
 public interface HierarchyTypeSnapshotBusinessServiceIF
@@ -34,8 +36,14 @@ public interface HierarchyTypeSnapshotBusinessServiceIF
 
   String getTableName(String className);
 
-  HierarchyTypeSnapshot create(LabeledPropertyGraphTypeVersion version, JsonObject type, GeoObjectTypeSnapshot root);
+  HierarchyTypeSnapshot create(SnapshotContainer<?> version, JsonObject type, GeoObjectTypeSnapshot root);
 
-  HierarchyTypeSnapshot get(LabeledPropertyGraphTypeVersion version, String code);
+  HierarchyTypeSnapshot get(SnapshotContainer<?> version, String code);
+
+  List<GeoObjectTypeSnapshot> getChildren(HierarchyTypeSnapshot hierarchy, GeoObjectTypeSnapshot parent);
+
+  void createHierarchyRelationship(HierarchyTypeSnapshot hierarchy, GeoObjectTypeSnapshot parent, GeoObjectTypeSnapshot child);
+
+  JsonObject toJSON(HierarchyTypeSnapshot hierarchy, GeoObjectTypeSnapshot root);
 
 }

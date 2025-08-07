@@ -48,9 +48,9 @@ public class ServerParentGraphNode extends ServerGraphNode
    * @param date
    *          TODO
    */
-  public ServerParentGraphNode(ServerGeoObjectIF geoObject, GraphType graphType, Date startDate, Date endDate, String oid)
+  public ServerParentGraphNode(ServerGeoObjectIF geoObject, GraphType graphType, Date startDate, Date endDate, String oid, String uid)
   {
-    super(geoObject, graphType, startDate, endDate, oid);
+    super(geoObject, graphType, startDate, endDate, oid, uid);
 
     this.parents = Collections.synchronizedList(new LinkedList<ServerParentGraphNode>());
   }
@@ -228,7 +228,9 @@ public class ServerParentGraphNode extends ServerGraphNode
       oid = jo.get("oid").getAsString();
     }
     
-    ServerParentGraphNode node = new ServerParentGraphNode(goif, graphType, startDate, endDate, oid);
+    String uid = jo.has("oid") ? jo.get("oid").getAsString() : null;
+    
+    ServerParentGraphNode node = new ServerParentGraphNode(goif, graphType, startDate, endDate, oid, uid);
     
     if (jo.has(ParentTreeNode.JSON_PARENTS))
     {

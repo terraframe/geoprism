@@ -32,7 +32,13 @@ import org.commongeoregistry.adapter.metadata.GeoObjectType;
 import org.locationtech.jts.geom.Geometry;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import com.google.gson.JsonObject;
 import com.runwaysdk.business.graph.VertexObject;
+import com.runwaysdk.dataaccess.MdAttributeBooleanDAOIF;
+import com.runwaysdk.dataaccess.MdAttributeDecDAOIF;
+import com.runwaysdk.dataaccess.MdAttributeGraphReferenceDAOIF;
+import com.runwaysdk.dataaccess.MdAttributeNumberDAOIF;
+import com.runwaysdk.dataaccess.MdVertexDAOIF;
 import com.runwaysdk.dataaccess.transaction.Transaction;
 import com.runwaysdk.system.metadata.MdVertex;
 
@@ -41,6 +47,7 @@ import net.geoprism.graph.LabeledPropertyGraphTypeVersion;
 import net.geoprism.registry.cache.ClassificationCache;
 import net.geoprism.registry.conversion.LocalizedValueConverter;
 import net.geoprism.registry.graph.Source;
+import net.geoprism.registry.lpg.LPGPublishProgressMonitorIF;
 import net.geoprism.registry.model.Classification;
 
 public abstract class AbstractGraphVersionPublisherService
@@ -77,6 +84,8 @@ public abstract class AbstractGraphVersionPublisherService
     }
 
   }
+  
+  protected LPGPublishProgressMonitorIF monitor;
 
   @Autowired
   protected LabeledPropertyGraphTypeVersionBusinessServiceIF service;
@@ -216,6 +225,112 @@ public abstract class AbstractGraphVersionPublisherService
     {
       node.setValue(DefaultAttribute.GEOMETRY.getName(), geometry);
     }
+  }
+  
+  protected void beginWork(long workTotal, Object importStage)
+  {
+    if (monitor != null)
+    {
+      monitor.appLock();
+      monitor.setWorkTotal(workTotal);
+      monitor.setWorkProgress(0L);
+      monitor.clearStage();
+      monitor.addStage(importStage);
+      monitor.apply();
+    }
+  }
+  
+  protected void recordProgress(long progress, Object importStage)
+  {
+    if (monitor != null)
+    {
+      monitor.appLock();
+      monitor.setWorkProgress(progress);
+      monitor.clearStage();
+      monitor.addStage(importStage);
+      monitor.apply();
+    }
+  }
+  
+  protected void updateProgress(long workTotal, long progress, Object importStage)
+  {
+    if (monitor != null)
+    {
+      monitor.appLock();
+      monitor.setWorkProgress(progress);
+      monitor.setWorkTotal(workTotal);
+      monitor.clearStage();
+      monitor.addStage(importStage);
+      monitor.apply();
+    }
+  }
+
+  @Transaction
+  protected VertexObject publishBusiness(State state, MdVertexDAOIF mdVertex, JsonObject dto, ClassificationCache classiCache)
+  {
+    VertexObject node = new VertexObject(mdVertex.definesType());
+
+    node.setValue(DefaultAttribute.CODE.getName(), dto.get(DefaultAttribute.CODE.getName()).getAsString());
+
+    JsonObject data = dto.get("data").getAsJsonObject();
+
+    mdVertex.definesAttributes().stream().filter(attribute -> !attribute.isSystem()).forEach(attribute -> {
+
+      String attributeName = attribute.definesAttribute();
+
+      if (node.hasAttribute(attributeName) && data.has(attributeName))
+      {
+        if (data.get(attributeName).isJsonNull())
+        {
+          node.setValue(attributeName, (String) null);
+        }
+        else if (attribute instanceof MdAttributeGraphReferenceDAOIF)
+        {
+          String value = data.get(attributeName).getAsString();
+
+          String classificationTypeCode = ( (AttributeClassificationType) attribute ).getClassificationType();
+
+          Classification classification = null;
+          if (classiCache != null)
+          {
+            classification = classiCache.getClassification(classificationTypeCode, value.toString().trim());
+          }
+
+          if (classification == null)
+          {
+            classification = this.classificationService.get((AttributeClassificationType) attribute, value);
+
+            if (classification != null && classiCache != null)
+            {
+              classiCache.putClassification(classificationTypeCode, value.toString().trim(), classification);
+            }
+          }
+
+          node.setValue(attributeName, classification.getVertex());
+        }
+        else if (attribute instanceof MdAttributeNumberDAOIF)
+        {
+          node.setValue(attributeName, data.get(attributeName).getAsNumber());
+        }
+        else if (attribute instanceof MdAttributeDecDAOIF)
+        {
+          node.setValue(attributeName, data.get(attributeName).getAsBigDecimal());
+        }
+        else if (attribute instanceof MdAttributeBooleanDAOIF)
+        {
+          node.setValue(attributeName, data.get(attributeName).getAsBoolean());
+        }
+        else
+        {
+          node.setValue(attributeName, data.get(attributeName).getAsString());
+        }
+      }
+
+    });
+
+    node.apply();
+
+    return node;
   }
 
 }

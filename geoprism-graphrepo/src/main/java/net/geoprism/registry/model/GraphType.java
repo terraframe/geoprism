@@ -3,18 +3,18 @@
  *
  * This file is part of Geoprism(tm).
  *
- * Geoprism(tm) is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
+ * Geoprism(tm) is free software: you can redistribute it and/or modify it under
+ * the terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation, either version 3 of the License, or (at your option) any
+ * later version.
  *
- * Geoprism(tm) is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
+ * Geoprism(tm) is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with Geoprism(tm).  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with Geoprism(tm). If not, see <http://www.gnu.org/licenses/>.
  */
 package net.geoprism.registry.model;
 
@@ -22,6 +22,7 @@ import org.commongeoregistry.adapter.dataaccess.LocalizedValue;
 import org.commongeoregistry.adapter.metadata.GraphTypeDTO;
 
 import com.runwaysdk.dataaccess.MdEdgeDAOIF;
+import com.runwaysdk.dataaccess.ProgrammingErrorException;
 
 import net.geoprism.graph.GraphTypeReference;
 import net.geoprism.graph.GraphTypeSnapshot;
@@ -32,11 +33,15 @@ import net.geoprism.registry.model.graph.GraphStrategy;
 public interface GraphType
 {
   public MdEdgeDAOIF getMdEdgeDAO();
-  
+
   public GraphStrategy getStrategy();
 
   public String getCode();
+
+  public String getOrigin();
   
+  public Long getSequence();
+
   public LocalizedValue getLabel();
 
   public static GraphType getByCode(String relationshipType, String code)
@@ -45,11 +50,15 @@ public interface GraphType
     {
       if (relationshipType.equals(GraphTypeSnapshot.UNDIRECTED_GRAPH_TYPE) || relationshipType.equals(UndirectedGraphType.CLASS))
       {
-        return UndirectedGraphType.getByCode(code);
+        return UndirectedGraphType.getByCode(code).orElseThrow(() -> {
+          throw new ProgrammingErrorException("Unable to find undirected graph with the code [" + code + "]");
+        });
       }
       else if (relationshipType.equals(GraphTypeSnapshot.DIRECTED_ACYCLIC_GRAPH_TYPE) || relationshipType.equals(DirectedAcyclicGraphType.CLASS))
       {
-        return DirectedAcyclicGraphType.getByCode(code);
+        return DirectedAcyclicGraphType.getByCode(code).orElseThrow(() -> {
+          throw new ProgrammingErrorException("Unable to find undirected graph with the code [" + code + "]");
+        });
       }
       else if (relationshipType.equals(GraphTypeSnapshot.HIERARCHY_TYPE))
       {
@@ -63,7 +72,7 @@ public interface GraphType
 
     return ServerHierarchyType.get(code);
   }
-  
+
   public static String getTypeCode(GraphType graphType)
   {
     if (graphType instanceof DirectedAcyclicGraphType)
@@ -83,7 +92,7 @@ public interface GraphType
       throw new UnsupportedOperationException();
     }
   }
-  
+
   public static GraphType resolve(GraphTypeReference ref)
   {
     return getByCode(ref.typeCode, ref.code);

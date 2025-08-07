@@ -20,6 +20,7 @@ package net.geoprism.registry;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Optional;
 
 import org.commongeoregistry.adapter.dataaccess.LocalizedValue;
 import org.commongeoregistry.adapter.metadata.GraphTypeDTO;
@@ -81,6 +82,7 @@ public class UndirectedGraphType extends UndirectedGraphTypeBase implements Json
     object.addProperty(UndirectedGraphType.OID, this.getOid());
     object.addProperty(UndirectedGraphType.TYPE, "UndirectedGraphType");
     object.addProperty(UndirectedGraphType.CODE, this.getCode());
+    object.addProperty(UndirectedGraphType.SEQ, this.getSeq());
     object.add(UndirectedGraphType.JSON_LABEL, RegistryLocalizedValueConverter.convertNoAutoCoalesce(this.getDisplayLabel()).toJSON());
     object.add(UndirectedGraphType.DESCRIPTION, RegistryLocalizedValueConverter.convertNoAutoCoalesce(this.getDescription()).toJSON());
 
@@ -114,9 +116,20 @@ public class UndirectedGraphType extends UndirectedGraphTypeBase implements Json
     return new UndirectedGraphStrategy(this);
   }
 
-  public static UndirectedGraphType getByCode(String code)
+  public static Optional<UndirectedGraphType> getByCode(String code)
   {
-    return UndirectedGraphType.getByKey(code);
+    UndirectedGraphTypeQuery query = new UndirectedGraphTypeQuery(new QueryFactory());
+    query.WHERE(query.getCode().EQ(code));
+
+    try (OIterator<? extends UndirectedGraphType> it = query.getIterator())
+    {
+      if (it.hasNext())
+      {
+        return Optional.ofNullable(it.next());
+      }
+    }
+
+    return Optional.empty();
   }
 
   public static UndirectedGraphType getByMdEdge(MdEdge mdEdge)

@@ -3,23 +3,22 @@
  *
  * This file is part of Geoprism(tm).
  *
- * Geoprism(tm) is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
+ * Geoprism(tm) is free software: you can redistribute it and/or modify it under
+ * the terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation, either version 3 of the License, or (at your option) any
+ * later version.
  *
- * Geoprism(tm) is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
+ * Geoprism(tm) is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with Geoprism(tm).  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with Geoprism(tm). If not, see <http://www.gnu.org/licenses/>.
  */
 package net.geoprism.registry.service.request;
 
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -35,8 +34,9 @@ import com.google.gson.JsonObject;
 import com.runwaysdk.session.Request;
 import com.runwaysdk.session.RequestType;
 
+import net.geoprism.configuration.GeoprismProperties;
 import net.geoprism.registry.Organization;
-import net.geoprism.registry.model.ServerGeoObjectIF;
+import net.geoprism.registry.OriginException;
 import net.geoprism.registry.model.ServerGeoObjectType;
 import net.geoprism.registry.model.ServerHierarchyType;
 import net.geoprism.registry.permission.PermissionContext;
@@ -44,9 +44,7 @@ import net.geoprism.registry.service.business.GeoObjectBusinessServiceIF;
 import net.geoprism.registry.service.business.GeoObjectTypeBusinessServiceIF;
 import net.geoprism.registry.service.business.HierarchyTypeBusinessServiceIF;
 import net.geoprism.registry.service.business.ServiceFactory;
-import net.geoprism.registry.service.permission.GeoObjectRelationshipPermissionServiceIF;
 import net.geoprism.registry.service.permission.HierarchyTypePermissionServiceIF;
-import net.geoprism.registry.view.ServerParentTreeNodeOverTime;
 
 @Service
 public class HierarchyTypeService implements HierarchyTypeServiceIF
@@ -152,7 +150,6 @@ public class HierarchyTypeService implements HierarchyTypeServiceIF
 
     ServerHierarchyType sType = service.createHierarchyType(hierarchyType);
 
-
     return service.toHierarchyType(sType);
   }
 
@@ -168,6 +165,11 @@ public class HierarchyTypeService implements HierarchyTypeServiceIF
   {
     HierarchyType dto = HierarchyType.fromJSON(htJSON, ServiceFactory.getAdapter());
     ServerHierarchyType type = ServerHierarchyType.get(dto);
+
+    if (!type.getOrigin().equals(GeoprismProperties.getOrigin()))
+    {
+      throw new OriginException();
+    }
 
     ServiceFactory.getHierarchyPermissionService().enforceCanWrite(type.getOrganization().getCode());
 
@@ -187,6 +189,11 @@ public class HierarchyTypeService implements HierarchyTypeServiceIF
   public void deleteHierarchyType(String sessionId, String code)
   {
     ServerHierarchyType type = ServerHierarchyType.get(code);
+
+    if (!type.getOrigin().equals(GeoprismProperties.getOrigin()))
+    {
+      throw new OriginException();
+    }
 
     ServiceFactory.getHierarchyPermissionService().enforceCanDelete(type.getOrganization().getCode());
 
@@ -212,6 +219,11 @@ public class HierarchyTypeService implements HierarchyTypeServiceIF
     ServerHierarchyType type = ServerHierarchyType.get(hierarchyTypeCode);
     ServerGeoObjectType parentType = ServerGeoObjectType.get(parentGeoObjectTypeCode);
     ServerGeoObjectType childType = ServerGeoObjectType.get(childGeoObjectTypeCode);
+
+    if (!type.getOrigin().equals(GeoprismProperties.getOrigin()))
+    {
+      throw new OriginException();
+    }
 
     ServiceFactory.getGeoObjectTypeRelationshipPermissionService().enforceCanAddChild(type, parentType, childType);
 
@@ -245,6 +257,11 @@ public class HierarchyTypeService implements HierarchyTypeServiceIF
     ServerGeoObjectType parentType = ServerGeoObjectType.get(parentGeoObjectTypeCode);
     ServerGeoObjectType middleType = ServerGeoObjectType.get(middleGeoObjectTypeCode);
 
+    if (!type.getOrigin().equals(GeoprismProperties.getOrigin()))
+    {
+      throw new OriginException();
+    }
+
     List<ServerGeoObjectType> youngestTypes = Arrays.asList(youngestGeoObjectTypeCode.split(",")).stream().map(code -> ServerGeoObjectType.get(code.trim())).collect(Collectors.toList());
 
     ServiceFactory.getGeoObjectTypeRelationshipPermissionService().enforceCanAddChild(type, parentType, middleType);
@@ -273,6 +290,11 @@ public class HierarchyTypeService implements HierarchyTypeServiceIF
     ServerHierarchyType inheritedHierarchy = ServerHierarchyType.get(inheritedHierarchyTypeCode);
     ServerGeoObjectType childType = ServerGeoObjectType.get(geoObjectTypeCode);
 
+    if (!forHierarchy.getOrigin().equals(GeoprismProperties.getOrigin()))
+    {
+      throw new OriginException();
+    }
+
     ServiceFactory.getGeoObjectTypeRelationshipPermissionService().enforceCanAddChild(forHierarchy, null, childType);
 
     ServerGeoObjectType type = ServerGeoObjectType.get(geoObjectTypeCode);
@@ -298,6 +320,11 @@ public class HierarchyTypeService implements HierarchyTypeServiceIF
   {
     ServerHierarchyType forHierarchy = ServerHierarchyType.get(hierarchyTypeCode);
     ServerGeoObjectType childType = ServerGeoObjectType.get(geoObjectTypeCode);
+
+    if (!forHierarchy.getOrigin().equals(GeoprismProperties.getOrigin()))
+    {
+      throw new OriginException();
+    }
 
     ServiceFactory.getGeoObjectTypeRelationshipPermissionService().enforceCanAddChild(forHierarchy, null, childType);
 
@@ -325,6 +352,11 @@ public class HierarchyTypeService implements HierarchyTypeServiceIF
     ServerHierarchyType type = ServerHierarchyType.get(hierarchyTypeCode);
     ServerGeoObjectType parentType = ServerGeoObjectType.get(parentGeoObjectTypeCode);
     ServerGeoObjectType childType = ServerGeoObjectType.get(childGeoObjectTypeCode);
+
+    if (!type.getOrigin().equals(GeoprismProperties.getOrigin()))
+    {
+      throw new OriginException();
+    }
 
     ServiceFactory.getGeoObjectTypeRelationshipPermissionService().enforceCanRemoveChild(type, parentType, childType);
 

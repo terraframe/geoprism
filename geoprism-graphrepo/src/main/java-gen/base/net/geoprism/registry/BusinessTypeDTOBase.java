@@ -1,29 +1,11 @@
-/**
- * Copyright (c) 2023 TerraFrame, Inc. All rights reserved.
- *
- * This file is part of Geoprism(tm).
- *
- * Geoprism(tm) is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
- *
- * Geoprism(tm) is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with Geoprism(tm).  If not, see <http://www.gnu.org/licenses/>.
- */
 package net.geoprism.registry;
 
-@com.runwaysdk.business.ClassSignature(hash = 811006712)
+@com.runwaysdk.business.ClassSignature(hash = -1663267263)
 public abstract class BusinessTypeDTOBase extends com.runwaysdk.business.BusinessDTO
 {
   public final static String CLASS = "net.geoprism.registry.BusinessType";
   @SuppressWarnings("unused")
-  private static final long serialVersionUID = 811006712;
+  private static final long serialVersionUID = -1663267263;
   
   protected BusinessTypeDTOBase(com.runwaysdk.constants.ClientRequestIF clientRequest)
   {
@@ -46,24 +28,25 @@ public abstract class BusinessTypeDTOBase extends com.runwaysdk.business.Busines
     return CLASS;
   }
   
-  public static final java.lang.String CODE = "code";
-  public static final java.lang.String CREATEDATE = "createDate";
-  public static final java.lang.String CREATEDBY = "createdBy";
-  public static final java.lang.String DISPLAYLABEL = "displayLabel";
-  public static final java.lang.String ENTITYDOMAIN = "entityDomain";
-  public static final java.lang.String KEYNAME = "keyName";
-  public static final java.lang.String LABELATTRIBUTE = "labelAttribute";
-  public static final java.lang.String LASTUPDATEDATE = "lastUpdateDate";
-  public static final java.lang.String LASTUPDATEDBY = "lastUpdatedBy";
-  public static final java.lang.String LOCKEDBY = "lockedBy";
-  public static final java.lang.String MDEDGE = "mdEdge";
-  public static final java.lang.String MDVERTEX = "mdVertex";
-  public static final java.lang.String OID = "oid";
-  public static final java.lang.String ORGANIZATION = "organization";
-  public static final java.lang.String OWNER = "owner";
-  public static final java.lang.String SEQ = "seq";
-  public static final java.lang.String SITEMASTER = "siteMaster";
-  public static final java.lang.String TYPE = "type";
+  public static java.lang.String CODE = "code";
+  public static java.lang.String CREATEDATE = "createDate";
+  public static java.lang.String CREATEDBY = "createdBy";
+  public static java.lang.String DISPLAYLABEL = "displayLabel";
+  public static java.lang.String ENTITYDOMAIN = "entityDomain";
+  public static java.lang.String KEYNAME = "keyName";
+  public static java.lang.String LABELATTRIBUTE = "labelAttribute";
+  public static java.lang.String LASTUPDATEDATE = "lastUpdateDate";
+  public static java.lang.String LASTUPDATEDBY = "lastUpdatedBy";
+  public static java.lang.String LOCKEDBY = "lockedBy";
+  public static java.lang.String MDVERTEX = "mdVertex";
+  public static java.lang.String OID = "oid";
+  public static java.lang.String ORGANIZATION = "organization";
+  public static java.lang.String ORIGIN = "origin";
+  public static java.lang.String OWNER = "owner";
+  public static java.lang.String SEQ = "seq";
+  public static java.lang.String SEQUENCE = "sequence";
+  public static java.lang.String SITEMASTER = "siteMaster";
+  public static java.lang.String TYPE = "type";
   public String getCode()
   {
     return getValue(CODE);
@@ -422,55 +405,6 @@ public abstract class BusinessTypeDTOBase extends com.runwaysdk.business.Busines
     return (com.runwaysdk.transport.metadata.AttributeReferenceMdDTO) getAttributeDTO(LOCKEDBY).getAttributeMdDTO();
   }
   
-  public com.runwaysdk.system.metadata.MdEdgeDTO getMdEdge()
-  {
-    if(getValue(MDEDGE) == null || getValue(MDEDGE).trim().equals(""))
-    {
-      return null;
-    }
-    else
-    {
-      return com.runwaysdk.system.metadata.MdEdgeDTO.get(getRequest(), getValue(MDEDGE));
-    }
-  }
-  
-  public String getMdEdgeOid()
-  {
-    return getValue(MDEDGE);
-  }
-  
-  public void setMdEdge(com.runwaysdk.system.metadata.MdEdgeDTO value)
-  {
-    if(value == null)
-    {
-      setValue(MDEDGE, "");
-    }
-    else
-    {
-      setValue(MDEDGE, value.getOid());
-    }
-  }
-  
-  public boolean isMdEdgeWritable()
-  {
-    return isWritable(MDEDGE);
-  }
-  
-  public boolean isMdEdgeReadable()
-  {
-    return isReadable(MDEDGE);
-  }
-  
-  public boolean isMdEdgeModified()
-  {
-    return isModified(MDEDGE);
-  }
-  
-  public final com.runwaysdk.transport.metadata.AttributeReferenceMdDTO getMdEdgeMd()
-  {
-    return (com.runwaysdk.transport.metadata.AttributeReferenceMdDTO) getAttributeDTO(MDEDGE).getAttributeMdDTO();
-  }
-  
   public com.runwaysdk.system.metadata.MdVertexDTO getMdVertex()
   {
     if(getValue(MDVERTEX) == null || getValue(MDVERTEX).trim().equals(""))
@@ -533,6 +467,43 @@ public abstract class BusinessTypeDTOBase extends com.runwaysdk.business.Busines
   public boolean isOrganizationModified()
   {
     return isModified(ORGANIZATION);
+  }
+  
+  public String getOrigin()
+  {
+    return getValue(ORIGIN);
+  }
+  
+  public void setOrigin(String value)
+  {
+    if(value == null)
+    {
+      setValue(ORIGIN, "");
+    }
+    else
+    {
+      setValue(ORIGIN, value);
+    }
+  }
+  
+  public boolean isOriginWritable()
+  {
+    return isWritable(ORIGIN);
+  }
+  
+  public boolean isOriginReadable()
+  {
+    return isReadable(ORIGIN);
+  }
+  
+  public boolean isOriginModified()
+  {
+    return isModified(ORIGIN);
+  }
+  
+  public final com.runwaysdk.transport.metadata.AttributeTextMdDTO getOriginMd()
+  {
+    return (com.runwaysdk.transport.metadata.AttributeTextMdDTO) getAttributeDTO(ORIGIN).getAttributeMdDTO();
   }
   
   public com.runwaysdk.system.ActorDTO getOwner()
@@ -607,6 +578,43 @@ public abstract class BusinessTypeDTOBase extends com.runwaysdk.business.Busines
   public final com.runwaysdk.transport.metadata.AttributeNumberMdDTO getSeqMd()
   {
     return (com.runwaysdk.transport.metadata.AttributeNumberMdDTO) getAttributeDTO(SEQ).getAttributeMdDTO();
+  }
+  
+  public Long getSequence()
+  {
+    return com.runwaysdk.constants.MdAttributeLongUtil.getTypeSafeValue(getValue(SEQUENCE));
+  }
+  
+  public void setSequence(Long value)
+  {
+    if(value == null)
+    {
+      setValue(SEQUENCE, "");
+    }
+    else
+    {
+      setValue(SEQUENCE, java.lang.Long.toString(value));
+    }
+  }
+  
+  public boolean isSequenceWritable()
+  {
+    return isWritable(SEQUENCE);
+  }
+  
+  public boolean isSequenceReadable()
+  {
+    return isReadable(SEQUENCE);
+  }
+  
+  public boolean isSequenceModified()
+  {
+    return isModified(SEQUENCE);
+  }
+  
+  public final com.runwaysdk.transport.metadata.AttributeNumberMdDTO getSequenceMd()
+  {
+    return (com.runwaysdk.transport.metadata.AttributeNumberMdDTO) getAttributeDTO(SEQUENCE).getAttributeMdDTO();
   }
   
   public String getSiteMaster()

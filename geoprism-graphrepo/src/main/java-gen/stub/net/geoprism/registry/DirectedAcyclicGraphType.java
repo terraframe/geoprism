@@ -3,23 +3,24 @@
  *
  * This file is part of Geoprism(tm).
  *
- * Geoprism(tm) is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
+ * Geoprism(tm) is free software: you can redistribute it and/or modify it under
+ * the terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation, either version 3 of the License, or (at your option) any
+ * later version.
  *
- * Geoprism(tm) is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
+ * Geoprism(tm) is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with Geoprism(tm).  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with Geoprism(tm). If not, see <http://www.gnu.org/licenses/>.
  */
 package net.geoprism.registry;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Optional;
 
 import org.commongeoregistry.adapter.dataaccess.LocalizedValue;
 import org.commongeoregistry.adapter.metadata.GraphTypeDTO;
@@ -62,7 +63,7 @@ public class DirectedAcyclicGraphType extends DirectedAcyclicGraphTypeBase imple
   {
     return RegistryLocalizedValueConverter.convertNoAutoCoalesce(this.getDisplayLabel());
   }
-  
+
   @Override
   public LocalizedValue getDescriptionLV()
   {
@@ -81,12 +82,13 @@ public class DirectedAcyclicGraphType extends DirectedAcyclicGraphTypeBase imple
     object.addProperty(DirectedAcyclicGraphType.OID, this.getOid());
     object.addProperty(DirectedAcyclicGraphType.TYPE, "DirectedAcyclicGraphType");
     object.addProperty(DirectedAcyclicGraphType.CODE, this.getCode());
+    object.addProperty(DirectedAcyclicGraphType.SEQ, this.getSeq());
     object.add(DirectedAcyclicGraphType.JSON_LABEL, RegistryLocalizedValueConverter.convertNoAutoCoalesce(this.getDisplayLabel()).toJSON());
     object.add(DirectedAcyclicGraphType.DESCRIPTION, RegistryLocalizedValueConverter.convertNoAutoCoalesce(this.getDescription()).toJSON());
 
     return object;
   }
-  
+
   @Override
   public GraphTypeDTO toDTO()
   {
@@ -113,9 +115,20 @@ public class DirectedAcyclicGraphType extends DirectedAcyclicGraphTypeBase imple
     }
   }
 
-  public static DirectedAcyclicGraphType getByCode(String code)
+  public static Optional<DirectedAcyclicGraphType> getByCode(String code)
   {
-    return DirectedAcyclicGraphType.getByKey(code);
+    DirectedAcyclicGraphTypeQuery query = new DirectedAcyclicGraphTypeQuery(new QueryFactory());
+    query.WHERE(query.getCode().EQ(code));
+
+    try (OIterator<? extends DirectedAcyclicGraphType> it = query.getIterator())
+    {
+      if (it.hasNext())
+      {
+        return Optional.ofNullable(it.next());
+      }
+    }
+
+    return Optional.empty();
   }
 
   public static DirectedAcyclicGraphType getByMdEdge(MdEdge mdEdge)
@@ -133,5 +146,5 @@ public class DirectedAcyclicGraphType extends DirectedAcyclicGraphTypeBase imple
 
     return null;
   }
-  
+
 }

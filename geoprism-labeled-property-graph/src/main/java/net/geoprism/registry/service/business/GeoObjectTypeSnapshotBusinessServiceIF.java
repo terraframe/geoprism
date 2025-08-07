@@ -3,18 +3,18 @@
  *
  * This file is part of Geoprism(tm).
  *
- * Geoprism(tm) is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
+ * Geoprism(tm) is free software: you can redistribute it and/or modify it under
+ * the terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation, either version 3 of the License, or (at your option) any
+ * later version.
  *
- * Geoprism(tm) is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
+ * Geoprism(tm) is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with Geoprism(tm).  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with Geoprism(tm). If not, see <http://www.gnu.org/licenses/>.
  */
 package net.geoprism.registry.service.business;
 
@@ -29,10 +29,10 @@ import com.runwaysdk.dataaccess.MdVertexDAOIF;
 import com.runwaysdk.dataaccess.metadata.graph.MdVertexDAO;
 
 import net.geoprism.graph.GeoObjectTypeSnapshot;
-import net.geoprism.graph.LabeledPropertyGraphTypeVersion;
+import net.geoprism.registry.model.SnapshotContainer;
 
 @Component
-public interface GeoObjectTypeSnapshotBusinessServiceIF
+public interface GeoObjectTypeSnapshotBusinessServiceIF extends ObjectTypeSnapshotBusinessServiceIF<GeoObjectTypeSnapshot>
 {
 
   void truncate(GeoObjectTypeSnapshot snapshot);
@@ -43,18 +43,18 @@ public interface GeoObjectTypeSnapshotBusinessServiceIF
 
   String getTableName(String className);
 
-  GeoObjectTypeSnapshot createRoot(LabeledPropertyGraphTypeVersion version);
+  GeoObjectTypeSnapshot createRoot(SnapshotContainer<?> version);
 
-  GeoObjectTypeSnapshot create(LabeledPropertyGraphTypeVersion version, JsonObject type);
+  GeoObjectTypeSnapshot create(SnapshotContainer<?> version, JsonObject type);
 
   GeoObject toGeoObject(GeoObjectTypeSnapshot snapshot, VertexObject vertex);
 
   GeoObject toGeoObject(VertexObject vertex, GeoObjectType type);
 
-  GeoObjectTypeSnapshot get(LabeledPropertyGraphTypeVersion version, MdVertexDAOIF mdVertex);
+  GeoObjectTypeSnapshot get(SnapshotContainer<?> version, MdVertexDAOIF mdVertex);
 
-  GeoObjectTypeSnapshot get(LabeledPropertyGraphTypeVersion version, String code);
+  GeoObjectTypeSnapshot get(SnapshotContainer<?> version, String code);
 
-  GeoObjectTypeSnapshot getRoot(LabeledPropertyGraphTypeVersion version);
+  GeoObjectTypeSnapshot getRoot(SnapshotContainer<?> version);
 
 }

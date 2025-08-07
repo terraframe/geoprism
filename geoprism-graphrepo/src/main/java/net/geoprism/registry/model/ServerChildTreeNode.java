@@ -46,9 +46,9 @@ public class ServerChildTreeNode extends ServerTreeNode
    * @param _geoObject
    * @param _hierarchyType
    */
-  public ServerChildTreeNode(ServerGeoObjectIF geoObject, ServerHierarchyType hierarchyType, Date startDate, Date endDate, String oid)
+  public ServerChildTreeNode(ServerGeoObjectIF geoObject, ServerHierarchyType hierarchyType, Date startDate, Date endDate, String oid, String uid)
   {
-    super(geoObject, hierarchyType, startDate, endDate, oid);
+    super(geoObject, hierarchyType, startDate, endDate, oid, uid);
 
     this.children = Collections.synchronizedList(new LinkedList<ServerChildTreeNode>());
   }

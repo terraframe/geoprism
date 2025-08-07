@@ -3,18 +3,18 @@
  *
  * This file is part of Geoprism(tm).
  *
- * Geoprism(tm) is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
+ * Geoprism(tm) is free software: you can redistribute it and/or modify it under
+ * the terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation, either version 3 of the License, or (at your option) any
+ * later version.
  *
- * Geoprism(tm) is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
+ * Geoprism(tm) is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with Geoprism(tm).  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with Geoprism(tm). If not, see <http://www.gnu.org/licenses/>.
  */
 package net.geoprism.registry.model.graph;
 
@@ -29,6 +29,8 @@ import java.util.TreeMap;
 import java.util.TreeSet;
 import java.util.UUID;
 
+import org.commongeoregistry.adapter.constants.DefaultAttribute;
+
 import com.runwaysdk.business.graph.EdgeObject;
 import com.runwaysdk.business.graph.GraphQuery;
 import com.runwaysdk.business.graph.VertexObject;
@@ -38,6 +40,7 @@ import com.runwaysdk.dataaccess.graph.attributes.ValueOverTime;
 import net.geoprism.registry.DirectedAcyclicGraphType;
 import net.geoprism.registry.graph.GeoVertex;
 import net.geoprism.registry.model.EdgeConstant;
+import net.geoprism.registry.model.EdgeValueOverTime;
 import net.geoprism.registry.model.ServerChildGraphNode;
 import net.geoprism.registry.model.ServerGeoObjectType;
 import net.geoprism.registry.model.ServerParentGraphNode;
@@ -71,7 +74,7 @@ public class DirectedAcyclicGraphStrategy extends AbstractGraphStrategy implemen
   @Override
   public ServerChildGraphNode getChildren(VertexServerGeoObject parent, Boolean recursive, Date date, String boundsWKT, Long skip, Long limit)
   {
-    ServerChildGraphNode tnRoot = new ServerChildGraphNode(parent, this.type, date, null, null);
+    ServerChildGraphNode tnRoot = new ServerChildGraphNode(parent, this.type, date, null, null, null);
 
     if (limit != null && limit <= 0)
     {
@@ -101,7 +104,7 @@ public class DirectedAcyclicGraphStrategy extends AbstractGraphStrategy implemen
       }
       else
       {
-        tnParent = new ServerChildGraphNode(child, this.type, date, null, UUID.randomUUID().toString());
+        tnParent = new ServerChildGraphNode(child, this.type, date, null, UUID.randomUUID().toString(), null);
       }
 
       tnRoot.addChild(tnParent);
@@ -164,7 +167,7 @@ public class DirectedAcyclicGraphStrategy extends AbstractGraphStrategy implemen
   @Override
   public ServerParentGraphNode getParents(VertexServerGeoObject child, Boolean recursive, Date date, String boundsWKT, Long skip, Long limit)
   {
-    ServerParentGraphNode tnRoot = new ServerParentGraphNode(child, this.type, date, null, null);
+    ServerParentGraphNode tnRoot = new ServerParentGraphNode(child, this.type, date, null, null, null);
 
     if (limit != null && limit <= 0)
     {
@@ -194,7 +197,7 @@ public class DirectedAcyclicGraphStrategy extends AbstractGraphStrategy implemen
       }
       else
       {
-        tnParent = new ServerParentGraphNode(parent, this.type, date, null, UUID.randomUUID().toString());
+        tnParent = new ServerParentGraphNode(parent, this.type, date, null, UUID.randomUUID().toString(), null);
       }
 
       tnRoot.addParent(tnParent);
@@ -205,14 +208,14 @@ public class DirectedAcyclicGraphStrategy extends AbstractGraphStrategy implemen
 
   @SuppressWarnings("unchecked")
   @Override
-  public ServerParentGraphNode addChild(VertexServerGeoObject geoObject, VertexServerGeoObject child, Date startDate, Date endDate, boolean validate)
+  public ServerParentGraphNode addChild(VertexServerGeoObject geoObject, VertexServerGeoObject child, Date startDate, Date endDate, String uid, boolean validate)
   {
-    return this.addParent(child, geoObject, startDate, endDate, validate);
+    return this.addParent(child, geoObject, startDate, endDate, uid, validate);
   }
 
   @SuppressWarnings("unchecked")
   @Override
-  public ServerParentGraphNode addParent(VertexServerGeoObject geoObject, VertexServerGeoObject parent, Date startDate, Date endDate, boolean validate)
+  public ServerParentGraphNode addParent(VertexServerGeoObject geoObject, VertexServerGeoObject parent, Date startDate, Date endDate, String uid, boolean validate)
   {
     if (validate)
     {
@@ -230,12 +233,13 @@ public class DirectedAcyclicGraphStrategy extends AbstractGraphStrategy implemen
     }
 
     Set<ValueOverTime> votc = this.getParentCollection(geoObject);
-    votc.add(new ValueOverTime(startDate, endDate, parent));
+    votc.add(new EdgeValueOverTime(startDate, endDate, parent, uid));
 
     SortedSet<EdgeObject> newEdges = this.setParentCollection(geoObject, votc);
+    EdgeObject edge = newEdges.first();
 
-    ServerParentGraphNode node = new ServerParentGraphNode(geoObject, this.type, startDate, endDate, null);
-    node.addParent(new ServerParentGraphNode(parent, this.type, startDate, endDate, newEdges.first().getOid()));
+    ServerParentGraphNode node = new ServerParentGraphNode(geoObject, this.type, startDate, endDate, null, null);
+    node.addParent(new ServerParentGraphNode(parent, this.type, startDate, endDate, edge.getOid(), edge.getObjectValue(DefaultAttribute.UID.getName())));
 
     return node;
   }
@@ -346,6 +350,10 @@ public class DirectedAcyclicGraphStrategy extends AbstractGraphStrategy implemen
       {
         VertexServerGeoObject inGo = (VertexServerGeoObject) inVot.getValue();
 
+        String uid = inVot instanceof EdgeValueOverTime ? //
+            ( (EdgeValueOverTime) inVot ).getUid() : //
+            UUID.randomUUID().toString();
+
         boolean hasValueChange = false;
 
         if ( ( inGo == null && edgeGo != null ) || ( inGo != null && edgeGo == null ))
@@ -362,6 +370,7 @@ public class DirectedAcyclicGraphStrategy extends AbstractGraphStrategy implemen
           edge.delete();
 
           EdgeObject newEdge = geoObject.getVertex().addParent(inGo.getVertex(), this.type.getMdEdgeDAO());
+          newEdge.setValue(DefaultAttribute.UID.getName(), uid);
           newEdge.setValue(GeoVertex.START_DATE, startDate);
           newEdge.setValue(GeoVertex.END_DATE, endDate);
           newEdge.apply();
@@ -406,11 +415,16 @@ public class DirectedAcyclicGraphStrategy extends AbstractGraphStrategy implemen
         }
       }
 
+      String uid = vot instanceof EdgeValueOverTime ? //
+          ( (EdgeValueOverTime) vot ).getUid() : //
+          UUID.randomUUID().toString();
+
       if (isNew)
       {
         EdgeObject newEdge = geoObject.getVertex().addParent( ( (VertexServerGeoObject) vot.getValue() ).getVertex(), this.type.getMdEdgeDAO());
         newEdge.setValue(GeoVertex.START_DATE, vot.getStartDate());
         newEdge.setValue(GeoVertex.END_DATE, vot.getEndDate());
+        newEdge.setValue(DefaultAttribute.UID.getName(), uid);
         newEdge.apply();
 
         resultEdges.add(newEdge);

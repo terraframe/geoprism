@@ -18,22 +18,27 @@
  */
 package net.geoprism.registry.service.business;
 
+import org.commongeoregistry.adapter.constants.DefaultAttribute;
 import org.commongeoregistry.adapter.dataaccess.LocalizedValue;
 import org.springframework.stereotype.Service;
 
 import com.google.gson.JsonObject;
 import com.runwaysdk.constants.MdAttributeBooleanInfo;
+import com.runwaysdk.constants.MdAttributeConcreteInfo;
 import com.runwaysdk.constants.MdAttributeDateTimeInfo;
 import com.runwaysdk.constants.MdAttributeLocalInfo;
 import com.runwaysdk.constants.graph.MdEdgeInfo;
 import com.runwaysdk.dataaccess.DuplicateDataException;
 import com.runwaysdk.dataaccess.MdVertexDAOIF;
 import com.runwaysdk.dataaccess.metadata.MdAttributeDateTimeDAO;
+import com.runwaysdk.dataaccess.metadata.MdAttributeUUIDDAO;
 import com.runwaysdk.dataaccess.metadata.graph.MdEdgeDAO;
 import com.runwaysdk.dataaccess.metadata.graph.MdVertexDAO;
 import com.runwaysdk.dataaccess.transaction.Transaction;
 import com.runwaysdk.system.metadata.MdEdge;
 
+import net.geoprism.configuration.GeoprismProperties;
+import net.geoprism.registry.BusinessType;
 import net.geoprism.registry.DirectedAcyclicGraphType;
 import net.geoprism.registry.DuplicateHierarchyTypeException;
 import net.geoprism.registry.RegistryConstants;
@@ -45,31 +50,32 @@ public class DirectedAcyclicGraphTypeBusinessService implements DirectedAcyclicG
 {
   @Override
   @Transaction
-  public void update(DirectedAcyclicGraphType dagt, JsonObject object)
+  public void update(DirectedAcyclicGraphType type, JsonObject object)
   {
     try
     {
-      dagt.appLock();
+      type.appLock();
 
       if (object.has(DirectedAcyclicGraphType.DISPLAYLABEL))
       {
         LocalizedValue label = LocalizedValue.fromJSON(object.getAsJsonObject(DirectedAcyclicGraphType.DISPLAYLABEL));
 
-        RegistryLocalizedValueConverter.populate(dagt.getDisplayLabel(), label);
+        RegistryLocalizedValueConverter.populate(type.getDisplayLabel(), label);
       }
 
       if (object.has(DirectedAcyclicGraphType.DESCRIPTION))
       {
         LocalizedValue description = LocalizedValue.fromJSON(object.getAsJsonObject(DirectedAcyclicGraphType.DESCRIPTION));
 
-        RegistryLocalizedValueConverter.populate(dagt.getDescription(), description);
+        RegistryLocalizedValueConverter.populate(type.getDescription(), description);
       }
 
-      dagt.apply();
+      type.setSequence(type.getSequence() + 1);
+      type.apply();
     }
     finally
     {
-      dagt.unlock();
+      type.unlock();
     }
   }
 
@@ -90,13 +96,21 @@ public class DirectedAcyclicGraphTypeBusinessService implements DirectedAcyclicG
     String code = object.get(DirectedAcyclicGraphType.CODE).getAsString();
     LocalizedValue label = LocalizedValue.fromJSON(object.getAsJsonObject(DirectedAcyclicGraphType.JSON_LABEL));
     LocalizedValue description = LocalizedValue.fromJSON(object.getAsJsonObject(DirectedAcyclicGraphType.DESCRIPTION));
+    Long seq = object.has(BusinessType.SEQ) ? object.get(BusinessType.SEQ).getAsLong() : 0L;
 
-    return create(code, label, description);
+    return create(code, label, description, GeoprismProperties.getOrigin(), seq);
+  }
+  
+  @Override
+  @Transaction
+  public DirectedAcyclicGraphType create(String code, LocalizedValue label, LocalizedValue description, Long seq)
+  {    
+    return create(code, label, description, GeoprismProperties.getOrigin(), seq);
   }
 
   @Override
   @Transaction
-  public DirectedAcyclicGraphType create(String code, LocalizedValue label, LocalizedValue description)
+  public DirectedAcyclicGraphType create(String code, LocalizedValue label, LocalizedValue description, String origin, Long seq)
   {
     try
     {
@@ -111,6 +125,15 @@ public class DirectedAcyclicGraphTypeBusinessService implements DirectedAcyclicG
       RegistryLocalizedValueConverter.populate(mdEdgeDAO, MdEdgeInfo.DESCRIPTION, description);
       mdEdgeDAO.setValue(MdEdgeInfo.ENABLE_CHANGE_OVER_TIME, MdAttributeBooleanInfo.FALSE);
       mdEdgeDAO.apply();
+      
+
+      MdAttributeUUIDDAO uidAttr = MdAttributeUUIDDAO.newInstance();
+      uidAttr.setValue(MdAttributeConcreteInfo.NAME, DefaultAttribute.UID.getName());
+      uidAttr.setStructValue(MdAttributeBooleanInfo.DISPLAY_LABEL, LocalizedValue.DEFAULT_LOCALE, DefaultAttribute.UID.getDefaultLocalizedName());
+      uidAttr.setStructValue(MdAttributeBooleanInfo.DESCRIPTION, LocalizedValue.DEFAULT_LOCALE, DefaultAttribute.UID.getDefaultDescription());
+      uidAttr.setValue(MdAttributeConcreteInfo.DEFINING_MD_CLASS, mdEdgeDAO.getOid());
+      uidAttr.setValue(MdAttributeConcreteInfo.REQUIRED, true);
+      uidAttr.apply();
 
       MdAttributeDateTimeDAO startDate = MdAttributeDateTimeDAO.newInstance();
       startDate.setValue(MdAttributeDateTimeInfo.NAME, GeoVertex.START_DATE);
@@ -133,6 +156,8 @@ public class DirectedAcyclicGraphTypeBusinessService implements DirectedAcyclicG
       graphType.setMdEdgeId(mdEdgeDAO.getOid());
       RegistryLocalizedValueConverter.populate(graphType.getDisplayLabel(), label);
       RegistryLocalizedValueConverter.populate(graphType.getDescription(), description);
+      graphType.setOrigin(origin);
+      graphType.setSequence(seq);
       graphType.apply();
 
       return graphType;

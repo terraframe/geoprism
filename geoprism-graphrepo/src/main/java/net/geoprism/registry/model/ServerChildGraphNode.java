@@ -40,9 +40,9 @@ public class ServerChildGraphNode extends ServerGraphNode
 {
   private List<ServerChildGraphNode> children;
 
-  public ServerChildGraphNode(ServerGeoObjectIF geoObject, GraphType graphType, Date startDate, Date endDate, String oid)
+  public ServerChildGraphNode(ServerGeoObjectIF geoObject, GraphType graphType, Date startDate, Date endDate, String oid, String uid)
   {
-    super(geoObject, graphType, startDate, endDate, oid);
+    super(geoObject, graphType, startDate, endDate, oid, uid);
 
     this.children = Collections.synchronizedList(new LinkedList<ServerChildGraphNode>());
   }
@@ -133,8 +133,10 @@ public class ServerChildGraphNode extends ServerGraphNode
     {
       oid = jo.get("oid").getAsString();
     }
-    
-    ServerChildGraphNode node = new ServerChildGraphNode(goif, graphType, startDate, endDate, oid);
+
+    String uid = jo.has("oid") ? jo.get("oid").getAsString() : null;
+
+    ServerChildGraphNode node = new ServerChildGraphNode(goif, graphType, startDate, endDate, oid, uid);
     
     if (jo.has(ChildTreeNode.JSON_CHILDREN))
     {

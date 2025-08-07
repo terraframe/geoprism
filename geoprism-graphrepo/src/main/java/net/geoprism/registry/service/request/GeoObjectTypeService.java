@@ -28,8 +28,12 @@ import org.springframework.stereotype.Service;
 import com.runwaysdk.session.Request;
 import com.runwaysdk.session.RequestType;
 
+import net.geoprism.configuration.GeoprismProperties;
+import net.geoprism.registry.OriginException;
+import net.geoprism.registry.model.ServerGeoObjectType;
 import net.geoprism.registry.permission.PermissionContext;
 import net.geoprism.registry.service.business.GeoObjectTypeBusinessServiceIF;
+import net.geoprism.registry.service.business.ServiceFactory;
 
 @Service
 public class GeoObjectTypeService implements GeoObjectTypeServiceIF
@@ -76,7 +80,15 @@ public class GeoObjectTypeService implements GeoObjectTypeServiceIF
   @Request(RequestType.SESSION)
   public GeoObjectType updateGeoObjectType(String sessionId, String gtJSON)
   {
-    return this.service.updateGeoObjectType(gtJSON);
+    GeoObjectType dto = GeoObjectType.fromJSON(gtJSON, ServiceFactory.getAdapter());
+    ServerGeoObjectType type = ServerGeoObjectType.get(dto.getCode());
+    
+    if (!type.getOrigin().equals(GeoprismProperties.getOrigin()))
+    {
+      throw new OriginException();
+    }
+
+    return this.service.updateGeoObjectType(type, dto).toDTO();
   }
 
   @Override

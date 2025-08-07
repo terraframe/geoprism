@@ -20,7 +20,7 @@ package net.geoprism.registry.service.request;
 
 import java.util.Set;
 
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 
 import org.springframework.stereotype.Component;
 

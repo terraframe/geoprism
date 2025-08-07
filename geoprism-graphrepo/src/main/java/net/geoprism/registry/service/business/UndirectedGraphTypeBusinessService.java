@@ -3,37 +3,42 @@
  *
  * This file is part of Geoprism(tm).
  *
- * Geoprism(tm) is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
+ * Geoprism(tm) is free software: you can redistribute it and/or modify it under
+ * the terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation, either version 3 of the License, or (at your option) any
+ * later version.
  *
- * Geoprism(tm) is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
+ * Geoprism(tm) is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with Geoprism(tm).  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with Geoprism(tm). If not, see <http://www.gnu.org/licenses/>.
  */
 package net.geoprism.registry.service.business;
 
+import org.commongeoregistry.adapter.constants.DefaultAttribute;
 import org.commongeoregistry.adapter.dataaccess.LocalizedValue;
 import org.springframework.stereotype.Service;
 
 import com.google.gson.JsonObject;
 import com.runwaysdk.constants.MdAttributeBooleanInfo;
+import com.runwaysdk.constants.MdAttributeConcreteInfo;
 import com.runwaysdk.constants.MdAttributeDateTimeInfo;
 import com.runwaysdk.constants.MdAttributeLocalInfo;
 import com.runwaysdk.constants.graph.MdEdgeInfo;
 import com.runwaysdk.dataaccess.DuplicateDataException;
 import com.runwaysdk.dataaccess.MdVertexDAOIF;
 import com.runwaysdk.dataaccess.metadata.MdAttributeDateTimeDAO;
+import com.runwaysdk.dataaccess.metadata.MdAttributeUUIDDAO;
 import com.runwaysdk.dataaccess.metadata.graph.MdEdgeDAO;
 import com.runwaysdk.dataaccess.metadata.graph.MdVertexDAO;
 import com.runwaysdk.dataaccess.transaction.Transaction;
 import com.runwaysdk.system.metadata.MdEdge;
 
+import net.geoprism.configuration.GeoprismProperties;
+import net.geoprism.registry.BusinessType;
 import net.geoprism.registry.DuplicateHierarchyTypeException;
 import net.geoprism.registry.RegistryConstants;
 import net.geoprism.registry.UndirectedGraphType;
@@ -49,13 +54,21 @@ public class UndirectedGraphTypeBusinessService implements UndirectedGraphTypeBu
     String code = object.get(UndirectedGraphType.CODE).getAsString();
     LocalizedValue label = LocalizedValue.fromJSON(object.getAsJsonObject(UndirectedGraphType.JSON_LABEL));
     LocalizedValue description = LocalizedValue.fromJSON(object.getAsJsonObject(UndirectedGraphType.DESCRIPTION));
+    Long seq = object.has(BusinessType.SEQ) ? object.get(BusinessType.SEQ).getAsLong() : 0L;
 
-    return create(code, label, description);
+    return create(code, label, description, GeoprismProperties.getOrigin(), seq);
   }
 
   @Override
   @Transaction
-  public UndirectedGraphType create(String code, LocalizedValue label, LocalizedValue description)
+  public UndirectedGraphType create(String code, LocalizedValue label, LocalizedValue description, Long seq)
+  {
+    return create(code, label, description, GeoprismProperties.getOrigin(), seq);
+  }
+
+  @Override
+  @Transaction
+  public UndirectedGraphType create(String code, LocalizedValue label, LocalizedValue description, String origin, Long seq)
   {
     try
     {
@@ -71,6 +84,14 @@ public class UndirectedGraphTypeBusinessService implements UndirectedGraphTypeBu
       mdEdgeDAO.setValue(MdEdgeInfo.ENABLE_CHANGE_OVER_TIME, MdAttributeBooleanInfo.FALSE);
       mdEdgeDAO.apply();
 
+      MdAttributeUUIDDAO uidAttr = MdAttributeUUIDDAO.newInstance();
+      uidAttr.setValue(MdAttributeConcreteInfo.NAME, DefaultAttribute.UID.getName());
+      uidAttr.setStructValue(MdAttributeBooleanInfo.DISPLAY_LABEL, LocalizedValue.DEFAULT_LOCALE, DefaultAttribute.UID.getDefaultLocalizedName());
+      uidAttr.setStructValue(MdAttributeBooleanInfo.DESCRIPTION, LocalizedValue.DEFAULT_LOCALE, DefaultAttribute.UID.getDefaultDescription());
+      uidAttr.setValue(MdAttributeConcreteInfo.DEFINING_MD_CLASS, mdEdgeDAO.getOid());
+      uidAttr.setValue(MdAttributeConcreteInfo.REQUIRED, true);
+      uidAttr.apply();
+
       MdAttributeDateTimeDAO startDate = MdAttributeDateTimeDAO.newInstance();
       startDate.setValue(MdAttributeDateTimeInfo.NAME, GeoVertex.START_DATE);
       startDate.setStructValue(MdAttributeDateTimeInfo.DISPLAY_LABEL, MdAttributeLocalInfo.DEFAULT_LOCALE, "Start Date");
@@ -84,7 +105,7 @@ public class UndirectedGraphTypeBusinessService implements UndirectedGraphTypeBu
       endDate.setStructValue(MdAttributeDateTimeInfo.DESCRIPTION, MdAttributeLocalInfo.DEFAULT_LOCALE, "End Date");
       endDate.setValue(MdAttributeDateTimeInfo.DEFINING_MD_CLASS, mdEdgeDAO.getOid());
       endDate.apply();
-      
+
       createPermissions(mdEdgeDAO);
 
       UndirectedGraphType graphType = new UndirectedGraphType();
@@ -92,6 +113,8 @@ public class UndirectedGraphTypeBusinessService implements UndirectedGraphTypeBu
       graphType.setMdEdgeId(mdEdgeDAO.getOid());
       RegistryLocalizedValueConverter.populate(graphType.getDisplayLabel(), label);
       RegistryLocalizedValueConverter.populate(graphType.getDescription(), description);
+      graphType.setOrigin(origin);
+      graphType.setSequence(seq);
       graphType.apply();
 
       return graphType;
@@ -103,39 +126,40 @@ public class UndirectedGraphTypeBusinessService implements UndirectedGraphTypeBu
       throw ex2;
     }
   }
-  
+
   protected void createPermissions(MdEdgeDAO mdEdgeDAO)
   {
     // None in the graph repo
   }
-  
+
   @Override
   @Transaction
-  public void update(UndirectedGraphType ugt, JsonObject object)
+  public void update(UndirectedGraphType type, JsonObject object)
   {
     try
     {
-      ugt.appLock();
+      type.appLock();
 
       if (object.has(UndirectedGraphType.JSON_LABEL))
       {
         LocalizedValue label = LocalizedValue.fromJSON(object.getAsJsonObject(UndirectedGraphType.JSON_LABEL));
 
-        RegistryLocalizedValueConverter.populate(ugt.getDisplayLabel(), label);
+        RegistryLocalizedValueConverter.populate(type.getDisplayLabel(), label);
       }
 
       if (object.has(UndirectedGraphType.DESCRIPTION))
       {
         LocalizedValue description = LocalizedValue.fromJSON(object.getAsJsonObject(UndirectedGraphType.DESCRIPTION));
 
-        RegistryLocalizedValueConverter.populate(ugt.getDescription(), description);
+        RegistryLocalizedValueConverter.populate(type.getDescription(), description);
       }
 
-      ugt.apply();
+      type.setSequence(type.getSequence() + 1);
+      type.apply();
     }
     finally
     {
-      ugt.unlock();
+      type.unlock();
     }
   }
 

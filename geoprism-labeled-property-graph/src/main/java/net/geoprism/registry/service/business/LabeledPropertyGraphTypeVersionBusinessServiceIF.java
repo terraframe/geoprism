@@ -3,18 +3,18 @@
  *
  * This file is part of Geoprism(tm).
  *
- * Geoprism(tm) is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
+ * Geoprism(tm) is free software: you can redistribute it and/or modify it under
+ * the terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation, either version 3 of the License, or (at your option) any
+ * later version.
  *
- * Geoprism(tm) is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
+ * Geoprism(tm) is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with Geoprism(tm).  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with Geoprism(tm). If not, see <http://www.gnu.org/licenses/>.
  */
 package net.geoprism.registry.service.business;
 
@@ -25,11 +25,13 @@ import org.springframework.stereotype.Component;
 import com.google.gson.JsonObject;
 import com.runwaysdk.business.graph.VertexObject;
 
+import net.geoprism.graph.BusinessEdgeTypeSnapshot;
+import net.geoprism.graph.BusinessTypeSnapshot;
 import net.geoprism.graph.GeoObjectTypeSnapshot;
 import net.geoprism.graph.GraphTypeSnapshot;
-import net.geoprism.graph.HierarchyTypeSnapshot;
 import net.geoprism.graph.LabeledPropertyGraphTypeEntry;
 import net.geoprism.graph.LabeledPropertyGraphTypeVersion;
+import net.geoprism.registry.lpg.LPGPublishProgressMonitorIF;
 import net.geoprism.spring.core.ApplicationContextHolder;
 
 @Component
@@ -45,13 +47,13 @@ public interface LabeledPropertyGraphTypeVersionBusinessServiceIF
 
   public void remove(LabeledPropertyGraphTypeVersion version);
 
-  GeoObjectTypeSnapshot getRootType(LabeledPropertyGraphTypeVersion version);
-
-  GeoObjectTypeSnapshot getSnapshot(LabeledPropertyGraphTypeVersion version, String typeCode);
+  List<BusinessTypeSnapshot> getBusinessTypes(LabeledPropertyGraphTypeVersion version);
 
   List<GeoObjectTypeSnapshot> getTypes(LabeledPropertyGraphTypeVersion version);
 
   List<GraphTypeSnapshot> getGraphSnapshots(LabeledPropertyGraphTypeVersion version);
+
+  List<BusinessEdgeTypeSnapshot> getBusinessEdgeTypes(LabeledPropertyGraphTypeVersion version);
 
   GraphTypeSnapshot getGraphTypeSnapshot(LabeledPropertyGraphTypeVersion version, String typeCode);
 
@@ -73,12 +75,23 @@ public interface LabeledPropertyGraphTypeVersionBusinessServiceIF
 
   List<? extends LabeledPropertyGraphTypeVersion> getAll();
 
-  public void publish(LabeledPropertyGraphTypeVersion version);
+  public void publish(LPGPublishProgressMonitorIF history, LabeledPropertyGraphTypeVersion version);
 
-  public void publishNoAuth(LabeledPropertyGraphTypeVersion version);
+  public void publishNoAuth(LPGPublishProgressMonitorIF history, LabeledPropertyGraphTypeVersion version);
 
   public void createPublishJob(LabeledPropertyGraphTypeVersion version);
 
   void createTiles(LabeledPropertyGraphTypeVersion version);
 
+  VertexObject getBusinessVertex(LabeledPropertyGraphTypeVersion version, String code, String typeCode);
+
+  GeoObjectTypeSnapshot getRootType(LabeledPropertyGraphTypeVersion version);
+
+  GeoObjectTypeSnapshot getSnapshot(LabeledPropertyGraphTypeVersion version, String typeCode);
+
+  <T extends GraphTypeSnapshot> List<T> getHiearchyTypes(LabeledPropertyGraphTypeVersion version);
+
+  <T extends GraphTypeSnapshot> List<T> getDirectedAcyclicGraphTypes(LabeledPropertyGraphTypeVersion version);
+
+  <T extends GraphTypeSnapshot> List<T> getUndirectedGraphTypes(LabeledPropertyGraphTypeVersion version);
 }

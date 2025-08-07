@@ -3,18 +3,18 @@
  *
  * This file is part of Geoprism(tm).
  *
- * Geoprism(tm) is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
+ * Geoprism(tm) is free software: you can redistribute it and/or modify it under
+ * the terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation, either version 3 of the License, or (at your option) any
+ * later version.
  *
- * Geoprism(tm) is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
+ * Geoprism(tm) is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with Geoprism(tm).  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with Geoprism(tm). If not, see <http://www.gnu.org/licenses/>.
  */
 package net.geoprism.registry.service.business;
 
@@ -27,6 +27,8 @@ import java.util.List;
 import java.util.Set;
 
 import org.apache.commons.lang3.StringUtils;
+import org.commongeoregistry.adapter.constants.DefaultAttribute;
+import org.commongeoregistry.adapter.dataaccess.LocalizedValue;
 import org.commongeoregistry.adapter.metadata.GeoObjectType;
 import org.commongeoregistry.adapter.metadata.HierarchyNode;
 import org.commongeoregistry.adapter.metadata.HierarchyType;
@@ -40,6 +42,7 @@ import com.runwaysdk.business.BusinessFacade;
 import com.runwaysdk.business.rbac.Operation;
 import com.runwaysdk.business.rbac.RoleDAO;
 import com.runwaysdk.constants.MdAttributeBooleanInfo;
+import com.runwaysdk.constants.MdAttributeConcreteInfo;
 import com.runwaysdk.constants.MdAttributeDateTimeInfo;
 import com.runwaysdk.constants.MdAttributeLocalInfo;
 import com.runwaysdk.constants.graph.MdEdgeInfo;
@@ -47,6 +50,7 @@ import com.runwaysdk.dataaccess.DuplicateDataException;
 import com.runwaysdk.dataaccess.MdVertexDAOIF;
 import com.runwaysdk.dataaccess.attributes.AttributeValueException;
 import com.runwaysdk.dataaccess.metadata.MdAttributeDateTimeDAO;
+import com.runwaysdk.dataaccess.metadata.MdAttributeUUIDDAO;
 import com.runwaysdk.dataaccess.metadata.graph.MdEdgeDAO;
 import com.runwaysdk.dataaccess.metadata.graph.MdVertexDAO;
 import com.runwaysdk.dataaccess.transaction.Transaction;
@@ -56,6 +60,7 @@ import com.runwaysdk.system.gis.geo.InvalidGeoEntityUniversalException;
 import com.runwaysdk.system.metadata.MdEdge;
 import com.runwaysdk.system.metadata.MdTermRelationship;
 
+import net.geoprism.configuration.GeoprismProperties;
 import net.geoprism.rbac.RoleConstants;
 import net.geoprism.registry.AbstractParentException;
 import net.geoprism.registry.CodeLengthException;
@@ -128,11 +133,10 @@ public class HierarchyTypeBusinessService implements HierarchyTypeBusinessServic
     new HierarchicalRelationshipTypeCacheEventCommand(sht, CacheEventType.DELETE).doIt();
   }
 
-  public void addToHierarchy(ServerHierarchyType sht, ServerGeoObjectType parentType, ServerGeoObjectType childType) {
+  public void addToHierarchy(ServerHierarchyType sht, ServerGeoObjectType parentType, ServerGeoObjectType childType)
+  {
     this.addToHierarchy(sht, parentType, childType, true);
   }
-
-
 
   public void addToHierarchy(ServerHierarchyType sht, ServerGeoObjectType parentType, ServerGeoObjectType childType, boolean validate)
   {
@@ -154,20 +158,24 @@ public class HierarchyTypeBusinessService implements HierarchyTypeBusinessServic
     }
 
     // Check to see if the child type is already in the hierarchy
-    if(validate) {
+    if (validate)
+    {
       List<ServerHierarchyType> hierarchies = typeService.getHierarchies(childType, true);
 
-      if (hierarchies.contains(sht)) {
+      if (hierarchies.contains(sht))
+      {
         GeoObjectTypeAlreadyInHierarchyException ex = new GeoObjectTypeAlreadyInHierarchyException();
         ex.setGotCode(childType.getCode());
         throw ex;
       }
 
       // Ensure a subtype is not already in the hierarchy
-      if (childType.getIsAbstract()) {
+      if (childType.getIsAbstract())
+      {
         Set<ServerHierarchyType> hierarchiesOfSubTypes = typeService.getHierarchiesOfSubTypes(childType);
 
-        if (hierarchiesOfSubTypes.contains(sht)) {
+        if (hierarchiesOfSubTypes.contains(sht))
+        {
           GeoObjectTypeAlreadyInHierarchyException ex = new GeoObjectTypeAlreadyInHierarchyException();
           ex.setGotCode(childType.getCode());
           throw ex;
@@ -176,6 +184,14 @@ public class HierarchyTypeBusinessService implements HierarchyTypeBusinessServic
     }
 
     sht.addToHierarchy(parentType, childType);
+
+    // Update the sequence of the type
+    if (sht.getOrigin().equals(GeoprismProperties.getOrigin()))
+    {
+      HierarchicalRelationshipType baseType = sht.getObject();
+      baseType.setSequence(baseType.getSequence() + 1);
+      baseType.apply();
+    }
   }
 
   public void removeChild(ServerHierarchyType sht, ServerGeoObjectType parentType, ServerGeoObjectType childType, boolean migrateChildren)
@@ -433,6 +449,8 @@ public class HierarchyTypeBusinessService implements HierarchyTypeBusinessServic
       hierarchicalRelationship.setDefinitionEdge(defitionEdge);
       hierarchicalRelationship.setOrganization(organization.getGraphOrganization());
       hierarchicalRelationship.setDbClassName(objectEdge.getDbClassName());
+      hierarchicalRelationship.setOrigin(StringUtils.isBlank(dto.getOrigin()) ? GeoprismProperties.getOrigin() : dto.getOrigin());
+      hierarchicalRelationship.setSequence(dto.getSequenceNumber());
       hierarchicalRelationship.apply();
 
       ServerHierarchyType sht = this.get(hierarchicalRelationship);
@@ -471,6 +489,14 @@ public class HierarchyTypeBusinessService implements HierarchyTypeBusinessServic
     LocalizedValueConverter.populate(mdEdgeDAO, MdEdgeInfo.DESCRIPTION, dto.getDescription());
     mdEdgeDAO.setValue(MdEdgeInfo.ENABLE_CHANGE_OVER_TIME, MdAttributeBooleanInfo.FALSE);
     mdEdgeDAO.apply();
+
+    MdAttributeUUIDDAO uidAttr = MdAttributeUUIDDAO.newInstance();
+    uidAttr.setValue(MdAttributeConcreteInfo.NAME, DefaultAttribute.UID.getName());
+    uidAttr.setStructValue(MdAttributeBooleanInfo.DISPLAY_LABEL, LocalizedValue.DEFAULT_LOCALE, DefaultAttribute.UID.getDefaultLocalizedName());
+    uidAttr.setStructValue(MdAttributeBooleanInfo.DESCRIPTION, LocalizedValue.DEFAULT_LOCALE, DefaultAttribute.UID.getDefaultDescription());
+    uidAttr.setValue(MdAttributeConcreteInfo.DEFINING_MD_CLASS, mdEdgeDAO.getOid());
+    uidAttr.setValue(MdAttributeConcreteInfo.REQUIRED, true);
+    uidAttr.apply();
 
     MdAttributeDateTimeDAO startDate = MdAttributeDateTimeDAO.newInstance();
     startDate.setValue(MdAttributeDateTimeInfo.NAME, GeoVertex.START_DATE);
@@ -668,7 +694,15 @@ public class HierarchyTypeBusinessService implements HierarchyTypeBusinessServic
 
     sht.removeFromHierarchy(parentType, childType, migrateChildren);
 
-    objectService.removeAllEdges(sht, childType);
+    // Update the sequence of the type
+    if (sht.getOrigin().equals(GeoprismProperties.getOrigin()))
+    {
+      HierarchicalRelationshipType baseType = sht.getObject();
+      baseType.setSequence(baseType.getSequence() + 1);
+      baseType.apply();
+    }
+
+    objectService.removeAllEdges(sht, childType, true);
 
     InheritedHierarchyAnnotation annotation = InheritedHierarchyAnnotation.get(childType, sht);
 

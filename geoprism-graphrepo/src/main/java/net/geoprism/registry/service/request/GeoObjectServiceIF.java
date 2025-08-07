@@ -68,10 +68,10 @@ public interface GeoObjectServiceIF
 
   public JsonObject hasDuplicateLabel(String sessionId, Date date, String typeCode, String code, String label);
 
-  public JsonArray getBusinessObjects(String sessionId, String typeCode, String code, String businessTypeCode);
-
   public ParentTreeNode addChild(String sessionId, String parentCode, String parentTypeCode, String childCode, String childTypeCode, String hierarchyCode, Date startDate, Date endDate);
 
   public void removeChild(String sessionId, String parentCode, String parentTypeCode, String childCode, String childTypeCode, String hierarchyCode, Date startDate, Date endDate);
+
+  public JsonArray getBusinessObjects(String sessionId, String typeCode, String code, String edgeTypeCode, String direction);
 
 }

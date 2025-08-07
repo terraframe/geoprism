@@ -28,9 +28,9 @@ public interface GraphStrategy
 
   public <T extends ServerGraphNode> T getParents(VertexServerGeoObject geoObject, Boolean recursive, Date date, String boundsWKT, Long skip, Long limit);
 
-  public <T extends ServerGraphNode> T addChild(VertexServerGeoObject geoObject, VertexServerGeoObject child, Date startDate, Date endDate, boolean validate);
+  public <T extends ServerGraphNode> T addChild(VertexServerGeoObject geoObject, VertexServerGeoObject child, Date startDate, Date endDate, String uid, boolean validate);
 
-  public <T extends ServerGraphNode> T addParent(VertexServerGeoObject geoObject, VertexServerGeoObject parent, Date startDate, Date endDate, boolean validate);
+  public <T extends ServerGraphNode> T addParent(VertexServerGeoObject geoObject, VertexServerGeoObject parent, Date startDate, Date endDate, String uid, boolean validate);
 
   public void removeParent(VertexServerGeoObject geoObject, VertexServerGeoObject parent, Date startDate, Date endDate);
 }

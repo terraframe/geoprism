@@ -18,12 +18,6 @@
  */
 package net.geoprism.graph;
 
-import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
-import com.runwaysdk.query.OIterator;
-
-import net.geoprism.registry.conversion.AttributeTypeConverter;
-
 public class HierarchyTypeSnapshot extends HierarchyTypeSnapshotBase implements GraphTypeSnapshot
 {
   @SuppressWarnings("unused")
@@ -32,45 +26,6 @@ public class HierarchyTypeSnapshot extends HierarchyTypeSnapshotBase implements 
   public HierarchyTypeSnapshot()
   {
     super();
-  }
-
-  public JsonObject toJSON(GeoObjectTypeSnapshot root)
-  {
-    JsonArray nodes = new JsonArray();
-
-    try (OIterator<? extends GeoObjectTypeSnapshot> it = root.getAllChildSnapshot())
-    {
-      it.forEach(snapshot -> {
-        nodes.add(this.toNode(snapshot));
-      });
-    }
-
-    JsonObject hierarchyObject = new JsonObject();
-    hierarchyObject.addProperty(HierarchyTypeSnapshotBase.CODE, this.getCode());
-    hierarchyObject.addProperty(GraphTypeSnapshot.TYPE_CODE, GraphTypeSnapshot.HIERARCHY_TYPE);
-    hierarchyObject.add(HierarchyTypeSnapshotBase.DISPLAYLABEL, AttributeTypeConverter.convertNoAutoCoalesce(this.getDisplayLabel()).toJSON());
-    hierarchyObject.add(HierarchyTypeSnapshotBase.DESCRIPTION, AttributeTypeConverter.convertNoAutoCoalesce(this.getDescription()).toJSON());
-    hierarchyObject.add("nodes", nodes);
-
-    return hierarchyObject;
-  }
-
-  private JsonObject toNode(GeoObjectTypeSnapshot snapshot)
-  {
-    JsonArray children = new JsonArray();
-
-    try (OIterator<? extends GeoObjectTypeSnapshot> it = snapshot.getAllChildSnapshot())
-    {
-      it.forEach(child -> {
-        children.add(this.toNode(child));
-      });
-    }
-
-    JsonObject node = new JsonObject();
-    node.addProperty(GeoObjectTypeSnapshot.CODE, snapshot.getCode());
-    node.add("nodes", children);
-
-    return node;
   }
 
   @Override

@@ -18,7 +18,7 @@
  */
 package net.geoprism.registry.controller.email;
 
-import javax.validation.Valid;
+import jakarta.validation.Valid;
 
 import org.json.JSONException;
 import org.springframework.beans.factory.annotation.Autowired;

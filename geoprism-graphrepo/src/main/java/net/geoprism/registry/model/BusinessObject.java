@@ -81,7 +81,7 @@ public class BusinessObject
     return this.getCode();
   }
 
-  public String getCode(BusinessObject this)
+  public String getCode()
   {
     return this.getObjectValue(DefaultAttribute.CODE.getName());
   }

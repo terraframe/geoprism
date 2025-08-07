@@ -3,18 +3,18 @@
  *
  * This file is part of Geoprism(tm).
  *
- * Geoprism(tm) is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
+ * Geoprism(tm) is free software: you can redistribute it and/or modify it under
+ * the terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation, either version 3 of the License, or (at your option) any
+ * later version.
  *
- * Geoprism(tm) is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
+ * Geoprism(tm) is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with Geoprism(tm).  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with Geoprism(tm). If not, see <http://www.gnu.org/licenses/>.
  */
 package net.geoprism.registry.model.graph;
 
@@ -71,14 +71,13 @@ import com.runwaysdk.dataaccess.metadata.graph.MdGraphClassDAO;
 import com.runwaysdk.dataaccess.metadata.graph.MdVertexDAO;
 import com.runwaysdk.dataaccess.transaction.Transaction;
 import com.runwaysdk.localization.LocalizationFacade;
-import com.runwaysdk.query.QueryFactory;
 import com.runwaysdk.session.Session;
 import com.runwaysdk.system.gis.geo.GeoEntity;
-import com.runwaysdk.system.metadata.MdVertex;
-import com.runwaysdk.system.metadata.MdVertexQuery;
 
+import net.geoprism.configuration.GeoprismProperties;
 import net.geoprism.ontology.Classifier;
 import net.geoprism.registry.DateFormatter;
+import net.geoprism.registry.OriginException;
 import net.geoprism.registry.conversion.RegistryLocalizedValueConverter;
 import net.geoprism.registry.geoobject.ValueOutOfRangeException;
 import net.geoprism.registry.graph.AttributeLocalType;
@@ -154,7 +153,7 @@ public class VertexServerGeoObject extends AbstractServerGeoObject implements Se
 
     this.date = date;
   }
-  
+
   @Override
   @Transaction
   public void apply()
@@ -446,7 +445,7 @@ public class VertexServerGeoObject extends AbstractServerGeoObject implements Se
   {
     return (String) this.getValue(DefaultAttribute.CODE.getName());
   }
-
+  
   @Override
   public String getUid()
   {
@@ -536,13 +535,9 @@ public class VertexServerGeoObject extends AbstractServerGeoObject implements Se
 
   private boolean isSystemAttribute(String attributeName)
   {
-    // Attributes created by the runway that do not have actual attribute type metadata
-    return this.vertex.hasAttribute(attributeName) && 
-        (
-            attributeName.equals(DefaultAttribute.CREATE_DATE.getName())
-            || attributeName.equals(DefaultAttribute.LAST_UPDATE_DATE.getName())
-            || attributeName.equals(DefaultAttribute.SEQUENCE.getName())
-        );
+    // Attributes created by the runway that do not have actual attribute type
+    // metadata
+    return this.vertex.hasAttribute(attributeName) && ( attributeName.equals(DefaultAttribute.CREATE_DATE.getName()) || attributeName.equals(DefaultAttribute.LAST_UPDATE_DATE.getName())  );
   }
 
   @Override
@@ -576,7 +571,7 @@ public class VertexServerGeoObject extends AbstractServerGeoObject implements Se
 
     Collection<AttributeType> attributes = type.getAttributeMap().values();
 
-    String[] shouldNotProcessArray = new String[] { DefaultAttribute.UID.getName(), DefaultAttribute.SEQUENCE.getName(), DefaultAttribute.LAST_UPDATE_DATE.getName(), DefaultAttribute.CREATE_DATE.getName(), DefaultAttribute.TYPE.getName(), DefaultAttribute.EXISTS.getName() };
+    String[] shouldNotProcessArray = new String[] { DefaultAttribute.UID.getName(), DefaultAttribute.LAST_UPDATE_DATE.getName(), DefaultAttribute.CREATE_DATE.getName(), DefaultAttribute.TYPE.getName(), DefaultAttribute.EXISTS.getName() };
 
     Date startDate = null;
     Date endDate = null;
@@ -745,6 +740,19 @@ public class VertexServerGeoObject extends AbstractServerGeoObject implements Se
     {
       query.setParameter("endDate", endDate);
     }
+
+    return query.getSingleResult();
+  }
+
+  public EdgeObject getEdge(ServerHierarchyType hierarchyType, String uid)
+  {
+    String statement = "SELECT FROM " + hierarchyType.getObjectEdge().getDBClassName();
+    statement += " WHERE uid = :uid";
+    statement += " AND in = :child";
+
+    GraphQuery<EdgeObject> query = new GraphQuery<EdgeObject>(statement);
+    query.setParameter("uid", uid);
+    query.setParameter("child", this.getVertex().getRID());
 
     return query.getSingleResult();
   }
@@ -939,21 +947,36 @@ public class VertexServerGeoObject extends AbstractServerGeoObject implements Se
   @Transaction
   public void removeGraphChild(ServerGeoObjectIF child, GraphType type, Date startDate, Date endDate)
   {
+    if (!type.getOrigin().equals(GeoprismProperties.getOrigin()))
+    {
+      throw new OriginException();
+    }
+
     type.getStrategy().removeParent((VertexServerGeoObject) child, this, startDate, endDate);
   }
 
   @Override
   @Transaction
-  public <T extends ServerGraphNode> T addGraphChild(ServerGeoObjectIF child, GraphType type, Date startDate, Date endDate, boolean validate)
+  public <T extends ServerGraphNode> T addGraphChild(ServerGeoObjectIF child, GraphType type, Date startDate, Date endDate, String uid, boolean validate)
   {
-    return type.getStrategy().addChild(this, (VertexServerGeoObject) child, startDate, endDate, validate);
+    if (!type.getOrigin().equals(GeoprismProperties.getOrigin()))
+    {
+      throw new OriginException();
+    }
+
+    return type.getStrategy().addChild(this, (VertexServerGeoObject) child, startDate, endDate, uid, validate);
   }
 
   @Override
   @Transaction
-  public <T extends ServerGraphNode> T addGraphParent(ServerGeoObjectIF parent, GraphType type, Date startDate, Date endDate, boolean validate)
+  public <T extends ServerGraphNode> T addGraphParent(ServerGeoObjectIF parent, GraphType type, Date startDate, Date endDate, String uid, boolean validate)
   {
-    return type.getStrategy().addParent(this, (VertexServerGeoObject) parent, startDate, endDate, validate);
+    if (!type.getOrigin().equals(GeoprismProperties.getOrigin()))
+    {
+      throw new OriginException();
+    }
+
+    return type.getStrategy().addParent(this, (VertexServerGeoObject) parent, startDate, endDate, uid, validate);
   }
 
   @Override
@@ -1066,8 +1089,7 @@ public class VertexServerGeoObject extends AbstractServerGeoObject implements Se
       query.setParameter("text", null);
     }
 
-    @SuppressWarnings("unchecked")
-    List<HashMap<String, Object>> results = (List<HashMap<String, Object>>) ( (Object) query.getResults() );
+    @SuppressWarnings("unchecked") List<HashMap<String, Object>> results = (List<HashMap<String, Object>>) ( (Object) query.getResults() );
 
     JsonArray array = new JsonArray();
 

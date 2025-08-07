@@ -30,11 +30,13 @@
         cacheAlgorithm="everything">
         <create>
           <attributes>
+<!-- 
             <reference
               name="mdEdge"
               type="com.runwaysdk.system.metadata.MdEdge"
               required="true"
               label="MdEdge" />            
+ -->          
           </attributes>
         </create>
       </mdBusiness>

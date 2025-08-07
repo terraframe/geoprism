@@ -1,24 +1,6 @@
-/**
- * Copyright (c) 2023 TerraFrame, Inc. All rights reserved.
- *
- * This file is part of Geoprism(tm).
- *
- * Geoprism(tm) is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
- *
- * Geoprism(tm) is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with Geoprism(tm).  If not, see <http://www.gnu.org/licenses/>.
- */
 package net.geoprism.graph;
 
-@com.runwaysdk.business.ClassSignature(hash = 597196538)
+@com.runwaysdk.business.ClassSignature(hash = 151233743)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -47,7 +29,7 @@ public abstract class LabeledPropertyGraphTypeVersionBase extends com.runwaysdk.
   public final static java.lang.String TYPE = "type";
   public final static java.lang.String VERSIONNUMBER = "versionNumber";
   @SuppressWarnings("unused")
-  private static final long serialVersionUID = 597196538;
+  private static final long serialVersionUID = 151233743;
   
   public LabeledPropertyGraphTypeVersionBase()
   {
@@ -566,6 +548,34 @@ public abstract class LabeledPropertyGraphTypeVersionBase extends com.runwaysdk.
     return query;
   }
   
+  public net.geoprism.graph.LabeledPropertyGraphTypeSnapshot addSnapshot(net.geoprism.graph.MetadataSnapshot metadataSnapshot)
+  {
+    return (net.geoprism.graph.LabeledPropertyGraphTypeSnapshot) addChild(metadataSnapshot, net.geoprism.graph.LabeledPropertyGraphTypeSnapshot.CLASS);
+  }
+  
+  public void removeSnapshot(net.geoprism.graph.MetadataSnapshot metadataSnapshot)
+  {
+    removeAllChildren(metadataSnapshot, net.geoprism.graph.LabeledPropertyGraphTypeSnapshot.CLASS);
+  }
+  
+  @SuppressWarnings("unchecked")
+  public com.runwaysdk.query.OIterator<? extends net.geoprism.graph.MetadataSnapshot> getAllSnapshot()
+  {
+    return (com.runwaysdk.query.OIterator<? extends net.geoprism.graph.MetadataSnapshot>) getChildren(net.geoprism.graph.LabeledPropertyGraphTypeSnapshot.CLASS);
+  }
+  
+  @SuppressWarnings("unchecked")
+  public com.runwaysdk.query.OIterator<? extends net.geoprism.graph.LabeledPropertyGraphTypeSnapshot> getAllSnapshotRel()
+  {
+    return (com.runwaysdk.query.OIterator<? extends net.geoprism.graph.LabeledPropertyGraphTypeSnapshot>) getChildRelationships(net.geoprism.graph.LabeledPropertyGraphTypeSnapshot.CLASS);
+  }
+  
+  @SuppressWarnings("unchecked")
+  public com.runwaysdk.query.OIterator<? extends net.geoprism.graph.LabeledPropertyGraphTypeSnapshot> getSnapshotRel(net.geoprism.graph.MetadataSnapshot metadataSnapshot)
+  {
+    return (com.runwaysdk.query.OIterator<? extends net.geoprism.graph.LabeledPropertyGraphTypeSnapshot>) getRelationshipsWithChild(metadataSnapshot, net.geoprism.graph.LabeledPropertyGraphTypeSnapshot.CLASS);
+  }
+  
   public static LabeledPropertyGraphTypeVersion get(String oid)
   {
     return (LabeledPropertyGraphTypeVersion) com.runwaysdk.business.Business.get(oid);
@@ -575,30 +585,6 @@ public abstract class LabeledPropertyGraphTypeVersionBase extends com.runwaysdk.
   {
     return (LabeledPropertyGraphTypeVersion) com.runwaysdk.business.Business.get(CLASS, key);
   }
-  
-//  public java.lang.String publish()
-//  {
-//    String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.graph.LabeledPropertyGraphTypeVersion.java";
-//    throw new com.runwaysdk.dataaccess.metadata.ForbiddenMethodException(msg);
-//  }
-//  
-//  public static final java.lang.String publish(java.lang.String oid)
-//  {
-//    LabeledPropertyGraphTypeVersion _instance = LabeledPropertyGraphTypeVersion.get(oid);
-//    return _instance.publish();
-//  }
-//  
-//  public void remove()
-//  {
-//    String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.graph.LabeledPropertyGraphTypeVersion.java";
-//    throw new com.runwaysdk.dataaccess.metadata.ForbiddenMethodException(msg);
-//  }
-//  
-//  public static final void remove(java.lang.String oid)
-//  {
-//    LabeledPropertyGraphTypeVersion _instance = LabeledPropertyGraphTypeVersion.get(oid);
-//    _instance.remove();
-//  }
   
   public static LabeledPropertyGraphTypeVersion lock(java.lang.String oid)
   {

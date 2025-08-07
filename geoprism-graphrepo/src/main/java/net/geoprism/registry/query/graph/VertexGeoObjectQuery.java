@@ -3,18 +3,18 @@
  *
  * This file is part of Geoprism(tm).
  *
- * Geoprism(tm) is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
+ * Geoprism(tm) is free software: you can redistribute it and/or modify it under
+ * the terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation, either version 3 of the License, or (at your option) any
+ * later version.
  *
- * Geoprism(tm) is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
+ * Geoprism(tm) is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with Geoprism(tm).  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with Geoprism(tm). If not, see <http://www.gnu.org/licenses/>.
  */
 package net.geoprism.registry.query.graph;
 
@@ -45,10 +45,13 @@ public class VertexGeoObjectQuery implements ServerGeoObjectQuery
 
   private Long                       skip;
 
+  private boolean                    includeGeometries;
+
   public VertexGeoObjectQuery(ServerGeoObjectType type, Date date)
   {
     this.type = type;
     this.date = date;
+    this.includeGeometries = true;
   }
 
   public ServerGeoObjectType getType()
@@ -96,12 +99,28 @@ public class VertexGeoObjectQuery implements ServerGeoObjectQuery
     return date;
   }
 
+  public boolean isIncludeGeometries()
+  {
+    return includeGeometries;
+  }
+
+  public void setIncludeGeometries(boolean includeGeometries)
+  {
+    this.includeGeometries = includeGeometries;
+  }
+
   public GraphQuery<VertexObject> getQuery()
   {
     HashMap<String, Object> parameters = new HashMap<String, Object>();
 
     StringBuilder statement = new StringBuilder();
-    statement.append("TRAVERSE out('" + EdgeConstant.HAS_VALUE.getDBClassName() + "', '" + EdgeConstant.HAS_GEOMETRY.getDBClassName() + "') FROM (");
+    
+    if(includeGeometries) {
+      statement.append("TRAVERSE out('" + EdgeConstant.HAS_VALUE.getDBClassName() + "', '" + EdgeConstant.HAS_GEOMETRY.getDBClassName() + "') FROM (");      
+    }
+    else {
+      statement.append("TRAVERSE out('" + EdgeConstant.HAS_VALUE.getDBClassName() + "') FROM (");      
+    }
     statement.append(" SELECT FROM ");
 
     if (this.restriction != null)

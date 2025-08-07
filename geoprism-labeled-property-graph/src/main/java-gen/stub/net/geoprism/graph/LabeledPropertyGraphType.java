@@ -3,18 +3,18 @@
  *
  * This file is part of Geoprism(tm).
  *
- * Geoprism(tm) is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
+ * Geoprism(tm) is free software: you can redistribute it and/or modify it under
+ * the terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation, either version 3 of the License, or (at your option) any
+ * later version.
  *
- * Geoprism(tm) is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
+ * Geoprism(tm) is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with Geoprism(tm).  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with Geoprism(tm). If not, see <http://www.gnu.org/licenses/>.
  */
 package net.geoprism.graph;
 
@@ -45,22 +45,22 @@ import net.geoprism.registry.lpg.TreeStrategyConfiguration;
 
 public abstract class LabeledPropertyGraphType extends LabeledPropertyGraphTypeBase
 {
-  private static final long  serialVersionUID = 190790165;
+  private static final long  serialVersionUID                = 190790165;
 
-  public static final String GRAPH_TYPE       = "graphType";
+  public static final String GRAPH_TYPE                      = "graphType";
 
-  public static final String SINGLE           = "single";
+  public static final String SINGLE                          = "single";
 
-  public static final String INTERVAL         = "interval";
+  public static final String INTERVAL                        = "interval";
 
-  public static final String INCREMENTAL      = "incremental";
+  public static final String INCREMENTAL                     = "incremental";
 
-  public static final String TREE             = "TREE";
-  
-  public static final String GRAPH            = "GRAPH";
-  
-  public static String GRAPH_TYPE_REFERENECE_SEPARATOR = "$@~";
-  
+  public static final String TREE                            = "TREE";
+
+  public static final String GRAPH                           = "GRAPH";
+
+  public static String       GRAPH_TYPE_REFERENECE_SEPARATOR = "$@~";
+
   public LabeledPropertyGraphType()
   {
     super();
@@ -113,21 +113,78 @@ public abstract class LabeledPropertyGraphType extends LabeledPropertyGraphTypeB
 
     return new JsonObject();
   }
-  
+
   public List<String> getGeoObjectTypeCodesList()
   {
     List<String> result = new ArrayList<String>();
-    
-    if (StringUtils.isEmpty(this.getGeoObjectTypeCodes())) return result;
-    
+
+    if (StringUtils.isEmpty(this.getGeoObjectTypeCodes()))
+      return result;
+
     JsonArray jaCodes = JsonParser.parseString(this.getGeoObjectTypeCodes()).getAsJsonArray();
-    
+
     jaCodes.forEach(je -> result.add(je.getAsString()));
+
+    return result;
+  }
+
+  public void setGeoObjectTypeCodesList(String... codes)
+  {
+    JsonArray jaCodes = new JsonArray();
+
+    if (codes != null)
+    {
+      Arrays.asList(codes).forEach(s -> jaCodes.add(s));
+    }
+
+    this.setGeoObjectTypeCodes(jaCodes.toString());
+  }
+
+  public List<String> getBusinessTypeCodesList()
+  {
+    List<String> result = new ArrayList<String>();
+
+    String typeCodes = this.getBusinessTypeCodes();
+
+    if (!StringUtils.isEmpty(typeCodes))
+    {
+      JsonArray jaCodes = JsonParser.parseString(typeCodes).getAsJsonArray();
+
+      jaCodes.forEach(je -> result.add(je.getAsString()));
+    }
+
+    return result;
+  }
+
+  public void setBusinessTypeCodesList(String... codes)
+  {
+    JsonArray jaCodes = new JsonArray();
+
+    if (codes != null)
+    {
+      Arrays.asList(codes).forEach(s -> jaCodes.add(s));
+    }
+
+    this.setBusinessTypeCodes(jaCodes.toString());
+  }
+
+  public List<String> getBusinessEdgeCodesList()
+  {
+    List<String> result = new ArrayList<String>();
+    
+    String edgeCodes = this.getBusinessEdgeCodes();
+    
+    if (!StringUtils.isEmpty(edgeCodes))
+    {
+      JsonArray jaCodes = JsonParser.parseString(edgeCodes).getAsJsonArray();
+      
+      jaCodes.forEach(je -> result.add(je.getAsString()));
+    }
     
     return result;
   }
   
-  public void setGeoObjectTypeCodesList(String... codes)
+  public void setBusinessEdgeCodesList(String... codes)
   {
     JsonArray jaCodes = new JsonArray();
     
@@ -136,7 +193,7 @@ public abstract class LabeledPropertyGraphType extends LabeledPropertyGraphTypeB
       Arrays.asList(codes).forEach(s -> jaCodes.add(s));
     }
     
-    this.setGeoObjectTypeCodes(jaCodes.toString());
+    this.setBusinessEdgeCodes(jaCodes.toString());
   }
   
   public List<GraphTypeReference> getGraphTypeReferences()
@@ -150,26 +207,27 @@ public abstract class LabeledPropertyGraphType extends LabeledPropertyGraphTypeB
     else
     {
       List<GraphTypeReference> result = new ArrayList<GraphTypeReference>();
-      
-      if (StringUtils.isEmpty(this.getGraphTypes())) return result;
-      
+
+      if (StringUtils.isEmpty(this.getGraphTypes()))
+        return result;
+
       JsonArray jaCodes = JsonParser.parseString(this.getGraphTypes()).getAsJsonArray();
-      
+
       jaCodes.forEach(je -> result.add(GraphTypeReference.build(je.getAsString().split("\\" + GRAPH_TYPE_REFERENECE_SEPARATOR))));
-      
+
       return result;
     }
   }
-  
+
   public void setGraphTypeReferences(GraphTypeReference... graphTypeReferences)
   {
     JsonArray jaCodes = new JsonArray();
-    
+
     if (graphTypeReferences != null)
     {
       Arrays.asList(graphTypeReferences).forEach(r -> jaCodes.add(r.typeCode + GRAPH_TYPE_REFERENECE_SEPARATOR + r.code));
     }
-    
+
     this.setGraphTypes(jaCodes.toString());
   }
 
@@ -198,24 +256,28 @@ public abstract class LabeledPropertyGraphType extends LabeledPropertyGraphTypeB
     LocalizedValueConverter.populate(this.getDescription(), LocalizedValue.fromJSON(object.get(LabeledPropertyGraphType.DESCRIPTION).getAsJsonObject()));
     this.setCode(object.get(LabeledPropertyGraphType.CODE).getAsString());
     this.setHierarchy(object.get(LabeledPropertyGraphType.HIERARCHY).getAsString());
-    
+
     if (object.has(STRATEGYCONFIGURATION))
     {
       this.setStrategyConfiguration(object.get(STRATEGYCONFIGURATION).toString());
     }
 
     this.setStrategyType(jsonRead(object, STRATEGYTYPE));
+
     this.setGraphTypes(jsonRead(object, GRAPHTYPES));
     this.setGeoObjectTypeCodes(jsonRead(object, GEOOBJECTTYPECODES));
+
+    this.setBusinessTypeCodes(jsonRead(object, BUSINESSTYPECODES));
+    this.setBusinessEdgeCodes(jsonRead(object, BUSINESSEDGECODES));
   }
-  
+
   private String jsonRead(JsonObject ele, String property)
   {
     if (ele.has(property))
     {
       return ele.get(property).getAsString();
     }
-    
+
     return null;
   }
 
@@ -235,8 +297,13 @@ public abstract class LabeledPropertyGraphType extends LabeledPropertyGraphTypeB
     object.add(LabeledPropertyGraphType.DESCRIPTION, LocalizedValueConverter.convertNoAutoCoalesce(this.getDescription()).toJSON(serializer));
     object.addProperty(LabeledPropertyGraphType.CODE, this.getCode());
     object.addProperty(LabeledPropertyGraphType.HIERARCHY, this.getHierarchy());
+
     object.addProperty(LabeledPropertyGraphType.GEOOBJECTTYPECODES, this.getGeoObjectTypeCodes());
     object.addProperty(LabeledPropertyGraphType.GRAPHTYPES, this.getGraphTypes());
+
+    object.addProperty(LabeledPropertyGraphType.BUSINESSTYPECODES, this.getBusinessTypeCodes());
+    object.addProperty(LabeledPropertyGraphType.BUSINESSEDGECODES, this.getBusinessEdgeCodes());
+
     object.addProperty(LabeledPropertyGraphType.STRATEGYTYPE, this.getStrategyType());
     object.add(LabeledPropertyGraphType.STRATEGYCONFIGURATION, this.getStrategyConfigurationAsJson());
     object.addProperty(LabeledPropertyGraphType.ORGANIZATION, this.getOrganization().getCode());

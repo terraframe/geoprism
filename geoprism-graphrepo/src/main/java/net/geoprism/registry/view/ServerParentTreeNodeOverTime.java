@@ -31,7 +31,9 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 import java.util.TreeMap;
+import java.util.UUID;
 
+import org.commongeoregistry.adapter.constants.DefaultAttribute;
 import org.commongeoregistry.adapter.dataaccess.GeoObject;
 import org.commongeoregistry.adapter.dataaccess.GeoObjectJsonAdapters;
 import org.commongeoregistry.adapter.dataaccess.LocalizedValue;
@@ -321,6 +323,7 @@ public class ServerParentTreeNodeOverTime
         object.add(JSON_ENTRY_PARENTS, pArray);
 
         object.addProperty("oid", node.getOid());
+        object.addProperty(DefaultAttribute.UID.getName(), node.getUid());
 
         entries.add(object);
       }
@@ -427,13 +430,10 @@ public class ServerParentTreeNodeOverTime
 
             ServerGeoObjectIF pSGO = deserializeGeoObject(go, code, context);
 
-            String oid = null;
-            if (parent.has("oid"))
-            {
-              oid = parent.get("oid").getAsString();
-            }
+            String oid = parent.has("oid") ? oid = parent.get("oid").getAsString() : null;
+            String uid = parent.has("uid") ? oid = parent.get("uid").getAsString() : UUID.randomUUID().toString();
 
-            return new ServerParentTreeNode(pSGO, ht, startDate, endDate, oid);
+            return new ServerParentTreeNode(pSGO, ht, startDate, endDate, oid, uid);
           }
         }
       }

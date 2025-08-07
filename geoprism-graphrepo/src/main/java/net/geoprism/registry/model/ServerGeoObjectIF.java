@@ -3,18 +3,18 @@
  *
  * This file is part of Geoprism(tm).
  *
- * Geoprism(tm) is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
+ * Geoprism(tm) is free software: you can redistribute it and/or modify it under
+ * the terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation, either version 3 of the License, or (at your option) any
+ * later version.
  *
- * Geoprism(tm) is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
+ * Geoprism(tm) is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with Geoprism(tm).  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with Geoprism(tm). If not, see <http://www.gnu.org/licenses/>.
  */
 package net.geoprism.registry.model;
 
@@ -43,11 +43,11 @@ public interface ServerGeoObjectIF
 
   public String getCode();
 
+  public void setCode(String code);
+
   public Boolean getInvalid();
 
   public void setInvalid(Boolean invalid);
-
-  public void setCode(String code);
 
   public Boolean getExists();
 
@@ -78,7 +78,7 @@ public interface ServerGeoObjectIF
   public void setValue(String attributeName, Object value);
 
   public void setValue(String attributeName, Object value, Date startDate, Date endDate);
-  
+
   public void setValue(String attributeName, Object value, Date startDate, Date endDate, boolean validate);
 
   public void setDisplayLabel(LocalizedValue label);
@@ -96,6 +96,8 @@ public interface ServerGeoObjectIF
   public VertexObject getVertex();
 
   public EdgeObject getEdge(ServerGeoObjectIF parent, ServerHierarchyType hierarchyType, Date startDate, Date endDate);
+
+  public EdgeObject getEdge(ServerHierarchyType hierarchyType, String uid);
 
   public ValueOverTimeCollection getValuesOverTime(String attributeName);
 
@@ -115,9 +117,9 @@ public interface ServerGeoObjectIF
 
   <T extends ServerGraphNode> T getGraphChildren(GraphType type, Boolean recursive, Date date, String boundsWKT, Long skip, Long limit);
 
-  <T extends ServerGraphNode> T addGraphParent(ServerGeoObjectIF parent, GraphType type, Date startDate, Date endDate, boolean validate);
+  <T extends ServerGraphNode> T addGraphParent(ServerGeoObjectIF parent, GraphType type, Date startDate, Date endDate, String uid, boolean validate);
 
-  <T extends ServerGraphNode> T addGraphChild(ServerGeoObjectIF child, GraphType type, Date startDate, Date endDate, boolean validate);
+  <T extends ServerGraphNode> T addGraphChild(ServerGeoObjectIF child, GraphType type, Date startDate, Date endDate, String uid, boolean validate);
 
   void removeGraphChild(ServerGeoObjectIF child, GraphType type, Date startDate, Date endDate);
 
@@ -130,6 +132,5 @@ public interface ServerGeoObjectIF
   public void apply();
 
   void delete();
-
 
 }

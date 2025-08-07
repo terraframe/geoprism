@@ -3,32 +3,30 @@
  *
  * This file is part of Geoprism(tm).
  *
- * Geoprism(tm) is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
+ * Geoprism(tm) is free software: you can redistribute it and/or modify it under
+ * the terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation, either version 3 of the License, or (at your option) any
+ * later version.
  *
- * Geoprism(tm) is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
+ * Geoprism(tm) is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with Geoprism(tm).  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with Geoprism(tm). If not, see <http://www.gnu.org/licenses/>.
  */
 package net.geoprism.graph;
 
-import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
-import com.runwaysdk.query.OIterator;
 
-import net.geoprism.registry.conversion.AttributeTypeConverter;
+import net.geoprism.registry.conversion.LocalizedValueConverter;
 
 public class UndirectedGraphTypeSnapshot extends UndirectedGraphTypeSnapshotBase implements GraphTypeSnapshot
 {
   @SuppressWarnings("unused")
   private static final long serialVersionUID = 566543388;
-  
+
   public UndirectedGraphTypeSnapshot()
   {
     super();
@@ -39,44 +37,17 @@ public class UndirectedGraphTypeSnapshot extends UndirectedGraphTypeSnapshotBase
   {
     return GraphTypeSnapshot.getTypeCode(this);
   }
-  
-  @Override
-  public JsonObject toJSON(GeoObjectTypeSnapshot root)
+
+  public JsonObject toJSON()
   {
-    JsonArray nodes = new JsonArray();
-
-    try (OIterator<? extends GeoObjectTypeSnapshot> it = root.getAllChildSnapshot())
-    {
-      it.forEach(snapshot -> {
-        nodes.add(this.toNode(snapshot));
-      });
-    }
-
     JsonObject hierarchyObject = new JsonObject();
-    hierarchyObject.addProperty(HierarchyTypeSnapshotBase.CODE, this.getCode());
+    hierarchyObject.addProperty(UndirectedGraphTypeSnapshot.CODE, this.getCode());
+    hierarchyObject.addProperty(ORIGIN, this.getOrigin());
+    hierarchyObject.addProperty(UndirectedGraphTypeSnapshot.SEQUENCE, this.getSequence());
     hierarchyObject.addProperty(GraphTypeSnapshot.TYPE_CODE, GraphTypeSnapshot.UNDIRECTED_GRAPH_TYPE);
-    hierarchyObject.add(HierarchyTypeSnapshotBase.DISPLAYLABEL, AttributeTypeConverter.convertNoAutoCoalesce(this.getDisplayLabel()).toJSON());
-    hierarchyObject.add(HierarchyTypeSnapshotBase.DESCRIPTION, AttributeTypeConverter.convertNoAutoCoalesce(this.getDescription()).toJSON());
-    hierarchyObject.add("nodes", nodes);
+    hierarchyObject.add(UndirectedGraphTypeSnapshot.DISPLAYLABEL, LocalizedValueConverter.convertNoAutoCoalesce(this.getDisplayLabel()).toJSON());
+    hierarchyObject.add(UndirectedGraphTypeSnapshot.DESCRIPTION, LocalizedValueConverter.convertNoAutoCoalesce(this.getDescription()).toJSON());
 
     return hierarchyObject;
-  }
-  
-  private JsonObject toNode(GeoObjectTypeSnapshot snapshot)
-  {
-    JsonArray children = new JsonArray();
-
-    try (OIterator<? extends GeoObjectTypeSnapshot> it = snapshot.getAllChildSnapshot())
-    {
-      it.forEach(child -> {
-        children.add(this.toNode(child));
-      });
-    }
-
-    JsonObject node = new JsonObject();
-    node.addProperty(GeoObjectTypeSnapshot.CODE, snapshot.getCode());
-    node.add("nodes", children);
-
-    return node;
   }
 }

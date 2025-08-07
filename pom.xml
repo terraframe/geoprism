@@ -23,7 +23,7 @@
 
   <groupId>net.geoprism</groupId>
   <artifactId>geoprism</artifactId>
-  <version>1.2.7-SNAPSHOT</version>
+  <version>2.0.1-SNAPSHOT</version>
   <packaging>pom</packaging>
 
   <name>Geoprism</name>
@@ -47,14 +47,14 @@
   </modules>
 
   <properties>
-    <runway.version>3.8.19</runway.version>
+    <runway.version>4.0.1-SNAPSHOT</runway.version>
     <geotools.version>26.7</geotools.version>
 
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <maven.compiler.source>11</maven.compiler.source>
-    <maven.compiler.target>11</maven.compiler.target>
-    <aspectj.version>1.9.7</aspectj.version>    
-    <aspectj.plugin.version>1.13.1</aspectj.plugin.version>    
+    <maven.compiler.source>17</maven.compiler.source>
+    <maven.compiler.target>17</maven.compiler.target>
+    <aspectj.version>1.9.22.1</aspectj.version>    
+    <aspectj.plugin.version>1.15.0</aspectj.plugin.version>
   </properties>
 
   <dependencies>
@@ -65,9 +65,9 @@
       <scope>test</scope>
     </dependency>
     <dependency>
-      <groupId>javax.servlet</groupId>
-      <artifactId>javax.servlet-api</artifactId>
-      <version>3.0.1</version>
+      <groupId>jakarta.servlet</groupId>
+      <artifactId>jakarta.servlet-api</artifactId>
+      <version>6.1.0</version>
       <scope>provided</scope>
     </dependency>
   </dependencies>
@@ -139,6 +139,17 @@
 
   <build>
     <plugins>
+	  <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <version>3.13.0</version>
+        <configuration>
+            <compilerArgs>
+                <arg>-parameters</arg>
+            </compilerArgs>
+        </configuration>
+      </plugin>
+		
       <plugin>
         <groupId>com.github.spotbugs</groupId>
         <artifactId>spotbugs-maven-plugin</artifactId>

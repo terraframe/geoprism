@@ -1,24 +1,6 @@
-/**
- * Copyright (c) 2023 TerraFrame, Inc. All rights reserved.
- *
- * This file is part of Geoprism(tm).
- *
- * Geoprism(tm) is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
- *
- * Geoprism(tm) is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with Geoprism(tm).  If not, see <http://www.gnu.org/licenses/>.
- */
 package net.geoprism.graph;
 
-@com.runwaysdk.business.ClassSignature(hash = -658849509)
+@com.runwaysdk.business.ClassSignature(hash = -1011062024)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -32,6 +14,7 @@ public abstract class SnapshotHierarchyBase extends com.runwaysdk.business.Relat
   public final static java.lang.String CREATEDATE = "createDate";
   public final static java.lang.String CREATEDBY = "createdBy";
   public final static java.lang.String ENTITYDOMAIN = "entityDomain";
+  public final static java.lang.String HIERARCHYTYPECODE = "hierarchyTypeCode";
   public final static java.lang.String KEYNAME = "keyName";
   public final static java.lang.String LASTUPDATEDATE = "lastUpdateDate";
   public final static java.lang.String LASTUPDATEDBY = "lastUpdatedBy";
@@ -42,7 +25,7 @@ public abstract class SnapshotHierarchyBase extends com.runwaysdk.business.Relat
   public final static java.lang.String SITEMASTER = "siteMaster";
   public final static java.lang.String TYPE = "type";
   @SuppressWarnings("unused")
-  private static final long serialVersionUID = -658849509;
+  private static final long serialVersionUID = -1011062024;
   
   public SnapshotHierarchyBase(String parentOid, String childOid)
   {
@@ -142,6 +125,34 @@ public abstract class SnapshotHierarchyBase extends com.runwaysdk.business.Relat
     else
     {
       setValue(ENTITYDOMAIN, oid);
+    }
+  }
+  
+  public String getHierarchyTypeCode()
+  {
+    return getValue(HIERARCHYTYPECODE);
+  }
+  
+  public void validateHierarchyTypeCode()
+  {
+    this.validateAttribute(HIERARCHYTYPECODE);
+  }
+  
+  public static com.runwaysdk.dataaccess.MdAttributeCharacterDAOIF getHierarchyTypeCodeMd()
+  {
+    com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(net.geoprism.graph.SnapshotHierarchy.CLASS);
+    return (com.runwaysdk.dataaccess.MdAttributeCharacterDAOIF)mdClassIF.definesAttribute(HIERARCHYTYPECODE);
+  }
+  
+  public void setHierarchyTypeCode(String value)
+  {
+    if(value == null)
+    {
+      setValue(HIERARCHYTYPECODE, "");
+    }
+    else
+    {
+      setValue(HIERARCHYTYPECODE, value);
     }
   }
   
@@ -364,6 +375,13 @@ public abstract class SnapshotHierarchyBase extends com.runwaysdk.business.Relat
   protected String getDeclaredType()
   {
     return CLASS;
+  }
+  
+  public static SnapshotHierarchyQuery getAllInstances(String sortAttribute, Boolean ascending, Integer pageSize, Integer pageNumber)
+  {
+    SnapshotHierarchyQuery query = new SnapshotHierarchyQuery(new com.runwaysdk.query.QueryFactory());
+    com.runwaysdk.business.Entity.getAllInstances(query, sortAttribute, ascending, pageSize, pageNumber);
+    return query;
   }
   
   public net.geoprism.graph.GeoObjectTypeSnapshot getParent()

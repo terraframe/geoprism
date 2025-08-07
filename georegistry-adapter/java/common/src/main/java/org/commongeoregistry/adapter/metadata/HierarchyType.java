@@ -3,18 +3,19 @@
  *
  * This file is part of Common Geo Registry Adapter(tm).
  *
- * Common Geo Registry Adapter(tm) is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
+ * Common Geo Registry Adapter(tm) is free software: you can redistribute it
+ * and/or modify it under the terms of the GNU Lesser General Public License as
+ * published by the Free Software Foundation, either version 3 of the License,
+ * or (at your option) any later version.
  *
- * Common Geo Registry Adapter(tm) is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
+ * Common Geo Registry Adapter(tm) is distributed in the hope that it will be
+ * useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser
+ * General Public License for more details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with Common Geo Registry Adapter(tm).  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with Common Geo Registry Adapter(tm). If not, see
+ * <http://www.gnu.org/licenses/>.
  */
 package org.commongeoregistry.adapter.metadata;
 
@@ -45,8 +46,8 @@ public class HierarchyType extends GraphTypeDTO implements Serializable, Cloneab
    */
   private static final long   serialVersionUID           = -1947163248569170534L;
 
-  public static final String JSON_TYPE_CODE              = "typeCode";
-  
+  public static final String  JSON_TYPE_CODE             = "typeCode";
+
   public static final String  JSON_CODE                  = "code";
 
   public static final String  JSON_INHERITED_HIER_CODE   = "inheritedHierarchyCode";
@@ -79,6 +80,10 @@ public class HierarchyType extends GraphTypeDTO implements Serializable, Cloneab
 
   public static final String  JSON_CHILDREN              = "children";
 
+  public static final String  JSON_ORIGIN                = "origin";
+
+  public static final String  JSON_SEQUENCE              = "sequence";
+
   /**
    * Invariant: Is either an empty string or is the code of a valid
    * {@link OrganizationDTO}.
@@ -109,12 +114,17 @@ public class HierarchyType extends GraphTypeDTO implements Serializable, Cloneab
 
   private String              email;
 
+  private String              origin;
+
+  private Long                sequenceNumber;
+
   private List<HierarchyNode> rootGeoObjectTypes;
 
   public HierarchyType(String code, LocalizedValue label, LocalizedValue description, String organizationCode)
   {
     super("HierarchyType", code, label, description);
     this.organizationCode = organizationCode;
+    this.sequenceNumber = 0L;
     this.rootGeoObjectTypes = Collections.synchronizedList(new LinkedList<HierarchyNode>());
   }
 
@@ -234,6 +244,26 @@ public class HierarchyType extends GraphTypeDTO implements Serializable, Cloneab
     this.email = email;
   }
 
+  public String getOrigin()
+  {
+    return origin;
+  }
+
+  public void setOrigin(String origin)
+  {
+    this.origin = origin;
+  }
+  
+  public Long getSequenceNumber()
+  {
+    return sequenceNumber;
+  }
+  
+  public void setSequenceNumber(Long sequenceNumber)
+  {
+    this.sequenceNumber = sequenceNumber;
+  }
+
   public List<HierarchyNode> getRootGeoObjectTypes()
   {
     return this.rootGeoObjectTypes;
@@ -294,8 +324,8 @@ public class HierarchyType extends GraphTypeDTO implements Serializable, Cloneab
       clone.setEmail(email);
       clone.setAccessConstraints(accessConstraints);
       clone.setUseConstraints(useConstraints);
+      clone.setSequenceNumber(sequenceNumber);
       return clone;
-
     }
   }
 
@@ -309,7 +339,7 @@ public class HierarchyType extends GraphTypeDTO implements Serializable, Cloneab
     JsonObject jsonObj = new JsonObject();
 
     jsonObj.addProperty(JSON_TYPE_CODE, "HierarchyType");
-    
+
     jsonObj.addProperty(JSON_CODE, this.getCode());
 
     jsonObj.add(JSON_LOCALIZED_LABEL, this.getLabel().toJSON(serializer));
@@ -326,6 +356,8 @@ public class HierarchyType extends GraphTypeDTO implements Serializable, Cloneab
     jsonObj.addProperty(JSON_EMAIL, this.email == null ? "" : this.email);
     jsonObj.addProperty(JSON_ACCESS_CONSTRAINTS, this.accessConstraints == null ? "" : this.accessConstraints);
     jsonObj.addProperty(JSON_USE_CONSTRAINTS, this.useConstraints == null ? "" : this.useConstraints);
+    jsonObj.addProperty(JSON_ORIGIN, this.origin == null ? "" : this.origin);
+    jsonObj.addProperty(JSON_SEQUENCE, this.sequenceNumber == null ? 0L : this.sequenceNumber);
 
     JsonArray jaRoots = new JsonArray();
     for (int i = 0; i < rootGeoObjectTypes.size(); ++i)
@@ -351,9 +383,7 @@ public class HierarchyType extends GraphTypeDTO implements Serializable, Cloneab
    */
   public static HierarchyType fromJSON(String _sJson, RegistryAdapter _registry)
   {
-    JsonParser parser = new JsonParser();
-
-    JsonObject oJson = parser.parse(_sJson).getAsJsonObject();
+    JsonObject oJson = JsonParser.parseString(_sJson).getAsJsonObject();
 
     String code = oJson.get(JSON_CODE).getAsString();
     LocalizedValue label = LocalizedValue.fromJSON(oJson.get(JSON_LOCALIZED_LABEL).getAsJsonObject());
@@ -368,6 +398,8 @@ public class HierarchyType extends GraphTypeDTO implements Serializable, Cloneab
     String email = oJson.has(JSON_EMAIL) ? oJson.get(JSON_EMAIL).getAsString() : null;
     String accessConstraints = oJson.has(JSON_ACCESS_CONSTRAINTS) ? oJson.get(JSON_ACCESS_CONSTRAINTS).getAsString() : null;
     String useConstraints = oJson.has(JSON_USE_CONSTRAINTS) ? oJson.get(JSON_USE_CONSTRAINTS).getAsString() : null;
+    String origin = oJson.has(JSON_ORIGIN) ? oJson.get(JSON_ORIGIN).getAsString() : null;
+    Long sequenceNumber = oJson.has(JSON_SEQUENCE) ? oJson.get(JSON_SEQUENCE).getAsLong() : 0;
 
     String organizationCode = null;
 
@@ -387,6 +419,8 @@ public class HierarchyType extends GraphTypeDTO implements Serializable, Cloneab
     ht.setEmail(email);
     ht.setAccessConstraints(accessConstraints);
     ht.setUseConstraints(useConstraints);
+    ht.setOrigin(origin);
+    ht.setSequenceNumber(sequenceNumber);
 
     JsonArray rootGeoObjectTypes = oJson.getAsJsonArray(JSON_ROOT_GEOOBJECTTYPES);
     if (rootGeoObjectTypes != null)
