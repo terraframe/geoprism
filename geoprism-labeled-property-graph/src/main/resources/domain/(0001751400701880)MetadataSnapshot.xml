@@ -177,6 +177,10 @@
         <attributes>
         </attributes>
       </mdBusiness>    
+      <mdBusiness name="net.geoprism.graph.AttributeSourceTypeSnapshot" extends="net.geoprism.graph.AttributeTypeSnapshot" label="Attribute Source TypeSnapshot">
+        <attributes>
+        </attributes>
+      </mdBusiness>    
       <mdBusiness name="net.geoprism.graph.AttributeDoubleTypeSnapshot" extends="net.geoprism.graph.AttributeTypeSnapshot" label="Attribute Double TypeSnapshot">
         <attributes>
           <integer name="precision" label="Precision" required="true"  />          

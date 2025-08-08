@@ -70,6 +70,7 @@ import net.geoprism.graph.AttributeDoubleTypeSnapshot;
 import net.geoprism.graph.AttributeGeometryTypeSnapshot;
 import net.geoprism.graph.AttributeLocalTypeSnapshot;
 import net.geoprism.graph.AttributeLongTypeSnapshot;
+import net.geoprism.graph.AttributeSourceTypeSnapshot;
 import net.geoprism.graph.AttributeTypeSnapshot;
 import net.geoprism.graph.AttributeTypeSnapshotQuery;
 import net.geoprism.graph.ObjectTypeSnapshot;
@@ -153,6 +154,10 @@ public abstract class ObjectTypeSnapshotBusinessService<T extends ObjectTypeSnap
     else if (attributeType.getType().equals(AttributeIntegerType.TYPE))
     {
       attributeTypeSnapshot = new AttributeLongTypeSnapshot();
+    }
+    else if (attributeType.getType().equals(AttributeSourceType.TYPE))
+    {
+      attributeTypeSnapshot = new AttributeSourceTypeSnapshot();
     }
     else if (attributeType.getType().equals(AttributeFloatType.TYPE))
     {

@@ -69,7 +69,6 @@ import com.runwaysdk.dataaccess.MdEdgeDAOIF;
 import com.runwaysdk.dataaccess.MdVertexDAOIF;
 import com.runwaysdk.dataaccess.graph.attributes.ValueOverTime;
 import com.runwaysdk.dataaccess.graph.attributes.ValueOverTimeCollection;
-import com.runwaysdk.dataaccess.metadata.graph.MdGraphClassDAO;
 import com.runwaysdk.dataaccess.transaction.Transaction;
 import com.runwaysdk.system.AbstractClassification;
 
@@ -118,11 +117,8 @@ import net.geoprism.registry.model.graph.VertexServerGeoObject;
 import net.geoprism.registry.model.graph.VertexServerGeoObject.EdgeComparator;
 import net.geoprism.registry.query.ServerGeoObjectQuery;
 import net.geoprism.registry.query.graph.VertexGeoObjectQuery;
-import net.geoprism.registry.service.business.VertexAndEdgeResultSetConverter.GeoObjectAndEdge;
-import net.geoprism.registry.service.business.VertexAndEdgeResultSetConverter.VertexAndEdge;
 import net.geoprism.registry.service.permission.AllowAllGeoObjectPermissionService;
 import net.geoprism.registry.service.permission.GeoObjectPermissionServiceIF;
-import net.geoprism.registry.service.request.SourceServiceIF;
 import net.geoprism.registry.view.GeoObjectSplitView;
 import net.geoprism.registry.view.ServerParentTreeNodeOverTime;
 
@@ -558,6 +554,24 @@ public class GeoObjectBusinessService extends RegistryLocalizedValueConverter im
             else
             {
               c.add(new ValueOverTime(votDTO.getStartDate(), votDTO.getEndDate(), (String) null));
+            }
+          }
+          else if (attribute instanceof AttributeSourceType)
+          {
+            String value = (String) votDTO.getValue();
+
+            if (value != null)
+            {
+              this.sourceService.getByCode(value).ifPresent(source -> {
+//                sgo.setValue(attributeName, source.getOid(), votDTO.getStartDate(), votDTO.getEndDate());
+                c.add(new ValueOverTime(votDTO.getStartDate(), votDTO.getEndDate(), source.getOid()));
+                
+              });
+            }
+            else
+            {
+              c.add(new ValueOverTime(votDTO.getStartDate(), votDTO.getEndDate(), (String) null));
+//              sgo.setValue(attributeName, (String) null, votDTO.getStartDate(), votDTO.getEndDate());
             }
           }
           else if (attribute instanceof AttributeClassificationType)
@@ -1527,24 +1541,244 @@ public class GeoObjectBusinessService extends RegistryLocalizedValueConverter im
   //
   // return node;
   // }
+  
+  
 
+//  private ServerChildTreeNode internalGetChildGeoObjects(ServerGeoObjectIF parent, String[] childrenTypes, Boolean recursive, ServerHierarchyType htIn, Date date)
+//  {
+//    ServerChildTreeNode tnRoot = new ServerChildTreeNode(parent, htIn, date, null, null, null);
+//
+//    Map<String, Object> parameters = new HashedMap<String, Object>();
+//    parameters.put("rid", parent.getVertex().getRID());
+//
+//    StringBuilder statement = new StringBuilder();
+//    statement.append("SELECT " + VertexAndEdgeResultSetConverter.geoVertexColumns(parent.getMdClass()) + ", " + VertexAndEdgeResultSetConverter.geoVertexAttributeColumns(parent.getType().definesAttributes()) + ", edgeClass, edgeOid FROM ( ");
+//    statement.append("SELECT v, v.out('" + EdgeConstant.HAS_VALUE.getDBClassName() + "', '" + EdgeConstant.HAS_GEOMETRY.getDBClassName() + "') as attr, edgeClass, edgeOid FROM ( ");
+//    statement.append("SELECT in as v, @class as edgeClass, oid as edgeOid, uid as edgeUid FROM ( ");
+//    statement.append("SELECT EXPAND( outE( ");
+//
+//    if (htIn != null)
+//    {
+//      statement.append("'" + htIn.getObjectEdge().getDBClassName() + "'");
+//    }
+//    statement.append(")");
+//
+//    if (childrenTypes != null && childrenTypes.length > 0)
+//    {
+//      statement.append("[");
+//
+//      for (int i = 0; i < childrenTypes.length; i++)
+//      {
+//        ServerGeoObjectType type = ServerGeoObjectType.get(childrenTypes[i]);
+//        final String paramName = "p" + Integer.toString(i);
+//
+//        if (i > 0)
+//        {
+//          statement.append(" OR ");
+//        }
+//
+//        statement.append("in.@class = :" + paramName);
+//
+//        parameters.put(paramName, type.getMdVertex().getDBClassName());
+//      }
+//
+//      statement.append("]");
+//    }
+//
+//    statement.append(" ) FROM :rid");
+//    statement.append(" )) UNWIND attr )");
+//
+//    GraphQuery<VertexAndEdge> query = new GraphQuery<VertexAndEdge>(statement.toString(), parameters, new VertexAndEdgeResultSetConverter());
+//
+//    List<VertexAndEdge> results = query.getResults();
+//
+//    List<GeoObjectAndEdge> parents = VertexAndEdgeResultSetConverter.convertResults(results, date);
+//
+//    for (GeoObjectAndEdge childAndEdge : parents)
+//    {
+//      ServerGeoObjectIF child = childAndEdge.geoObject;
+//      if (child.getRunwayId().equals(parent.getRunwayId()))
+//        continue;
+//
+//      ServerChildTreeNode tnChild;
+//
+//      final ServerHierarchyType rowHierarchy = ServerHierarchyType.get((MdEdgeDAOIF) MdGraphClassDAO.getMdGraphClassByTableName(childAndEdge.edgeClass));
+//
+//      if (recursive)
+//      {
+//        tnChild = internalGetChildGeoObjects(child, childrenTypes, recursive, rowHierarchy, date);
+//      }
+//      else
+//      {
+//        tnChild = new ServerChildTreeNode(child, rowHierarchy, date, null, childAndEdge.edgeOid, childAndEdge.edgeUid);
+//      }
+//
+//      tnRoot.addChild(tnChild);
+//    }
+//
+//    return tnRoot;
+//  }
+//
+//  /*
+//   * SELECT v.@rid, v.@class, v.oid, v.code, attr.@rid, attr.oid, attr.@class,
+//   * attr.value, edgeClass, edgeOid FROM ( SELECT v, v.out('has_value',
+//   * 'has_geometry') as attr, edgeClass, edgeOid FROM ( SELECT out as v, @class
+//   * as edgeClass, oid as edgeOid FROM ( SELECT EXPAND(inE('fasta_dmin_code'))
+//   * FROM #366:1 ) ) UNWIND attr )
+//   */
+//  protected ServerParentTreeNode internalGetParentGeoObjects(ServerGeoObjectIF child, String[] parentTypes, boolean recursive, boolean includeInherited, ServerHierarchyType htIn, Date date)
+//  {
+//    ServerParentTreeNode tnRoot = new ServerParentTreeNode(child, htIn, date, null, null, null);
+//    
+//    Map<String, Object> parameters = new HashedMap<String, Object>();
+//    parameters.put("rid", child.getVertex().getRID());
+//
+//    StringBuilder statement = new StringBuilder();
+//    statement.append("SELECT " + VertexAndEdgeResultSetConverter.geoVertexColumns(child.getMdClass()) + ", " + VertexAndEdgeResultSetConverter.geoVertexAttributeColumns(child.getType().definesAttributes()) + ", edgeClass, edgeOid FROM ( ");
+//    statement.append("SELECT v, v.out('" + EdgeConstant.HAS_VALUE.getDBClassName() + "', '" + EdgeConstant.HAS_GEOMETRY.getDBClassName() + "') as attr, edgeClass, edgeOid FROM ( ");
+//    statement.append("SELECT out as v, @class as edgeClass, oid as edgeOid, oid as edgeUid FROM ( ");
+//    statement.append("SELECT EXPAND( inE( ");
+//
+//    if (htIn != null)
+//    {
+//      statement.append("'" + htIn.getObjectEdge().getDBClassName() + "'");
+//    }
+//    statement.append(")");
+//
+//    if (date != null || ( parentTypes != null && parentTypes.length > 0 ))
+//    {
+//      statement.append("[");
+//
+//      if (date != null)
+//      {
+//        statement.append(" :date BETWEEN startDate AND endDate");
+//        parameters.put("date", date);
+//      }
+//
+//      if (parentTypes != null && parentTypes.length > 0)
+//      {
+//        if (date != null)
+//        {
+//          statement.append(" AND");
+//        }
+//
+//        statement.append("(");
+//        for (int i = 0; i < parentTypes.length; i++)
+//        {
+//          ServerGeoObjectType type = ServerGeoObjectType.get(parentTypes[i]);
+//          final String paramName = "p" + Integer.toString(i);
+//
+//          if (i > 0)
+//          {
+//            statement.append(" OR ");
+//          }
+//
+//          statement.append("out.@class = :" + paramName);
+//
+//          parameters.put(paramName, type.getMdVertex().getDBClassName());
+//        }
+//        statement.append(" )");
+//      }
+//
+//      statement.append(" ]");
+//    }
+//
+//    statement.append(" ) FROM :rid");
+//    statement.append(" )) UNWIND attr )");
+//
+//    GraphQuery<VertexAndEdge> query = new GraphQuery<VertexAndEdge>(statement.toString(), parameters, new VertexAndEdgeResultSetConverter());
+//
+//    List<VertexAndEdge> results = query.getResults();
+//
+//    List<GeoObjectAndEdge> parents = VertexAndEdgeResultSetConverter.convertResults(results, date);
+//
+//    for (GeoObjectAndEdge parentAndEdge : parents)
+//    {
+//      ServerGeoObjectIF parent = parentAndEdge.geoObject;
+//
+//      if (child.getRunwayId().equals(parent.getRunwayId()))
+//        continue;
+//
+//      ServerParentTreeNode tnParent;
+//
+//      final ServerHierarchyType rowHierarchy = ServerHierarchyType.get((MdEdgeDAOIF) MdGraphClassDAO.getMdGraphClassByTableName(parentAndEdge.edgeClass));
+//
+//      if (recursive)
+//      {
+//        if (includeInherited && gotService.isRoot(parent.getType(), rowHierarchy))
+//        {
+//          InheritedHierarchyAnnotation anno = InheritedHierarchyAnnotation.getByForHierarchical(rowHierarchy.getObject());
+//
+//          if (anno != null)
+//          {
+//            ServerHierarchyType shtInherited = ServerHierarchyType.get(anno.getInheritedHierarchyCode());
+//
+//            tnParent = internalGetParentGeoObjects(parent, parentTypes, recursive, includeInherited, shtInherited, date);
+//          }
+//          else
+//          {
+//            tnParent = internalGetParentGeoObjects(parent, parentTypes, recursive, includeInherited, rowHierarchy, date);
+//          }
+//        }
+//        else
+//        {
+//          tnParent = internalGetParentGeoObjects(parent, parentTypes, recursive, includeInherited, rowHierarchy, date);
+//        }
+//      }
+//      else
+//      {
+//        tnParent = new ServerParentTreeNode(parent, rowHierarchy, date, null, parentAndEdge.edgeOid, parentAndEdge.edgeUid);
+//      }
+//
+//      tnRoot.addParent(tnParent);
+//    }
+//
+//    return tnRoot;
+//  }
+  
   private ServerChildTreeNode internalGetChildGeoObjects(ServerGeoObjectIF parent, String[] childrenTypes, Boolean recursive, ServerHierarchyType htIn, Date date)
   {
-    ServerChildTreeNode tnRoot = new ServerChildTreeNode(parent, htIn, date, null, null, null);
+    if (htIn != null)
+    {
+      return internalGetChildGeoObjectsForHierarchy(parent, childrenTypes, recursive, htIn, date);
+    }
+    else
+    {
+      Iterator<ServerHierarchyType> it = gotService.getHierarchies(parent.getType()).iterator();
+
+      if (!it.hasNext())
+      {
+        return new ServerChildTreeNode(parent, htIn, date, null, null, UUID.randomUUID().toString());
+      }
+
+      ServerChildTreeNode ctn = internalGetChildGeoObjectsForHierarchy(parent, childrenTypes, recursive, it.next(), date);
+
+      while (it.hasNext())
+      {
+        ServerChildTreeNode next = internalGetChildGeoObjectsForHierarchy(parent, childrenTypes, recursive, it.next(), date);
+
+        for (ServerChildTreeNode child : next.getChildren())
+        {
+          ctn.addChild(child);
+        }
+      }
+
+      return ctn;
+    }
+  }
+
+  private ServerChildTreeNode internalGetChildGeoObjectsForHierarchy(ServerGeoObjectIF parent, String[] childrenTypes, Boolean recursive, ServerHierarchyType htIn, Date date)
+  {
+    ServerChildTreeNode tnRoot = new ServerChildTreeNode(parent, htIn, date, null, null, UUID.randomUUID().toString());
 
     Map<String, Object> parameters = new HashedMap<String, Object>();
     parameters.put("rid", parent.getVertex().getRID());
 
     StringBuilder statement = new StringBuilder();
-    statement.append("SELECT " + VertexAndEdgeResultSetConverter.geoVertexColumns(parent.getMdClass()) + ", " + VertexAndEdgeResultSetConverter.geoVertexAttributeColumns(parent.getType().definesAttributes()) + ", edgeClass, edgeOid FROM ( ");
-    statement.append("SELECT v, v.out('" + EdgeConstant.HAS_VALUE.getDBClassName() + "', '" + EdgeConstant.HAS_GEOMETRY.getDBClassName() + "') as attr, edgeClass, edgeOid FROM ( ");
-    statement.append("SELECT in as v, @class as edgeClass, oid as edgeOid, uid as edgeUid FROM ( ");
-    statement.append("SELECT EXPAND( outE( ");
+    statement.append("TRAVERSE OUT('has_value', 'has_geometry') FROM ( SELECT in FROM (");
+    statement.append("SELECT EXPAND(outE(");
 
-    if (htIn != null)
-    {
-      statement.append("'" + htIn.getObjectEdge().getDBClassName() + "'");
-    }
+    statement.append("'" + htIn.getObjectEdge().getDBClassName() + "'");
     statement.append(")");
 
     if (childrenTypes != null && childrenTypes.length > 0)
@@ -1569,32 +1803,29 @@ public class GeoObjectBusinessService extends RegistryLocalizedValueConverter im
       statement.append("]");
     }
 
-    statement.append(" ) FROM :rid");
-    statement.append(" )) UNWIND attr )");
+    statement.append(") FROM :rid");
+    statement.append("))");
 
-    GraphQuery<VertexAndEdge> query = new GraphQuery<VertexAndEdge>(statement.toString(), parameters, new VertexAndEdgeResultSetConverter());
+    GraphQuery<VertexObject> query = new GraphQuery<VertexObject>(statement.toString(), parameters);
 
-    List<VertexAndEdge> results = query.getResults();
+    List<VertexObject> vertexes = query.getResults();
 
-    List<GeoObjectAndEdge> parents = VertexAndEdgeResultSetConverter.convertResults(results, date);
+    List<ServerGeoObjectIF> children = constructGeoObjectsFromQueryResults(vertexes, date);
 
-    for (GeoObjectAndEdge childAndEdge : parents)
+    for (ServerGeoObjectIF child : children)
     {
-      ServerGeoObjectIF child = childAndEdge.geoObject;
       if (child.getRunwayId().equals(parent.getRunwayId()))
         continue;
 
       ServerChildTreeNode tnChild;
 
-      final ServerHierarchyType rowHierarchy = ServerHierarchyType.get((MdEdgeDAOIF) MdGraphClassDAO.getMdGraphClassByTableName(childAndEdge.edgeClass));
-
       if (recursive)
       {
-        tnChild = internalGetChildGeoObjects(child, childrenTypes, recursive, rowHierarchy, date);
+        tnChild = internalGetChildGeoObjectsForHierarchy(child, childrenTypes, recursive, htIn, date);
       }
       else
       {
-        tnChild = new ServerChildTreeNode(child, rowHierarchy, date, null, childAndEdge.edgeOid, childAndEdge.edgeUid);
+        tnChild = new ServerChildTreeNode(child, htIn, date, null, child.getRunwayId(), UUID.randomUUID().toString());
       }
 
       tnRoot.addChild(tnChild);
@@ -1603,25 +1834,52 @@ public class GeoObjectBusinessService extends RegistryLocalizedValueConverter im
     return tnRoot;
   }
 
-  /*
-   * SELECT v.@rid, v.@class, v.oid, v.code, attr.@rid, attr.oid, attr.@class,
-   * attr.value, edgeClass, edgeOid FROM ( SELECT v, v.out('has_value',
-   * 'has_geometry') as attr, edgeClass, edgeOid FROM ( SELECT out as v, @class
-   * as edgeClass, oid as edgeOid FROM ( SELECT EXPAND(inE('fasta_dmin_code'))
-   * FROM #366:1 ) ) UNWIND attr )
-   */
-  protected ServerParentTreeNode internalGetParentGeoObjects(ServerGeoObjectIF child, String[] parentTypes, boolean recursive, boolean includeInherited, ServerHierarchyType htIn, Date date)
+  public static List<ServerGeoObjectIF> constructGeoObjectsFromQueryResults(List<VertexObject> results, Date date)
   {
-    ServerParentTreeNode tnRoot = new ServerParentTreeNode(child, htIn, date, null, null, null);
-    
+    return VertexServerGeoObject.processTraverseResults(results, date);
+  }
+
+  private ServerParentTreeNode internalGetParentGeoObjects(ServerGeoObjectIF child, String[] parentTypes, boolean recursive, boolean includeInherited, ServerHierarchyType htIn, Date date)
+  {
+    if (htIn != null)
+    {
+      return internalGetParentGeoObjectsForHierarchy(child, parentTypes, recursive, includeInherited, htIn, date);
+    }
+    else
+    {
+      Iterator<ServerHierarchyType> it = gotService.getHierarchies(child.getType()).iterator();
+
+      if (!it.hasNext())
+      {
+        return new ServerParentTreeNode(child, htIn, date, null, null, UUID.randomUUID().toString());
+      }
+
+      ServerParentTreeNode ctn = internalGetParentGeoObjectsForHierarchy(child, parentTypes, recursive, includeInherited, it.next(), date);
+
+      while (it.hasNext())
+      {
+        ServerParentTreeNode next = internalGetParentGeoObjectsForHierarchy(child, parentTypes, recursive, includeInherited, it.next(), date);
+
+        for (ServerParentTreeNode parent : next.getParents())
+        {
+          ctn.addParent(parent);
+        }
+      }
+
+      return ctn;
+    }
+  }
+
+  protected ServerParentTreeNode internalGetParentGeoObjectsForHierarchy(ServerGeoObjectIF child, String[] parentTypes, boolean recursive, boolean includeInherited, ServerHierarchyType htIn, Date date)
+  {
+    ServerParentTreeNode tnRoot = new ServerParentTreeNode(child, htIn, date, null, null, UUID.randomUUID().toString());
+
     Map<String, Object> parameters = new HashedMap<String, Object>();
     parameters.put("rid", child.getVertex().getRID());
 
     StringBuilder statement = new StringBuilder();
-    statement.append("SELECT " + VertexAndEdgeResultSetConverter.geoVertexColumns(child.getMdClass()) + ", " + VertexAndEdgeResultSetConverter.geoVertexAttributeColumns(child.getType().definesAttributes()) + ", edgeClass, edgeOid FROM ( ");
-    statement.append("SELECT v, v.out('" + EdgeConstant.HAS_VALUE.getDBClassName() + "', '" + EdgeConstant.HAS_GEOMETRY.getDBClassName() + "') as attr, edgeClass, edgeOid FROM ( ");
-    statement.append("SELECT out as v, @class as edgeClass, oid as edgeOid, oid as edgeUid FROM ( ");
-    statement.append("SELECT EXPAND( inE( ");
+    statement.append("TRAVERSE OUT('has_value', 'has_geometry') FROM ( SELECT out FROM (");
+    statement.append("SELECT EXPAND( inE(");
 
     if (htIn != null)
     {
@@ -1661,57 +1919,53 @@ public class GeoObjectBusinessService extends RegistryLocalizedValueConverter im
 
           parameters.put(paramName, type.getMdVertex().getDBClassName());
         }
-        statement.append(" )");
+        statement.append(")");
       }
 
-      statement.append(" ]");
+      statement.append("]");
     }
 
-    statement.append(" ) FROM :rid");
-    statement.append(" )) UNWIND attr )");
+    statement.append(") FROM :rid");
+    statement.append("))");
 
-    GraphQuery<VertexAndEdge> query = new GraphQuery<VertexAndEdge>(statement.toString(), parameters, new VertexAndEdgeResultSetConverter());
+    GraphQuery<VertexObject> query = new GraphQuery<VertexObject>(statement.toString(), parameters);
 
-    List<VertexAndEdge> results = query.getResults();
+    List<VertexObject> vertexes = query.getResults();
 
-    List<GeoObjectAndEdge> parents = VertexAndEdgeResultSetConverter.convertResults(results, date);
+    List<ServerGeoObjectIF> parents = constructGeoObjectsFromQueryResults(vertexes, date);
 
-    for (GeoObjectAndEdge parentAndEdge : parents)
+    for (ServerGeoObjectIF parent : parents)
     {
-      ServerGeoObjectIF parent = parentAndEdge.geoObject;
-
       if (child.getRunwayId().equals(parent.getRunwayId()))
         continue;
 
       ServerParentTreeNode tnParent;
 
-      final ServerHierarchyType rowHierarchy = ServerHierarchyType.get((MdEdgeDAOIF) MdGraphClassDAO.getMdGraphClassByTableName(parentAndEdge.edgeClass));
-
       if (recursive)
       {
-        if (includeInherited && gotService.isRoot(parent.getType(), rowHierarchy))
+        if (includeInherited && gotService.isRoot(parent.getType(), htIn))
         {
-          InheritedHierarchyAnnotation anno = InheritedHierarchyAnnotation.getByForHierarchical(rowHierarchy.getObject());
+          InheritedHierarchyAnnotation anno = InheritedHierarchyAnnotation.getByForHierarchical(htIn.getObject());
 
           if (anno != null)
           {
             ServerHierarchyType shtInherited = ServerHierarchyType.get(anno.getInheritedHierarchyCode());
 
-            tnParent = internalGetParentGeoObjects(parent, parentTypes, recursive, includeInherited, shtInherited, date);
+            tnParent = internalGetParentGeoObjectsForHierarchy(parent, parentTypes, recursive, includeInherited, shtInherited, date);
           }
           else
           {
-            tnParent = internalGetParentGeoObjects(parent, parentTypes, recursive, includeInherited, rowHierarchy, date);
+            tnParent = internalGetParentGeoObjectsForHierarchy(parent, parentTypes, recursive, includeInherited, htIn, date);
           }
         }
         else
         {
-          tnParent = internalGetParentGeoObjects(parent, parentTypes, recursive, includeInherited, rowHierarchy, date);
+          tnParent = internalGetParentGeoObjectsForHierarchy(parent, parentTypes, recursive, includeInherited, htIn, date);
         }
       }
       else
       {
-        tnParent = new ServerParentTreeNode(parent, rowHierarchy, date, null, parentAndEdge.edgeOid, parentAndEdge.edgeUid);
+        tnParent = new ServerParentTreeNode(parent, htIn, date, null, child.getRunwayId(), UUID.randomUUID().toString());
       }
 
       tnRoot.addParent(tnParent);
@@ -1719,6 +1973,7 @@ public class GeoObjectBusinessService extends RegistryLocalizedValueConverter im
 
     return tnRoot;
   }
+  
 
   protected ServerParentTreeNodeOverTime internalGetParentOverTime(ServerGeoObjectIF child, String[] parentTypes, boolean recursive, boolean includeInherited)
   {
