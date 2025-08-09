@@ -30,12 +30,12 @@ import net.geoprism.registry.model.ValueNodeStrategy;
 import net.geoprism.registry.model.ValueStrategy;
 import net.geoprism.registry.model.VertexValueStrategy;
 
-public class AttributeSourceType extends AttributeSourceTypeBase
+public class AttributeDataSourceType extends AttributeDataSourceTypeBase
 {
   @SuppressWarnings("unused")
   private static final long serialVersionUID = -301152783;
 
-  public AttributeSourceType()
+  public AttributeDataSourceType()
   {
     super();
   }
@@ -80,7 +80,7 @@ public class AttributeSourceType extends AttributeSourceTypeBase
   @Override
   public AttributeType toDTO()
   {
-    org.commongeoregistry.adapter.metadata.AttributeSourceType dto = new org.commongeoregistry.adapter.metadata.AttributeSourceType(this.getCode(), getLocalizedLabel(), getLocalizedDescription(), getIsDefault(), isNew(), getUnique());
+    org.commongeoregistry.adapter.metadata.AttributeDataSourceType dto = new org.commongeoregistry.adapter.metadata.AttributeDataSourceType(this.getCode(), getLocalizedLabel(), getLocalizedDescription(), getIsDefault(), isNew(), getUnique());
 
     this.populate(dto);
 
@@ -96,7 +96,7 @@ public class AttributeSourceType extends AttributeSourceTypeBase
     }
     else
     {
-      return new ValueNodeStrategy(this, MdVertexDAO.getMdVertexDAO(AttributeSourceValue.CLASS), AttributeSourceValue.VALUE);
+      return new ValueNodeStrategy(this, MdVertexDAO.getMdVertexDAO(AttributeDataSourceValue.CLASS), AttributeDataSourceValue.VALUE);
     }
   }
 

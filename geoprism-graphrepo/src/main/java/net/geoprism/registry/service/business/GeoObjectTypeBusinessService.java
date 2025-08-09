@@ -37,7 +37,7 @@ import org.commongeoregistry.adapter.metadata.AttributeDateType;
 import org.commongeoregistry.adapter.metadata.AttributeFloatType;
 import org.commongeoregistry.adapter.metadata.AttributeIntegerType;
 import org.commongeoregistry.adapter.metadata.AttributeLocalType;
-import org.commongeoregistry.adapter.metadata.AttributeSourceType;
+import org.commongeoregistry.adapter.metadata.AttributeDataSourceType;
 import org.commongeoregistry.adapter.metadata.AttributeTermType;
 import org.commongeoregistry.adapter.metadata.AttributeType;
 import org.commongeoregistry.adapter.metadata.GeoObjectType;
@@ -816,9 +816,9 @@ public class GeoObjectTypeBusinessService implements GeoObjectTypeBusinessServic
     {
       attributeType = new net.geoprism.registry.graph.AttributeBooleanType();
     }
-    else if (dto.getType().equals(AttributeSourceType.TYPE))
+    else if (dto.getType().equals(AttributeDataSourceType.TYPE))
     {
-      attributeType = new net.geoprism.registry.graph.AttributeSourceType();
+      attributeType = new net.geoprism.registry.graph.AttributeDataSourceType();
     }
     else if (dto.getType().equals(AttributeLocalType.TYPE))
     {

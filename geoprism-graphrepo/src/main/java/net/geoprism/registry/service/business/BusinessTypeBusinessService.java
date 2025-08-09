@@ -35,7 +35,7 @@ import org.commongeoregistry.adapter.metadata.AttributeDateType;
 import org.commongeoregistry.adapter.metadata.AttributeFloatType;
 import org.commongeoregistry.adapter.metadata.AttributeIntegerType;
 import org.commongeoregistry.adapter.metadata.AttributeLocalType;
-import org.commongeoregistry.adapter.metadata.AttributeSourceType;
+import org.commongeoregistry.adapter.metadata.AttributeDataSourceType;
 import org.commongeoregistry.adapter.metadata.AttributeTermType;
 import org.commongeoregistry.adapter.metadata.AttributeType;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -655,7 +655,7 @@ public class BusinessTypeBusinessService implements BusinessTypeBusinessServiceI
         mdAttributeTerm.setValue(MdAttributeClassification.ROOT, classification.getOid());
       }
     }
-    else if (attributeType.getType().equals(AttributeSourceType.TYPE))
+    else if (attributeType.getType().equals(AttributeDataSourceType.TYPE))
     {
       MdVertexDAOIF mdVertex = MdVertexDAO.getMdVertexDAO(Source.CLASS);
 

@@ -20,14 +20,14 @@
 package org.commongeoregistry.adapter.dataaccess;
 
 import org.commongeoregistry.adapter.RegistryAdapter;
-import org.commongeoregistry.adapter.metadata.AttributeSourceType;
+import org.commongeoregistry.adapter.metadata.AttributeDataSourceType;
 import org.commongeoregistry.adapter.metadata.CustomSerializer;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonNull;
 import com.google.gson.JsonPrimitive;
 
-public class AttributeSource extends Attribute
+public class AttributeDataSource extends Attribute
 {
   /**
    * 
@@ -36,9 +36,9 @@ public class AttributeSource extends Attribute
 
   private String            value;
 
-  public AttributeSource(String name)
+  public AttributeDataSource(String name)
   {
-    super(name, AttributeSourceType.TYPE);
+    super(name, AttributeDataSourceType.TYPE);
 
     this.value = null;
   }

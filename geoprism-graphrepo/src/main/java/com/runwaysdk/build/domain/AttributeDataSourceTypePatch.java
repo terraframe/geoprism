@@ -29,28 +29,28 @@ import org.springframework.stereotype.Service;
 import com.runwaysdk.session.Request;
 
 import net.geoprism.registry.graph.AttributeBooleanType;
-import net.geoprism.registry.graph.AttributeSourceType;
+import net.geoprism.registry.graph.AttributeDataSourceType;
 import net.geoprism.registry.graph.AttributeUUIDType;
 import net.geoprism.registry.model.ServerGeoObjectType;
 
 @Service
-public class AttributeSourceTypePatch
+public class AttributeDataSourceTypePatch
 {
 
   @Request
   private void doIt()
   {
     List<ServerGeoObjectType> types = ServerGeoObjectType.getAll().stream().filter(type -> {      
-      return !type.getIsAbstract() && !type.getAttributeMap().containsKey(DefaultAttribute.SOURCE.getName());
+      return !type.getIsAbstract() && !type.getAttributeMap().containsKey(DefaultAttribute.DATA_SOURCE.getName());
     }).collect(Collectors.toList());
     
     types.forEach(type -> {
       // Create the default source attribute
       
-      AttributeSourceType sourceAttr = new AttributeSourceType();
-      sourceAttr.setCode(DefaultAttribute.SOURCE.getName());
-      sourceAttr.setEmbeddedValue(AttributeUUIDType.LABEL, LocalizedValue.DEFAULT_LOCALE, DefaultAttribute.SOURCE.getDefaultLocalizedName());
-      sourceAttr.setEmbeddedValue(AttributeUUIDType.DESCRIPTION, LocalizedValue.DEFAULT_LOCALE, DefaultAttribute.SOURCE.getDefaultDescription());
+      AttributeDataSourceType sourceAttr = new AttributeDataSourceType();
+      sourceAttr.setCode(DefaultAttribute.DATA_SOURCE.getName());
+      sourceAttr.setEmbeddedValue(AttributeUUIDType.LABEL, LocalizedValue.DEFAULT_LOCALE, DefaultAttribute.DATA_SOURCE.getDefaultLocalizedName());
+      sourceAttr.setEmbeddedValue(AttributeUUIDType.DESCRIPTION, LocalizedValue.DEFAULT_LOCALE, DefaultAttribute.DATA_SOURCE.getDefaultDescription());
       sourceAttr.setValue(AttributeBooleanType.GEOOBJECTTYPE, type.getOid());
       sourceAttr.setRequired(false);
       sourceAttr.setUnique(false);
@@ -66,11 +66,11 @@ public class AttributeSourceTypePatch
 
     try (AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext("net.geoprism.spring.core", "net.geoprism.registry.service.business", "net.geoprism.registry.service.permission"))
     {
-      context.register(AttributeSourceTypePatch.class);
+      context.register(AttributeDataSourceTypePatch.class);
 
-      AttributeSourceTypePatch service = context.getBean(AttributeSourceTypePatch.class);
+      AttributeDataSourceTypePatch service = context.getBean(AttributeDataSourceTypePatch.class);
 
-      new AttributeSourceTypePatch().doIt();
+      new AttributeDataSourceTypePatch().doIt();
     }
   }
 

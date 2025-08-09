@@ -18,12 +18,12 @@
  */
 package net.geoprism.registry.graph;
 
-public class AttributeSourceValue extends AttributeSourceValueBase
+public class AttributeDataSourceValue extends AttributeDataSourceValueBase
 {
   @SuppressWarnings("unused")
   private static final long serialVersionUID = 1367756568;
   
-  public AttributeSourceValue()
+  public AttributeDataSourceValue()
   {
     super();
   }

@@ -207,10 +207,10 @@ public class GeoObjectType extends GeoObjectTypeBase implements ServerElement
       labelAttr.setIsDefault(true);
       labelAttr.apply();
       
-      AttributeSourceType sourceAttr = new AttributeSourceType();
-      sourceAttr.setCode(DefaultAttribute.SOURCE.getName());
-      sourceAttr.setEmbeddedValue(AttributeUUIDType.LABEL, LocalizedValue.DEFAULT_LOCALE, DefaultAttribute.SOURCE.getDefaultLocalizedName());
-      sourceAttr.setEmbeddedValue(AttributeUUIDType.DESCRIPTION, LocalizedValue.DEFAULT_LOCALE, DefaultAttribute.SOURCE.getDefaultDescription());
+      AttributeDataSourceType sourceAttr = new AttributeDataSourceType();
+      sourceAttr.setCode(DefaultAttribute.DATA_SOURCE.getName());
+      sourceAttr.setEmbeddedValue(AttributeUUIDType.LABEL, LocalizedValue.DEFAULT_LOCALE, DefaultAttribute.DATA_SOURCE.getDefaultLocalizedName());
+      sourceAttr.setEmbeddedValue(AttributeUUIDType.DESCRIPTION, LocalizedValue.DEFAULT_LOCALE, DefaultAttribute.DATA_SOURCE.getDefaultDescription());
       sourceAttr.setValue(AttributeBooleanType.GEOOBJECTTYPE, this.getOid());
       sourceAttr.setRequired(false);
       sourceAttr.setUnique(false);

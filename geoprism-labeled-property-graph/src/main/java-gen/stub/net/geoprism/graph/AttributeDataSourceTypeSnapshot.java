@@ -1,11 +1,11 @@
 package net.geoprism.graph;
 
-public class AttributeSourceTypeSnapshot extends AttributeSourceTypeSnapshotBase
+public class AttributeDataSourceTypeSnapshot extends AttributeDataSourceTypeSnapshotBase
 {
   @SuppressWarnings("unused")
   private static final long serialVersionUID = 1476909843;
   
-  public AttributeSourceTypeSnapshot()
+  public AttributeDataSourceTypeSnapshot()
   {
     super();
   }

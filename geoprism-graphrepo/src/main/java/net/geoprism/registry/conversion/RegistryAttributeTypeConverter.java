@@ -31,7 +31,7 @@ import org.commongeoregistry.adapter.metadata.AttributeDateType;
 import org.commongeoregistry.adapter.metadata.AttributeFloatType;
 import org.commongeoregistry.adapter.metadata.AttributeIntegerType;
 import org.commongeoregistry.adapter.metadata.AttributeLocalType;
-import org.commongeoregistry.adapter.metadata.AttributeSourceType;
+import org.commongeoregistry.adapter.metadata.AttributeDataSourceType;
 import org.commongeoregistry.adapter.metadata.AttributeTermType;
 import org.commongeoregistry.adapter.metadata.AttributeType;
 
@@ -110,7 +110,7 @@ public class RegistryAttributeTypeConverter extends RegistryLocalizedValueConver
     }
     else if (mdAttribute instanceof MdAttributeGraphReferenceDAOIF)
     {
-      return AttributeType.factory(attributeName, displayLabel, description, AttributeSourceType.TYPE, required, unique, isChangeOverTime);
+      return AttributeType.factory(attributeName, displayLabel, description, AttributeDataSourceType.TYPE, required, unique, isChangeOverTime);
     }
     else if (mdAttribute instanceof MdAttributeIntegerDAOIF || mdAttribute instanceof MdAttributeLongDAOIF)
     {

@@ -15,7 +15,7 @@ import org.commongeoregistry.adapter.metadata.AttributeDateType;
 import org.commongeoregistry.adapter.metadata.AttributeFloatType;
 import org.commongeoregistry.adapter.metadata.AttributeIntegerType;
 import org.commongeoregistry.adapter.metadata.AttributeLocalType;
-import org.commongeoregistry.adapter.metadata.AttributeSourceType;
+import org.commongeoregistry.adapter.metadata.AttributeDataSourceType;
 import org.commongeoregistry.adapter.metadata.AttributeTermType;
 import org.commongeoregistry.adapter.metadata.AttributeType;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -70,7 +70,7 @@ import net.geoprism.graph.AttributeDoubleTypeSnapshot;
 import net.geoprism.graph.AttributeGeometryTypeSnapshot;
 import net.geoprism.graph.AttributeLocalTypeSnapshot;
 import net.geoprism.graph.AttributeLongTypeSnapshot;
-import net.geoprism.graph.AttributeSourceTypeSnapshot;
+import net.geoprism.graph.AttributeDataSourceTypeSnapshot;
 import net.geoprism.graph.AttributeTypeSnapshot;
 import net.geoprism.graph.AttributeTypeSnapshotQuery;
 import net.geoprism.graph.ObjectTypeSnapshot;
@@ -155,9 +155,9 @@ public abstract class ObjectTypeSnapshotBusinessService<T extends ObjectTypeSnap
     {
       attributeTypeSnapshot = new AttributeLongTypeSnapshot();
     }
-    else if (attributeType.getType().equals(AttributeSourceType.TYPE))
+    else if (attributeType.getType().equals(AttributeDataSourceType.TYPE))
     {
-      attributeTypeSnapshot = new AttributeSourceTypeSnapshot();
+      attributeTypeSnapshot = new AttributeDataSourceTypeSnapshot();
     }
     else if (attributeType.getType().equals(AttributeFloatType.TYPE))
     {
@@ -298,7 +298,7 @@ public abstract class ObjectTypeSnapshotBusinessService<T extends ObjectTypeSnap
     {
       mdAttribute = new MdAttributeBoolean();
     }
-    else if (attributeType.getType().equals(AttributeSourceType.TYPE))
+    else if (attributeType.getType().equals(AttributeDataSourceType.TYPE))
     {
       MdVertexDAOIF mdVertex = MdVertexDAO.getMdVertexDAO(Source.CLASS);
 

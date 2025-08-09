@@ -283,9 +283,9 @@ public abstract class AttributeType implements Serializable
     {
       attributeType = new AttributeBooleanType(_name, _label, _description, _isDefault, _required, _unique);
     }
-    else if (_type.equals(AttributeSourceType.TYPE))
+    else if (_type.equals(AttributeDataSourceType.TYPE))
     {
-      attributeType = new AttributeSourceType(_name, _label, _description, _isDefault, _required, _unique);
+      attributeType = new AttributeDataSourceType(_name, _label, _description, _isDefault, _required, _unique);
     }
     else if (_type.equals(AttributeGeometryType.TYPE))
     {

@@ -177,7 +177,7 @@
         <attributes>
         </attributes>
       </mdBusiness>    
-      <mdBusiness name="net.geoprism.graph.AttributeSourceTypeSnapshot" extends="net.geoprism.graph.AttributeTypeSnapshot" label="Attribute Source TypeSnapshot">
+      <mdBusiness name="net.geoprism.graph.AttributeDataSourceTypeSnapshot" extends="net.geoprism.graph.AttributeTypeSnapshot" label="Attribute Source TypeSnapshot">
         <attributes>
         </attributes>
       </mdBusiness>    

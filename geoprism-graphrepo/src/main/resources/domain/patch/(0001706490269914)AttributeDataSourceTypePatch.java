@@ -22,12 +22,12 @@
   <doIt>
     <create>
       
-      <mdVertex name="net.geoprism.registry.graph.AttributeSourceType" extends="net.geoprism.registry.graph.AttributeType" label="Attribute Source Type">
+      <mdVertex name="net.geoprism.registry.graph.AttributeDataSourceType" extends="net.geoprism.registry.graph.AttributeType" label="Attribute Source Type">
         <attributes>
         </attributes>
       </mdVertex>  
         
-      <mdVertex name="net.geoprism.registry.graph.AttributeSourceValue" extends="net.geoprism.registry.graph.AttributeBasicValue" label="Attribute Source Value">
+      <mdVertex name="net.geoprism.registry.graph.AttributeDataSourceValue" extends="net.geoprism.registry.graph.AttributeBasicValue" label="Attribute Source Value">
         <attributes>
           <graphReference name="value" label="Value" required="false" type="net.geoprism.registry.graph.Source"  />          
         </attributes>
@@ -37,8 +37,8 @@
   </doIt>
   <undoIt>
     <delete>
-      <object type="com.runwaysdk.system.metadata.MdVertex" key="net.geoprism.registry.graph.AttributeSourceValue" />
-      <object type="com.runwaysdk.system.metadata.MdVertex" key="net.geoprism.registry.graph.AttributeSourceType" />
+      <object type="com.runwaysdk.system.metadata.MdVertex" key="net.geoprism.registry.graph.AttributeDataSourceValue" />
+      <object type="com.runwaysdk.system.metadata.MdVertex" key="net.geoprism.registry.graph.AttributeDataSourceType" />
     </delete>
   </undoIt>
 </version>

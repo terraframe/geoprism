@@ -21,7 +21,7 @@ package org.commongeoregistry.adapter.metadata;
 
 import org.commongeoregistry.adapter.dataaccess.LocalizedValue;
 
-public class AttributeSourceType extends AttributeType
+public class AttributeDataSourceType extends AttributeType
 {
   /**
    * 
@@ -30,7 +30,7 @@ public class AttributeSourceType extends AttributeType
 
   public static String      TYPE             = "source";
 
-  public AttributeSourceType(String _name, LocalizedValue _label, LocalizedValue _description, boolean _isDefault, boolean _required, boolean _unique)
+  public AttributeDataSourceType(String _name, LocalizedValue _label, LocalizedValue _description, boolean _isDefault, boolean _required, boolean _unique)
   {
     super(_name, _label, _description, TYPE, _isDefault, _required, _unique);
   }

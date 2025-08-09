@@ -47,7 +47,7 @@ import org.commongeoregistry.adapter.dataaccess.ValueOverTimeCollectionDTO;
 import org.commongeoregistry.adapter.dataaccess.ValueOverTimeDTO;
 import org.commongeoregistry.adapter.metadata.AttributeClassificationType;
 import org.commongeoregistry.adapter.metadata.AttributeLocalType;
-import org.commongeoregistry.adapter.metadata.AttributeSourceType;
+import org.commongeoregistry.adapter.metadata.AttributeDataSourceType;
 import org.commongeoregistry.adapter.metadata.AttributeTermType;
 import org.commongeoregistry.adapter.metadata.AttributeType;
 import org.commongeoregistry.adapter.metadata.GeoObjectType;
@@ -439,7 +439,7 @@ public class GeoObjectBusinessService extends RegistryLocalizedValueConverter im
             sgo.setValue(attributeName, (String) null, startDate, endDate);
           }
         }
-        else if (attribute instanceof AttributeSourceType)
+        else if (attribute instanceof AttributeDataSourceType)
         {
           String value = (String) dto.getValue(attributeName);
 
@@ -556,7 +556,7 @@ public class GeoObjectBusinessService extends RegistryLocalizedValueConverter im
               c.add(new ValueOverTime(votDTO.getStartDate(), votDTO.getEndDate(), (String) null));
             }
           }
-          else if (attribute instanceof AttributeSourceType)
+          else if (attribute instanceof AttributeDataSourceType)
           {
             String value = (String) votDTO.getValue();
 
@@ -1016,7 +1016,7 @@ public class GeoObjectBusinessService extends RegistryLocalizedValueConverter im
               throw e;
             }
           }
-          else if (attribute instanceof AttributeSourceType)
+          else if (attribute instanceof AttributeDataSourceType)
           {
             String sourceOid = (String) value;
 
@@ -1243,7 +1243,7 @@ public class GeoObjectBusinessService extends RegistryLocalizedValueConverter im
                   throw e;
                 }
               }
-              else if (attribute instanceof AttributeSourceType)
+              else if (attribute instanceof AttributeDataSourceType)
               {
                 Source source = Source.get((String) value);
 

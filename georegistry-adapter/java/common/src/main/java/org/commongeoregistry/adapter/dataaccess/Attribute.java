@@ -30,7 +30,7 @@ import org.commongeoregistry.adapter.metadata.AttributeGeometryType;
 import org.commongeoregistry.adapter.metadata.AttributeIntegerType;
 import org.commongeoregistry.adapter.metadata.AttributeListType;
 import org.commongeoregistry.adapter.metadata.AttributeLocalType;
-import org.commongeoregistry.adapter.metadata.AttributeSourceType;
+import org.commongeoregistry.adapter.metadata.AttributeDataSourceType;
 import org.commongeoregistry.adapter.metadata.AttributeTermType;
 import org.commongeoregistry.adapter.metadata.AttributeType;
 import org.commongeoregistry.adapter.metadata.CustomSerializer;
@@ -107,9 +107,9 @@ public abstract class Attribute implements Serializable
     {
       attribute = new AttributeBoolean(attributeType.getName());
     }
-    else if (attributeType instanceof AttributeSourceType)
+    else if (attributeType instanceof AttributeDataSourceType)
     {
-      attribute = new AttributeSource(attributeType.getName());
+      attribute = new AttributeDataSource(attributeType.getName());
     }
     else if (attributeType instanceof AttributeLocalType)
     {

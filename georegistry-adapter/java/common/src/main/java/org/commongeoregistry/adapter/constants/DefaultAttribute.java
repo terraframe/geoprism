@@ -28,7 +28,7 @@ import org.commongeoregistry.adapter.metadata.AttributeGeometryType;
 import org.commongeoregistry.adapter.metadata.AttributeIntegerType;
 import org.commongeoregistry.adapter.metadata.AttributeListType;
 import org.commongeoregistry.adapter.metadata.AttributeLocalType;
-import org.commongeoregistry.adapter.metadata.AttributeSourceType;
+import org.commongeoregistry.adapter.metadata.AttributeDataSourceType;
 import org.commongeoregistry.adapter.metadata.AttributeType;
 
 public enum DefaultAttribute {
@@ -52,7 +52,7 @@ public enum DefaultAttribute {
 
   LAST_UPDATE_DATE("lastUpdateDate", "Date Last Updated", "The date the object was updated", AttributeDateType.TYPE, true, false, false, false),
 
-  SOURCE("source", "Source", "Source of the data", AttributeSourceType.TYPE, true, false, false, true),
+  DATA_SOURCE("dataSource", "Data Source", "Source of the data", AttributeDataSourceType.TYPE, true, false, false, true),
 
   GEOMETRY("geometry", "Geometry", "The geometries for the GeoObject.", AttributeGeometryType.TYPE, true, false, false, true);
 
