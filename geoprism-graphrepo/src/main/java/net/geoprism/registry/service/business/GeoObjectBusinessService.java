@@ -613,7 +613,7 @@ public class GeoObjectBusinessService extends RegistryLocalizedValueConverter im
           {
             Object value = votDTO.getValue();
 
-            c.add(new ValueOverTime(votDTO.getStartDate(), votDTO.getEndDate(), value));
+            c.add(new ValueOverTime(votDTO.getOid(), votDTO.getStartDate(), votDTO.getEndDate(), value));
           }
         }
 
