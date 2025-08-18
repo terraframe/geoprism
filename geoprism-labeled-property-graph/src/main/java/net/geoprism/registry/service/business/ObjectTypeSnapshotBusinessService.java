@@ -76,7 +76,7 @@ import net.geoprism.graph.AttributeTypeSnapshotQuery;
 import net.geoprism.graph.ObjectTypeSnapshot;
 import net.geoprism.graph.SnapshotHasAttributeQuery;
 import net.geoprism.registry.conversion.LocalizedValueConverter;
-import net.geoprism.registry.graph.Source;
+import net.geoprism.registry.graph.DataSource;
 import net.geoprism.registry.model.Classification;
 import net.geoprism.registry.model.ClassificationType;
 
@@ -300,7 +300,7 @@ public abstract class ObjectTypeSnapshotBusinessService<T extends ObjectTypeSnap
     }
     else if (attributeType.getType().equals(AttributeDataSourceType.TYPE))
     {
-      MdVertexDAOIF mdVertex = MdVertexDAO.getMdVertexDAO(Source.CLASS);
+      MdVertexDAOIF mdVertex = MdVertexDAO.getMdVertexDAO(DataSource.CLASS);
 
       mdAttribute = new MdAttributeGraphReference();
       mdAttribute.setValue(MdAttributeGraphReferenceInfo.REFERENCE_MD_VERTEX, mdVertex.getOid());

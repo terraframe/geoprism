@@ -20,9 +20,9 @@ public abstract class AttributeDataSourceValueBase extends net.geoprism.registry
     super();
   }
   
-  public net.geoprism.registry.graph.Source getValue()
+  public net.geoprism.registry.graph.DataSource getValue()
   {
-    return (net.geoprism.registry.graph.Source) this.getObjectValue(VALUE);
+    return (net.geoprism.registry.graph.DataSource) this.getObjectValue(VALUE);
   }
   
   public static com.runwaysdk.dataaccess.MdAttributeGraphReferenceDAOIF getValueMd()
@@ -31,7 +31,7 @@ public abstract class AttributeDataSourceValueBase extends net.geoprism.registry
     return (com.runwaysdk.dataaccess.MdAttributeGraphReferenceDAOIF)mdClassIF.definesAttribute(VALUE);
   }
   
-  public void setValue(net.geoprism.registry.graph.Source value)
+  public void setValue(net.geoprism.registry.graph.DataSource value)
   {
     this.setValue(VALUE, value);
   }

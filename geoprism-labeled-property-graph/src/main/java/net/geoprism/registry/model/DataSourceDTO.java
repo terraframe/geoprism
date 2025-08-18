@@ -1,6 +1,6 @@
 package net.geoprism.registry.model;
 
-public class SourceDTO
+public class DataSourceDTO
 {
   private String oid;
 

@@ -24,25 +24,25 @@ import com.runwaysdk.business.graph.GraphQuery;
 import com.runwaysdk.dataaccess.MdVertexDAOIF;
 import com.runwaysdk.dataaccess.metadata.graph.MdVertexDAO;
 
-public class Source extends SourceBase
+public class DataSource extends DataSourceBase
 {
   @SuppressWarnings("unused")
   private static final long serialVersionUID = 57875307;
 
-  public Source()
+  public DataSource()
   {
     super();
   }
 
-  public static Optional<Source> getByCode(String code)
+  public static Optional<DataSource> getByCode(String code)
   {
-    MdVertexDAOIF metadata = MdVertexDAO.getMdVertexDAO(Source.CLASS);
+    MdVertexDAOIF metadata = MdVertexDAO.getMdVertexDAO(DataSource.CLASS);
 
     StringBuilder statement = new StringBuilder();
     statement.append("SELECT FROM " + metadata.getDBClassName());
-    statement.append(" WHERE " + metadata.definesAttribute(Source.CODE).getColumnName() + " = :code");
+    statement.append(" WHERE " + metadata.definesAttribute(DataSource.CODE).getColumnName() + " = :code");
 
-    GraphQuery<Source> query = new GraphQuery<Source>(statement.toString());
+    GraphQuery<DataSource> query = new GraphQuery<DataSource>(statement.toString());
     query.setParameter("code", code);
 
     return Optional.ofNullable(query.getSingleResult());

@@ -22,18 +22,18 @@ import java.util.List;
 
 import org.springframework.stereotype.Component;
 
-import net.geoprism.registry.model.SourceDTO;
+import net.geoprism.registry.model.DataSourceDTO;
 
 @Component
 public interface SourceServiceIF
 {
-  public List<SourceDTO> getAll(String sessionId);
+  public List<DataSourceDTO> getAll(String sessionId);
 
   public void delete(String sessionId, String code);
 
-  public SourceDTO apply(String sessionId, SourceDTO object);
+  public DataSourceDTO apply(String sessionId, DataSourceDTO object);
 
-  public SourceDTO getByCode(String sessionId, String code);
+  public DataSourceDTO getByCode(String sessionId, String code);
 
-  public List<SourceDTO> search(String sessionId, String text);
+  public List<DataSourceDTO> search(String sessionId, String text);
 }

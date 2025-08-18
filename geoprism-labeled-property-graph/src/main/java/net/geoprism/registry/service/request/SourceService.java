@@ -27,21 +27,21 @@ import org.springframework.stereotype.Service;
 import com.runwaysdk.session.Request;
 import com.runwaysdk.session.RequestType;
 
-import net.geoprism.registry.graph.Source;
-import net.geoprism.registry.model.SourceDTO;
-import net.geoprism.registry.service.business.SourceBusinessServiceIF;
+import net.geoprism.registry.graph.DataSource;
+import net.geoprism.registry.model.DataSourceDTO;
+import net.geoprism.registry.service.business.DataSourceBusinessServiceIF;
 
 @Service
 public class SourceService implements SourceServiceIF
 {
   @Autowired
-  private SourceBusinessServiceIF service;
+  private DataSourceBusinessServiceIF service;
 
   @Override
   @Request(RequestType.SESSION)
-  public List<SourceDTO> getAll(String sessionId)
+  public List<DataSourceDTO> getAll(String sessionId)
   {
-    List<Source> sources = this.service.getAll();
+    List<DataSource> sources = this.service.getAll();
 
     return sources.stream().map(source -> this.service.toDTO(source)).collect(Collectors.toList());
   }
@@ -57,28 +57,28 @@ public class SourceService implements SourceServiceIF
 
   @Override
   @Request(RequestType.SESSION)
-  public SourceDTO apply(String sessionId, SourceDTO object)
+  public DataSourceDTO apply(String sessionId, DataSourceDTO object)
   {
-    Source source = this.service.apply(object);
+    DataSource source = this.service.apply(object);
 
     return this.service.toDTO(source);
   }
 
   @Override
   @Request(RequestType.SESSION)
-  public SourceDTO getByCode(String sessionId, String code)
+  public DataSourceDTO getByCode(String sessionId, String code)
   {
     // TODO: Add localized error message for missing source
-    Source source = this.service.getByCode(code).orElseThrow();
+    DataSource source = this.service.getByCode(code).orElseThrow();
 
     return this.service.toDTO(source);
   }
   
   @Override
   @Request(RequestType.SESSION)
-  public List<SourceDTO> search(String sessionId, String text)
+  public List<DataSourceDTO> search(String sessionId, String text)
   {
-    List<Source> sources = this.service.search(text);
+    List<DataSource> sources = this.service.search(text);
 
     return sources.stream().map(source -> this.service.toDTO(source)).collect(Collectors.toList());
   }

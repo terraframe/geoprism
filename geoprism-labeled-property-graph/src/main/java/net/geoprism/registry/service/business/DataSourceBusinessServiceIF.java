@@ -23,25 +23,27 @@ import java.util.Optional;
 
 import org.springframework.stereotype.Component;
 
-import net.geoprism.registry.graph.Source;
-import net.geoprism.registry.model.SourceDTO;
+import net.geoprism.registry.graph.DataSource;
+import net.geoprism.registry.model.DataSourceDTO;
 
 @Component
-public interface SourceBusinessServiceIF
+public interface DataSourceBusinessServiceIF
 {
 
-  public void delete(Source source);
+  public void delete(DataSource source);
 
-  SourceDTO toDTO(Source source);
+  DataSourceDTO toDTO(DataSource source);
 
-  Source apply(SourceDTO object);
+  DataSource apply(DataSourceDTO object);
 
-  Source apply(Source source);
+  DataSource apply(DataSource source);
 
-  Optional<Source> getByCode(String code);
+  Optional<DataSource> getByCode(String code);
 
-  public List<Source> getAll();
+  public List<DataSource> getAll();
 
-  public List<Source> search(String text);
+  public List<DataSource> search(String text);
+
+  public DataSource get(String sourceOid);
 
 }

@@ -29,7 +29,7 @@
         
       <mdVertex name="net.geoprism.registry.graph.AttributeDataSourceValue" extends="net.geoprism.registry.graph.AttributeBasicValue" label="Attribute Source Value">
         <attributes>
-          <graphReference name="value" label="Value" required="false" type="net.geoprism.registry.graph.Source"  />          
+          <graphReference name="value" label="Value" required="false" type="net.geoprism.registry.graph.DataSource"  />          
         </attributes>
       </mdVertex>    
     </create>

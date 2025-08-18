@@ -30,24 +30,24 @@ import com.runwaysdk.dataaccess.MdVertexDAOIF;
 import com.runwaysdk.dataaccess.metadata.graph.MdVertexDAO;
 import com.runwaysdk.dataaccess.transaction.Transaction;
 
-import net.geoprism.registry.graph.Source;
-import net.geoprism.registry.model.SourceDTO;
+import net.geoprism.registry.graph.DataSource;
+import net.geoprism.registry.model.DataSourceDTO;
 
 @Service
-public class SourceBusinessService implements SourceBusinessServiceIF
+public class DataSourceBusinessService implements DataSourceBusinessServiceIF
 {
 
   @Override
   @Transaction
-  public void delete(Source source)
+  public void delete(DataSource source)
   {
     source.delete();
   }
 
   @Override
-  public SourceDTO toDTO(Source source)
+  public DataSourceDTO toDTO(DataSource source)
   {
-    SourceDTO object = new SourceDTO();
+    DataSourceDTO object = new DataSourceDTO();
     object.setOid(source.getOid());
     object.setCode(source.getCode());
 
@@ -56,17 +56,17 @@ public class SourceBusinessService implements SourceBusinessServiceIF
 
   @Override
   @Transaction
-  public Source apply(SourceDTO object)
+  public DataSource apply(DataSourceDTO object)
   {
-    Source source = null;
+    DataSource source = null;
 
     if (!StringUtils.isBlank(object.getOid()))
     {
-      source = Source.get(object.getOid());
+      source = DataSource.get(object.getOid());
     }
     else
     {
-      source = new Source();
+      source = new DataSource();
     }
 
     source.setCode(object.getCode());
@@ -76,7 +76,7 @@ public class SourceBusinessService implements SourceBusinessServiceIF
 
   @Override
   @Transaction
-  public Source apply(Source source)
+  public DataSource apply(DataSource source)
   {
     source.apply();
 
@@ -84,38 +84,46 @@ public class SourceBusinessService implements SourceBusinessServiceIF
   }
 
   @Override
-  public Optional<Source> getByCode(String code)
+  public Optional<DataSource> getByCode(String code)
   {
-    return Source.getByCode(code);
+    return DataSource.getByCode(code);
+  }
+  
+  @Override
+  public DataSource get(String sourceOid)
+  {
+    return DataSource.get(sourceOid);
   }
 
+
+
   @Override
-  public List<Source> getAll()
+  public List<DataSource> getAll()
   {
-    MdVertexDAOIF mdVertex = MdVertexDAO.getMdVertexDAO(Source.CLASS);
-    MdAttributeDAOIF mdAttribute = mdVertex.definesAttribute(Source.CODE);
+    MdVertexDAOIF mdVertex = MdVertexDAO.getMdVertexDAO(DataSource.CLASS);
+    MdAttributeDAOIF mdAttribute = mdVertex.definesAttribute(DataSource.CODE);
 
     StringBuilder statement = new StringBuilder();
     statement.append("SELECT FROM " + mdVertex.getDBClassName());
     statement.append(" ORDER BY " + mdAttribute.getColumnName());
 
-    GraphQuery<Source> query = new GraphQuery<Source>(statement.toString());
+    GraphQuery<DataSource> query = new GraphQuery<DataSource>(statement.toString());
 
     return query.getResults();
   }
 
   @Override
-  public List<Source> search(String text)
+  public List<DataSource> search(String text)
   {
-    MdVertexDAOIF mdVertex = MdVertexDAO.getMdVertexDAO(Source.CLASS);
-    MdAttributeDAOIF mdAttribute = mdVertex.definesAttribute(Source.CODE);
+    MdVertexDAOIF mdVertex = MdVertexDAO.getMdVertexDAO(DataSource.CLASS);
+    MdAttributeDAOIF mdAttribute = mdVertex.definesAttribute(DataSource.CODE);
 
     StringBuilder statement = new StringBuilder();
     statement.append("SELECT FROM " + mdVertex.getDBClassName());
     statement.append(" WHERE " + mdAttribute.getColumnName() + " LIKE :text");
     statement.append(" ORDER BY " + mdAttribute.getColumnName());
 
-    GraphQuery<Source> query = new GraphQuery<Source>(statement.toString());
+    GraphQuery<DataSource> query = new GraphQuery<DataSource>(statement.toString());
     query.setParameter("text", "%" + text + "%");
 
     return query.getResults();

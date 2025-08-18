@@ -46,7 +46,7 @@ import net.geoprism.graph.LabeledPropertyGraphSynchronization;
 import net.geoprism.graph.LabeledPropertyGraphTypeVersion;
 import net.geoprism.registry.cache.ClassificationCache;
 import net.geoprism.registry.conversion.LocalizedValueConverter;
-import net.geoprism.registry.graph.Source;
+import net.geoprism.registry.graph.DataSource;
 import net.geoprism.registry.lpg.LPGPublishProgressMonitorIF;
 import net.geoprism.registry.model.Classification;
 
@@ -94,7 +94,7 @@ public abstract class AbstractGraphVersionPublisherService
   protected ClassificationBusinessServiceIF                  classificationService;
 
   @Autowired
-  protected SourceBusinessServiceIF                          sourceService;
+  protected DataSourceBusinessServiceIF                          sourceService;
 
   public State createState(LabeledPropertyGraphSynchronization synchronization, LabeledPropertyGraphTypeVersion version)
   {
@@ -188,7 +188,7 @@ public abstract class AbstractGraphVersionPublisherService
               cache.put(key, this.sourceService.getByCode(code).orElse(null));
             }
 
-            node.setValue(attributeName, (Source) cache.get(key));
+            node.setValue(attributeName, (DataSource) cache.get(key));
           }
           else
           {

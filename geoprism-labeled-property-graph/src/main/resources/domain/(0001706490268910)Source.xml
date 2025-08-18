@@ -21,7 +21,7 @@
 <version xsi:noNamespaceSchemaLocation="classpath:com/runwaysdk/resources/xsd/version.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <doIt>
     <create>
-      <mdVertex name="net.geoprism.registry.graph.Source" label="Source">
+      <mdVertex name="net.geoprism.registry.graph.DataSource" label="Source">
         <attributes>
           <char name="code" label="Code" required="true" size="255" indexType="unique"  />          
         </attributes>
@@ -31,7 +31,7 @@
     <permissions>
       <role roleName="geoprism.admin.Administrator">
         <grant>
-          <mdBusinessPermission type="net.geoprism.registry.graph.Source">
+          <mdBusinessPermission type="net.geoprism.registry.graph.DataSource">
             <operation name="ALL" />
           </mdBusinessPermission>
         </grant>
@@ -42,7 +42,7 @@
   </doIt>
   <undoIt>
     <delete>
-      <object type="com.runwaysdk.system.metadata.MdVertex" key="net.geoprism.registry.graph.Source" />
+      <object type="com.runwaysdk.system.metadata.MdVertex" key="net.geoprism.registry.graph.DataSource" />
     </delete>
   </undoIt>
 </version>
