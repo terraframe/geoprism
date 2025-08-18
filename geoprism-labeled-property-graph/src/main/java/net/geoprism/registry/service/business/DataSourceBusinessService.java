@@ -30,17 +30,26 @@ import com.runwaysdk.dataaccess.MdVertexDAOIF;
 import com.runwaysdk.dataaccess.metadata.graph.MdVertexDAO;
 import com.runwaysdk.dataaccess.transaction.Transaction;
 
+import net.geoprism.registry.cache.TransactionLRUCache;
 import net.geoprism.registry.graph.DataSource;
 import net.geoprism.registry.model.DataSourceDTO;
 
 @Service
 public class DataSourceBusinessService implements DataSourceBusinessServiceIF
 {
+  private final TransactionLRUCache<String, DataSource> cache;
+
+  public DataSourceBusinessService()
+  {
+    this.cache = new TransactionLRUCache<String, DataSource>("t-source-cache", (v) -> new String[] { v.getOid(), v.getCode() });
+  }
 
   @Override
   @Transaction
   public void delete(DataSource source)
   {
+    this.cache.remove(source);
+
     source.delete();
   }
 
@@ -78,6 +87,8 @@ public class DataSourceBusinessService implements DataSourceBusinessServiceIF
   @Transaction
   public DataSource apply(DataSource source)
   {
+    this.cache.put(source);
+
     source.apply();
 
     return source;
@@ -86,16 +97,14 @@ public class DataSourceBusinessService implements DataSourceBusinessServiceIF
   @Override
   public Optional<DataSource> getByCode(String code)
   {
-    return DataSource.getByCode(code);
+    return this.cache.get(code, () -> DataSource.getByCode(code));
   }
-  
+
   @Override
   public DataSource get(String sourceOid)
   {
-    return DataSource.get(sourceOid);
+    return this.cache.get(sourceOid, () -> Optional.ofNullable(DataSource.get(sourceOid))).get();
   }
-
-
 
   @Override
   public List<DataSource> getAll()
