@@ -88,6 +88,11 @@ public class TransactionLRUCache<K, V>
 
   public TransactionLRUCache(String cacheKey, Function<V, K[]> mapper)
   {
+    this(cacheKey, mapper, 20);
+  }
+
+  public TransactionLRUCache(String cacheKey, Function<V, K[]> mapper, int maxSize)
+  {
     this.mapper = mapper;
     this.transactionCache = new TransactionCache<>(cacheKey, mapper);
     this.cache = Collections.synchronizedMap(new LRUMap<K, V>(20));
@@ -148,6 +153,11 @@ public class TransactionLRUCache<K, V>
 
           return v;
         });
+  }
+
+  public void clear()
+  {
+    this.cache.clear();
   }
 
 }

@@ -131,7 +131,8 @@ public abstract class ObjectTypeSnapshotBusinessService<T extends ObjectTypeSnap
     vQuery.WHERE(vQuery.getParent().EQ(snapshot));
 
     AttributeTypeSnapshotQuery query = new AttributeTypeSnapshotQuery(factory);
-    query.WHERE(query.EQ(vQuery.getChild()));;
+    query.WHERE(query.EQ(vQuery.getChild()));
+    ;
 
     try (OIterator<? extends AttributeTypeSnapshot> it = query.getIterator())
     {
@@ -278,18 +279,14 @@ public abstract class ObjectTypeSnapshotBusinessService<T extends ObjectTypeSnap
 
       if (root != null)
       {
-        Classification classification = this.classificationService.get(classificationType, root.getCode());
-
-        if (classification == null)
-        {
+        Classification classification = this.classificationService.getByCode(classificationType, root.getCode()).orElseThrow(() -> {
           net.geoprism.registry.DataNotFoundException ex = new net.geoprism.registry.DataNotFoundException();
           ex.setTypeLabel(classificationType.getDisplayLabel().getValue());
           ex.setDataIdentifier(root.getCode());
           ex.setAttributeLabel("geoObjectType.attr.code");
 
           throw ex;
-
-        }
+        });
 
         mdAttributeTerm.setValue(MdAttributeClassification.ROOT, classification.getOid());
       }

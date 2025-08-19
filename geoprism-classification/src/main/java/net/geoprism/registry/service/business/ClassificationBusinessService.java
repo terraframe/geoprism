@@ -3,18 +3,18 @@
  *
  * This file is part of Geoprism(tm).
  *
- * Geoprism(tm) is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
+ * Geoprism(tm) is free software: you can redistribute it and/or modify it under
+ * the terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation, either version 3 of the License, or (at your option) any
+ * later version.
  *
- * Geoprism(tm) is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
+ * Geoprism(tm) is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with Geoprism(tm).  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with Geoprism(tm). If not, see <http://www.gnu.org/licenses/>.
  */
 package net.geoprism.registry.service.business;
 
@@ -22,8 +22,10 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
+import org.apache.commons.lang3.StringUtils;
 import org.commongeoregistry.adapter.Term;
 import org.commongeoregistry.adapter.dataaccess.LocalizedValue;
 import org.commongeoregistry.adapter.metadata.AttributeClassificationType;
@@ -36,12 +38,14 @@ import com.google.gson.JsonParser;
 import com.runwaysdk.business.graph.EdgeObject;
 import com.runwaysdk.business.graph.GraphQuery;
 import com.runwaysdk.business.graph.VertexObject;
+import com.runwaysdk.dataaccess.cache.DataNotFoundException;
 import com.runwaysdk.dataaccess.graph.VertexObjectDAO;
 import com.runwaysdk.dataaccess.transaction.Transaction;
 import com.runwaysdk.resource.ApplicationResource;
 import com.runwaysdk.system.AbstractClassification;
 
 import net.geoprism.registry.CannotDeleteClassificationWithChildrenException;
+import net.geoprism.registry.cache.TransactionLRUCache;
 import net.geoprism.registry.model.Classification;
 import net.geoprism.registry.model.ClassificationNode;
 import net.geoprism.registry.model.ClassificationType;
@@ -52,7 +56,21 @@ import net.geoprism.registry.view.Page;
 public class ClassificationBusinessService implements ClassificationBusinessServiceIF
 {
   @Autowired
-  private ClassificationTypeBusinessServiceIF typeService;
+  private ClassificationTypeBusinessServiceIF               typeService;
+
+  private final TransactionLRUCache<String, Classification> cache;
+
+  public ClassificationBusinessService()
+  {
+    this.cache = new TransactionLRUCache<String, Classification>("t-classification-cache", (v) -> {
+      if (v.getRID() != null)
+      {
+        return new String[] { v.getOid(), v.getType().getCode() + "#" + v.getCode(), v.getRID().toString() };
+      }
+
+      return new String[] { v.getOid(), v.getType().getCode() + "#" + v.getCode() };
+    }, 100);
+  }
 
   @Override
   public void populate(Classification classification, JsonObject object)
@@ -82,6 +100,8 @@ public class ClassificationBusinessService implements ClassificationBusinessServ
 
     classification.getVertex().apply();
 
+    this.cache.put(classification);
+
     if (isNew)
     {
       if (parent != null)
@@ -105,6 +125,8 @@ public class ClassificationBusinessService implements ClassificationBusinessServ
     }
 
     classification.getVertex().delete();
+
+    this.cache.remove(classification);
   }
 
   @Transaction
@@ -302,43 +324,68 @@ public class ClassificationBusinessService implements ClassificationBusinessServ
   }
 
   @Override
-  public Classification get(ClassificationType type, String code)
+  public Optional<Classification> getByOid(ClassificationType type, String oid)
   {
-    StringBuilder builder = new StringBuilder();
-    builder.append("SELECT FROM " + type.getMdVertex().getDBClassName());
-    builder.append(" WHERE code = :code");
+    return this.cache.get(oid, () -> {
+      StringBuilder builder = new StringBuilder();
+      builder.append("SELECT FROM " + type.getMdVertex().getDBClassName());
+      builder.append(" WHERE oid = :oid");
 
-    GraphQuery<VertexObject> query = new GraphQuery<VertexObject>(builder.toString());
-    query.setParameter("code", code);
+      GraphQuery<VertexObject> query = new GraphQuery<VertexObject>(builder.toString());
+      query.setParameter("oid", oid);
 
-    VertexObject result = query.getSingleResult();
+      VertexObject result = query.getSingleResult();
 
-    if (result != null)
-    {
-      return new Classification(type, result);
-    }
-
-    return null;
+      return Optional.ofNullable(result).map(r -> new Classification(type, result));
+    });
   }
 
   @Override
-  public Classification getByOid(ClassificationType type, String oid)
+  public Optional<Classification> getByRid(String rid)
   {
-    StringBuilder builder = new StringBuilder();
-    builder.append("SELECT FROM " + type.getMdVertex().getDBClassName());
-    builder.append(" WHERE oid = :oid");
+    return this.cache.get(rid, () -> {
+      StringBuilder builder = new StringBuilder();
+      builder.append("SELECT FROM " + rid);
 
-    GraphQuery<VertexObject> query = new GraphQuery<VertexObject>(builder.toString());
-    query.setParameter("oid", oid);
+      GraphQuery<VertexObject> query = new GraphQuery<VertexObject>(builder.toString());
 
-    VertexObject result = query.getSingleResult();
+      VertexObject result = query.getSingleResult();
 
-    if (result != null)
-    {
-      return new Classification(type, result);
-    }
+      return Optional.ofNullable(result).map(r -> {
+        String typeName = r.getMdClass().getTypeName();
 
-    return null;
+        ClassificationType type = this.typeService.getByCode(typeName);
+
+        return new Classification(type, result);
+      });
+    });
+  }
+
+  @Override
+  public Classification get(ClassificationType type, String code)
+  {
+    return this.getByCode(type, code).orElseThrow(() -> {
+      throw new DataNotFoundException(code, type.getMdVertex());
+    });
+  }
+
+  @Override
+  public Optional<Classification> getByCode(ClassificationType type, String code)
+  {
+    String key = type.getCode() + "#" + code;
+
+    return this.cache.get(key, () -> {
+      StringBuilder builder = new StringBuilder();
+      builder.append("SELECT FROM " + type.getMdVertex().getDBClassName());
+      builder.append(" WHERE code = :code");
+
+      GraphQuery<VertexObject> query = new GraphQuery<VertexObject>(builder.toString());
+      query.setParameter("code", code);
+
+      VertexObject result = query.getSingleResult();
+
+      return Optional.ofNullable(result).map(r -> new Classification(type, result));
+    });
   }
 
   @Override
@@ -359,7 +406,7 @@ public class ClassificationBusinessService implements ClassificationBusinessServ
 
     String code = object.get(AbstractClassification.CODE).getAsString();
 
-    return this.get(type, code);
+    return this.getByCode(type, code).get();
   }
 
   @Override
@@ -392,10 +439,11 @@ public class ClassificationBusinessService implements ClassificationBusinessServ
       query.setParameter("text", "%" + text.toUpperCase() + "%");
     }
 
-    if (rootCode != null && rootCode.length() > 0)
+    if (!StringUtils.isBlank(rootCode))
     {
-      Classification root = this.get(type, rootCode);
-      query.setParameter("rid", root.getVertex().getRID());
+      this.getByCode(type, rootCode).ifPresent(root -> {
+        query.setParameter("rid", root.getVertex().getRID());
+      });
     }
 
     List<Classification> results = query.getResults().stream().map(vertex -> {
@@ -406,19 +454,19 @@ public class ClassificationBusinessService implements ClassificationBusinessServ
   }
 
   @Override
-  public Classification get(AttributeClassificationType attribute, String code)
+  public Optional<Classification> get(AttributeClassificationType attribute, String code)
   {
     String classificationTypeCode = attribute.getClassificationType();
     ClassificationType type = this.typeService.getByCode(classificationTypeCode);
 
-    return this.get(type, code);
+    return this.getByCode(type, code);
   }
 
   @Override
   public JsonObject exportToJson(String classificationTypeCode, String code)
   {
     ClassificationType type = this.typeService.getByCode(classificationTypeCode);
-    Classification classification = this.get(type, code);
+    Classification classification = this.getByCode(type, code).get();
 
     return exportToJson(classification);
   }
@@ -468,6 +516,12 @@ public class ClassificationBusinessService implements ClassificationBusinessServ
 
       importJsonTree(type, classification, child);
     }
+  }
+  
+  @Override
+  public void clear()
+  {
+    this.cache.clear();
   }
 
 }

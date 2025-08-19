@@ -113,9 +113,9 @@ public class AttributeTypeSnapshotConverter
 
         ClassificationType type = typeService.getByCode(attributeClassification.getClassificationType());
 
-        Classification classification = service.get(type, attributeClassification.getRootTerm());
-
-        attributeType.setRootTerm(classification.toTerm());
+        service.getByCode(type, attributeClassification.getRootTerm()).ifPresent(classification -> {
+          attributeType.setRootTerm(classification.toTerm());          
+        });
       }
 
       return attributeType;

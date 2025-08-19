@@ -44,11 +44,9 @@ import com.runwaysdk.system.metadata.MdVertex;
 
 import net.geoprism.graph.LabeledPropertyGraphSynchronization;
 import net.geoprism.graph.LabeledPropertyGraphTypeVersion;
-import net.geoprism.registry.cache.ClassificationCache;
 import net.geoprism.registry.conversion.LocalizedValueConverter;
 import net.geoprism.registry.graph.DataSource;
 import net.geoprism.registry.lpg.LPGPublishProgressMonitorIF;
-import net.geoprism.registry.model.Classification;
 
 public abstract class AbstractGraphVersionPublisherService
 {
@@ -84,8 +82,8 @@ public abstract class AbstractGraphVersionPublisherService
     }
 
   }
-  
-  protected LPGPublishProgressMonitorIF monitor;
+
+  protected LPGPublishProgressMonitorIF                      monitor;
 
   @Autowired
   protected LabeledPropertyGraphTypeVersionBusinessServiceIF service;
@@ -94,7 +92,7 @@ public abstract class AbstractGraphVersionPublisherService
   protected ClassificationBusinessServiceIF                  classificationService;
 
   @Autowired
-  protected DataSourceBusinessServiceIF                          sourceService;
+  protected DataSourceBusinessServiceIF                      sourceService;
 
   public State createState(LabeledPropertyGraphSynchronization synchronization, LabeledPropertyGraphTypeVersion version)
   {
@@ -102,7 +100,7 @@ public abstract class AbstractGraphVersionPublisherService
   }
 
   @Transaction
-  protected VertexObject publish(State state, MdVertex mdVertex, GeoObject geoObject, ClassificationCache classiCache)
+  protected VertexObject publish(State state, MdVertex mdVertex, GeoObject geoObject)
   {
     GeoObjectType type = geoObject.getType();
 
@@ -150,23 +148,10 @@ public abstract class AbstractGraphVersionPublisherService
           {
             String classificationTypeCode = ( (AttributeClassificationType) attribute ).getClassificationType();
 
-            Classification classification = null;
-            if (classiCache != null)
-            {
-              classification = classiCache.getClassification(classificationTypeCode, value.toString().trim());
-            }
+            this.classificationService.get((AttributeClassificationType) attribute, value).ifPresent(classification -> {
+              node.setValue(attributeName, classification.getVertex());
+            });
 
-            if (classification == null)
-            {
-              classification = this.classificationService.get((AttributeClassificationType) attribute, value);
-
-              if (classification != null && classiCache != null)
-              {
-                classiCache.putClassification(classificationTypeCode, value.toString().trim(), classification);
-              }
-            }
-
-            node.setValue(attributeName, classification.getVertex());
           }
           else
           {
@@ -226,7 +211,7 @@ public abstract class AbstractGraphVersionPublisherService
       node.setValue(DefaultAttribute.GEOMETRY.getName(), geometry);
     }
   }
-  
+
   protected void beginWork(long workTotal, Object importStage)
   {
     if (monitor != null)
@@ -239,7 +224,7 @@ public abstract class AbstractGraphVersionPublisherService
       monitor.apply();
     }
   }
-  
+
   protected void recordProgress(long progress, Object importStage)
   {
     if (monitor != null)
@@ -251,7 +236,7 @@ public abstract class AbstractGraphVersionPublisherService
       monitor.apply();
     }
   }
-  
+
   protected void updateProgress(long workTotal, long progress, Object importStage)
   {
     if (monitor != null)
@@ -266,7 +251,7 @@ public abstract class AbstractGraphVersionPublisherService
   }
 
   @Transaction
-  protected VertexObject publishBusiness(State state, MdVertexDAOIF mdVertex, JsonObject dto, ClassificationCache classiCache)
+  protected VertexObject publishBusiness(State state, MdVertexDAOIF mdVertex, JsonObject dto)
   {
     VertexObject node = new VertexObject(mdVertex.definesType());
 
@@ -288,25 +273,10 @@ public abstract class AbstractGraphVersionPublisherService
         {
           String value = data.get(attributeName).getAsString();
 
-          String classificationTypeCode = ( (AttributeClassificationType) attribute ).getClassificationType();
+          this.classificationService.get((AttributeClassificationType) attribute, value).ifPresent(classification -> {
+            node.setValue(attributeName, classification.getVertex());
+          });
 
-          Classification classification = null;
-          if (classiCache != null)
-          {
-            classification = classiCache.getClassification(classificationTypeCode, value.toString().trim());
-          }
-
-          if (classification == null)
-          {
-            classification = this.classificationService.get((AttributeClassificationType) attribute, value);
-
-            if (classification != null && classiCache != null)
-            {
-              classiCache.putClassification(classificationTypeCode, value.toString().trim(), classification);
-            }
-          }
-
-          node.setValue(attributeName, classification.getVertex());
         }
         else if (attribute instanceof MdAttributeNumberDAOIF)
         {

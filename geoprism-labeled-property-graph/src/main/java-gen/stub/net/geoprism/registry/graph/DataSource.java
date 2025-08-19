@@ -48,4 +48,14 @@ public class DataSource extends DataSourceBase
     return Optional.ofNullable(query.getSingleResult());
   }
 
+  public static Optional<DataSource> getByRid(String rid)
+  {
+    StringBuilder statement = new StringBuilder();
+    statement.append("SELECT FROM " + rid);
+
+    GraphQuery<DataSource> query = new GraphQuery<DataSource>(statement.toString());
+
+    return Optional.ofNullable(query.getSingleResult());
+  }
+
 }

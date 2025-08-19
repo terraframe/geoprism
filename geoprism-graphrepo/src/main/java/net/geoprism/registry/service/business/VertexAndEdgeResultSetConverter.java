@@ -23,55 +23,31 @@ import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
 
-import com.orientechnologies.orient.core.db.document.ODatabaseDocument;
-import com.orientechnologies.orient.core.db.record.OIdentifiable;
-import com.orientechnologies.orient.core.db.record.ORecordElement;
-import com.orientechnologies.orient.core.exception.ORecordNotFoundException;
-import com.orientechnologies.orient.core.exception.OSerializationException;
-import com.orientechnologies.orient.core.id.ORID;
-import com.orientechnologies.orient.core.metadata.schema.OClass;
-import com.orientechnologies.orient.core.metadata.schema.OType;
-import com.orientechnologies.orient.core.record.OEdge;
-import com.orientechnologies.orient.core.record.OElement;
-import com.orientechnologies.orient.core.record.ORecord;
-import com.orientechnologies.orient.core.record.OVertex;
-import com.orientechnologies.orient.core.record.impl.OBlob;
-import com.orientechnologies.orient.core.record.impl.ODocumentHelper;
-import com.orientechnologies.orient.core.serialization.OSerializableStream;
 import com.orientechnologies.orient.core.sql.executor.OResult;
-import com.orientechnologies.orient.core.storage.OStorage.LOCKING_STRATEGY;
 import com.runwaysdk.business.graph.VertexObject;
 import com.runwaysdk.dataaccess.MdAttributeConcreteDAOIF;
 import com.runwaysdk.dataaccess.MdAttributeDAOIF;
 import com.runwaysdk.dataaccess.MdGraphClassDAOIF;
 import com.runwaysdk.dataaccess.MdVertexDAOIF;
 import com.runwaysdk.dataaccess.graph.GraphRequest;
-import com.runwaysdk.dataaccess.graph.VertexObjectDAO;
-import com.runwaysdk.dataaccess.graph.orientdb.ResultSetConverter;
+import com.runwaysdk.dataaccess.graph.ResultSetConverterIF;
 
-import net.geoprism.registry.graph.AttributeType;
 import net.geoprism.registry.graph.AttributeValue;
 import net.geoprism.registry.graph.GeoVertex;
 import net.geoprism.registry.model.ServerGeoObjectIF;
 import net.geoprism.registry.model.ServerGeoObjectType;
 import net.geoprism.registry.model.graph.VertexServerGeoObject;
 
-public class VertexAndEdgeResultSetConverter extends ResultSetConverter
+public class VertexAndEdgeResultSetConverter extends PrefixedResultSetConverter implements ResultSetConverterIF
 {
   public static final String VERTEX_PREFIX = "v";
 
   public static final String ATTR_PREFIX   = "attr";
-
-  public VertexAndEdgeResultSetConverter()
-  {
-    super(VertexObjectDAO.class);
-  }
 
   @Override
   public VertexAndEdge convert(GraphRequest request, Object result)
@@ -87,19 +63,16 @@ public class VertexAndEdgeResultSetConverter extends ResultSetConverter
     if (edgeClass.equals("search_link_default") || ( geoObjectOid == null && attrOid == null ))
       return null;
 
-//    ResultPrefixWrapper vwrapper = new ResultPrefixWrapper(oresult, VERTEX_PREFIX + ".");
-//    final VertexObject goVertex = (VertexObject) super.convert(request, vwrapper);
-//
-//    ResultPrefixWrapper attrWrapper = new ResultPrefixWrapper(oresult, ATTR_PREFIX + ".");
-//    final VertexObject attrVertex = (VertexObject) super.convert(request, attrWrapper);
+    final VertexObject goVertex = (VertexObject) this.build(VERTEX_PREFIX, oresult);
+    final VertexObject attrVertex = (VertexObject) this.build(ATTR_PREFIX, oresult);
 
-    return new VertexAndEdge(null, null, geoObjectOid, edgeClass, edgeOid, edgeUid);
+    return new VertexAndEdge(goVertex, attrVertex, geoObjectOid, edgeClass, edgeOid, edgeUid);
   }
 
   public static class VertexAndEdge
   {
     public String       edgeOid;
-    
+
     public String       edgeUid;
 
     public String       edgeClass;

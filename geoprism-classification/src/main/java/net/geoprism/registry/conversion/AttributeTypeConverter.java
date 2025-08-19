@@ -130,9 +130,9 @@ public class AttributeTypeConverter extends LocalizedValueConverter
 
         ClassificationBusinessServiceIF service = ApplicationContextHolder.getBean(ClassificationBusinessServiceIF.class);
 
-        Classification classification = service.getByOid(type, rootOid);
-
-        attributeType.setRootTerm(classification.toTerm());
+        service.getByOid(type, rootOid).ifPresent(classification -> {
+          attributeType.setRootTerm(classification.toTerm());          
+        });
       }
 
       return attributeType;

@@ -40,10 +40,13 @@ public interface DataSourceBusinessServiceIF
 
   Optional<DataSource> getByCode(String code);
 
+  Optional<DataSource> getByRid(String rid);
+  
   public List<DataSource> getAll();
 
   public List<DataSource> search(String text);
 
   public DataSource get(String sourceOid);
+
 
 }

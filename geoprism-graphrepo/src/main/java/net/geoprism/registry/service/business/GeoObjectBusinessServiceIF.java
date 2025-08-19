@@ -37,7 +37,6 @@ import com.runwaysdk.dataaccess.MdEdgeDAOIF;
 import com.runwaysdk.dataaccess.graph.attributes.ValueOverTimeCollection;
 
 import net.geoprism.registry.BusinessEdgeType;
-import net.geoprism.registry.cache.ClassificationCache;
 import net.geoprism.registry.conversion.ServerGeoObjectStrategyIF;
 import net.geoprism.registry.etl.upload.ClassifierVertexCache;
 import net.geoprism.registry.model.BusinessObject;
@@ -119,7 +118,7 @@ public interface GeoObjectBusinessServiceIF
 
   public GeoObject toGeoObject(ServerGeoObjectIF sgo, Date date);
 
-  public GeoObject toGeoObject(ServerGeoObjectIF sgo, Date date, boolean includeExternalIds, ClassificationCache classiCache);
+  public GeoObject toGeoObject(ServerGeoObjectIF sgo, Date date, boolean includeExternalIds);
 
   public JsonArray getHierarchiesForGeoObject(ServerGeoObjectIF sgo, Date date);
 

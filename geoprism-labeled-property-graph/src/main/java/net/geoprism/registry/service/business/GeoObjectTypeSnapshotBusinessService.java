@@ -26,7 +26,6 @@ import org.commongeoregistry.adapter.constants.GeometryType;
 import org.commongeoregistry.adapter.dataaccess.Attribute;
 import org.commongeoregistry.adapter.dataaccess.GeoObject;
 import org.commongeoregistry.adapter.dataaccess.LocalizedValue;
-import org.commongeoregistry.adapter.dataaccess.UnknownTermException;
 import org.commongeoregistry.adapter.metadata.AttributeClassificationType;
 import org.commongeoregistry.adapter.metadata.AttributeTermType;
 import org.commongeoregistry.adapter.metadata.AttributeType;
@@ -217,7 +216,8 @@ public class GeoObjectTypeSnapshotBusinessService extends ObjectTypeSnapshotBusi
     vQuery.WHERE(vQuery.getParent().EQ((LabeledPropertyGraphTypeVersion) version));
 
     GeoObjectTypeSnapshotQuery query = new GeoObjectTypeSnapshotQuery(factory);
-    query.WHERE(query.EQ(vQuery.getChild()));;
+    query.WHERE(query.EQ(vQuery.getChild()));
+    ;
     query.AND(query.getCode().EQ(code));
 
     try (OIterator<? extends GeoObjectTypeSnapshot> it = query.getIterator())
@@ -240,7 +240,8 @@ public class GeoObjectTypeSnapshotBusinessService extends ObjectTypeSnapshotBusi
     vQuery.WHERE(vQuery.getParent().EQ((LabeledPropertyGraphTypeVersion) version));
 
     GeoObjectTypeSnapshotQuery query = new GeoObjectTypeSnapshotQuery(factory);
-    query.WHERE(query.EQ(vQuery.getChild()));;
+    query.WHERE(query.EQ(vQuery.getChild()));
+    ;
     query.AND(query.getGraphMdVertex().EQ(mdVertex.getOid()));
 
     try (OIterator<? extends GeoObjectTypeSnapshot> it = query.getIterator())
@@ -263,7 +264,8 @@ public class GeoObjectTypeSnapshotBusinessService extends ObjectTypeSnapshotBusi
     vQuery.WHERE(vQuery.getParent().EQ((LabeledPropertyGraphTypeVersion) version));
 
     GeoObjectTypeSnapshotQuery query = new GeoObjectTypeSnapshotQuery(factory);
-    query.WHERE(query.EQ(vQuery.getChild()));;
+    query.WHERE(query.EQ(vQuery.getChild()));
+    ;
     query.AND(query.getIsRoot().EQ(true));
 
     try (OIterator<? extends GeoObjectTypeSnapshot> it = query.getIterator())
@@ -323,24 +325,12 @@ public class GeoObjectTypeSnapshotBusinessService extends ObjectTypeSnapshotBusi
           {
             String classificationTypeCode = ( (AttributeClassificationType) attribute ).getClassificationType();
             ClassificationType classificationType = this.typeService.getByCode(classificationTypeCode);
-            Classification classification = this.classificationService.getByOid(classificationType, (String) value);
-
-            try
-            {
-              geoObj.setValue(attributeName, classification.toTerm());
-            }
-            catch (UnknownTermException e)
-            {
-              // TermValueException ex = new TermValueException();
-              // ex.setAttributeLabel(e.getAttribute().getLabel().getValue());
-              // ex.setCode(e.getCode());
-              //
-              // throw e;
-
+            Classification classification = this.classificationService.getByOid(classificationType, (String) value).orElseThrow(() -> {
               // TODO Change exception type
+              throw new RuntimeException("Unable to find a classification with the code [" + value + "] and attribute [" + attribute.getLabel().getValue() + "]");
+            });
 
-              throw new RuntimeException("Unable to find a classification with the code [" + e.getCode() + "] and attribute [" + e.getAttribute().getLabel().getValue() + "]");
-            }
+            geoObj.setValue(attributeName, classification.toTerm());
           }
           else
           {

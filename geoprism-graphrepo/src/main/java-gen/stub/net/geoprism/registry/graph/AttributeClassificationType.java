@@ -189,17 +189,14 @@ public class AttributeClassificationType extends AttributeClassificationTypeBase
 
     if (root != null)
     {
-      Classification classification = cService.get(classificationType, root.getCode());
-
-      if (classification == null)
-      {
+      Classification classification = cService.getByCode(classificationType, root.getCode()).orElseThrow(() -> {
         net.geoprism.registry.DataNotFoundException ex = new net.geoprism.registry.DataNotFoundException();
         ex.setTypeLabel(classificationType.getDisplayLabel().getValue());
         ex.setDataIdentifier(root.getCode());
         ex.setAttributeLabel(GeoObjectMetadata.get().getAttributeDisplayLabel(DefaultAttribute.CODE.getName()));
-
+        
         throw ex;
-      }
+      });
 
       this.setValue(AttributeClassificationType.ROOTTERM, classification.getOid());
     }
@@ -269,8 +266,15 @@ public class AttributeClassificationType extends AttributeClassificationTypeBase
     if (!StringUtils.isBlank(oid))
     {
       ClassificationBusinessServiceIF service = ServiceFactory.getBean(ClassificationBusinessServiceIF.class);
-
-      return service.getByOid(type, oid);
+      
+      return service.getByOid(type, oid).orElseThrow(() -> {
+        net.geoprism.registry.DataNotFoundException ex = new net.geoprism.registry.DataNotFoundException();
+        ex.setTypeLabel(type.getDisplayLabel().getValue());
+        ex.setDataIdentifier(oid);
+        ex.setAttributeLabel(GeoObjectMetadata.get().getAttributeDisplayLabel(DefaultAttribute.CODE.getName()));
+        
+        throw ex;
+      });
     }
 
     return null;

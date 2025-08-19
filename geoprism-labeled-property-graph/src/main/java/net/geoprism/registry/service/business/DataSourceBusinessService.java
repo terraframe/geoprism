@@ -41,7 +41,7 @@ public class DataSourceBusinessService implements DataSourceBusinessServiceIF
 
   public DataSourceBusinessService()
   {
-    this.cache = new TransactionLRUCache<String, DataSource>("t-source-cache", (v) -> new String[] { v.getOid(), v.getCode() });
+    this.cache = new TransactionLRUCache<String, DataSource>("t-source-cache", (v) -> new String[] { v.getOid(), v.getCode(), v.getRID().toString() });
   }
 
   @Override
@@ -87,10 +87,10 @@ public class DataSourceBusinessService implements DataSourceBusinessServiceIF
   @Transaction
   public DataSource apply(DataSource source)
   {
-    this.cache.put(source);
-
     source.apply();
 
+    this.cache.put(source);
+    
     return source;
   }
 
@@ -100,6 +100,12 @@ public class DataSourceBusinessService implements DataSourceBusinessServiceIF
     return this.cache.get(code, () -> DataSource.getByCode(code));
   }
 
+  @Override
+  public Optional<DataSource> getByRid(String rid)
+  {
+    return this.cache.get(rid, () -> DataSource.getByRid(rid));
+  }
+  
   @Override
   public DataSource get(String sourceOid)
   {

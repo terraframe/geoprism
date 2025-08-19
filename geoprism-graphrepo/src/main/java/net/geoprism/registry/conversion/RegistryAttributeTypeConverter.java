@@ -21,17 +21,18 @@ package net.geoprism.registry.conversion;
 import java.util.List;
 import java.util.Locale;
 
+import org.apache.commons.lang3.StringUtils;
 import org.commongeoregistry.adapter.Term;
 import org.commongeoregistry.adapter.constants.DefaultAttribute;
 import org.commongeoregistry.adapter.dataaccess.LocalizedValue;
 import org.commongeoregistry.adapter.metadata.AttributeBooleanType;
 import org.commongeoregistry.adapter.metadata.AttributeCharacterType;
 import org.commongeoregistry.adapter.metadata.AttributeClassificationType;
+import org.commongeoregistry.adapter.metadata.AttributeDataSourceType;
 import org.commongeoregistry.adapter.metadata.AttributeDateType;
 import org.commongeoregistry.adapter.metadata.AttributeFloatType;
 import org.commongeoregistry.adapter.metadata.AttributeIntegerType;
 import org.commongeoregistry.adapter.metadata.AttributeLocalType;
-import org.commongeoregistry.adapter.metadata.AttributeDataSourceType;
 import org.commongeoregistry.adapter.metadata.AttributeTermType;
 import org.commongeoregistry.adapter.metadata.AttributeType;
 
@@ -60,6 +61,7 @@ import com.runwaysdk.session.Session;
 
 import net.geoprism.registry.model.Classification;
 import net.geoprism.registry.model.ClassificationType;
+import net.geoprism.registry.model.GeoObjectMetadata;
 import net.geoprism.registry.service.business.ClassificationBusinessServiceIF;
 import net.geoprism.registry.service.business.ServiceFactory;
 
@@ -125,13 +127,20 @@ public class RegistryAttributeTypeConverter extends RegistryLocalizedValueConver
 
       String rootOid = ( (MdAttributeClassificationDAOIF) mdAttribute ).getValue(MdAttributeClassificationInfo.ROOT);
 
-      if (rootOid != null && rootOid.length() > 0)
+      if (!StringUtils.isBlank(rootOid))
       {
         ClassificationBusinessServiceIF service = ServiceFactory.getBean(ClassificationBusinessServiceIF.class);
 
         ClassificationType type = new ClassificationType(mdClassification);
 
-        Classification classification = service.getByOid(type, rootOid);
+        Classification classification = service.getByOid(type, rootOid).orElseThrow(() -> {
+          net.geoprism.registry.DataNotFoundException ex = new net.geoprism.registry.DataNotFoundException();
+          ex.setTypeLabel(type.getDisplayLabel().getValue());
+          ex.setDataIdentifier(rootOid);
+          ex.setAttributeLabel(GeoObjectMetadata.get().getAttributeDisplayLabel(DefaultAttribute.CODE.getName()));
+
+          throw ex;
+        });
 
         attributeType.setRootTerm(classification.toTerm());
       }

@@ -31,11 +31,11 @@ import org.commongeoregistry.adapter.dataaccess.LocalizedValue;
 import org.commongeoregistry.adapter.metadata.AttributeBooleanType;
 import org.commongeoregistry.adapter.metadata.AttributeCharacterType;
 import org.commongeoregistry.adapter.metadata.AttributeClassificationType;
+import org.commongeoregistry.adapter.metadata.AttributeDataSourceType;
 import org.commongeoregistry.adapter.metadata.AttributeDateType;
 import org.commongeoregistry.adapter.metadata.AttributeFloatType;
 import org.commongeoregistry.adapter.metadata.AttributeIntegerType;
 import org.commongeoregistry.adapter.metadata.AttributeLocalType;
-import org.commongeoregistry.adapter.metadata.AttributeDataSourceType;
 import org.commongeoregistry.adapter.metadata.AttributeTermType;
 import org.commongeoregistry.adapter.metadata.AttributeType;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,7 +51,6 @@ import com.runwaysdk.constants.MdAttributeConcreteInfo;
 import com.runwaysdk.constants.MdAttributeDoubleInfo;
 import com.runwaysdk.constants.MdAttributeGraphReferenceInfo;
 import com.runwaysdk.constants.MdAttributeLocalInfo;
-import com.runwaysdk.constants.MdAttributeLongInfo;
 import com.runwaysdk.constants.graph.MdVertexInfo;
 import com.runwaysdk.dataaccess.MdAttributeConcreteDAOIF;
 import com.runwaysdk.dataaccess.MdAttributeDAOIF;
@@ -62,7 +61,6 @@ import com.runwaysdk.dataaccess.MdVertexDAOIF;
 import com.runwaysdk.dataaccess.cache.DataNotFoundException;
 import com.runwaysdk.dataaccess.metadata.MdAttributeCharacterDAO;
 import com.runwaysdk.dataaccess.metadata.MdAttributeConcreteDAO;
-import com.runwaysdk.dataaccess.metadata.MdAttributeLongDAO;
 import com.runwaysdk.dataaccess.metadata.graph.MdVertexDAO;
 import com.runwaysdk.dataaccess.transaction.Transaction;
 import com.runwaysdk.gis.constants.MdGeoVertexInfo;
@@ -100,7 +98,6 @@ import net.geoprism.registry.RegistryConstants;
 import net.geoprism.registry.conversion.RegistryAttributeTypeConverter;
 import net.geoprism.registry.conversion.RegistryLocalizedValueConverter;
 import net.geoprism.registry.conversion.TermConverter;
-import net.geoprism.registry.graph.GeoVertex;
 import net.geoprism.registry.graph.DataSource;
 import net.geoprism.registry.model.Classification;
 import net.geoprism.registry.model.ClassificationType;
@@ -640,17 +637,14 @@ public class BusinessTypeBusinessService implements BusinessTypeBusinessServiceI
 
       if (root != null)
       {
-        Classification classification = this.cService.get(classificationType, root.getCode());
-
-        if (classification == null)
-        {
+        Classification classification = this.cService.getByCode(classificationType, root.getCode()).orElseThrow(() -> {
           net.geoprism.registry.DataNotFoundException ex = new net.geoprism.registry.DataNotFoundException();
           ex.setTypeLabel(classificationType.getDisplayLabel().getValue());
           ex.setDataIdentifier(root.getCode());
           ex.setAttributeLabel(GeoObjectMetadata.get().getAttributeDisplayLabel(DefaultAttribute.CODE.getName()));
 
           throw ex;
-        }
+        });
 
         mdAttributeTerm.setValue(MdAttributeClassification.ROOT, classification.getOid());
       }
@@ -768,7 +762,14 @@ public class BusinessTypeBusinessService implements BusinessTypeBusinessServiceI
 
           if (root != null)
           {
-            Classification classification = this.cService.get(classificationType, root.getCode());
+            Classification classification = this.cService.getByCode(classificationType, root.getCode()).orElseThrow(() -> {
+              net.geoprism.registry.DataNotFoundException ex = new net.geoprism.registry.DataNotFoundException();
+              ex.setTypeLabel(classificationType.getDisplayLabel().getValue());
+              ex.setDataIdentifier(root.getCode());
+              ex.setAttributeLabel(GeoObjectMetadata.get().getAttributeDisplayLabel(DefaultAttribute.CODE.getName()));
+
+              throw ex;
+            });
 
             mdAttributeTerm.setValue(MdAttributeClassification.ROOT, classification.getOid());
           }
