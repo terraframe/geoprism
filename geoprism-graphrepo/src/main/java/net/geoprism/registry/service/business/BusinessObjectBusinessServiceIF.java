@@ -19,13 +19,16 @@
 package net.geoprism.registry.service.business;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.stereotype.Component;
 
 import com.google.gson.JsonObject;
+import com.runwaysdk.business.graph.EdgeObject;
 
 import net.geoprism.registry.BusinessEdgeType;
 import net.geoprism.registry.BusinessType;
+import net.geoprism.registry.graph.DataSource;
 import net.geoprism.registry.model.BusinessObject;
 import net.geoprism.registry.model.EdgeDirection;
 import net.geoprism.registry.model.ServerGeoObjectIF;
@@ -47,7 +50,7 @@ public interface BusinessObjectBusinessServiceIF
 
   public boolean exists(BusinessObject object, BusinessEdgeType edgeType, ServerGeoObjectIF geoObject, EdgeDirection direction);
 
-  public void addGeoObject(BusinessObject object, BusinessEdgeType edgeType, ServerGeoObjectIF geoObject, EdgeDirection direction, String uid, boolean validateOrigin);
+  public Optional<EdgeObject> addGeoObject(BusinessObject object, BusinessEdgeType edgeType, ServerGeoObjectIF geoObject, EdgeDirection direction, String uid, DataSource source, boolean validateOrigin);
 
   public void removeGeoObject(BusinessObject object, BusinessEdgeType edgeType, ServerGeoObjectIF geoObject, EdgeDirection direction, boolean validateOrigin);
 
@@ -55,21 +58,21 @@ public interface BusinessObjectBusinessServiceIF
 
   public boolean exists(BusinessEdgeType type, BusinessObject parent, BusinessObject child);
 
-  public void addParent(BusinessObject object, BusinessEdgeType type, BusinessObject parent, String uid);
+  public Optional<EdgeObject> addParent(BusinessObject object, BusinessEdgeType type, BusinessObject parent, String uid, DataSource source);
+
+  public Optional<EdgeObject> addParent(BusinessObject object, BusinessEdgeType type, BusinessObject parent, String uid, DataSource source, boolean validateOrigin);
 
   public void removeParent(BusinessObject object, BusinessEdgeType type, BusinessObject parent);
-
-  public void addParent(BusinessObject object, BusinessEdgeType type, BusinessObject parent, String uid, boolean validateOrigin);
 
   public void removeParent(BusinessObject object, BusinessEdgeType type, BusinessObject parent, boolean validateOrigin);
 
   public List<BusinessObject> getParents(BusinessObject object, BusinessEdgeType type);
 
-  public void addChild(BusinessObject object, BusinessEdgeType type, BusinessObject child, String uid);
+  public Optional<EdgeObject> addChild(BusinessObject object, BusinessEdgeType type, BusinessObject child, String uid, DataSource source);
+
+  public Optional<EdgeObject> addChild(BusinessObject object, BusinessEdgeType type, BusinessObject child, String uid, DataSource source, boolean validateOrigin);
 
   public void removeChild(BusinessObject object, BusinessEdgeType type, BusinessObject child);
-
-  public void addChild(BusinessObject object, BusinessEdgeType type, BusinessObject child, String uid, boolean validateOrigin);
 
   public void removeChild(BusinessObject object, BusinessEdgeType type, BusinessObject child, boolean validateOrigin);
 

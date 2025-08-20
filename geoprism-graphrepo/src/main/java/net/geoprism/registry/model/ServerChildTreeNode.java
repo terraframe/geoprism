@@ -28,6 +28,7 @@ import org.commongeoregistry.adapter.dataaccess.ChildTreeNode;
 import org.commongeoregistry.adapter.dataaccess.GeoObject;
 import org.commongeoregistry.adapter.metadata.HierarchyType;
 
+import net.geoprism.registry.graph.DataSource;
 import net.geoprism.registry.service.business.GeoObjectBusinessServiceIF;
 import net.geoprism.registry.service.business.HierarchyTypeBusinessServiceIF;
 import net.geoprism.registry.service.business.ServiceFactory;
@@ -41,14 +42,15 @@ public class ServerChildTreeNode extends ServerTreeNode
   /**
    * 
    * 
+   * @param source TODO
    * @param date
    *          TODO
    * @param _geoObject
    * @param _hierarchyType
    */
-  public ServerChildTreeNode(ServerGeoObjectIF geoObject, ServerHierarchyType hierarchyType, Date startDate, Date endDate, String oid, String uid)
+  public ServerChildTreeNode(ServerGeoObjectIF geoObject, ServerHierarchyType hierarchyType, Date startDate, Date endDate, String oid, String uid, DataSource source)
   {
-    super(geoObject, hierarchyType, startDate, endDate, oid, uid);
+    super(geoObject, hierarchyType, startDate, endDate, oid, uid, source);
 
     this.children = Collections.synchronizedList(new LinkedList<ServerChildTreeNode>());
   }

@@ -74,7 +74,7 @@ public class DirectedAcyclicGraphStrategy extends AbstractGraphStrategy implemen
   @Override
   public ServerChildGraphNode getChildren(VertexServerGeoObject parent, Boolean recursive, Date date, String boundsWKT, Long skip, Long limit)
   {
-    ServerChildGraphNode tnRoot = new ServerChildGraphNode(parent, this.type, date, null, null, null);
+    ServerChildGraphNode tnRoot = new ServerChildGraphNode(parent, this.type, date, null, null, null, null);
 
     if (limit != null && limit <= 0)
     {
@@ -104,7 +104,8 @@ public class DirectedAcyclicGraphStrategy extends AbstractGraphStrategy implemen
       }
       else
       {
-        tnParent = new ServerChildGraphNode(child, this.type, date, null, UUID.randomUUID().toString(), null);
+        // TODO: Figure out uid and source values
+        tnParent = new ServerChildGraphNode(child, this.type, date, null, UUID.randomUUID().toString(), null, null);
       }
 
       tnRoot.addChild(tnParent);
@@ -167,7 +168,7 @@ public class DirectedAcyclicGraphStrategy extends AbstractGraphStrategy implemen
   @Override
   public ServerParentGraphNode getParents(VertexServerGeoObject child, Boolean recursive, Date date, String boundsWKT, Long skip, Long limit)
   {
-    ServerParentGraphNode tnRoot = new ServerParentGraphNode(child, this.type, date, null, null, null);
+    ServerParentGraphNode tnRoot = new ServerParentGraphNode(child, this.type, date, null, null, null, null);
 
     if (limit != null && limit <= 0)
     {
@@ -197,7 +198,9 @@ public class DirectedAcyclicGraphStrategy extends AbstractGraphStrategy implemen
       }
       else
       {
-        tnParent = new ServerParentGraphNode(parent, this.type, date, null, UUID.randomUUID().toString(), null);
+        // TODO: Figure out uid and source values
+
+        tnParent = new ServerParentGraphNode(parent, this.type, date, null, UUID.randomUUID().toString(), null, null);
       }
 
       tnRoot.addParent(tnParent);
@@ -238,8 +241,10 @@ public class DirectedAcyclicGraphStrategy extends AbstractGraphStrategy implemen
     SortedSet<EdgeObject> newEdges = this.setParentCollection(geoObject, votc);
     EdgeObject edge = newEdges.first();
 
-    ServerParentGraphNode node = new ServerParentGraphNode(geoObject, this.type, startDate, endDate, null, null);
-    node.addParent(new ServerParentGraphNode(parent, this.type, startDate, endDate, edge.getOid(), edge.getObjectValue(DefaultAttribute.UID.getName())));
+    // TODO: Figure out uid and source values
+
+    ServerParentGraphNode node = new ServerParentGraphNode(geoObject, this.type, startDate, endDate, null, null, null);
+    node.addParent(new ServerParentGraphNode(parent, this.type, startDate, endDate, edge.getOid(), edge.getObjectValue(DefaultAttribute.UID.getName()), null));
 
     return node;
   }

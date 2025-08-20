@@ -22,11 +22,13 @@ import java.util.Date;
 
 import org.commongeoregistry.adapter.dataaccess.TreeNode;
 
+import net.geoprism.registry.graph.DataSource;
+
 public abstract class ServerTreeNode extends ServerGraphNode
 {
-  public ServerTreeNode(ServerGeoObjectIF geoObject, ServerHierarchyType hierarchyType, Date startDate, Date endDate, String oid, String uid)
+  public ServerTreeNode(ServerGeoObjectIF geoObject, ServerHierarchyType hierarchyType, Date startDate, Date endDate, String oid, String uid, DataSource source)
   {
-    super(geoObject, hierarchyType, startDate, endDate, oid, uid);
+    super(geoObject, hierarchyType, startDate, endDate, oid, uid, source);
   }
 
   public ServerHierarchyType getHierarchyType()

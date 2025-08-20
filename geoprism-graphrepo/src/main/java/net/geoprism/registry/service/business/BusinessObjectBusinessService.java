@@ -20,8 +20,8 @@ package net.geoprism.registry.service.business;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 import java.util.TreeMap;
-import java.util.UUID;
 import java.util.stream.Collectors;
 
 import org.commongeoregistry.adapter.constants.DefaultAttribute;
@@ -33,14 +33,18 @@ import com.runwaysdk.business.graph.EdgeObject;
 import com.runwaysdk.business.graph.GraphQuery;
 import com.runwaysdk.business.graph.VertexObject;
 import com.runwaysdk.dataaccess.MdAttributeBooleanDAOIF;
+import com.runwaysdk.dataaccess.MdAttributeClassificationDAOIF;
 import com.runwaysdk.dataaccess.MdAttributeConcreteDAOIF;
 import com.runwaysdk.dataaccess.MdAttributeDAOIF;
 import com.runwaysdk.dataaccess.MdAttributeDateDAOIF;
 import com.runwaysdk.dataaccess.MdAttributeDecimalDAOIF;
 import com.runwaysdk.dataaccess.MdAttributeDoubleDAOIF;
+import com.runwaysdk.dataaccess.MdAttributeGraphReferenceDAOIF;
 import com.runwaysdk.dataaccess.MdAttributeLongDAOIF;
 import com.runwaysdk.dataaccess.MdAttributeNumberDAOIF;
 import com.runwaysdk.dataaccess.MdAttributeTermDAOIF;
+import com.runwaysdk.dataaccess.MdClassDAOIF;
+import com.runwaysdk.dataaccess.MdClassificationDAOIF;
 import com.runwaysdk.dataaccess.MdVertexDAOIF;
 import com.runwaysdk.dataaccess.graph.VertexObjectDAO;
 import com.runwaysdk.dataaccess.transaction.Transaction;
@@ -51,7 +55,9 @@ import net.geoprism.registry.BusinessEdgeType;
 import net.geoprism.registry.BusinessType;
 import net.geoprism.registry.DateFormatter;
 import net.geoprism.registry.OriginException;
+import net.geoprism.registry.graph.DataSource;
 import net.geoprism.registry.model.BusinessObject;
+import net.geoprism.registry.model.ClassificationType;
 import net.geoprism.registry.model.EdgeDirection;
 import net.geoprism.registry.model.ServerGeoObjectIF;
 import net.geoprism.registry.model.ServerGeoObjectType;
@@ -61,7 +67,13 @@ import net.geoprism.registry.model.graph.VertexServerGeoObject;
 public class BusinessObjectBusinessService implements BusinessObjectBusinessServiceIF
 {
   @Autowired
-  private BusinessTypeBusinessServiceIF typeService;
+  private BusinessTypeBusinessServiceIF   typeService;
+
+  @Autowired
+  private ClassificationBusinessServiceIF classificationService;
+
+  @Autowired
+  private DataSourceBusinessServiceIF     sourceService;
 
   @Override
   public JsonObject toJSON(BusinessObject object)
@@ -87,6 +99,34 @@ public class BusinessObjectBusinessService implements BusinessObjectBusinessServ
 
             data.addProperty(mdAttribute.definesAttribute(), classifier.getDisplayLabel().getValue());
           }
+          else if (mdAttribute instanceof MdAttributeClassificationDAOIF)
+          {
+            MdClassificationDAOIF mdClassification = ( (MdAttributeClassificationDAOIF) mdAttribute ).getMdClassificationDAOIF();
+
+            ClassificationType type = new ClassificationType(mdClassification);
+
+            this.classificationService.getByOid(type, (String) value).ifPresent(classification -> {
+              data.addProperty(mdAttribute.definesAttribute(), classification.getCode());
+            });
+          }
+          else if (mdAttribute instanceof MdAttributeGraphReferenceDAOIF)
+          {
+            MdClassDAOIF mdVertex = ( (MdAttributeGraphReferenceDAOIF) mdAttribute ).getReferenceMdVertexDAOIF();
+
+            if (mdVertex.definesType().equals(DataSource.CLASS))
+            {
+              DataSource dataSource = this.sourceService.get((String) value);
+
+              if (dataSource != null)
+              {
+                data.addProperty(mdAttribute.definesAttribute(), dataSource.getCode());
+              }
+            }
+            else
+            {
+              throw new UnsupportedOperationException();
+            }
+          }
           else if (value instanceof Number)
           {
             data.addProperty(mdAttribute.definesAttribute(), (Number) value);
@@ -106,6 +146,10 @@ public class BusinessObjectBusinessService implements BusinessObjectBusinessServ
           else if (value instanceof Date)
           {
             data.addProperty(mdAttribute.definesAttribute(), DateFormatter.formatDate((Date) value, false));
+          }
+          else
+          {
+            throw new UnsupportedOperationException();
           }
         }
       }
@@ -176,6 +220,35 @@ public class BusinessObjectBusinessService implements BusinessObjectBusinessServ
         else if (mdAttribute instanceof MdAttributeDateDAOIF)
         {
           object.setValue(attributeName, DateFormatter.parseDate(data.get(attributeName).getAsString()));
+        }
+        else if (mdAttribute instanceof MdAttributeClassificationDAOIF)
+        {
+          String code = data.get(attributeName).getAsString();
+
+          MdClassificationDAOIF mdClassification = ( (MdAttributeClassificationDAOIF) mdAttribute ).getMdClassificationDAOIF();
+
+          ClassificationType type = new ClassificationType(mdClassification);
+
+          this.classificationService.getByCode(type, code).ifPresent(classification -> {
+            object.setValue(attributeName, classification);
+          });
+        }
+        else if (mdAttribute instanceof MdAttributeGraphReferenceDAOIF)
+        {
+          MdClassDAOIF mdVertex = ( (MdAttributeGraphReferenceDAOIF) mdAttribute ).getReferenceMdVertexDAOIF();
+
+          if (mdVertex.definesType().equals(DataSource.CLASS))
+          {
+            String code = data.get(attributeName).getAsString();
+
+            this.sourceService.getByCode(code).ifPresent(dataSource -> {
+              object.setValue(attributeName, dataSource);
+            });
+          }
+          else
+          {
+            throw new UnsupportedOperationException();
+          }
         }
         else
         {
@@ -257,7 +330,7 @@ public class BusinessObjectBusinessService implements BusinessObjectBusinessServ
   }
 
   @Override
-  public void addGeoObject(BusinessObject object, BusinessEdgeType edgeType, ServerGeoObjectIF geoObject, EdgeDirection direction, String uid, boolean validateOrigin)
+  public Optional<EdgeObject> addGeoObject(BusinessObject object, BusinessEdgeType edgeType, ServerGeoObjectIF geoObject, EdgeDirection direction, String uid, DataSource source, boolean validateOrigin)
   {
     if (validateOrigin)
     {
@@ -274,20 +347,28 @@ public class BusinessObjectBusinessService implements BusinessObjectBusinessServ
       if (direction.equals(EdgeDirection.CHILD))
       {
         EdgeObject newEdge = geoVertex.addParent(object.getVertex(), edgeType.getMdEdgeDAO());
-        newEdge.setValue(DefaultAttribute.UID.getName(), UUID.randomUUID().toString());
+        newEdge.setValue(DefaultAttribute.UID.getName(), uid);
+        newEdge.setValue(DefaultAttribute.DATA_SOURCE.getName(), source);
         newEdge.apply();
+        
+        return Optional.of(newEdge);
       }
       else if (direction.equals(EdgeDirection.PARENT))
       {
         EdgeObject newEdge = geoVertex.addChild(object.getVertex(), edgeType.getMdEdgeDAO());
-        newEdge.setValue(DefaultAttribute.UID.getName(), UUID.randomUUID().toString());
+        newEdge.setValue(DefaultAttribute.UID.getName(), uid);
+        newEdge.setValue(DefaultAttribute.DATA_SOURCE.getName(), source);
         newEdge.apply();
+        
+        return Optional.of(newEdge);
       }
       else
       {
         throw new UnsupportedOperationException();
       }
     }
+    
+    return Optional.empty();
   }
 
   @Override
@@ -357,13 +438,13 @@ public class BusinessObjectBusinessService implements BusinessObjectBusinessServ
   }
 
   @Override
-  public void addParent(BusinessObject object, BusinessEdgeType type, BusinessObject parent, String uid)
+  public Optional<EdgeObject> addParent(BusinessObject object, BusinessEdgeType type, BusinessObject parent, String uid, DataSource source)
   {
-    this.addParent(object, type, parent, uid, true);
+    return this.addParent(object, type, parent, uid, source, true);
   }
 
   @Override
-  public void addParent(BusinessObject object, BusinessEdgeType type, BusinessObject parent, String uid, boolean validateOrigin)
+  public Optional<EdgeObject> addParent(BusinessObject object, BusinessEdgeType type, BusinessObject parent, String uid, DataSource source, boolean validateOrigin)
   {
     if (validateOrigin)
     {
@@ -377,8 +458,13 @@ public class BusinessObjectBusinessService implements BusinessObjectBusinessServ
     {
       EdgeObject newEdge = object.getVertex().addParent(parent.getVertex(), type.getMdEdgeDAO());
       newEdge.setValue(DefaultAttribute.UID.getName(), uid);
+      newEdge.setValue(DefaultAttribute.DATA_SOURCE.getName(), source);
       newEdge.apply();
+      
+      return Optional.of(newEdge);
     }
+    
+    return Optional.empty();
   }
 
   @Override
@@ -421,13 +507,13 @@ public class BusinessObjectBusinessService implements BusinessObjectBusinessServ
   }
 
   @Override
-  public void addChild(BusinessObject object, BusinessEdgeType type, BusinessObject child, String uid)
+  public Optional<EdgeObject> addChild(BusinessObject object, BusinessEdgeType type, BusinessObject child, String uid, DataSource source)
   {
-    this.addChild(object, type, child, uid, true);
+    return this.addChild(object, type, child, uid, source, true);
   }
 
   @Override
-  public void addChild(BusinessObject object, BusinessEdgeType type, BusinessObject child, String uid, boolean validateOrigin)
+  public Optional<EdgeObject> addChild(BusinessObject object, BusinessEdgeType type, BusinessObject child, String uid, DataSource source, boolean validateOrigin)
   {
     if (validateOrigin)
     {
@@ -441,8 +527,13 @@ public class BusinessObjectBusinessService implements BusinessObjectBusinessServ
     {
       EdgeObject newEdge = object.getVertex().addChild(child.getVertex(), type.getMdEdgeDAO());
       newEdge.setValue(DefaultAttribute.UID.getName(), uid);
+      newEdge.setValue(DefaultAttribute.DATA_SOURCE.getName(), source);
       newEdge.apply();
+      
+      return Optional.of(newEdge);
     }
+    
+    return Optional.empty();
   }
 
   @Override

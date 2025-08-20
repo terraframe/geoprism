@@ -318,7 +318,7 @@ public class GeoObjectService implements GeoObjectServiceIF
   @Request(RequestType.SESSION)
   public ParentTreeNode addChild(String sessionId, String parentCode, String parentTypeCode, String childCode, String childTypeCode, String hierarchyCode, Date startDate, Date endDate)
   {
-    return this.service.addChild(parentCode, parentTypeCode, childCode, childTypeCode, hierarchyCode, startDate, endDate, UUID.randomUUID().toString(), true);
+    return this.service.addChild(parentCode, parentTypeCode, childCode, childTypeCode, hierarchyCode, startDate, endDate, UUID.randomUUID().toString(), null, true);
   }
 
   @Override

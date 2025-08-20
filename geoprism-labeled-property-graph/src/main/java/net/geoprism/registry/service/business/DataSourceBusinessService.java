@@ -90,26 +90,41 @@ public class DataSourceBusinessService implements DataSourceBusinessServiceIF
     source.apply();
 
     this.cache.put(source);
-    
+
     return source;
   }
 
   @Override
   public Optional<DataSource> getByCode(String code)
   {
-    return this.cache.get(code, () -> DataSource.getByCode(code));
+    if (!StringUtils.isBlank(code))
+    {
+      return this.cache.get(code, () -> DataSource.getByCode(code));
+    }
+    
+    return Optional.empty();
   }
 
   @Override
   public Optional<DataSource> getByRid(String rid)
   {
-    return this.cache.get(rid, () -> DataSource.getByRid(rid));
+    if (!StringUtils.isBlank(rid))
+    {
+      return this.cache.get(rid, () -> DataSource.getByRid(rid));
+    }
+    
+    return Optional.empty();
   }
-  
+
   @Override
   public DataSource get(String sourceOid)
   {
-    return this.cache.get(sourceOid, () -> Optional.ofNullable(DataSource.get(sourceOid))).get();
+    if (!StringUtils.isBlank(sourceOid))
+    {
+      return this.cache.get(sourceOid, () -> Optional.ofNullable(DataSource.get(sourceOid))).get();
+    }
+    
+    return null;
   }
 
   @Override

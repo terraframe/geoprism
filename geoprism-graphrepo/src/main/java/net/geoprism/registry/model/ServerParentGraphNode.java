@@ -3,18 +3,18 @@
  *
  * This file is part of Geoprism(tm).
  *
- * Geoprism(tm) is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
+ * Geoprism(tm) is free software: you can redistribute it and/or modify it under
+ * the terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation, either version 3 of the License, or (at your option) any
+ * later version.
  *
- * Geoprism(tm) is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
+ * Geoprism(tm) is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with Geoprism(tm).  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with Geoprism(tm). If not, see <http://www.gnu.org/licenses/>.
  */
 package net.geoprism.registry.model;
 
@@ -24,6 +24,7 @@ import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.commongeoregistry.adapter.constants.DefaultAttribute;
 import org.commongeoregistry.adapter.dataaccess.GeoObject;
 import org.commongeoregistry.adapter.dataaccess.ParentTreeNode;
 import org.commongeoregistry.adapter.dataaccess.TreeNode;
@@ -33,6 +34,8 @@ import com.google.gson.JsonObject;
 
 import net.geoprism.registry.DateFormatter;
 import net.geoprism.registry.conversion.ServerGeoObjectStrategyIF;
+import net.geoprism.registry.graph.DataSource;
+import net.geoprism.registry.service.business.DataSourceBusinessServiceIF;
 import net.geoprism.registry.service.business.GeoObjectBusinessService;
 import net.geoprism.registry.service.business.ServiceFactory;
 
@@ -45,12 +48,14 @@ public class ServerParentGraphNode extends ServerGraphNode
    * 
    * @param geoObject
    * @param graphType
+   * @param source
+   *          TODO
    * @param date
    *          TODO
    */
-  public ServerParentGraphNode(ServerGeoObjectIF geoObject, GraphType graphType, Date startDate, Date endDate, String oid, String uid)
+  public ServerParentGraphNode(ServerGeoObjectIF geoObject, GraphType graphType, Date startDate, Date endDate, String oid, String uid, DataSource source)
   {
-    super(geoObject, graphType, startDate, endDate, oid, uid);
+    super(geoObject, graphType, startDate, endDate, oid, uid, source);
 
     this.parents = Collections.synchronizedList(new LinkedList<ServerParentGraphNode>());
   }
@@ -183,65 +188,74 @@ public class ServerParentGraphNode extends ServerGraphNode
 
     return json;
   }
-  
+
   public static ServerParentGraphNode fromJSON(JsonObject jo)
   {
     ServerGeoObjectIF goif = null;
-    
+
     if (jo.has(TreeNode.JSON_GEO_OBJECT))
     {
       GeoObject go = GeoObject.fromJSON(ServiceFactory.getAdapter(), jo.get(TreeNode.JSON_GEO_OBJECT).toString());
-      
+
       ServerGeoObjectType type = ServerGeoObjectType.get(go.getType().getCode());
       ServerGeoObjectStrategyIF strategy = new GeoObjectBusinessService().getStrategy(type);
       goif = strategy.constructFromGeoObject(go, false);
     }
-    
+
     GraphType graphType = null;
-    
+
     if (jo.has("graphType"))
     {
       String graphCode = jo.get("graphType").getAsString();
       String graphTypeClass = jo.get("graphTypeClass").getAsString();
-      
+
       graphType = GraphType.getByCode(graphTypeClass, graphCode);
     }
-    
+
     Date startDate = null;
-    
+
     if (jo.has("startDate"))
     {
       startDate = DateFormatter.parseDate(jo.get("startDate").getAsString());
     }
-    
+
     Date endDate = null;
-    
+
     if (jo.has("endDate"))
     {
       endDate = DateFormatter.parseDate(jo.get("startDate").getAsString());
     }
-    
+
     String oid = null;
-    
+
     if (jo.has("oid"))
     {
       oid = jo.get("oid").getAsString();
     }
-    
-    String uid = jo.has("oid") ? jo.get("oid").getAsString() : null;
-    
-    ServerParentGraphNode node = new ServerParentGraphNode(goif, graphType, startDate, endDate, oid, uid);
-    
+
+    String uid = jo.has("uid") ? jo.get("uid").getAsString() : null;
+
+    DataSource source = null;
+
+    if (jo.has(DefaultAttribute.DATA_SOURCE.getName()))
+    {
+      String code = jo.get(DefaultAttribute.DATA_SOURCE.getName()).getAsString();
+
+      source = ServiceFactory.getBean(DataSourceBusinessServiceIF.class).getByCode(code).orElse(null);
+    }
+
+    ServerParentGraphNode node = new ServerParentGraphNode(goif, graphType, startDate, endDate, oid, uid, source);
+
     if (jo.has(ParentTreeNode.JSON_PARENTS))
     {
       JsonArray jaParents = jo.get(ParentTreeNode.JSON_PARENTS).getAsJsonArray();
-      
+
       for (int i = 0; i < jaParents.size(); ++i)
       {
         node.addParent(ServerParentGraphNode.fromJSON(jaParents.get(i).getAsJsonObject()));
       }
     }
-    
+
     return node;
   }
 

@@ -65,7 +65,7 @@ public class UndirectedGraphStrategy extends AbstractGraphStrategy implements Gr
 
   private ServerChildGraphNode getChildren(VertexServerGeoObject source, Boolean recursive, Date date, TreeSet<String> visited, String boundsWKT, Long skip, Long limit)
   {
-    ServerChildGraphNode tnRoot = new ServerChildGraphNode(source, this.type, date, null, null, null);
+    ServerChildGraphNode tnRoot = new ServerChildGraphNode(source, this.type, date, null, null, null, null);
 
     if (limit != null && limit <= 0)
     {
@@ -99,7 +99,8 @@ public class UndirectedGraphStrategy extends AbstractGraphStrategy implements Gr
         }
         else
         {
-          tnParent = new ServerChildGraphNode(target, this.type, date, null, UUID.randomUUID().toString(), null);
+          // TODO: Figure out how to get edge uid and source attributes
+          tnParent = new ServerChildGraphNode(target, this.type, date, null, UUID.randomUUID().toString(), null, null);
         }
 
         tnRoot.addChild(tnParent);
@@ -118,7 +119,7 @@ public class UndirectedGraphStrategy extends AbstractGraphStrategy implements Gr
 
   private ServerParentGraphNode getParents(VertexServerGeoObject source, Boolean recursive, Date date, TreeSet<String> visited, String boundsWKT, Long skip, Long limit)
   {
-    ServerParentGraphNode tnRoot = new ServerParentGraphNode(source, this.type, date, null, null, null);
+    ServerParentGraphNode tnRoot = new ServerParentGraphNode(source, this.type, date, null, null, null, null);
 
     if (limit != null && limit <= 0)
     {
@@ -151,7 +152,8 @@ public class UndirectedGraphStrategy extends AbstractGraphStrategy implements Gr
         }
         else
         {
-          tnParent = new ServerParentGraphNode(target, this.type, date, null, UUID.randomUUID().toString(), null);
+          // TODO: Figure out how to get edge uid and source attributes
+          tnParent = new ServerParentGraphNode(target, this.type, date, null, UUID.randomUUID().toString(), null, null);
         }
 
         tnRoot.addParent(tnParent);
@@ -190,8 +192,8 @@ public class UndirectedGraphStrategy extends AbstractGraphStrategy implements Gr
     SortedSet<EdgeObject> newEdges = this.setParentCollection(geoObject, votc);
     EdgeObject edge = newEdges.first();
 
-    ServerParentGraphNode node = new ServerParentGraphNode(geoObject, this.type, startDate, endDate, null, null);
-    node.addParent(new ServerParentGraphNode(parent, this.type, startDate, endDate, edge.getOid(), edge.getObjectValue(DefaultAttribute.UID.getName())));
+    ServerParentGraphNode node = new ServerParentGraphNode(geoObject, this.type, startDate, endDate, null, null, null);
+    node.addParent(new ServerParentGraphNode(parent, this.type, startDate, endDate, edge.getOid(), edge.getObjectValue(DefaultAttribute.UID.getName()), null));
 
     return (T) node;
   }

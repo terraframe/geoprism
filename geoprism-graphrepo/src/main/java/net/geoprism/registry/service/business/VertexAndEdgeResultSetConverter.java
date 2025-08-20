@@ -59,6 +59,7 @@ public class VertexAndEdgeResultSetConverter extends PrefixedResultSetConverter 
     final String edgeClass = oresult.getProperty("edgeClass");
     final String edgeOid = oresult.getProperty("edgeOid");
     final String edgeUid = oresult.getProperty("edgeUid");
+    final String edgeSource = oresult.getProperty("edgeSource");
 
     if (edgeClass.equals("search_link_default") || ( geoObjectOid == null && attrOid == null ))
       return null;
@@ -66,7 +67,7 @@ public class VertexAndEdgeResultSetConverter extends PrefixedResultSetConverter 
     final VertexObject goVertex = (VertexObject) this.build(VERTEX_PREFIX, oresult);
     final VertexObject attrVertex = (VertexObject) this.build(ATTR_PREFIX, oresult);
 
-    return new VertexAndEdge(goVertex, attrVertex, geoObjectOid, edgeClass, edgeOid, edgeUid);
+    return new VertexAndEdge(goVertex, attrVertex, geoObjectOid, edgeClass, edgeOid, edgeUid, edgeSource);
   }
 
   public static class VertexAndEdge
@@ -77,18 +78,21 @@ public class VertexAndEdgeResultSetConverter extends PrefixedResultSetConverter 
 
     public String       edgeClass;
 
+    public String       edgeSource;
+
     public VertexObject goVertex;
 
     public VertexObject attrVertex;
 
-    public VertexAndEdge(VertexObject goVertex, VertexObject attrVertex, String geoObjectOid, String edgeClass, String edgeOid, String edgeUid)
+    public VertexAndEdge(VertexObject goVertex, VertexObject attrVertex, String geoObjectOid, String edgeClass, String edgeOid, String edgeUid, String edgeSource)
     {
       super();
-      this.edgeOid = edgeOid;
-      this.edgeUid = edgeUid;
-      this.edgeClass = edgeClass;
       this.goVertex = goVertex;
       this.attrVertex = attrVertex;
+      this.edgeOid = edgeOid;
+      this.edgeClass = edgeClass;
+      this.edgeUid = edgeUid;
+      this.edgeSource = edgeSource;
     }
   }
 
@@ -100,14 +104,17 @@ public class VertexAndEdgeResultSetConverter extends PrefixedResultSetConverter 
 
     public String            edgeClass;
 
+    public String            edgeSource;
+
     public ServerGeoObjectIF geoObject;
 
-    public GeoObjectAndEdge(ServerGeoObjectIF geoObject, String edgeClass, String edgeOid, String edgeUid)
+    public GeoObjectAndEdge(ServerGeoObjectIF geoObject, String edgeClass, String edgeOid, String edgeUid, String edgeSource)
     {
       super();
       this.edgeOid = edgeOid;
       this.edgeUid = edgeUid;
       this.edgeClass = edgeClass;
+      this.edgeSource = edgeSource;
       this.geoObject = geoObject;
     }
   }
@@ -130,7 +137,7 @@ public class VertexAndEdgeResultSetConverter extends PrefixedResultSetConverter 
         }));
 
         VertexServerGeoObject vsgo = new VertexServerGeoObject(type, previous.goVertex, nodeMap, date);
-        list.add(new GeoObjectAndEdge(vsgo, previous.edgeClass, previous.edgeOid, previous.edgeUid));
+        list.add(new GeoObjectAndEdge(vsgo, previous.edgeClass, previous.edgeOid, previous.edgeUid, previous.edgeSource));
         currentAttributes = new LinkedList<>();
       }
 
@@ -149,7 +156,7 @@ public class VertexAndEdgeResultSetConverter extends PrefixedResultSetConverter 
       }));
 
       VertexServerGeoObject vsgo = new VertexServerGeoObject(type, previous.goVertex, nodeMap, date);
-      list.add(new GeoObjectAndEdge(vsgo, previous.edgeClass, previous.edgeOid, previous.edgeUid));
+      list.add(new GeoObjectAndEdge(vsgo, previous.edgeClass, previous.edgeOid, previous.edgeUid, previous.edgeSource));
     }
 
     return list;

@@ -48,7 +48,7 @@ public class ServerHierarchyStrategy extends AbstractGraphStrategy implements Gr
   @Override
   public ServerChildGraphNode getChildren(VertexServerGeoObject parent, Boolean recursive, Date date, String boundsWKT, Long skip, Long limit)
   {
-    ServerChildGraphNode tnRoot = new ServerChildGraphNode(parent, this.hierarchy, date, null, null, null);
+    ServerChildGraphNode tnRoot = new ServerChildGraphNode(parent, this.hierarchy, date, null, null, null, null);
     
     if (limit != null && limit <= 0)
     {
@@ -114,7 +114,8 @@ public class ServerHierarchyStrategy extends AbstractGraphStrategy implements Gr
       }
       else
       {
-        tnParent = new ServerChildGraphNode(child, this.hierarchy, date, null, UUID.randomUUID().toString(), null);
+        // TODO: Figure out edge uid and source attributes
+        tnParent = new ServerChildGraphNode(child, this.hierarchy, date, null, UUID.randomUUID().toString(), null, null);
       }
 
       tnRoot.addChild(tnParent);
@@ -127,7 +128,7 @@ public class ServerHierarchyStrategy extends AbstractGraphStrategy implements Gr
   @Override
   public ServerParentGraphNode getParents(VertexServerGeoObject child, Boolean recursive, Date date, String boundsWKT, Long skip, Long limit)
   {
-    ServerParentGraphNode tnRoot = new ServerParentGraphNode(child, this.hierarchy, date, null, null, null);
+    ServerParentGraphNode tnRoot = new ServerParentGraphNode(child, this.hierarchy, date, null, null, null, null);
     
     if (limit != null && limit <= 0)
     {
@@ -192,7 +193,8 @@ public class ServerHierarchyStrategy extends AbstractGraphStrategy implements Gr
       }
       else
       {
-        tnParent = new ServerParentGraphNode(parent, this.hierarchy, date, null, UUID.randomUUID().toString(), null);
+        // TODO: Figure out edge uid and source attributes
+        tnParent = new ServerParentGraphNode(parent, this.hierarchy, date, null, UUID.randomUUID().toString(), null, null);
       }
 
       tnRoot.addParent(tnParent);

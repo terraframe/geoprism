@@ -48,12 +48,14 @@ import com.google.gson.JsonParseException;
 import com.runwaysdk.dataaccess.ProgrammingErrorException;
 
 import net.geoprism.registry.DateFormatter;
+import net.geoprism.registry.graph.DataSource;
 import net.geoprism.registry.graph.InheritedHierarchyAnnotation;
 import net.geoprism.registry.model.ServerGeoObjectIF;
 import net.geoprism.registry.model.ServerGeoObjectType;
 import net.geoprism.registry.model.ServerHierarchyType;
 import net.geoprism.registry.model.ServerParentTreeNode;
 import net.geoprism.registry.model.graph.VertexServerGeoObject;
+import net.geoprism.registry.service.business.DataSourceBusinessServiceIF;
 import net.geoprism.registry.service.business.GeoObjectBusinessService;
 import net.geoprism.registry.service.business.GeoObjectBusinessServiceIF;
 import net.geoprism.registry.service.business.GeoObjectTypeBusinessServiceIF;
@@ -430,10 +432,12 @@ public class ServerParentTreeNodeOverTime
 
             ServerGeoObjectIF pSGO = deserializeGeoObject(go, code, context);
 
-            String oid = parent.has("oid") ? oid = parent.get("oid").getAsString() : null;
-            String uid = parent.has("uid") ? oid = parent.get("uid").getAsString() : UUID.randomUUID().toString();
+            String oid = parent.has("oid") ? parent.get("oid").getAsString() : null;
+            String uid = parent.has("uid") ? parent.get("uid").getAsString() : UUID.randomUUID().toString();
+            String sourceCode = parent.has(DefaultAttribute.DATA_SOURCE.getName()) ? oid = parent.get(DefaultAttribute.DATA_SOURCE.getName()).getAsString() : null;            
+            DataSource source = ServiceFactory.getBean(DataSourceBusinessServiceIF.class).getByCode(sourceCode).orElse(null);
 
-            return new ServerParentTreeNode(pSGO, ht, startDate, endDate, oid, uid);
+            return new ServerParentTreeNode(pSGO, ht, startDate, endDate, oid, uid, source);
           }
         }
       }

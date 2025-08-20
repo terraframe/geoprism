@@ -25,6 +25,7 @@ import org.commongeoregistry.adapter.dataaccess.TreeNode;
 import com.google.gson.JsonObject;
 
 import net.geoprism.registry.DateFormatter;
+import net.geoprism.registry.graph.DataSource;
 import net.geoprism.registry.service.business.GeoObjectBusinessServiceIF;
 import net.geoprism.registry.service.business.ServiceFactory;
 
@@ -42,7 +43,9 @@ public abstract class ServerGraphNode
 
   private String            uid;
 
-  public ServerGraphNode(ServerGeoObjectIF geoObject, GraphType graphType, Date startDate, Date endDate, String oid, String uid)
+  private DataSource        source;
+
+  public ServerGraphNode(ServerGeoObjectIF geoObject, GraphType graphType, Date startDate, Date endDate, String oid, String uid, DataSource source)
   {
     this.geoObject = geoObject;
     this.graphType = graphType;
@@ -50,6 +53,7 @@ public abstract class ServerGraphNode
     this.endDate = endDate;
     this.oid = oid;
     this.uid = uid;
+    this.source = source;
   }
 
   public ServerGeoObjectIF getGeoObject()
@@ -91,15 +95,25 @@ public abstract class ServerGraphNode
   {
     this.oid = oid;
   }
-  
+
   public String getUid()
   {
     return uid;
   }
-  
+
   public void setUid(String uid)
   {
     this.uid = uid;
+  }
+  
+  public DataSource getSource()
+  {
+    return source;
+  }
+  
+  public void setSource(DataSource source)
+  {
+    this.source = source;
   }
 
   public JsonObject toJSON()
@@ -130,7 +144,7 @@ public abstract class ServerGraphNode
     {
       json.addProperty("uid", this.uid);
     }
-    
+
     if (this.startDate != null)
     {
       json.addProperty("startDate", DateFormatter.formatDate(this.startDate, false));
@@ -141,6 +155,11 @@ public abstract class ServerGraphNode
       json.addProperty("endDate", DateFormatter.formatDate(this.endDate, false));
     }
 
+    if (this.source != null)
+    {
+      json.addProperty("source", this.source.getCode());
+    }
+    
     return json;
   }
 
