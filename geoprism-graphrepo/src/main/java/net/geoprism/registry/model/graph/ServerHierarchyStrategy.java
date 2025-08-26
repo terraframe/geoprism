@@ -28,6 +28,7 @@ import org.apache.commons.collections4.map.HashedMap;
 import com.runwaysdk.business.graph.GraphQuery;
 import com.runwaysdk.business.graph.VertexObject;
 
+import net.geoprism.registry.graph.DataSource;
 import net.geoprism.registry.model.EdgeConstant;
 import net.geoprism.registry.model.ServerChildGraphNode;
 import net.geoprism.registry.model.ServerGraphNode;
@@ -205,14 +206,14 @@ public class ServerHierarchyStrategy extends AbstractGraphStrategy implements Gr
 
   @SuppressWarnings("unchecked")
   @Override
-  public ServerGraphNode addChild(VertexServerGeoObject geoObject, VertexServerGeoObject child, Date startDate, Date endDate, String uid, boolean validate)
+  public ServerGraphNode addChild(VertexServerGeoObject geoObject, VertexServerGeoObject child, Date startDate, Date endDate, String uid, DataSource source, boolean validate)
   {
     throw new UnsupportedOperationException();
   }
 
   @SuppressWarnings("unchecked")
   @Override
-  public ServerGraphNode addParent(VertexServerGeoObject geoObject, VertexServerGeoObject parent, Date startDate, Date endDate, String uid, boolean validate)
+  public ServerGraphNode addParent(VertexServerGeoObject geoObject, VertexServerGeoObject parent, Date startDate, Date endDate, String uid, DataSource source, boolean validate)
   {
     throw new UnsupportedOperationException();
   }

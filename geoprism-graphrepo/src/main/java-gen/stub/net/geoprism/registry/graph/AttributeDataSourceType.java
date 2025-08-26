@@ -26,7 +26,7 @@ import com.runwaysdk.dataaccess.metadata.MdAttributeGraphReferenceDAO;
 import com.runwaysdk.dataaccess.metadata.graph.MdVertexDAO;
 import com.runwaysdk.dataaccess.transaction.Transaction;
 
-import net.geoprism.registry.model.ValueNodeStrategy;
+import net.geoprism.registry.model.GraphRefNodeValueStrategy;
 import net.geoprism.registry.model.ValueStrategy;
 import net.geoprism.registry.model.VertexValueStrategy;
 
@@ -96,7 +96,7 @@ public class AttributeDataSourceType extends AttributeDataSourceTypeBase
     }
     else
     {
-      return new ValueNodeStrategy(this, MdVertexDAO.getMdVertexDAO(AttributeDataSourceValue.CLASS), AttributeDataSourceValue.VALUE);
+      return new GraphRefNodeValueStrategy(this, MdVertexDAO.getMdVertexDAO(AttributeDataSourceValue.CLASS), AttributeDataSourceValue.VALUE);
     }
   }
 

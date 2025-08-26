@@ -67,6 +67,8 @@ import com.runwaysdk.dataaccess.MdAttributeDAOIF;
 import com.runwaysdk.dataaccess.MdClassificationDAOIF;
 import com.runwaysdk.dataaccess.MdEdgeDAOIF;
 import com.runwaysdk.dataaccess.MdVertexDAOIF;
+import com.runwaysdk.dataaccess.ProgrammingErrorException;
+import com.runwaysdk.dataaccess.graph.attributes.AttributeGraphRef.ID;
 import com.runwaysdk.dataaccess.graph.attributes.ValueOverTime;
 import com.runwaysdk.dataaccess.graph.attributes.ValueOverTimeCollection;
 import com.runwaysdk.dataaccess.metadata.graph.MdGraphClassDAO;
@@ -445,11 +447,13 @@ public class GeoObjectBusinessService extends RegistryLocalizedValueConverter im
         {
           String value = (String) dto.getValue(attributeName);
 
-          if (value != null)
+          if (!StringUtils.isBlank(value))
           {
-            this.sourceService.getByCode(value).ifPresent(source -> {
-              sgo.setValue(attributeName, source, startDate, endDate);
+            DataSource source = this.sourceService.getByCode(value).orElseThrow(() -> {
+              throw new ProgrammingErrorException("Unable to find source with code [" + value + "]");
             });
+
+            sgo.setValue(attributeName, source, startDate, endDate);
           }
           else
           {
@@ -562,14 +566,16 @@ public class GeoObjectBusinessService extends RegistryLocalizedValueConverter im
           {
             String value = (String) votDTO.getValue();
 
-            if (value != null)
+            if (!StringUtils.isBlank(value))
             {
-              this.sourceService.getByCode(value).ifPresent(source -> {
-                // sgo.setValue(attributeName, source.getOid(),
-                // votDTO.getStartDate(), votDTO.getEndDate());
-                c.add(new ValueOverTime(votDTO.getStartDate(), votDTO.getEndDate(), source.getOid()));
-
+              DataSource source = this.sourceService.getByCode(value).orElseThrow(() -> {
+                throw new ProgrammingErrorException("Unable to find source with code [" + value + "]");
               });
+
+              // sgo.setValue(attributeName, source.getOid(),
+              // votDTO.getStartDate(), votDTO.getEndDate());
+              c.add(new ValueOverTime(votDTO.getStartDate(), votDTO.getEndDate(), source.getOid()));
+
             }
             else
             {
@@ -1022,19 +1028,17 @@ public class GeoObjectBusinessService extends RegistryLocalizedValueConverter im
           }
           else if (attribute instanceof AttributeDataSourceType)
           {
-            String sourceOid = (String) value;
+            ID id = (ID) value;
 
-            DataSource source = this.sourceService.get(sourceOid);
+            DataSource source = this.sourceService.getByRid(id.getRid().toString()).orElseThrow();
 
             geoObj.setValue(attributeName, source.getCode());
           }
           else if (attribute instanceof AttributeClassificationType)
           {
-            String classificationTypeCode = ( (AttributeClassificationType) attribute ).getClassificationType();
+            ID id = (ID) value;
 
-            ClassificationType classificationType = this.cTypeService.getByCode(classificationTypeCode);
-
-            Classification classification = this.cService.getByOid(classificationType, (String) value).orElseThrow(() -> {
+            Classification classification = this.cService.getByRid(id.getRid().toString()).orElseThrow(() -> {
               TermValueException ex = new TermValueException();
               ex.setAttributeLabel(attribute.getLabel().getValue());
               ex.setCode(value.toString());
@@ -1231,7 +1235,9 @@ public class GeoObjectBusinessService extends RegistryLocalizedValueConverter im
               }
               else if (attribute instanceof AttributeDataSourceType)
               {
-                DataSource source = this.sourceService.get((String) value);
+                ID id = (ID) value;
+
+                DataSource source = this.sourceService.getByRid(id.getRid().toString()).orElseThrow();
 
                 ValueOverTimeDTO votDTO = new ValueOverTimeDTO(vot.getOid(), vot.getStartDate(), vot.getEndDate(), votcDTO);
                 votDTO.setValue(source.getCode());
@@ -1239,42 +1245,19 @@ public class GeoObjectBusinessService extends RegistryLocalizedValueConverter im
               }
               else if (attribute instanceof AttributeClassificationType)
               {
-                String classificationTypeCode = ( (AttributeClassificationType) attribute ).getClassificationType();
-                ClassificationType classificationType = this.cTypeService.getByCode(classificationTypeCode);
-                MdClassificationDAOIF mdClassificationDAO = classificationType.getMdClassification();
+                ID id = (ID) value;
 
-                VertexObject classifier = null;
-                if (classifierCache != null)
-                {
-                  classifier = classifierCache.getClassifier(classificationTypeCode, value.toString().trim());
-                }
-
-                if (classifier == null)
-                {
-                  MdVertexDAOIF mdVertexDAO = mdClassificationDAO.getReferenceMdVertexDAO();
-
-                  classifier = VertexObject.get(mdVertexDAO, (String) value);
-
-                  if (classifier != null && classifierCache != null)
-                  {
-                    classifierCache.putClassifier(classificationTypeCode, value.toString().trim(), classifier);
-                  }
-                }
-
-                try
-                {
-                  ValueOverTimeDTO votDTO = new ValueOverTimeDTO(vot.getOid(), vot.getStartDate(), vot.getEndDate(), votcDTO);
-                  votDTO.setValue(new Classification(classificationType, classifier).toTerm());
-                  votcDTO.add(votDTO);
-                }
-                catch (UnknownTermException e)
-                {
+                Classification classification = this.cService.getByRid(id.getRid().toString()).orElseThrow(() -> {
                   TermValueException ex = new TermValueException();
-                  ex.setAttributeLabel(e.getAttribute().getLabel().getValue());
-                  ex.setCode(e.getCode());
+                  ex.setAttributeLabel(attribute.getLabel().getValue());
+                  ex.setCode(value.toString());
 
-                  throw e;
-                }
+                  throw ex;
+                });
+
+                ValueOverTimeDTO votDTO = new ValueOverTimeDTO(vot.getOid(), vot.getStartDate(), vot.getEndDate(), votcDTO);
+                votDTO.setValue(classification.toTerm());
+                votcDTO.add(votDTO);
               }
               else
               {
@@ -1594,7 +1577,7 @@ public class GeoObjectBusinessService extends RegistryLocalizedValueConverter im
 
     Map<String, Object> parameters = new HashedMap<String, Object>();
     parameters.put("rid", child.getVertex().getRID());
-    
+
     StringBuilder statement = new StringBuilder();
     statement.append("SELECT " + VertexAndEdgeResultSetConverter.geoVertexColumns(child.getMdClass()));
     statement.append(", " + VertexAndEdgeResultSetConverter.geoVertexAttributeColumns(child.getType().definesAttributes()));
@@ -1606,7 +1589,6 @@ public class GeoObjectBusinessService extends RegistryLocalizedValueConverter im
     statement.append("     SELECT out as v, @class as edgeClass, oid as edgeOid, uid as edgeUid, dataSource.code as edgeSource" + "\n");
     statement.append("       FROM ( " + "\n");
     statement.append("         SELECT EXPAND( inE( ");
-
 
     if (htIn != null)
     {

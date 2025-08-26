@@ -29,6 +29,8 @@ import com.runwaysdk.business.graph.VertexObject;
 import com.runwaysdk.dataaccess.MdGraphClassDAOIF;
 import com.runwaysdk.dataaccess.graph.attributes.ValueOverTimeCollection;
 
+import net.geoprism.registry.graph.DataSource;
+
 public interface ServerGeoObjectIF
 {
   public boolean exists(ServerGeoObjectIF parent, ServerHierarchyType hierarchyType, Date startDate, Date endDate);
@@ -117,9 +119,9 @@ public interface ServerGeoObjectIF
 
   <T extends ServerGraphNode> T getGraphChildren(GraphType type, Boolean recursive, Date date, String boundsWKT, Long skip, Long limit);
 
-  <T extends ServerGraphNode> T addGraphParent(ServerGeoObjectIF parent, GraphType type, Date startDate, Date endDate, String uid, boolean validate);
+  <T extends ServerGraphNode> T addGraphParent(ServerGeoObjectIF parent, GraphType type, Date startDate, Date endDate, String uid, DataSource source, boolean validate);
 
-  <T extends ServerGraphNode> T addGraphChild(ServerGeoObjectIF child, GraphType type, Date startDate, Date endDate, String uid, boolean validate);
+  <T extends ServerGraphNode> T addGraphChild(ServerGeoObjectIF child, GraphType type, Date startDate, Date endDate, String uid, DataSource source, boolean validate);
 
   void removeGraphChild(ServerGeoObjectIF child, GraphType type, Date startDate, Date endDate);
 

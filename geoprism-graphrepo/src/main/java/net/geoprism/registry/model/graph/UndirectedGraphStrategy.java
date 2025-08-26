@@ -38,6 +38,7 @@ import com.runwaysdk.dataaccess.MdVertexDAOIF;
 import com.runwaysdk.dataaccess.graph.attributes.ValueOverTime;
 
 import net.geoprism.registry.UndirectedGraphType;
+import net.geoprism.registry.graph.DataSource;
 import net.geoprism.registry.graph.GeoVertex;
 import net.geoprism.registry.model.EdgeConstant;
 import net.geoprism.registry.model.EdgeValueOverTime;
@@ -164,14 +165,14 @@ public class UndirectedGraphStrategy extends AbstractGraphStrategy implements Gr
   }
 
   @Override
-  public <T extends ServerGraphNode> T addChild(VertexServerGeoObject geoObject, VertexServerGeoObject child, Date startDate, Date endDate, String uid, boolean validate)
+  public <T extends ServerGraphNode> T addChild(VertexServerGeoObject geoObject, VertexServerGeoObject child, Date startDate, Date endDate, String uid, DataSource source, boolean validate)
   {
-    return this.addParent(child, geoObject, startDate, endDate, uid, validate);
+    return this.addParent(child, geoObject, startDate, endDate, uid, source, validate);
   }
 
   @SuppressWarnings("unchecked")
   @Override
-  public <T extends ServerGraphNode> T addParent(VertexServerGeoObject geoObject, VertexServerGeoObject parent, Date startDate, Date endDate, String uid, boolean validate)
+  public <T extends ServerGraphNode> T addParent(VertexServerGeoObject geoObject, VertexServerGeoObject parent, Date startDate, Date endDate, String uid, DataSource source, boolean validate)
   {
     if (validate)
     {
@@ -189,11 +190,11 @@ public class UndirectedGraphStrategy extends AbstractGraphStrategy implements Gr
     Set<ValueOverTime> votc = this.getParentCollection(geoObject);
     votc.add(new EdgeValueOverTime(startDate, endDate, parent, uid));
 
-    SortedSet<EdgeObject> newEdges = this.setParentCollection(geoObject, votc);
+    SortedSet<EdgeObject> newEdges = this.setParentCollection(geoObject, votc, source);
     EdgeObject edge = newEdges.first();
 
     ServerParentGraphNode node = new ServerParentGraphNode(geoObject, this.type, startDate, endDate, null, null, null);
-    node.addParent(new ServerParentGraphNode(parent, this.type, startDate, endDate, edge.getOid(), edge.getObjectValue(DefaultAttribute.UID.getName()), null));
+    node.addParent(new ServerParentGraphNode(parent, this.type, startDate, endDate, edge.getOid(), edge.getObjectValue(DefaultAttribute.UID.getName()), source));
 
     return (T) node;
   }
@@ -235,7 +236,7 @@ public class UndirectedGraphStrategy extends AbstractGraphStrategy implements Gr
     return set;
   }
 
-  private SortedSet<EdgeObject> setParentCollection(VertexServerGeoObject geoObject, Set<ValueOverTime> votc)
+  private SortedSet<EdgeObject> setParentCollection(VertexServerGeoObject geoObject, Set<ValueOverTime> votc, DataSource source)
   {
     SortedSet<EdgeObject> resultEdges = new TreeSet<EdgeObject>(new EdgeComparator());
     SortedSet<EdgeObject> existingEdges = this.getParentEdges(geoObject);
@@ -292,6 +293,7 @@ public class UndirectedGraphStrategy extends AbstractGraphStrategy implements Gr
           newEdge.setValue(GeoVertex.START_DATE, startDate);
           newEdge.setValue(GeoVertex.END_DATE, endDate);
           newEdge.setValue(DefaultAttribute.UID.getName(), uid);
+          newEdge.setValue(DefaultAttribute.DATA_SOURCE.getName(), source);
           newEdge.apply();
 
           resultEdges.add(newEdge);
@@ -316,6 +318,7 @@ public class UndirectedGraphStrategy extends AbstractGraphStrategy implements Gr
 
           if (hasChanges)
           {
+            edge.setValue(DefaultAttribute.DATA_SOURCE.getName(), source);
             edge.apply();
           }
         }
@@ -346,6 +349,7 @@ public class UndirectedGraphStrategy extends AbstractGraphStrategy implements Gr
         newEdge.setValue(GeoVertex.START_DATE, vot.getStartDate());
         newEdge.setValue(GeoVertex.END_DATE, vot.getEndDate());
         newEdge.setValue(DefaultAttribute.UID.getName(), uid);
+        newEdge.setValue(DefaultAttribute.DATA_SOURCE.getName(), source);        
         newEdge.apply();
 
         resultEdges.add(newEdge);

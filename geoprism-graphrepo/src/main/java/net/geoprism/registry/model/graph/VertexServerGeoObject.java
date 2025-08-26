@@ -84,6 +84,7 @@ import net.geoprism.registry.graph.AttributeLocalType;
 import net.geoprism.registry.graph.AttributeTermType;
 import net.geoprism.registry.graph.AttributeType;
 import net.geoprism.registry.graph.AttributeValue;
+import net.geoprism.registry.graph.DataSource;
 import net.geoprism.registry.graph.GeoVertex;
 import net.geoprism.registry.graph.GeoVertexSynonym;
 import net.geoprism.registry.model.AbstractServerGeoObject;
@@ -957,26 +958,26 @@ public class VertexServerGeoObject extends AbstractServerGeoObject implements Se
 
   @Override
   @Transaction
-  public <T extends ServerGraphNode> T addGraphChild(ServerGeoObjectIF child, GraphType type, Date startDate, Date endDate, String uid, boolean validate)
+  public <T extends ServerGraphNode> T addGraphChild(ServerGeoObjectIF child, GraphType type, Date startDate, Date endDate, String uid, DataSource source, boolean validate)
   {
     if (!type.getOrigin().equals(GeoprismProperties.getOrigin()))
     {
       throw new OriginException();
     }
 
-    return type.getStrategy().addChild(this, (VertexServerGeoObject) child, startDate, endDate, uid, validate);
+    return type.getStrategy().addChild(this, (VertexServerGeoObject) child, startDate, endDate, uid, source, validate);
   }
 
   @Override
   @Transaction
-  public <T extends ServerGraphNode> T addGraphParent(ServerGeoObjectIF parent, GraphType type, Date startDate, Date endDate, String uid, boolean validate)
+  public <T extends ServerGraphNode> T addGraphParent(ServerGeoObjectIF parent, GraphType type, Date startDate, Date endDate, String uid, DataSource source, boolean validate)
   {
     if (!type.getOrigin().equals(GeoprismProperties.getOrigin()))
     {
       throw new OriginException();
     }
 
-    return type.getStrategy().addParent(this, (VertexServerGeoObject) parent, startDate, endDate, uid, validate);
+    return type.getStrategy().addParent(this, (VertexServerGeoObject) parent, startDate, endDate, uid, source, validate);
   }
 
   @Override

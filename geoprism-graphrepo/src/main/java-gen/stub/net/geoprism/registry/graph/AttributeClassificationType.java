@@ -43,7 +43,7 @@ import net.geoprism.registry.RegistryConstants;
 import net.geoprism.registry.model.Classification;
 import net.geoprism.registry.model.ClassificationType;
 import net.geoprism.registry.model.GeoObjectMetadata;
-import net.geoprism.registry.model.ValueNodeStrategy;
+import net.geoprism.registry.model.GraphRefNodeValueStrategy;
 import net.geoprism.registry.model.ValueStrategy;
 import net.geoprism.registry.model.VertexValueStrategy;
 import net.geoprism.registry.model.graph.GraphTableUtil;
@@ -243,7 +243,7 @@ public class AttributeClassificationType extends AttributeClassificationTypeBase
     }
     else
     {
-      return new ValueNodeStrategy(this, MdVertexDAO.get(this.getValueVertexOid()), VALUE);
+      return new GraphRefNodeValueStrategy(this, MdVertexDAO.get(this.getValueVertexOid()), VALUE);
     }
   }
 
