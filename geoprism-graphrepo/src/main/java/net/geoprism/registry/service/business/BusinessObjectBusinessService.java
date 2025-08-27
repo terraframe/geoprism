@@ -230,7 +230,7 @@ public class BusinessObjectBusinessService implements BusinessObjectBusinessServ
           ClassificationType type = new ClassificationType(mdClassification);
 
           this.classificationService.getByCode(type, code).ifPresent(classification -> {
-            object.setValue(attributeName, classification);
+            object.setValue(attributeName, classification.getVertex());
           });
         }
         else if (mdAttribute instanceof MdAttributeGraphReferenceDAOIF)
@@ -350,7 +350,7 @@ public class BusinessObjectBusinessService implements BusinessObjectBusinessServ
         newEdge.setValue(DefaultAttribute.UID.getName(), uid);
         newEdge.setValue(DefaultAttribute.DATA_SOURCE.getName(), source);
         newEdge.apply();
-        
+
         return Optional.of(newEdge);
       }
       else if (direction.equals(EdgeDirection.PARENT))
@@ -359,7 +359,7 @@ public class BusinessObjectBusinessService implements BusinessObjectBusinessServ
         newEdge.setValue(DefaultAttribute.UID.getName(), uid);
         newEdge.setValue(DefaultAttribute.DATA_SOURCE.getName(), source);
         newEdge.apply();
-        
+
         return Optional.of(newEdge);
       }
       else
@@ -367,7 +367,7 @@ public class BusinessObjectBusinessService implements BusinessObjectBusinessServ
         throw new UnsupportedOperationException();
       }
     }
-    
+
     return Optional.empty();
   }
 
@@ -438,6 +438,18 @@ public class BusinessObjectBusinessService implements BusinessObjectBusinessServ
   }
 
   @Override
+  public boolean exists(BusinessEdgeType type, String uid)
+  {
+    String statement = "SELECT FROM " + type.getMdEdgeDAO().getDBClassName();
+    statement += " WHERE uid = :uid";
+
+    GraphQuery<EdgeObject> query = new GraphQuery<EdgeObject>(statement);
+    query.setParameter("uid", uid);
+
+    return ( query.getSingleResult() != null );
+  }
+
+  @Override
   public Optional<EdgeObject> addParent(BusinessObject object, BusinessEdgeType type, BusinessObject parent, String uid, DataSource source)
   {
     return this.addParent(object, type, parent, uid, source, true);
@@ -460,10 +472,10 @@ public class BusinessObjectBusinessService implements BusinessObjectBusinessServ
       newEdge.setValue(DefaultAttribute.UID.getName(), uid);
       newEdge.setValue(DefaultAttribute.DATA_SOURCE.getName(), source);
       newEdge.apply();
-      
+
       return Optional.of(newEdge);
     }
-    
+
     return Optional.empty();
   }
 
@@ -529,10 +541,10 @@ public class BusinessObjectBusinessService implements BusinessObjectBusinessServ
       newEdge.setValue(DefaultAttribute.UID.getName(), uid);
       newEdge.setValue(DefaultAttribute.DATA_SOURCE.getName(), source);
       newEdge.apply();
-      
+
       return Optional.of(newEdge);
     }
-    
+
     return Optional.empty();
   }
 

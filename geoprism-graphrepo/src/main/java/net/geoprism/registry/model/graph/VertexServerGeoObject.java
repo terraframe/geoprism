@@ -745,9 +745,9 @@ public class VertexServerGeoObject extends AbstractServerGeoObject implements Se
     return query.getSingleResult();
   }
 
-  public EdgeObject getEdge(ServerHierarchyType hierarchyType, String uid)
+  public EdgeObject getEdge(GraphType type, String uid)
   {
-    String statement = "SELECT FROM " + hierarchyType.getObjectEdge().getDBClassName();
+    String statement = "SELECT FROM " + type.getMdEdgeDAO().getDBClassName();
     statement += " WHERE uid = :uid";
     statement += " AND in = :child";
 

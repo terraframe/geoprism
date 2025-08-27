@@ -50,6 +50,8 @@ public interface BusinessObjectBusinessServiceIF
 
   public boolean exists(BusinessObject object, BusinessEdgeType edgeType, ServerGeoObjectIF geoObject, EdgeDirection direction);
 
+  public boolean exists(BusinessEdgeType type, String uid);
+
   public Optional<EdgeObject> addGeoObject(BusinessObject object, BusinessEdgeType edgeType, ServerGeoObjectIF geoObject, EdgeDirection direction, String uid, DataSource source, boolean validateOrigin);
 
   public void removeGeoObject(BusinessObject object, BusinessEdgeType edgeType, ServerGeoObjectIF geoObject, EdgeDirection direction, boolean validateOrigin);

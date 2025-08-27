@@ -99,7 +99,7 @@ public interface ServerGeoObjectIF
 
   public EdgeObject getEdge(ServerGeoObjectIF parent, ServerHierarchyType hierarchyType, Date startDate, Date endDate);
 
-  public EdgeObject getEdge(ServerHierarchyType hierarchyType, String uid);
+  public EdgeObject getEdge(GraphType graphType, String uid);
 
   public ValueOverTimeCollection getValuesOverTime(String attributeName);
 
