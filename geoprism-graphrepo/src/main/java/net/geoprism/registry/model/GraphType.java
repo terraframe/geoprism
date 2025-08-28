@@ -31,6 +31,12 @@ import net.geoprism.registry.model.graph.GraphStrategy;
 
 public interface GraphType
 {
+  public static final String UNDIRECTED_GRAPH_TYPE = GraphTypeSnapshot.UNDIRECTED_GRAPH_TYPE;
+  
+  public static final String DIRECTED_ACYCLIC_GRAPH_TYPE = GraphTypeSnapshot.DIRECTED_ACYCLIC_GRAPH_TYPE;
+  
+  public static final String HIERARCHY_TYPE = GraphTypeSnapshot.HIERARCHY_TYPE;
+  
   public MdEdgeDAOIF getMdEdgeDAO();
   
   public GraphStrategy getStrategy();
