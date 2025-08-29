@@ -2,7 +2,6 @@ package net.geoprism.registry.model;
 
 import com.runwaysdk.business.graph.VertexObject;
 import com.runwaysdk.dataaccess.MdVertexDAOIF;
-import com.runwaysdk.dataaccess.graph.attributes.AttributeGraphRef;
 
 import net.geoprism.registry.graph.AttributeType;
 
@@ -18,9 +17,11 @@ public class GraphRefNodeValueStrategy extends ValueNodeStrategy
   @Override
   protected <T> T getNodeValue(VertexObject node)
   {
-    AttributeGraphRef attribute = (AttributeGraphRef) node.getObjectAttribute(this.getNodeAttribute());
     
-    return (T) attribute.getId();
+    
+//    AttributeGraphRef attribute = (AttributeGraphRef) node.getObjectAttribute(this.getNodeAttribute());
+//    
+//    return (T) attribute.getId();
 
 //    if (!StringUtils.isBlank(oid))
 //    {
@@ -29,7 +30,7 @@ public class GraphRefNodeValueStrategy extends ValueNodeStrategy
 //      return (T) service.get(oid);
 //    }
 //
-//    return super.getNodeValue(node);
+    return super.getNodeValue(node);
   }
 
 }

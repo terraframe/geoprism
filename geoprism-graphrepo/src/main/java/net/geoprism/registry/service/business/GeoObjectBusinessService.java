@@ -68,7 +68,6 @@ import com.runwaysdk.dataaccess.MdClassificationDAOIF;
 import com.runwaysdk.dataaccess.MdEdgeDAOIF;
 import com.runwaysdk.dataaccess.MdVertexDAOIF;
 import com.runwaysdk.dataaccess.ProgrammingErrorException;
-import com.runwaysdk.dataaccess.graph.attributes.AttributeGraphRef.ID;
 import com.runwaysdk.dataaccess.graph.attributes.ValueOverTime;
 import com.runwaysdk.dataaccess.graph.attributes.ValueOverTimeCollection;
 import com.runwaysdk.dataaccess.metadata.graph.MdGraphClassDAO;
@@ -1028,17 +1027,21 @@ public class GeoObjectBusinessService extends RegistryLocalizedValueConverter im
           }
           else if (attribute instanceof AttributeDataSourceType)
           {
-            ID id = (ID) value;
-
-            DataSource source = this.sourceService.getByRid(id.getRid().toString()).orElseThrow();
-
+//            ID id = (ID) value;
+//
+//            DataSource source = this.sourceService.getByRid(id.getRid().toString()).orElseThrow();
+            
+            DataSource source = this.sourceService.get((String) value);
             geoObj.setValue(attributeName, source.getCode());
           }
           else if (attribute instanceof AttributeClassificationType)
           {
-            ID id = (ID) value;
+//            ID id = (ID) value;
+            String classificationTypeCode = ( (AttributeClassificationType) attribute ).getClassificationType();
+            ClassificationType classificationType = this.cTypeService.getByCode(classificationTypeCode);
 
-            Classification classification = this.cService.getByRid(id.getRid().toString()).orElseThrow(() -> {
+            Classification classification = this.cService.getByOid(classificationType, (String) value).orElseThrow(() -> {
+//            Classification classification = this.cService.getByRid(id.getRid().toString()).orElseThrow(() -> {
               TermValueException ex = new TermValueException();
               ex.setAttributeLabel(attribute.getLabel().getValue());
               ex.setCode(value.toString());
@@ -1235,9 +1238,10 @@ public class GeoObjectBusinessService extends RegistryLocalizedValueConverter im
               }
               else if (attribute instanceof AttributeDataSourceType)
               {
-                ID id = (ID) value;
-
-                DataSource source = this.sourceService.getByRid(id.getRid().toString()).orElseThrow();
+//                ID id = (ID) value;
+//
+//                DataSource source = this.sourceService.getByRid(id.getRid().toString()).orElseThrow();
+                DataSource source = this.sourceService.get((String) value);
 
                 ValueOverTimeDTO votDTO = new ValueOverTimeDTO(vot.getOid(), vot.getStartDate(), vot.getEndDate(), votcDTO);
                 votDTO.setValue(source.getCode());
@@ -1245,9 +1249,14 @@ public class GeoObjectBusinessService extends RegistryLocalizedValueConverter im
               }
               else if (attribute instanceof AttributeClassificationType)
               {
-                ID id = (ID) value;
+//                ID id = (ID) value;
+//
+//                Classification classification = this.cService.getByRid(id.getRid().toString()).orElseThrow(() -> {
+                
+                String classificationTypeCode = ( (AttributeClassificationType) attribute ).getClassificationType();
+                ClassificationType classificationType = this.cTypeService.getByCode(classificationTypeCode);
 
-                Classification classification = this.cService.getByRid(id.getRid().toString()).orElseThrow(() -> {
+                Classification classification = this.cService.getByOid(classificationType, (String) value).orElseThrow(() -> {                
                   TermValueException ex = new TermValueException();
                   ex.setAttributeLabel(attribute.getLabel().getValue());
                   ex.setCode(value.toString());
