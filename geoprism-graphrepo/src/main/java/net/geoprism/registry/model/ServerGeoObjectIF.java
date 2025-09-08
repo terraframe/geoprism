@@ -97,7 +97,7 @@ public interface ServerGeoObjectIF
 
   public VertexObject getVertex();
 
-  public EdgeObject getEdge(ServerGeoObjectIF parent, ServerHierarchyType hierarchyType, Date startDate, Date endDate);
+  public EdgeObject getEdge(ServerGeoObjectIF parent, GraphType graphType, Date startDate, Date endDate);
 
   public EdgeObject getEdge(GraphType graphType, String uid);
 

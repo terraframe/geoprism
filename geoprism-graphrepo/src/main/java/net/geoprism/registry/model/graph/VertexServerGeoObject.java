@@ -712,9 +712,9 @@ public class VertexServerGeoObject extends AbstractServerGeoObject implements Se
     return ( edge != null );
   }
 
-  public EdgeObject getEdge(ServerGeoObjectIF parent, ServerHierarchyType hierarchyType, Date startDate, Date endDate)
+  public EdgeObject getEdge(ServerGeoObjectIF parent, GraphType graphType, Date startDate, Date endDate)
   {
-    String statement = "SELECT FROM " + hierarchyType.getObjectEdge().getDBClassName();
+    String statement = "SELECT FROM " + graphType.getMdEdgeDAO().getDBClassName();
     statement += " WHERE out = :parent";
     statement += " AND in = :child";
 
