@@ -147,7 +147,7 @@ public class GeoprismProperties
 
     if (StringUtils.isBlank(origin))
     {
-      throw new UnsupportedOperationException("Origin must be specified in geoprism.properties");
+      throw new UnsupportedOperationException("geoprism.origin must be specified in geoprism.properties");
     }
 
     return origin;
