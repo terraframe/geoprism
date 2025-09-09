@@ -3,24 +3,20 @@
  *
  * This file is part of Geoprism(tm).
  *
- * Geoprism(tm) is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
+ * Geoprism(tm) is free software: you can redistribute it and/or modify it under
+ * the terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation, either version 3 of the License, or (at your option) any
+ * later version.
  *
- * Geoprism(tm) is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
+ * Geoprism(tm) is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with Geoprism(tm).  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with Geoprism(tm). If not, see <http://www.gnu.org/licenses/>.
  */
 package net.geoprism.registry;
-
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Optional;
 
 import org.commongeoregistry.adapter.dataaccess.LocalizedValue;
 import org.commongeoregistry.adapter.metadata.GraphTypeDTO;
@@ -28,14 +24,11 @@ import org.commongeoregistry.adapter.metadata.GraphTypeDTO;
 import com.google.gson.JsonObject;
 import com.runwaysdk.dataaccess.MdEdgeDAOIF;
 import com.runwaysdk.dataaccess.metadata.graph.MdEdgeDAO;
-import com.runwaysdk.query.OIterator;
-import com.runwaysdk.query.QueryFactory;
-import com.runwaysdk.system.metadata.MdEdge;
 
+import net.geoprism.graph.GraphTypeSnapshot;
 import net.geoprism.registry.conversion.LocalizedValueConverter;
 import net.geoprism.registry.conversion.RegistryLocalizedValueConverter;
 import net.geoprism.registry.model.GraphType;
-import net.geoprism.graph.GraphTypeSnapshot;
 import net.geoprism.registry.model.ServerElement;
 import net.geoprism.registry.model.graph.GraphStrategy;
 import net.geoprism.registry.model.graph.UndirectedGraphStrategy;
@@ -50,6 +43,18 @@ public class UndirectedGraphType extends UndirectedGraphTypeBase implements Json
   public UndirectedGraphType()
   {
     super();
+  }
+
+  @Override
+  public void apply()
+  {
+    super.apply();
+  }
+
+  @Override
+  public void delete()
+  {
+    super.delete();
   }
 
   public MdEdgeDAOIF getMdEdgeDAO()
@@ -68,7 +73,7 @@ public class UndirectedGraphType extends UndirectedGraphTypeBase implements Json
   {
     return RegistryLocalizedValueConverter.convertNoAutoCoalesce(this.getDisplayLabel());
   }
-  
+
   @Override
   public LocalizedValue getDescriptionLV()
   {
@@ -88,7 +93,7 @@ public class UndirectedGraphType extends UndirectedGraphTypeBase implements Json
 
     return object;
   }
-  
+
   @Override
   public GraphTypeDTO toDTO()
   {
@@ -100,52 +105,10 @@ public class UndirectedGraphType extends UndirectedGraphTypeBase implements Json
     return dto;
   }
 
-  public static List<UndirectedGraphType> getAll()
-  {
-    UndirectedGraphTypeQuery query = new UndirectedGraphTypeQuery(new QueryFactory());
-
-    try (OIterator<? extends UndirectedGraphType> it = query.getIterator())
-    {
-      return new LinkedList<UndirectedGraphType>(it.getAll());
-    }
-  }
-
   @Override
   public GraphStrategy getStrategy()
   {
     return new UndirectedGraphStrategy(this);
-  }
-
-  public static Optional<UndirectedGraphType> getByCode(String code)
-  {
-    UndirectedGraphTypeQuery query = new UndirectedGraphTypeQuery(new QueryFactory());
-    query.WHERE(query.getCode().EQ(code));
-
-    try (OIterator<? extends UndirectedGraphType> it = query.getIterator())
-    {
-      if (it.hasNext())
-      {
-        return Optional.ofNullable(it.next());
-      }
-    }
-
-    return Optional.empty();
-  }
-
-  public static UndirectedGraphType getByMdEdge(MdEdge mdEdge)
-  {
-    UndirectedGraphTypeQuery query = new UndirectedGraphTypeQuery(new QueryFactory());
-    query.WHERE(query.getMdEdge().EQ(mdEdge));
-
-    try (OIterator<? extends UndirectedGraphType> it = query.getIterator())
-    {
-      if (it.hasNext())
-      {
-        return it.next();
-      }
-    }
-
-    return null;
   }
 
 }

@@ -102,6 +102,9 @@ public class TransactionLRUCache<K, V>
   {
     this.transactionCache.put(value);
 
+    // If an object has been updated then remove the current version from the
+    // cache so an updated version will be retrieved when its the getter next
+    // called
     new AbstractCommand()
     {
       @Override
@@ -111,7 +114,7 @@ public class TransactionLRUCache<K, V>
 
         for (K key : keys)
         {
-          cache.put(key, value);
+          cache.remove(key);
         }
       }
     }.doIt();

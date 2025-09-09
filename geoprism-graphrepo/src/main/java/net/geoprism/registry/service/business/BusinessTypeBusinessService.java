@@ -20,6 +20,7 @@ package net.geoprism.registry.service.business;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collector;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -96,6 +97,7 @@ import net.geoprism.registry.BusinessTypeQuery;
 import net.geoprism.registry.CodeLengthException;
 import net.geoprism.registry.Organization;
 import net.geoprism.registry.RegistryConstants;
+import net.geoprism.registry.cache.TransactionLRUCache;
 import net.geoprism.registry.conversion.RegistryAttributeTypeConverter;
 import net.geoprism.registry.conversion.RegistryLocalizedValueConverter;
 import net.geoprism.registry.conversion.TermConverter;
@@ -113,16 +115,26 @@ import net.geoprism.registry.view.Page;
 public class BusinessTypeBusinessService implements BusinessTypeBusinessServiceIF
 {
   @Autowired
-  private ClassificationTypeBusinessServiceIF cTypeService;
+  private ClassificationTypeBusinessServiceIF             cTypeService;
 
   @Autowired
-  private ClassificationBusinessServiceIF     cService;
+  private ClassificationBusinessServiceIF                 cService;
 
   @Autowired
-  private GeoObjectTypeBusinessServiceIF      typeService;
+  private GeoObjectTypeBusinessServiceIF                  typeService;
 
   @Autowired
-  private PermissionServiceIF                 permissions;
+  private PermissionServiceIF                             permissions;
+
+  private final TransactionLRUCache<String, BusinessType> cache;
+
+  public BusinessTypeBusinessService()
+  {
+    this.cache = new TransactionLRUCache<String, BusinessType>("t-b-type-cache", (v) -> {
+
+      return new String[] { v.getCode(), v.getMdVertexOid() };
+    }, 20);
+  }
 
   @Override
   @Transaction
@@ -137,6 +149,8 @@ public class BusinessTypeBusinessService implements BusinessTypeBusinessServiceI
     type.delete();
 
     mdVertex.delete();
+
+    this.cache.remove(type);
   }
 
   @Override
@@ -150,6 +164,8 @@ public class BusinessTypeBusinessService implements BusinessTypeBusinessServiceI
       // Refresh the users session
       ( (Session) Session.getCurrentSession() ).reloadPermissions();
     }
+
+    this.cache.put(type);
 
     return new RegistryAttributeTypeConverter().build(MdAttributeConcreteDAO.get(mdAttribute.getOid()));
   }
@@ -197,6 +213,8 @@ public class BusinessTypeBusinessService implements BusinessTypeBusinessServiceI
     {
       type.setSequence(type.getSequence() + 1);
       type.apply();
+
+      this.cache.put(type);
     }
 
     // Refresh the users session
@@ -239,6 +257,8 @@ public class BusinessTypeBusinessService implements BusinessTypeBusinessServiceI
 
       mdAttributeConcreteDAOIF.getBusinessDAO().delete();
     }
+
+    this.cache.put(type);
   }
 
   @Override
@@ -376,7 +396,7 @@ public class BusinessTypeBusinessService implements BusinessTypeBusinessServiceI
       vertexCodeMdAttr.setValue(MdAttributeConcreteInfo.REQUIRED, MdAttributeBooleanInfo.TRUE);
       vertexCodeMdAttr.addItem(MdAttributeConcreteInfo.INDEX_TYPE, IndexTypes.UNIQUE_INDEX.getOid());
       vertexCodeMdAttr.apply();
-      
+
       // DefaultAttribute.DATA_SOURCE
       MdAttributeGraphReferenceDAO sourceAttr = MdAttributeGraphReferenceDAO.newInstance();
       sourceAttr.setValue(MdAttributeConcreteInfo.NAME, DefaultAttribute.DATA_SOURCE.getName());
@@ -386,7 +406,6 @@ public class BusinessTypeBusinessService implements BusinessTypeBusinessServiceI
       sourceAttr.setValue(MdAttributeGraphReferenceInfo.REFERENCE_MD_VERTEX, MdVertexDAO.getMdVertexDAO(DataSource.CLASS).getOid());
       sourceAttr.setValue(MdAttributeConcreteInfo.REQUIRED, false);
       sourceAttr.apply();
-
 
       businessType.setMdVertexId(mdVertex.getOid());
       businessType.setOrigin(origin);
@@ -414,7 +433,16 @@ public class BusinessTypeBusinessService implements BusinessTypeBusinessServiceI
       }
     }
 
+    return apply(businessType);
+  }
+
+  @Transaction
+  @Override
+  public BusinessType apply(BusinessType businessType)
+  {
     businessType.apply();
+
+    this.cache.put(businessType);
 
     return businessType;
   }
@@ -468,18 +496,20 @@ public class BusinessTypeBusinessService implements BusinessTypeBusinessServiceI
   @Override
   public BusinessType getByCode(String code)
   {
-    BusinessTypeQuery query = new BusinessTypeQuery(new QueryFactory());
-    query.WHERE(query.getCode().EQ(code));
+    return this.cache.get(code, () -> {
+      BusinessTypeQuery query = new BusinessTypeQuery(new QueryFactory());
+      query.WHERE(query.getCode().EQ(code));
 
-    try (OIterator<? extends BusinessType> it = query.getIterator())
-    {
-      if (it.hasNext())
+      try (OIterator<? extends BusinessType> it = query.getIterator())
       {
-        return it.next();
+        if (it.hasNext())
+        {
+          return Optional.of(it.next());
+        }
       }
-    }
 
-    return null;
+      return Optional.empty();
+    }).orElse(null);
   }
 
   @Override
@@ -568,18 +598,20 @@ public class BusinessTypeBusinessService implements BusinessTypeBusinessServiceI
   @Override
   public BusinessType getByMdVertex(MdVertexDAOIF mdVertex)
   {
-    BusinessTypeQuery query = new BusinessTypeQuery(new QueryFactory());
-    query.WHERE(query.getMdVertex().EQ(mdVertex.getOid()));
+    return this.cache.get(mdVertex.getOid(), () -> {
+      BusinessTypeQuery query = new BusinessTypeQuery(new QueryFactory());
+      query.WHERE(query.getMdVertex().EQ(mdVertex.getOid()));
 
-    try (OIterator<? extends BusinessType> it = query.getIterator())
-    {
-      if (it.hasNext())
+      try (OIterator<? extends BusinessType> it = query.getIterator())
       {
-        return it.next();
+        if (it.hasNext())
+        {
+          return Optional.of(it.next());
+        }
       }
-    }
 
-    return null;
+      return Optional.empty();
+    }).orElse(null);
   }
 
   private MdAttributeConcreteDAOIF getMdAttribute(MdClass mdClass, String attributeName)
@@ -808,6 +840,8 @@ public class BusinessTypeBusinessService implements BusinessTypeBusinessServiceI
 
       return mdAttribute;
     }
+
+    this.cache.put(type);
 
     return null;
   }

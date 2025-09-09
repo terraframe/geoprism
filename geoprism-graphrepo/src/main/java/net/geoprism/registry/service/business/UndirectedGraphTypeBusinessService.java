@@ -18,6 +18,10 @@
  */
 package net.geoprism.registry.service.business;
 
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Optional;
+
 import org.commongeoregistry.adapter.constants.DefaultAttribute;
 import org.commongeoregistry.adapter.dataaccess.LocalizedValue;
 import org.springframework.stereotype.Service;
@@ -37,6 +41,8 @@ import com.runwaysdk.dataaccess.metadata.MdAttributeUUIDDAO;
 import com.runwaysdk.dataaccess.metadata.graph.MdEdgeDAO;
 import com.runwaysdk.dataaccess.metadata.graph.MdVertexDAO;
 import com.runwaysdk.dataaccess.transaction.Transaction;
+import com.runwaysdk.query.OIterator;
+import com.runwaysdk.query.QueryFactory;
 import com.runwaysdk.system.metadata.MdEdge;
 
 import net.geoprism.configuration.GeoprismProperties;
@@ -44,6 +50,8 @@ import net.geoprism.registry.BusinessType;
 import net.geoprism.registry.DuplicateHierarchyTypeException;
 import net.geoprism.registry.RegistryConstants;
 import net.geoprism.registry.UndirectedGraphType;
+import net.geoprism.registry.UndirectedGraphTypeQuery;
+import net.geoprism.registry.cache.TransactionLRUCache;
 import net.geoprism.registry.conversion.RegistryLocalizedValueConverter;
 import net.geoprism.registry.graph.DataSource;
 import net.geoprism.registry.graph.GeoVertex;
@@ -51,6 +59,16 @@ import net.geoprism.registry.graph.GeoVertex;
 @Service
 public class UndirectedGraphTypeBusinessService implements UndirectedGraphTypeBusinessServiceIF
 {
+  private final TransactionLRUCache<String, UndirectedGraphType> cache;
+
+  public UndirectedGraphTypeBusinessService()
+  {
+    this.cache = new TransactionLRUCache<String, UndirectedGraphType>("t-undirected-cache", (v) -> {
+
+      return new String[] { v.getCode(), v.getMdEdgeOid() };
+    }, 20);
+  }
+
   @Override
   public UndirectedGraphType create(JsonObject object)
   {
@@ -94,7 +112,7 @@ public class UndirectedGraphTypeBusinessService implements UndirectedGraphTypeBu
       uidAttr.setValue(MdAttributeConcreteInfo.DEFINING_MD_CLASS, mdEdgeDAO.getOid());
       uidAttr.setValue(MdAttributeConcreteInfo.REQUIRED, true);
       uidAttr.apply();
-      
+
       MdAttributeGraphReferenceDAO sourceAttr = MdAttributeGraphReferenceDAO.newInstance();
       sourceAttr.setValue(MdAttributeConcreteInfo.NAME, DefaultAttribute.DATA_SOURCE.getName());
       sourceAttr.setStructValue(MdAttributeBooleanInfo.DISPLAY_LABEL, LocalizedValue.DEFAULT_LOCALE, DefaultAttribute.DATA_SOURCE.getDefaultLocalizedName());
@@ -103,7 +121,6 @@ public class UndirectedGraphTypeBusinessService implements UndirectedGraphTypeBu
       sourceAttr.setValue(MdAttributeGraphReferenceInfo.REFERENCE_MD_VERTEX, MdVertexDAO.getMdVertexDAO(DataSource.CLASS).getOid());
       sourceAttr.setValue(MdAttributeConcreteInfo.REQUIRED, false);
       sourceAttr.apply();
-
 
       MdAttributeDateTimeDAO startDate = MdAttributeDateTimeDAO.newInstance();
       startDate.setValue(MdAttributeDateTimeInfo.NAME, GeoVertex.START_DATE);
@@ -129,6 +146,8 @@ public class UndirectedGraphTypeBusinessService implements UndirectedGraphTypeBu
       graphType.setOrigin(origin);
       graphType.setSequence(seq);
       graphType.apply();
+
+      this.cache.put(graphType);
 
       return graphType;
     }
@@ -174,6 +193,8 @@ public class UndirectedGraphTypeBusinessService implements UndirectedGraphTypeBu
     {
       type.unlock();
     }
+
+    this.cache.put(type);
   }
 
   @Override
@@ -185,5 +206,62 @@ public class UndirectedGraphTypeBusinessService implements UndirectedGraphTypeBu
     ugt.delete();
 
     mdEdge.delete();
+
+    this.cache.remove(ugt);
   }
+
+  @Override
+  public List<UndirectedGraphType> getAll(String... typeCodes)
+  {
+    UndirectedGraphTypeQuery query = new UndirectedGraphTypeQuery(new QueryFactory());
+
+    if (typeCodes != null && typeCodes.length > 0)
+    {
+      query.AND(query.getCode().IN(typeCodes));
+    }
+
+    try (OIterator<? extends UndirectedGraphType> it = query.getIterator())
+    {
+      return new LinkedList<UndirectedGraphType>(it.getAll());
+    }
+  }
+
+  @Override
+  public Optional<UndirectedGraphType> getByCode(String code)
+  {
+    return this.cache.get(code, () -> {
+      UndirectedGraphTypeQuery query = new UndirectedGraphTypeQuery(new QueryFactory());
+      query.WHERE(query.getCode().EQ(code));
+
+      try (OIterator<? extends UndirectedGraphType> it = query.getIterator())
+      {
+        if (it.hasNext())
+        {
+          return Optional.ofNullable(it.next());
+        }
+      }
+
+      return Optional.empty();
+    });
+  }
+
+  @Override
+  public UndirectedGraphType getByMdEdge(MdEdge mdEdge)
+  {
+    return this.cache.get(mdEdge.getOid(), () -> {
+      UndirectedGraphTypeQuery query = new UndirectedGraphTypeQuery(new QueryFactory());
+      query.WHERE(query.getMdEdge().EQ(mdEdge));
+
+      try (OIterator<? extends UndirectedGraphType> it = query.getIterator())
+      {
+        if (it.hasNext())
+        {
+          return Optional.of(it.next());
+        }
+      }
+
+      return Optional.empty();
+    }).orElse(null);
+  }
+
 }

@@ -18,19 +18,12 @@
  */
 package net.geoprism.registry;
 
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Optional;
-
 import org.commongeoregistry.adapter.dataaccess.LocalizedValue;
 import org.commongeoregistry.adapter.metadata.GraphTypeDTO;
 
 import com.google.gson.JsonObject;
 import com.runwaysdk.dataaccess.MdEdgeDAOIF;
 import com.runwaysdk.dataaccess.metadata.graph.MdEdgeDAO;
-import com.runwaysdk.query.OIterator;
-import com.runwaysdk.query.QueryFactory;
-import com.runwaysdk.system.metadata.MdEdge;
 
 import net.geoprism.graph.GraphTypeSnapshot;
 import net.geoprism.registry.conversion.LocalizedValueConverter;
@@ -50,6 +43,18 @@ public class DirectedAcyclicGraphType extends DirectedAcyclicGraphTypeBase imple
   public DirectedAcyclicGraphType()
   {
     super();
+  }
+
+  @Override
+  public void apply()
+  {
+    super.apply();
+  }
+
+  @Override
+  public void delete()
+  {
+    super.delete();
   }
 
   @Override
@@ -104,47 +109,4 @@ public class DirectedAcyclicGraphType extends DirectedAcyclicGraphTypeBase imple
   {
     return new DirectedAcyclicGraphStrategy(this);
   }
-
-  public static List<DirectedAcyclicGraphType> getAll()
-  {
-    DirectedAcyclicGraphTypeQuery query = new DirectedAcyclicGraphTypeQuery(new QueryFactory());
-
-    try (OIterator<? extends DirectedAcyclicGraphType> it = query.getIterator())
-    {
-      return new LinkedList<DirectedAcyclicGraphType>(it.getAll());
-    }
-  }
-
-  public static Optional<DirectedAcyclicGraphType> getByCode(String code)
-  {
-    DirectedAcyclicGraphTypeQuery query = new DirectedAcyclicGraphTypeQuery(new QueryFactory());
-    query.WHERE(query.getCode().EQ(code));
-
-    try (OIterator<? extends DirectedAcyclicGraphType> it = query.getIterator())
-    {
-      if (it.hasNext())
-      {
-        return Optional.ofNullable(it.next());
-      }
-    }
-
-    return Optional.empty();
-  }
-
-  public static DirectedAcyclicGraphType getByMdEdge(MdEdge mdEdge)
-  {
-    DirectedAcyclicGraphTypeQuery query = new DirectedAcyclicGraphTypeQuery(new QueryFactory());
-    query.WHERE(query.getMdEdge().EQ(mdEdge));
-
-    try (OIterator<? extends DirectedAcyclicGraphType> it = query.getIterator())
-    {
-      if (it.hasNext())
-      {
-        return it.next();
-      }
-    }
-
-    return null;
-  }
-
 }

@@ -18,10 +18,14 @@
  */
 package net.geoprism.registry.service.business;
 
+import java.util.List;
+import java.util.Optional;
+
 import org.commongeoregistry.adapter.dataaccess.LocalizedValue;
 import org.springframework.stereotype.Component;
 
 import com.google.gson.JsonObject;
+import com.runwaysdk.system.metadata.MdEdge;
 
 import net.geoprism.registry.UndirectedGraphType;
 
@@ -38,5 +42,11 @@ public interface UndirectedGraphTypeBusinessServiceIF
   public void update(UndirectedGraphType ugt, JsonObject object);
 
   public void delete(UndirectedGraphType ugt);
+
+  UndirectedGraphType getByMdEdge(MdEdge mdEdge);
+
+  Optional<UndirectedGraphType> getByCode(String code);
+
+  List<UndirectedGraphType> getAll(String... typeCodes);
 
 }

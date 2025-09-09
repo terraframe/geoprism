@@ -36,7 +36,8 @@ import net.geoprism.registry.DateFormatter;
 import net.geoprism.registry.conversion.ServerGeoObjectStrategyIF;
 import net.geoprism.registry.graph.DataSource;
 import net.geoprism.registry.service.business.DataSourceBusinessServiceIF;
-import net.geoprism.registry.service.business.GeoObjectBusinessService;
+import net.geoprism.registry.service.business.GeoObjectBusinessServiceIF;
+import net.geoprism.registry.service.business.GraphTypeBusinessServiceIF;
 import net.geoprism.registry.service.business.ServiceFactory;
 
 public class ServerParentGraphNode extends ServerGraphNode
@@ -198,7 +199,8 @@ public class ServerParentGraphNode extends ServerGraphNode
       GeoObject go = GeoObject.fromJSON(ServiceFactory.getAdapter(), jo.get(TreeNode.JSON_GEO_OBJECT).toString());
 
       ServerGeoObjectType type = ServerGeoObjectType.get(go.getType().getCode());
-      ServerGeoObjectStrategyIF strategy = new GeoObjectBusinessService().getStrategy(type);
+      GeoObjectBusinessServiceIF service = ServiceFactory.getBean(GeoObjectBusinessServiceIF.class);
+      ServerGeoObjectStrategyIF strategy = service.getStrategy(type);
       goif = strategy.constructFromGeoObject(go, false);
     }
 
@@ -209,7 +211,9 @@ public class ServerParentGraphNode extends ServerGraphNode
       String graphCode = jo.get("graphType").getAsString();
       String graphTypeClass = jo.get("graphTypeClass").getAsString();
 
-      graphType = GraphType.getByCode(graphTypeClass, graphCode);
+      GraphTypeBusinessServiceIF service = ServiceFactory.getBean(GraphTypeBusinessServiceIF.class);
+
+      graphType = service.getByCode(graphTypeClass, graphCode);
     }
 
     Date startDate = null;

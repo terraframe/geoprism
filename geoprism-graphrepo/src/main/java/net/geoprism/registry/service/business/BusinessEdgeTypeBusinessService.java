@@ -3,18 +3,18 @@
  *
  * This file is part of Geoprism(tm).
  *
- * Geoprism(tm) is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
+ * Geoprism(tm) is free software: you can redistribute it and/or modify it under
+ * the terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation, either version 3 of the License, or (at your option) any
+ * later version.
  *
- * Geoprism(tm) is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
+ * Geoprism(tm) is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with Geoprism(tm).  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with Geoprism(tm). If not, see <http://www.gnu.org/licenses/>.
  */
 package net.geoprism.registry.service.business;
 
@@ -51,6 +51,7 @@ import net.geoprism.registry.DataNotFoundException;
 import net.geoprism.registry.DuplicateHierarchyTypeException;
 import net.geoprism.registry.Organization;
 import net.geoprism.registry.RegistryConstants;
+import net.geoprism.registry.cache.TransactionLRUCache;
 import net.geoprism.registry.conversion.RegistryLocalizedValueConverter;
 import net.geoprism.registry.graph.DataSource;
 import net.geoprism.registry.graph.GeoVertex;
@@ -64,10 +65,20 @@ import net.geoprism.registry.view.BusinessGeoEdgeTypeView;
 public class BusinessEdgeTypeBusinessService implements BusinessEdgeTypeBusinessServiceIF
 {
   @Autowired
-  private BusinessTypeBusinessServiceIF  typeService;
+  private BusinessTypeBusinessServiceIF                       typeService;
 
   @Autowired
-  private HierarchyTypeBusinessServiceIF hierarchyService;
+  private HierarchyTypeBusinessServiceIF                      hierarchyService;
+
+  private final TransactionLRUCache<String, BusinessEdgeType> cache;
+
+  public BusinessEdgeTypeBusinessService()
+  {
+    this.cache = new TransactionLRUCache<String, BusinessEdgeType>("t-b-edge-cache", (v) -> {
+
+      return new String[] { v.getCode(), v.getMdEdgeOid() };
+    }, 20);
+  }
 
   @Override
   public EdgeVertexType getParent(BusinessEdgeType edgeType)
@@ -125,7 +136,7 @@ public class BusinessEdgeTypeBusinessService implements BusinessEdgeTypeBusiness
       {
         RegistryLocalizedValueConverter.populate(edgeType.getDescription(), description);
       }
-      
+
       edgeType.setSequence(edgeType.getSequence() + 1);
       edgeType.apply();
     }
@@ -133,6 +144,8 @@ public class BusinessEdgeTypeBusinessService implements BusinessEdgeTypeBusiness
     {
       edgeType.unlock();
     }
+
+    this.cache.put(edgeType);
   }
 
   @Override
@@ -144,6 +157,8 @@ public class BusinessEdgeTypeBusinessService implements BusinessEdgeTypeBusiness
     edgeType.delete();
 
     mdEdge.delete();
+
+    this.cache.remove(edgeType);
   }
 
   @Override
@@ -178,18 +193,21 @@ public class BusinessEdgeTypeBusinessService implements BusinessEdgeTypeBusiness
   @Override
   public Optional<BusinessEdgeType> getByCode(String code)
   {
-    BusinessEdgeTypeQuery query = new BusinessEdgeTypeQuery(new QueryFactory());
-    query.WHERE(query.getCode().EQ(code));
+    return this.cache.get(code, () -> {
+      BusinessEdgeTypeQuery query = new BusinessEdgeTypeQuery(new QueryFactory());
+      query.WHERE(query.getCode().EQ(code));
 
-    try (OIterator<? extends BusinessEdgeType> it = query.getIterator())
-    {
-      if (it.hasNext())
+      try (OIterator<? extends BusinessEdgeType> it = query.getIterator())
       {
-        return Optional.of(it.next());
+        if (it.hasNext())
+        {
+          return Optional.of(it.next());
+        }
       }
-    }
 
-    return Optional.empty();
+      return Optional.empty();
+    });
+
   }
 
   @Override
@@ -203,18 +221,20 @@ public class BusinessEdgeTypeBusinessService implements BusinessEdgeTypeBusiness
   @Override
   public BusinessEdgeType getByMdEdge(MdEdge mdEdge)
   {
-    BusinessEdgeTypeQuery query = new BusinessEdgeTypeQuery(new QueryFactory());
-    query.WHERE(query.getMdEdge().EQ(mdEdge));
+    return this.cache.get(mdEdge.getOid(), () -> {
+      BusinessEdgeTypeQuery query = new BusinessEdgeTypeQuery(new QueryFactory());
+      query.WHERE(query.getMdEdge().EQ(mdEdge));
 
-    try (OIterator<? extends BusinessEdgeType> it = query.getIterator())
-    {
-      if (it.hasNext())
+      try (OIterator<? extends BusinessEdgeType> it = query.getIterator())
       {
-        return it.next();
+        if (it.hasNext())
+        {
+          return Optional.of(it.next());
+        }
       }
-    }
 
-    return null;
+      return Optional.empty();
+    }).orElse(null);
   }
 
   @Override
@@ -250,7 +270,7 @@ public class BusinessEdgeTypeBusinessService implements BusinessEdgeTypeBusiness
       uidAttr.setValue(MdAttributeConcreteInfo.DEFINING_MD_CLASS, mdEdgeDAO.getOid());
       uidAttr.setValue(MdAttributeConcreteInfo.REQUIRED, true);
       uidAttr.apply();
-      
+
       MdAttributeGraphReferenceDAO sourceAttr = MdAttributeGraphReferenceDAO.newInstance();
       sourceAttr.setValue(MdAttributeConcreteInfo.NAME, DefaultAttribute.DATA_SOURCE.getName());
       sourceAttr.setStructValue(MdAttributeBooleanInfo.DISPLAY_LABEL, LocalizedValue.DEFAULT_LOCALE, DefaultAttribute.DATA_SOURCE.getDefaultLocalizedName());
@@ -273,6 +293,8 @@ public class BusinessEdgeTypeBusinessService implements BusinessEdgeTypeBusiness
       RegistryLocalizedValueConverter.populate(businessEdgeType.getDisplayLabel(), dto.getLabel());
       RegistryLocalizedValueConverter.populate(businessEdgeType.getDescription(), dto.getDescription());
       businessEdgeType.apply();
+
+      this.cache.put(businessEdgeType);
 
       return businessEdgeType;
     }
@@ -318,7 +340,7 @@ public class BusinessEdgeTypeBusinessService implements BusinessEdgeTypeBusiness
       uidAttr.setValue(MdAttributeConcreteInfo.DEFINING_MD_CLASS, mdEdgeDAO.getOid());
       uidAttr.setValue(MdAttributeConcreteInfo.REQUIRED, true);
       uidAttr.apply();
-      
+
       MdAttributeGraphReferenceDAO sourceAttr = MdAttributeGraphReferenceDAO.newInstance();
       sourceAttr.setValue(MdAttributeConcreteInfo.NAME, DefaultAttribute.DATA_SOURCE.getName());
       sourceAttr.setStructValue(MdAttributeBooleanInfo.DISPLAY_LABEL, LocalizedValue.DEFAULT_LOCALE, DefaultAttribute.DATA_SOURCE.getDefaultLocalizedName());
@@ -327,7 +349,6 @@ public class BusinessEdgeTypeBusinessService implements BusinessEdgeTypeBusiness
       sourceAttr.setValue(MdAttributeGraphReferenceInfo.REFERENCE_MD_VERTEX, MdVertexDAO.getMdVertexDAO(DataSource.CLASS).getOid());
       sourceAttr.setValue(MdAttributeConcreteInfo.REQUIRED, false);
       sourceAttr.apply();
-
 
       hierarchyService.grantWritePermissionsOnMdTermRel(mdEdgeDAO);
 

@@ -22,9 +22,7 @@ import org.commongeoregistry.adapter.dataaccess.LocalizedValue;
 import org.commongeoregistry.adapter.metadata.GraphTypeDTO;
 
 import com.runwaysdk.dataaccess.MdEdgeDAOIF;
-import com.runwaysdk.dataaccess.ProgrammingErrorException;
 
-import net.geoprism.graph.GraphTypeReference;
 import net.geoprism.graph.GraphTypeSnapshot;
 import net.geoprism.registry.DirectedAcyclicGraphType;
 import net.geoprism.registry.UndirectedGraphType;
@@ -32,12 +30,12 @@ import net.geoprism.registry.model.graph.GraphStrategy;
 
 public interface GraphType
 {
-  public static final String UNDIRECTED_GRAPH_TYPE = GraphTypeSnapshot.UNDIRECTED_GRAPH_TYPE;
-  
+  public static final String UNDIRECTED_GRAPH_TYPE       = GraphTypeSnapshot.UNDIRECTED_GRAPH_TYPE;
+
   public static final String DIRECTED_ACYCLIC_GRAPH_TYPE = GraphTypeSnapshot.DIRECTED_ACYCLIC_GRAPH_TYPE;
-  
-  public static final String HIERARCHY_TYPE = GraphTypeSnapshot.HIERARCHY_TYPE;
-  
+
+  public static final String HIERARCHY_TYPE              = GraphTypeSnapshot.HIERARCHY_TYPE;
+
   public MdEdgeDAOIF getMdEdgeDAO();
 
   public GraphStrategy getStrategy();
@@ -45,40 +43,15 @@ public interface GraphType
   public String getCode();
 
   public String getOrigin();
-  
+
   public Long getSequence();
 
   public LocalizedValue getLabel();
 
-  public static GraphType getByCode(String relationshipType, String code)
-  {
-    if (relationshipType != null)
-    {
-      if (relationshipType.equals(GraphTypeSnapshot.UNDIRECTED_GRAPH_TYPE) || relationshipType.equals(UndirectedGraphType.CLASS))
-      {
-        return UndirectedGraphType.getByCode(code).orElseThrow(() -> {
-          throw new ProgrammingErrorException("Unable to find undirected graph with the code [" + code + "]");
-        });
-      }
-      else if (relationshipType.equals(GraphTypeSnapshot.DIRECTED_ACYCLIC_GRAPH_TYPE) || relationshipType.equals(DirectedAcyclicGraphType.CLASS))
-      {
-        return DirectedAcyclicGraphType.getByCode(code).orElseThrow(() -> {
-          throw new ProgrammingErrorException("Unable to find undirected graph with the code [" + code + "]");
-        });
-      }
-      else if (relationshipType.equals(GraphTypeSnapshot.HIERARCHY_TYPE))
-      {
-        return ServerHierarchyType.get(code);
-      }
-      else
-      {
-        return (GraphType) com.runwaysdk.business.Business.get(relationshipType, code);
-      }
-    }
+  public LocalizedValue getDescriptionLV();
 
-    return ServerHierarchyType.get(code);
-  }
-
+  public GraphTypeDTO toDTO();
+  
   public static String getTypeCode(GraphType graphType)
   {
     if (graphType instanceof DirectedAcyclicGraphType)
@@ -99,12 +72,4 @@ public interface GraphType
     }
   }
 
-  public static GraphType resolve(GraphTypeReference ref)
-  {
-    return getByCode(ref.typeCode, ref.code);
-  }
-
-  public LocalizedValue getDescriptionLV();
-
-  public GraphTypeDTO toDTO();
 }
