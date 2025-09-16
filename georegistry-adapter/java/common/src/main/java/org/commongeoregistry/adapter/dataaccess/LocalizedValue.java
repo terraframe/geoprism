@@ -46,6 +46,11 @@ public class LocalizedValue
   private String              localizedValue;
 
   private Map<String, String> localeValues;
+  
+  public LocalizedValue()
+  {
+    this("");
+  }
 
   public LocalizedValue(String localizedValue)
   {
@@ -59,16 +64,6 @@ public class LocalizedValue
     this.localeValues = localeValues;
   }
 
-  /**
-   * Returns an empty {@link LocalizedValue} object.
-   * 
-   * @return an empty {@link LocalizedValue} object.
-   */
-  public static LocalizedValue createEmptyLocalizedValue()
-  {
-    return new LocalizedValue("", new HashMap<String, String>());
-  }
-  
   public String getValue()
   {
     return localizedValue;
@@ -166,31 +161,6 @@ public class LocalizedValue
     return object;
   }
 
-  public static LocalizedValue fromJSON(JsonObject jObject)
-  {
-    String localizedValue = jObject.has(LOCALIZED_VALUE) ? jObject.get(LOCALIZED_VALUE).getAsString() : null;
-    JsonArray locales = jObject.get(LOCALE_VALUES).getAsJsonArray();
-
-    Map<String, String> map = new HashMap<String, String>();
-
-    for (int i = 0; i < locales.size(); i++)
-    {
-      JsonObject locale = locales.get(i).getAsJsonObject();
-      
-      if (locale.has(VALUE) && locale.has(LOCALE)) // See ticket #293 if you wonder how it may not have a value
-      {
-        final JsonElement element = locale.get(VALUE);
-  
-        String key = locale.get(LOCALE).getAsString();
-        String value = !element.isJsonNull() ? element.getAsString() : null;
-  
-        map.put(key, value);
-      }
-    }
-
-    return new LocalizedValue(localizedValue, map);
-  }
-  
   /**
    * This equals behaviour is required for proper operation of ticket #568.
    * This method is invoked in VertexServerGeoObject.areValuesEqual.
@@ -241,4 +211,41 @@ public class LocalizedValue
   {
     return this.localizedValue == null && (this.localeValues == null || this.localeValues.size() == 0);
   }
+  
+  /**
+   * Returns an empty {@link LocalizedValue} object.
+   * 
+   * @return an empty {@link LocalizedValue} object.
+   */
+  public static LocalizedValue createEmptyLocalizedValue()
+  {
+    return new LocalizedValue("", new HashMap<String, String>());
+  }
+  
+  public static LocalizedValue fromJSON(JsonObject jObject)
+  {
+    String localizedValue = jObject.has(LOCALIZED_VALUE) ? jObject.get(LOCALIZED_VALUE).getAsString() : null;
+    JsonArray locales = jObject.get(LOCALE_VALUES).getAsJsonArray();
+
+    Map<String, String> map = new HashMap<String, String>();
+
+    for (int i = 0; i < locales.size(); i++)
+    {
+      JsonObject locale = locales.get(i).getAsJsonObject();
+      
+      if (locale.has(VALUE) && locale.has(LOCALE)) // See ticket #293 if you wonder how it may not have a value
+      {
+        final JsonElement element = locale.get(VALUE);
+  
+        String key = locale.get(LOCALE).getAsString();
+        String value = !element.isJsonNull() ? element.getAsString() : null;
+  
+        map.put(key, value);
+      }
+    }
+
+    return new LocalizedValue(localizedValue, map);
+  }
+  
+
 }
