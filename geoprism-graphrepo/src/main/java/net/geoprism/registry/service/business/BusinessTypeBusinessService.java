@@ -21,6 +21,7 @@ package net.geoprism.registry.service.business;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Predicate;
 import java.util.stream.Collector;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -95,6 +96,7 @@ import net.geoprism.registry.BusinessEdgeTypeQuery;
 import net.geoprism.registry.BusinessType;
 import net.geoprism.registry.BusinessTypeQuery;
 import net.geoprism.registry.CodeLengthException;
+import net.geoprism.registry.JsonCollectors;
 import net.geoprism.registry.Organization;
 import net.geoprism.registry.RegistryConstants;
 import net.geoprism.registry.cache.TransactionLRUCache;
@@ -211,6 +213,7 @@ public class BusinessTypeBusinessService implements BusinessTypeBusinessServiceI
     // Update the sequence number of the type
     if (type.getOrigin().equals(GeoprismProperties.getOrigin()))
     {
+      type.appLock();
       type.setSequence(type.getSequence() + 1);
       type.apply();
 
@@ -270,6 +273,12 @@ public class BusinessTypeBusinessService implements BusinessTypeBusinessServiceI
   @Override
   public JsonObject toJSON(BusinessType type, boolean includeAttribute, boolean flattenLocalAttributes)
   {
+    return this.toJSON(type, includeAttribute, flattenLocalAttributes, (attribute) -> true);
+  }
+
+  @Override
+  public JsonObject toJSON(BusinessType type, boolean includeAttribute, boolean flattenLocalAttributes, Predicate<AttributeType> filter)
+  {
     Organization organization = type.getOrganization();
 
     JsonObject object = new JsonObject();
@@ -296,29 +305,26 @@ public class BusinessTypeBusinessService implements BusinessTypeBusinessServiceI
 
     if (includeAttribute)
     {
-      Collector<Object, JsonArray, JsonArray> collector = Collector.of(() -> new JsonArray(), (r, t) -> r.add((JsonObject) t), (x1, x2) -> {
-        x1.addAll(x2);
-        return x1;
-      });
+      JsonArray attributes = type.getAttributeMap().values().stream() //
+          .filter(filter) //
+          .sorted((a, b) -> {
+            return a.getName().compareTo(b.getName());
+          }).flatMap(attr -> {
+            if (flattenLocalAttributes && attr instanceof AttributeLocalType)
+            {
+              List<JsonObject> list = new LinkedList<>();
+              list.add(this.serializeLocale(type, attr, LocalizedValue.DEFAULT_LOCALE, LocalizationFacade.localize(DefaultAttribute.DISPLAY_LABEL.getName())));
 
-      JsonArray attributes = type.getAttributeMap().values().stream().sorted((a, b) -> {
-        return a.getName().compareTo(b.getName());
-      }).flatMap(attr -> {
-        if (flattenLocalAttributes && attr instanceof AttributeLocalType)
-        {
-          List<JsonObject> list = new LinkedList<>();
-          list.add(this.serializeLocale(type, attr, LocalizedValue.DEFAULT_LOCALE, LocalizationFacade.localize(DefaultAttribute.DISPLAY_LABEL.getName())));
+              for (SupportedLocaleIF locale : LocalizationFacade.getSupportedLocales())
+              {
+                list.add(this.serializeLocale(type, attr, locale.getLocale().toString(), locale.getDisplayLabel().getValue()));
+              }
 
-          for (SupportedLocaleIF locale : LocalizationFacade.getSupportedLocales())
-          {
-            list.add(this.serializeLocale(type, attr, locale.getLocale().toString(), locale.getDisplayLabel().getValue()));
-          }
+              return list.stream();
+            }
 
-          return list.stream();
-        }
-
-        return Stream.of(attr.toJSON());
-      }).collect(collector);
+            return Stream.of(attr.toJSON());
+          }).collect(JsonCollectors.toJsonArray());
 
       object.add(BusinessType.JSON_ATTRIBUTES, attributes);
     }
@@ -758,6 +764,7 @@ public class BusinessTypeBusinessService implements BusinessTypeBusinessServiceI
     // Update the sequence number of the type
     if (type.getOrigin().equals(GeoprismProperties.getOrigin()))
     {
+      type.appLock();
       type.setSequence(type.getSequence() + 1);
       type.apply();
     }

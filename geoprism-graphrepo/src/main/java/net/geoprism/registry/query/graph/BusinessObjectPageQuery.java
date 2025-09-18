@@ -3,23 +3,24 @@
  *
  * This file is part of Geoprism(tm).
  *
- * Geoprism(tm) is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
+ * Geoprism(tm) is free software: you can redistribute it and/or modify it under
+ * the terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation, either version 3 of the License, or (at your option) any
+ * later version.
  *
- * Geoprism(tm) is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
+ * Geoprism(tm) is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with Geoprism(tm).  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with Geoprism(tm). If not, see <http://www.gnu.org/licenses/>.
  */
 package net.geoprism.registry.query.graph;
 
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
+import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -27,15 +28,15 @@ import java.util.stream.Collectors;
 
 import org.commongeoregistry.adapter.constants.DefaultAttribute;
 import org.commongeoregistry.adapter.dataaccess.LocalizedValue;
+import org.commongeoregistry.adapter.metadata.AttributeClassificationType;
+import org.commongeoregistry.adapter.metadata.AttributeDataSourceType;
+import org.commongeoregistry.adapter.metadata.AttributeLocalType;
+import org.commongeoregistry.adapter.metadata.AttributeTermType;
+import org.commongeoregistry.adapter.metadata.AttributeType;
 
 import com.google.gson.JsonObject;
 import com.runwaysdk.business.graph.GraphQuery;
-import com.runwaysdk.dataaccess.MdAttributeClassificationDAOIF;
-import com.runwaysdk.dataaccess.MdAttributeConcreteDAOIF;
 import com.runwaysdk.dataaccess.MdAttributeDAOIF;
-import com.runwaysdk.dataaccess.MdAttributeGraphRefDAOIF;
-import com.runwaysdk.dataaccess.MdAttributeLocalEmbeddedDAOIF;
-import com.runwaysdk.dataaccess.MdAttributeTermDAOIF;
 import com.runwaysdk.dataaccess.MdVertexDAOIF;
 import com.runwaysdk.session.Session;
 
@@ -48,11 +49,11 @@ import net.geoprism.registry.view.JsonWrapper;
 
 public class BusinessObjectPageQuery extends AbstractGraphPageQuery<HashMap<String, Object>, JsonSerializable>
 {
-  private SimpleDateFormat                         format;
+  private SimpleDateFormat          format;
 
-  private NumberFormat                             numberFormat;
+  private NumberFormat              numberFormat;
 
-  private List<? extends MdAttributeConcreteDAOIF> mdAttributes;
+  private Collection<AttributeType> attributes;
 
   public BusinessObjectPageQuery(BusinessType businessType, JsonObject criteria)
   {
@@ -63,7 +64,7 @@ public class BusinessObjectPageQuery extends AbstractGraphPageQuery<HashMap<Stri
 
     this.numberFormat = NumberFormat.getInstance(Session.getCurrentLocale());
 
-    this.mdAttributes = businessType.getMdVertexDAO().definesAttributes();
+    this.attributes = businessType.getAttributeMap().values();
   }
 
   @SuppressWarnings("unchecked")
@@ -76,56 +77,61 @@ public class BusinessObjectPageQuery extends AbstractGraphPageQuery<HashMap<Stri
 
       object.addProperty(DefaultAttribute.CODE.getName(), (String) row.get(DefaultAttribute.CODE.getName()));
 
-      for (MdAttributeConcreteDAOIF mdAttribute : mdAttributes)
-      {
-        String attributeName = mdAttribute.definesAttribute();
+      this.attributes.stream().filter(a -> !a.getName().equals(DefaultAttribute.CODE.name())).forEach(attribute -> {
+        String attributeName = attribute.getName();
 
         Object value = row.get(attributeName);
 
         if (value != null)
         {
-          if (mdAttribute instanceof MdAttributeTermDAOIF)
+          if (attribute instanceof AttributeTermType)
           {
             Classifier classifier = Classifier.get((String) value);
 
-            object.addProperty(mdAttribute.definesAttribute(), classifier.getDisplayLabel().getValue());
+            object.addProperty(attributeName, classifier.getDisplayLabel().getValue());
           }
-          else if (mdAttribute instanceof MdAttributeLocalEmbeddedDAOIF || mdAttribute instanceof MdAttributeClassificationDAOIF)
+          else if (attribute instanceof AttributeLocalType || attribute instanceof AttributeClassificationType)
           {
             LocalizedValue localizedValue = RegistryLocalizedValueConverter.convert((HashMap<String, ?>) value);
 
-            object.addProperty(mdAttribute.definesAttribute(), localizedValue.getValue());
+            object.addProperty(attributeName, localizedValue.getValue());
           }
           else if (value instanceof Double)
           {
-            object.addProperty(mdAttribute.definesAttribute(), numberFormat.format((Double) value));
+            object.addProperty(attributeName, numberFormat.format((Double) value));
           }
           else if (value instanceof Number)
           {
-            object.addProperty(mdAttribute.definesAttribute(), (Number) value);
+            object.addProperty(attributeName, (Number) value);
           }
           else if (value instanceof Boolean)
           {
-            object.addProperty(mdAttribute.definesAttribute(), (Boolean) value);
+            object.addProperty(attributeName, (Boolean) value);
           }
           else if (value instanceof String)
           {
-            object.addProperty(mdAttribute.definesAttribute(), (String) value);
+            object.addProperty(attributeName, (String) value);
           }
           else if (value instanceof Character)
           {
-            object.addProperty(mdAttribute.definesAttribute(), (Character) value);
+            object.addProperty(attributeName, (Character) value);
           }
           else if (value instanceof Date)
           {
-            object.addProperty(mdAttribute.definesAttribute(), format.format((Date) value));
+            object.addProperty(attributeName, format.format((Date) value));
           }
         }
-      }
+
+      });
 
       return new JsonWrapper(object);
 
     }).collect(Collectors.toList());
+  }
+
+  protected String getColumnName(final MdVertexDAOIF mdVertex, AttributeType type)
+  {
+    return this.getColumnName(mdVertex.definesAttribute(type.getName()));
   }
 
   @Override
@@ -136,20 +142,17 @@ public class BusinessObjectPageQuery extends AbstractGraphPageQuery<HashMap<Stri
 
   public void addSelectAttributes(final MdVertexDAOIF mdVertex, StringBuilder statement)
   {
-    List<? extends MdAttributeConcreteDAOIF> mdAttributes = mdVertex.definesAttributes();
-
-    List<String> columnNames = mdAttributes.stream().filter(attribute -> {
-      return !attribute.definesAttribute().equals("seq");
-    }).map(mdAttribute -> {
-      // Hardcoded assumption that the referenced class has a displayLabel
-      // This should work because the only referenced classes will be
-      // Classification types
-      if (mdAttribute instanceof MdAttributeGraphRefDAOIF)
+    List<String> columnNames = this.attributes.stream().map(attribute -> {
+      if (attribute instanceof AttributeClassificationType || attribute instanceof AttributeLocalType)
       {
-        return this.getColumnName(mdAttribute) + ".displayLabel AS " + mdAttribute.getColumnName();
+        return this.getColumnName(mdVertex, attribute) + ".displayLabel AS " + attribute.getName();
+      }
+      else if (attribute instanceof AttributeDataSourceType)
+      {
+        return this.getColumnName(mdVertex, attribute) + ".code AS " + attribute.getName();
       }
 
-      return this.getColumnName(mdAttribute) + " AS " + mdAttribute.getColumnName();
+      return this.getColumnName(mdVertex, attribute) + " AS " + attribute.getName();
     }).collect(Collectors.toList());
 
     statement.append(String.join(", ", columnNames));

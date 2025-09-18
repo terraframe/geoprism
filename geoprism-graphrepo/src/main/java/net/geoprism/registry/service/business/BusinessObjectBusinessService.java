@@ -3,18 +3,18 @@
  *
  * This file is part of Geoprism(tm).
  *
- * Geoprism(tm) is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
+ * Geoprism(tm) is free software: you can redistribute it and/or modify it under
+ * the terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation, either version 3 of the License, or (at your option) any
+ * later version.
  *
- * Geoprism(tm) is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
+ * Geoprism(tm) is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with Geoprism(tm).  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with Geoprism(tm). If not, see <http://www.gnu.org/licenses/>.
  */
 package net.geoprism.registry.service.business;
 
@@ -25,6 +25,9 @@ import java.util.TreeMap;
 import java.util.stream.Collectors;
 
 import org.commongeoregistry.adapter.constants.DefaultAttribute;
+import org.commongeoregistry.adapter.metadata.AttributeClassificationType;
+import org.commongeoregistry.adapter.metadata.AttributeDataSourceType;
+import org.commongeoregistry.adapter.metadata.AttributeTermType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -34,7 +37,6 @@ import com.runwaysdk.business.graph.GraphQuery;
 import com.runwaysdk.business.graph.VertexObject;
 import com.runwaysdk.dataaccess.MdAttributeBooleanDAOIF;
 import com.runwaysdk.dataaccess.MdAttributeClassificationDAOIF;
-import com.runwaysdk.dataaccess.MdAttributeConcreteDAOIF;
 import com.runwaysdk.dataaccess.MdAttributeDAOIF;
 import com.runwaysdk.dataaccess.MdAttributeDateDAOIF;
 import com.runwaysdk.dataaccess.MdAttributeDecimalDAOIF;
@@ -67,93 +69,83 @@ import net.geoprism.registry.model.graph.VertexServerGeoObject;
 public class BusinessObjectBusinessService implements BusinessObjectBusinessServiceIF
 {
   @Autowired
-  private BusinessTypeBusinessServiceIF   typeService;
+  private BusinessTypeBusinessServiceIF       typeService;
 
   @Autowired
-  private ClassificationBusinessServiceIF classificationService;
+  private ClassificationBusinessServiceIF     classificationService;
 
   @Autowired
-  private DataSourceBusinessServiceIF     sourceService;
+  private ClassificationTypeBusinessServiceIF classificationTypeService;
+
+  @Autowired
+  private DataSourceBusinessServiceIF         sourceService;
 
   @Override
   public JsonObject toJSON(BusinessObject object)
   {
     JsonObject data = new JsonObject();
 
-    List<? extends MdAttributeConcreteDAOIF> mdAttributes = object.getType().getMdVertexDAO().definesAttributes();
+    BusinessType type = object.getType();
 
-    for (MdAttributeConcreteDAOIF mdAttribute : mdAttributes)
-    {
-      String attributeName = mdAttribute.definesAttribute();
+    type.getAttributeMap().values().stream() //
+        .filter(attribute -> !attribute.getName().equals(BusinessObject.CODE)) //
+        .forEach(attribute -> {
 
-      if (!attributeName.equals(BusinessObject.CODE))
-      {
+          String attributeName = attribute.getName();
 
-        Object value = object.getVertex().getObjectValue(attributeName);
+          Object value = object.getVertex().getObjectValue(attributeName);
 
-        if (value != null)
-        {
-          if (mdAttribute instanceof MdAttributeTermDAOIF)
+          if (value != null)
           {
-            Classifier classifier = Classifier.get((String) value);
+            if (attribute instanceof AttributeTermType)
+            {
+              Classifier classifier = Classifier.get((String) value);
 
-            data.addProperty(mdAttribute.definesAttribute(), classifier.getDisplayLabel().getValue());
-          }
-          else if (mdAttribute instanceof MdAttributeClassificationDAOIF)
-          {
-            MdClassificationDAOIF mdClassification = ( (MdAttributeClassificationDAOIF) mdAttribute ).getMdClassificationDAOIF();
+              data.addProperty(attributeName, classifier.getDisplayLabel().getValue());
+            }
+            else if (attribute instanceof AttributeClassificationType)
+            {
+              ClassificationType classificationType = this.classificationTypeService.getByCode( ( (AttributeClassificationType) attribute ).getClassificationType(), true);
 
-            ClassificationType type = new ClassificationType(mdClassification);
-
-            this.classificationService.getByOid(type, (String) value).ifPresent(classification -> {
-              data.addProperty(mdAttribute.definesAttribute(), classification.getCode());
-            });
-          }
-          else if (mdAttribute instanceof MdAttributeGraphReferenceDAOIF)
-          {
-            MdClassDAOIF mdVertex = ( (MdAttributeGraphReferenceDAOIF) mdAttribute ).getReferenceMdVertexDAOIF();
-
-            if (mdVertex.definesType().equals(DataSource.CLASS))
+              this.classificationService.getByOid(classificationType, (String) value).ifPresent(classification -> {
+                data.addProperty(attributeName, classification.getCode());
+              });
+            }
+            else if (attribute instanceof AttributeDataSourceType)
             {
               DataSource dataSource = this.sourceService.get((String) value);
 
               if (dataSource != null)
               {
-                data.addProperty(mdAttribute.definesAttribute(), dataSource.getCode());
+                data.addProperty(attributeName, dataSource.getCode());
               }
+            }
+            else if (value instanceof Number)
+            {
+              data.addProperty(attributeName, (Number) value);
+            }
+            else if (value instanceof Boolean)
+            {
+              data.addProperty(attributeName, (Boolean) value);
+            }
+            else if (value instanceof String)
+            {
+              data.addProperty(attributeName, (String) value);
+            }
+            else if (value instanceof Character)
+            {
+              data.addProperty(attributeName, (Character) value);
+            }
+            else if (value instanceof Date)
+            {
+              data.addProperty(attributeName, DateFormatter.formatDate((Date) value, false));
             }
             else
             {
               throw new UnsupportedOperationException();
             }
           }
-          else if (value instanceof Number)
-          {
-            data.addProperty(mdAttribute.definesAttribute(), (Number) value);
-          }
-          else if (value instanceof Boolean)
-          {
-            data.addProperty(mdAttribute.definesAttribute(), (Boolean) value);
-          }
-          else if (value instanceof String)
-          {
-            data.addProperty(mdAttribute.definesAttribute(), (String) value);
-          }
-          else if (value instanceof Character)
-          {
-            data.addProperty(mdAttribute.definesAttribute(), (Character) value);
-          }
-          else if (value instanceof Date)
-          {
-            data.addProperty(mdAttribute.definesAttribute(), DateFormatter.formatDate((Date) value, false));
-          }
-          else
-          {
-            throw new UnsupportedOperationException();
-          }
-        }
-      }
-    }
+        });
 
     JsonObject json = new JsonObject();
     json.addProperty("code", object.getCode());

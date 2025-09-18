@@ -19,13 +19,13 @@
 package net.geoprism.registry.service.business;
 
 import java.util.List;
+import java.util.function.Predicate;
 
 import org.commongeoregistry.adapter.metadata.AttributeType;
 import org.springframework.stereotype.Component;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
-import com.runwaysdk.dataaccess.MdEdgeDAOIF;
 import com.runwaysdk.dataaccess.MdVertexDAOIF;
 
 import net.geoprism.registry.BusinessEdgeType;
@@ -55,10 +55,6 @@ public interface BusinessTypeBusinessServiceIF
 
   void deleteMdAttributeFromAttributeType(BusinessType type, String attributeName);
 
-  JsonObject toJSON(BusinessType type);
-
-  JsonObject toJSON(BusinessType type, boolean includeAttribute, boolean flattenLocalAttributes);
-
   Page<JsonSerializable> data(BusinessType type, JsonObject criteria);
 
   BusinessType apply(JsonObject object);
@@ -82,5 +78,11 @@ public interface BusinessTypeBusinessServiceIF
   BusinessType getByMdVertex(MdVertexDAOIF mdVertex);
 
   BusinessType apply(BusinessType businessType);
+
+  JsonObject toJSON(BusinessType type);
+
+  JsonObject toJSON(BusinessType type, boolean includeAttribute, boolean flattenLocalAttributes);
+
+  JsonObject toJSON(BusinessType type, boolean includeAttribute, boolean flattenLocalAttributes, Predicate<AttributeType> filter);
 
 }
