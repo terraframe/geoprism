@@ -39,7 +39,8 @@ package net.geoprism.configuration;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Random;
+import java.nio.file.Files;
+import java.nio.file.Path;
 
 import org.apache.commons.lang.StringUtils;
 
@@ -177,13 +178,10 @@ public class GeoprismProperties
    * files. It is your responsibility to invoke close on the directory when you
    * are finished with it, which will delete the directory.
    */
-  public static CloseableFile newTempDirectory()
+  public static CloseableFile newTempDirectory() throws IOException
   {
-    File storage = GeoprismProperties.getGeoprismFileStorage();
-    CloseableFile directory = new CloseableFile(storage, new Long(new Random().nextInt()).toString(), true);
-    directory.mkdir();
-
-    return directory;
+    Path tmpDir = Files.createTempDirectory("geoprism");
+    return new CloseableFile(tmpDir.toFile(), true);
   }
 
   /**
@@ -195,11 +193,8 @@ public class GeoprismProperties
    */
   public static CloseableFile newTempFile() throws IOException
   {
-    File storage = GeoprismProperties.getGeoprismFileStorage();
-    CloseableFile file = new CloseableFile(storage, new Long(Math.abs(new Random().nextInt())).toString(), true);
-    file.createNewFile();
-
-    return file;
+    Path tmp = Files.createTempFile("geoprism", ".tmp");
+    return new CloseableFile(tmp.toFile(), true);
   }
 
 }

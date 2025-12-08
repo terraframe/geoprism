@@ -3,18 +3,18 @@
  *
  * This file is part of Geoprism(tm).
  *
- * Geoprism(tm) is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
+ * Geoprism(tm) is free software: you can redistribute it and/or modify it under
+ * the terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation, either version 3 of the License, or (at your option) any
+ * later version.
  *
- * Geoprism(tm) is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
+ * Geoprism(tm) is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with Geoprism(tm).  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with Geoprism(tm). If not, see <http://www.gnu.org/licenses/>.
  */
 package net.geoprism.registry.service.business;
 
@@ -569,28 +569,28 @@ public class LabeledPropertyGraphTypeVersionBusinessService implements LabeledPr
 
     GeoObjectTypeSnapshot root = this.objectService.createRoot(version);
 
-    JsonArray types = json.get("types").getAsJsonArray();
+    JsonArray types = json.has("types") ? json.get("types").getAsJsonArray() : new JsonArray();
 
     for (JsonElement element : types)
     {
       this.objectService.create(version, element.getAsJsonObject());
     }
 
-    JsonArray businessTypes = json.get("businessTypes").getAsJsonArray();
+    JsonArray businessTypes = json.has("businessTypes") ? json.get("businessTypes").getAsJsonArray() : new JsonArray();
 
     for (JsonElement element : businessTypes)
     {
       this.businessService.create(version, element.getAsJsonObject());
     }
 
-    JsonArray graphTypes = json.get("graphTypes").getAsJsonArray();
+    JsonArray graphTypes = json.has("graphTypes") ? json.get("graphTypes").getAsJsonArray() : new JsonArray();
 
     for (JsonElement element : graphTypes)
     {
       this.graphService.create(version, element.getAsJsonObject(), root);
     }
-
-    JsonArray businessEdges = json.get("businessEdges").getAsJsonArray();
+    
+    JsonArray businessEdges = json.has("businessEdges") ? json.get("businessEdges").getAsJsonArray() : new JsonArray();
 
     for (JsonElement element : businessEdges)
     {
