@@ -3,18 +3,18 @@
  *
  * This file is part of Geoprism(tm).
  *
- * Geoprism(tm) is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
+ * Geoprism(tm) is free software: you can redistribute it and/or modify it under
+ * the terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation, either version 3 of the License, or (at your option) any
+ * later version.
  *
- * Geoprism(tm) is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
+ * Geoprism(tm) is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with Geoprism(tm).  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with Geoprism(tm). If not, see <http://www.gnu.org/licenses/>.
  */
 package net.geoprism.registry.service.business;
 
@@ -49,15 +49,15 @@ import net.geoprism.registry.conversion.LocalizedValueConverter;
 @Service
 public class BusinessEdgeTypeSnapshotBusinessService implements BusinessEdgeTypeSnapshotBusinessServiceIF
 {
-  public static final String                               PREFIX = "g_";
+  public static final String                     PREFIX = "g_";
 
-  public static final String                               SPLIT  = "__";
-
-  @Autowired
-  private BusinessTypeSnapshotBusinessServiceIF            typeService;
+  public static final String                     SPLIT  = "__";
 
   @Autowired
-  private LabeledPropertyGraphTypeVersionBusinessServiceIF versionService;
+  private BusinessTypeSnapshotBusinessServiceIF  typeService;
+
+  @Autowired
+  private GeoObjectTypeSnapshotBusinessServiceIF objectService;
 
   @Override
   @Transaction
@@ -116,7 +116,7 @@ public class BusinessEdgeTypeSnapshotBusinessService implements BusinessEdgeType
 
     if (isParentGeoObject)
     {
-      parentOid = this.versionService.getRootType(version).getGraphMdVertexOid();
+      parentOid = this.objectService.getRoot(version).getGraphMdVertexOid();
     }
     else
     {
@@ -126,20 +126,19 @@ public class BusinessEdgeTypeSnapshotBusinessService implements BusinessEdgeType
 
       parentOid = parent.getGraphMdVertexOid();
     }
-    
+
     if (isChildGeoObject)
     {
-      childOid = this.versionService.getRootType(version).getGraphMdVertexOid();
+      childOid = this.objectService.getRoot(version).getGraphMdVertexOid();
     }
     else
     {
       String code = type.get(BusinessEdgeTypeSnapshot.CHILDTYPE).getAsString();
-      
+
       BusinessTypeSnapshot child = this.typeService.get(version, code);
-      
+
       childOid = child.getGraphMdVertexOid();
     }
-
 
     return create(version, type, parentOid, childOid);
   }
