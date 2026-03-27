@@ -24,9 +24,9 @@ import java.util.Optional;
 
 import org.commongeoregistry.adapter.constants.DefaultAttribute;
 import org.commongeoregistry.adapter.dataaccess.LocalizedValue;
+import org.commongeoregistry.adapter.metadata.GraphTypeDTO;
 import org.springframework.stereotype.Service;
 
-import com.google.gson.JsonObject;
 import com.runwaysdk.constants.MdAttributeBooleanInfo;
 import com.runwaysdk.constants.MdAttributeConcreteInfo;
 import com.runwaysdk.constants.MdAttributeDateTimeInfo;
@@ -46,7 +46,6 @@ import com.runwaysdk.query.QueryFactory;
 import com.runwaysdk.system.metadata.MdEdge;
 
 import net.geoprism.configuration.GeoprismProperties;
-import net.geoprism.registry.BusinessType;
 import net.geoprism.registry.DuplicateHierarchyTypeException;
 import net.geoprism.registry.RegistryConstants;
 import net.geoprism.registry.UndirectedGraphType;
@@ -70,12 +69,12 @@ public class UndirectedGraphTypeBusinessService implements UndirectedGraphTypeBu
   }
 
   @Override
-  public UndirectedGraphType create(JsonObject object)
+  public UndirectedGraphType create(GraphTypeDTO object)
   {
-    String code = object.get(UndirectedGraphType.CODE).getAsString();
-    LocalizedValue label = LocalizedValue.fromJSON(object.getAsJsonObject(UndirectedGraphType.JSON_LABEL));
-    LocalizedValue description = LocalizedValue.fromJSON(object.getAsJsonObject(UndirectedGraphType.DESCRIPTION));
-    Long seq = object.has(BusinessType.SEQ) ? object.get(BusinessType.SEQ).getAsLong() : 0L;
+    String code = object.getCode();
+    LocalizedValue label = object.getLabel();
+    LocalizedValue description = object.getDescription();
+    Long seq = object.getSeq();
 
     return create(code, label, description, GeoprismProperties.getOrigin(), seq);
   }
@@ -166,24 +165,20 @@ public class UndirectedGraphTypeBusinessService implements UndirectedGraphTypeBu
 
   @Override
   @Transaction
-  public void update(UndirectedGraphType type, JsonObject object)
+  public void update(UndirectedGraphType type, GraphTypeDTO object)
   {
     try
     {
       type.appLock();
 
-      if (object.has(UndirectedGraphType.JSON_LABEL))
+      if (object.getLabel() != null)
       {
-        LocalizedValue label = LocalizedValue.fromJSON(object.getAsJsonObject(UndirectedGraphType.JSON_LABEL));
-
-        RegistryLocalizedValueConverter.populate(type.getDisplayLabel(), label);
+        RegistryLocalizedValueConverter.populate(type.getDisplayLabel(), object.getLabel());
       }
 
-      if (object.has(UndirectedGraphType.DESCRIPTION))
+      if (object.getDescription() != null)
       {
-        LocalizedValue description = LocalizedValue.fromJSON(object.getAsJsonObject(UndirectedGraphType.DESCRIPTION));
-
-        RegistryLocalizedValueConverter.populate(type.getDescription(), description);
+        RegistryLocalizedValueConverter.populate(type.getDescription(), object.getDescription());
       }
 
       type.setSequence(type.getSequence() + 1);

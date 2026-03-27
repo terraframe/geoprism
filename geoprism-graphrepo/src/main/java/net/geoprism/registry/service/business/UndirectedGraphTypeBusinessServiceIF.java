@@ -22,6 +22,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.commongeoregistry.adapter.dataaccess.LocalizedValue;
+import org.commongeoregistry.adapter.metadata.GraphTypeDTO;
 import org.springframework.stereotype.Component;
 
 import com.google.gson.JsonObject;
@@ -33,13 +34,13 @@ import net.geoprism.registry.UndirectedGraphType;
 public interface UndirectedGraphTypeBusinessServiceIF
 {
 
-  public UndirectedGraphType create(JsonObject object);
+  public UndirectedGraphType create(GraphTypeDTO object);
 
   public UndirectedGraphType create(String code, LocalizedValue label, LocalizedValue description, Long seq);
 
   public UndirectedGraphType create(String code, LocalizedValue label, LocalizedValue description, String origin, Long seq);
 
-  public void update(UndirectedGraphType ugt, JsonObject object);
+  public void update(UndirectedGraphType ugt, GraphTypeDTO object);
 
   public void delete(UndirectedGraphType ugt);
 

@@ -22,9 +22,9 @@ import java.util.List;
 import java.util.Optional;
 
 import org.commongeoregistry.adapter.dataaccess.LocalizedValue;
+import org.commongeoregistry.adapter.metadata.GraphTypeDTO;
 import org.springframework.stereotype.Component;
 
-import com.google.gson.JsonObject;
 import com.runwaysdk.system.metadata.MdEdge;
 
 import net.geoprism.registry.DirectedAcyclicGraphType;
@@ -33,20 +33,20 @@ import net.geoprism.registry.DirectedAcyclicGraphType;
 public interface DirectedAcyclicGraphTypeBusinessServiceIF
 {
 
-  public void update(DirectedAcyclicGraphType dagt, JsonObject object);
+  public void update(DirectedAcyclicGraphType dagt, GraphTypeDTO object);
 
   public void delete(DirectedAcyclicGraphType dagt);
 
-  public DirectedAcyclicGraphType create(JsonObject object);
+  public DirectedAcyclicGraphType create(GraphTypeDTO object);
 
   public DirectedAcyclicGraphType create(String code, LocalizedValue label, LocalizedValue description, String origin, Long seq);
 
   public DirectedAcyclicGraphType create(String code, LocalizedValue label, LocalizedValue description, Long seq);
 
-  DirectedAcyclicGraphType getByMdEdge(MdEdge mdEdge);
+  public DirectedAcyclicGraphType getByMdEdge(MdEdge mdEdge);
 
-  Optional<DirectedAcyclicGraphType> getByCode(String code);
+  public Optional<DirectedAcyclicGraphType> getByCode(String code);
 
-  List<DirectedAcyclicGraphType> getAll(String... typeCodes);
+  public List<DirectedAcyclicGraphType> getAll(String... typeCodes);
 
 }
