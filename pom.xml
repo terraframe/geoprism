@@ -49,7 +49,7 @@
   <properties>
     <runway.version>4.0.1-SNAPSHOT</runway.version>
     <geotools.version>26.7</geotools.version>
-    <fasterxml.version>2.18.1</fasterxml.version>
+    <fasterxml.version>2.18.6</fasterxml.version>
 
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <maven.compiler.source>17</maven.compiler.source>
