@@ -98,6 +98,9 @@ public class SessionService implements SessionServiceIF
     endpoint.add("forgotpassword/complete");
     endpoint.add("invite-user/initiate");
     endpoint.add("invite-user/complete");
+    endpoint.add("actuator");
+    endpoint.add("actuator/health");
+    endpoint.add("actuator/info");
 
     return endpoint;
   }
