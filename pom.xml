@@ -46,7 +46,7 @@
   </modules>
 
   <properties>
-    <runway.version>4.0.1-SNAPSHOT</runway.version>
+    <runway.version>4.0.1</runway.version>
     <geotools.version>26.7</geotools.version>
     <fasterxml.version>2.21.2</fasterxml.version>
     <fasterxml.annotations.version>2.21</fasterxml.annotations.version>
