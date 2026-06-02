@@ -58,6 +58,7 @@ public class BusinessEdgeTypeView
   public BusinessEdgeTypeView()
   {
     this.origin = GeoprismProperties.getOrigin();
+    this.seq = 0L;
   }
 
   public String getOid()

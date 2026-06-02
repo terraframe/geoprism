@@ -307,12 +307,11 @@ public class BusinessEdgeTypeBusinessService implements BusinessEdgeTypeBusiness
       businessEdgeType.setParentTypeId(parentType.getMdVertexOid());
       businessEdgeType.setChildTypeId(childType.getMdVertexOid());
       businessEdgeType.setOrigin(dto.getOrigin());
-      businessEdgeType.setSequence(dto.getSeq());
       RegistryLocalizedValueConverter.populate(businessEdgeType.getDisplayLabel(), dto.getLabel());
       RegistryLocalizedValueConverter.populate(businessEdgeType.getDescription(), dto.getDescription());
       businessEdgeType.setIsParentGeoObject(false);
       businessEdgeType.setIsChildGeoObject(false);
-      businessEdgeType.setSequence(0L);
+      businessEdgeType.setSequence(dto.getSeq());
       businessEdgeType.apply();
 
       this.cache.put(businessEdgeType);
@@ -399,7 +398,6 @@ public class BusinessEdgeTypeBusinessService implements BusinessEdgeTypeBusiness
       businessEdgeType.setSequence(dto.getSeq());
       businessEdgeType.setIsParentGeoObject(dto.isParentGeoObjectType());
       businessEdgeType.setIsChildGeoObject(dto.isChildGeObjectType());
-      businessEdgeType.setSequence(0L);
       businessEdgeType.apply();
 
       return businessEdgeType;
