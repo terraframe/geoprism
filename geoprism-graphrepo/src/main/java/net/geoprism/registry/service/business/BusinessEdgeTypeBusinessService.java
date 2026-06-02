@@ -3,18 +3,18 @@
  *
  * This file is part of Geoprism(tm).
  *
- * Geoprism(tm) is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
+ * Geoprism(tm) is free software: you can redistribute it and/or modify it under
+ * the terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation, either version 3 of the License, or (at your option) any
+ * later version.
  *
- * Geoprism(tm) is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
+ * Geoprism(tm) is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with Geoprism(tm).  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with Geoprism(tm). If not, see <http://www.gnu.org/licenses/>.
  */
 package net.geoprism.registry.service.business;
 
@@ -27,14 +27,16 @@ import org.commongeoregistry.adapter.dataaccess.LocalizedValue;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.google.gson.JsonObject;
 import com.runwaysdk.business.BusinessFacade;
 import com.runwaysdk.constants.MdAttributeBooleanInfo;
 import com.runwaysdk.constants.MdAttributeConcreteInfo;
+import com.runwaysdk.constants.MdAttributeDateTimeInfo;
 import com.runwaysdk.constants.MdAttributeGraphReferenceInfo;
+import com.runwaysdk.constants.MdAttributeLocalInfo;
 import com.runwaysdk.constants.graph.MdEdgeInfo;
 import com.runwaysdk.dataaccess.DuplicateDataException;
 import com.runwaysdk.dataaccess.MdVertexDAOIF;
+import com.runwaysdk.dataaccess.metadata.MdAttributeDateTimeDAO;
 import com.runwaysdk.dataaccess.metadata.MdAttributeGraphReferenceDAO;
 import com.runwaysdk.dataaccess.metadata.MdAttributeUUIDDAO;
 import com.runwaysdk.dataaccess.metadata.graph.MdEdgeDAO;
@@ -55,11 +57,10 @@ import net.geoprism.registry.cache.TransactionLRUCache;
 import net.geoprism.registry.conversion.RegistryLocalizedValueConverter;
 import net.geoprism.registry.graph.DataSource;
 import net.geoprism.registry.graph.GeoVertex;
-import net.geoprism.registry.model.EdgeDirection;
+import net.geoprism.registry.model.EdgeType;
 import net.geoprism.registry.model.graph.EdgeVertexType;
 import net.geoprism.registry.model.graph.GeoVertexEdgeType;
 import net.geoprism.registry.view.BusinessEdgeTypeView;
-import net.geoprism.registry.view.BusinessGeoEdgeTypeView;
 
 @Service
 public class BusinessEdgeTypeBusinessService implements BusinessEdgeTypeBusinessServiceIF
@@ -106,17 +107,9 @@ public class BusinessEdgeTypeBusinessService implements BusinessEdgeTypeBusiness
 
   @Override
   @Transaction
-  public void update(BusinessEdgeType edgeType, JsonObject object)
+  public void update(BusinessEdgeType edgeType, BusinessEdgeTypeView dto)
   {
-    LocalizedValue label = object.has(BusinessEdgeType.DISPLAYLABEL) ? //
-        LocalizedValue.fromJSON(object.getAsJsonObject(BusinessEdgeType.DISPLAYLABEL)) : //
-        null;
-
-    LocalizedValue description = object.has(BusinessEdgeType.DESCRIPTION) ? //
-        LocalizedValue.fromJSON(object.getAsJsonObject(BusinessEdgeType.DESCRIPTION)) : //
-        null;
-
-    this.update(edgeType, label, description);
+    this.update(edgeType, dto.getLabel(), dto.getDescription());
   }
 
   @Override
@@ -162,19 +155,21 @@ public class BusinessEdgeTypeBusinessService implements BusinessEdgeTypeBusiness
   }
 
   @Override
-  public JsonObject toJSON(BusinessEdgeType edgeType)
+  public BusinessEdgeTypeView toDTO(BusinessEdgeType edgeType)
   {
-    JsonObject object = new JsonObject();
-    object.addProperty(BusinessEdgeType.OID, edgeType.getOid());
-    object.addProperty(BusinessEdgeType.TYPE, "BusinessEdgeType");
-    object.addProperty(BusinessEdgeType.CODE, edgeType.getCode());
-    object.addProperty(BusinessEdgeType.ORIGIN, edgeType.getOrigin());
-    object.addProperty(BusinessEdgeType.SEQ, edgeType.getSeq());
-    object.addProperty(BusinessEdgeType.ORGANIZATION, edgeType.getOrganization().getCode());
-    object.addProperty(BusinessEdgeType.PARENTTYPE, edgeType.getParentType().getTypeName());
-    object.addProperty(BusinessEdgeType.CHILDTYPE, edgeType.getChildType().getTypeName());
-    object.add(BusinessEdgeType.JSON_LABEL, RegistryLocalizedValueConverter.convertNoAutoCoalesce(edgeType.getDisplayLabel()).toJSON());
-    object.add(BusinessEdgeType.DESCRIPTION, RegistryLocalizedValueConverter.convertNoAutoCoalesce(edgeType.getDescription()).toJSON());
+    String parentTypeCode = edgeType.getIsParentGeoObject() ? BusinessEdgeTypeView.GEO_OBJECT_TYPE : edgeType.getParentType().getTypeName();
+    String childTypeCode = edgeType.getIsChildGeoObject() ? BusinessEdgeTypeView.GEO_OBJECT_TYPE : edgeType.getChildType().getTypeName();
+
+    BusinessEdgeTypeView object = new BusinessEdgeTypeView();
+    object.setOid(edgeType.getOid());
+    object.setCode(edgeType.getCode());
+    object.setOrigin(edgeType.getOrigin());
+    object.setSeq(edgeType.getSequence());
+    object.setOrganizationCode(edgeType.getOrganization().getCode());
+    object.setParentTypeCode(parentTypeCode);
+    object.setChildTypeCode(childTypeCode);
+    object.setLabel(RegistryLocalizedValueConverter.convertNoAutoCoalesce(edgeType.getDisplayLabel()));
+    object.setDescription(RegistryLocalizedValueConverter.convertNoAutoCoalesce(edgeType.getDescription()));
 
     return object;
   }
@@ -238,14 +233,23 @@ public class BusinessEdgeTypeBusinessService implements BusinessEdgeTypeBusiness
   }
 
   @Override
-  public BusinessEdgeType create(JsonObject object)
-  {
-    return create(BusinessEdgeTypeView.fromJSON(object));
-  }
-
-  @Override
   @Transaction
   public BusinessEdgeType create(BusinessEdgeTypeView dto)
+  {
+    if (dto.isParentGeoObjectType() && dto.isChildGeObjectType())
+    {
+      throw new UnsupportedOperationException();
+    }
+
+    if (!dto.hasGeoObject())
+    {
+      return this.createBasic(dto);
+    }
+
+    return this.createGeoEdge(dto);
+  }
+
+  private BusinessEdgeType createBasic(BusinessEdgeTypeView dto)
   {
     BusinessType parentType = this.typeService.getByCode(dto.getParentTypeCode());
     BusinessType childType = this.typeService.getByCode(dto.getChildTypeCode());
@@ -280,6 +284,20 @@ public class BusinessEdgeTypeBusinessService implements BusinessEdgeTypeBusiness
       sourceAttr.setValue(MdAttributeConcreteInfo.REQUIRED, false);
       sourceAttr.apply();
 
+      MdAttributeDateTimeDAO startDate = MdAttributeDateTimeDAO.newInstance();
+      startDate.setValue(MdAttributeDateTimeInfo.NAME, EdgeType.START_DATE);
+      startDate.setStructValue(MdAttributeDateTimeInfo.DISPLAY_LABEL, MdAttributeLocalInfo.DEFAULT_LOCALE, "Start Date");
+      startDate.setStructValue(MdAttributeDateTimeInfo.DESCRIPTION, MdAttributeLocalInfo.DEFAULT_LOCALE, "Start Date");
+      startDate.setValue(MdAttributeDateTimeInfo.DEFINING_MD_CLASS, mdEdgeDAO.getOid());
+      startDate.apply();
+
+      MdAttributeDateTimeDAO endDate = MdAttributeDateTimeDAO.newInstance();
+      endDate.setValue(MdAttributeDateTimeInfo.NAME, EdgeType.END_DATE);
+      endDate.setStructValue(MdAttributeDateTimeInfo.DISPLAY_LABEL, MdAttributeLocalInfo.DEFAULT_LOCALE, "End Date");
+      endDate.setStructValue(MdAttributeDateTimeInfo.DESCRIPTION, MdAttributeLocalInfo.DEFAULT_LOCALE, "End Date");
+      endDate.setValue(MdAttributeDateTimeInfo.DEFINING_MD_CLASS, mdEdgeDAO.getOid());
+      endDate.apply();
+
       hierarchyService.grantWritePermissionsOnMdTermRel(mdEdgeDAO);
 
       BusinessEdgeType businessEdgeType = new BusinessEdgeType();
@@ -292,6 +310,9 @@ public class BusinessEdgeTypeBusinessService implements BusinessEdgeTypeBusiness
       businessEdgeType.setSequence(dto.getSeq());
       RegistryLocalizedValueConverter.populate(businessEdgeType.getDisplayLabel(), dto.getLabel());
       RegistryLocalizedValueConverter.populate(businessEdgeType.getDescription(), dto.getDescription());
+      businessEdgeType.setIsParentGeoObject(false);
+      businessEdgeType.setIsChildGeoObject(false);
+      businessEdgeType.setSequence(0L);
       businessEdgeType.apply();
 
       this.cache.put(businessEdgeType);
@@ -306,13 +327,13 @@ public class BusinessEdgeTypeBusinessService implements BusinessEdgeTypeBusiness
     }
   }
 
-  @Override
-  @Transaction
-  public BusinessEdgeType createGeoEdge(BusinessGeoEdgeTypeView dto)
+  private BusinessEdgeType createGeoEdge(BusinessEdgeTypeView dto)
   {
-    BusinessType buisnessType = this.typeService.getByCode(dto.getTypeCode());
+    String businessTypeCode = dto.isParentGeoObjectType() ? dto.getChildTypeCode() : dto.getParentTypeCode();
+
+    BusinessType buisnessType = this.typeService.getByCode(businessTypeCode);
     MdVertexDAO mdVertexDAO = MdVertexDAO.getMdVertexDAO(GeoVertex.CLASS).getBusinessDAO();
-    EdgeDirection direction = dto.getDirection();
+
     String code = dto.getCode();
     LocalizedValue label = dto.getLabel();
     LocalizedValue description = dto.getDescription();
@@ -320,8 +341,8 @@ public class BusinessEdgeTypeBusinessService implements BusinessEdgeTypeBusiness
 
     try
     {
-      String parentOid = direction.equals(EdgeDirection.PARENT) ? mdVertexDAO.getOid() : buisnessType.getMdVertexOid();
-      String childOid = direction.equals(EdgeDirection.PARENT) ? buisnessType.getMdVertexOid() : mdVertexDAO.getOid();
+      String parentOid = dto.isParentGeoObjectType() ? mdVertexDAO.getOid() : buisnessType.getMdVertexOid();
+      String childOid = dto.isParentGeoObjectType() ? buisnessType.getMdVertexOid() : mdVertexDAO.getOid();
 
       MdEdgeDAO mdEdgeDAO = MdEdgeDAO.newInstance();
       mdEdgeDAO.setValue(MdEdgeInfo.PACKAGE, RegistryConstants.DAG_PACKAGE);
@@ -340,6 +361,20 @@ public class BusinessEdgeTypeBusinessService implements BusinessEdgeTypeBusiness
       uidAttr.setValue(MdAttributeConcreteInfo.DEFINING_MD_CLASS, mdEdgeDAO.getOid());
       uidAttr.setValue(MdAttributeConcreteInfo.REQUIRED, true);
       uidAttr.apply();
+
+      MdAttributeDateTimeDAO startDate = MdAttributeDateTimeDAO.newInstance();
+      startDate.setValue(MdAttributeDateTimeInfo.NAME, EdgeType.START_DATE);
+      startDate.setStructValue(MdAttributeDateTimeInfo.DISPLAY_LABEL, MdAttributeLocalInfo.DEFAULT_LOCALE, "Start Date");
+      startDate.setStructValue(MdAttributeDateTimeInfo.DESCRIPTION, MdAttributeLocalInfo.DEFAULT_LOCALE, "Start Date");
+      startDate.setValue(MdAttributeDateTimeInfo.DEFINING_MD_CLASS, mdEdgeDAO.getOid());
+      startDate.apply();
+
+      MdAttributeDateTimeDAO endDate = MdAttributeDateTimeDAO.newInstance();
+      endDate.setValue(MdAttributeDateTimeInfo.NAME, EdgeType.END_DATE);
+      endDate.setStructValue(MdAttributeDateTimeInfo.DISPLAY_LABEL, MdAttributeLocalInfo.DEFAULT_LOCALE, "End Date");
+      endDate.setStructValue(MdAttributeDateTimeInfo.DESCRIPTION, MdAttributeLocalInfo.DEFAULT_LOCALE, "End Date");
+      endDate.setValue(MdAttributeDateTimeInfo.DEFINING_MD_CLASS, mdEdgeDAO.getOid());
+      endDate.apply();
 
       MdAttributeGraphReferenceDAO sourceAttr = MdAttributeGraphReferenceDAO.newInstance();
       sourceAttr.setValue(MdAttributeConcreteInfo.NAME, DefaultAttribute.DATA_SOURCE.getName());
@@ -362,6 +397,9 @@ public class BusinessEdgeTypeBusinessService implements BusinessEdgeTypeBusiness
       RegistryLocalizedValueConverter.populate(businessEdgeType.getDescription(), description);
       businessEdgeType.setOrigin(dto.getOrigin());
       businessEdgeType.setSequence(dto.getSeq());
+      businessEdgeType.setIsParentGeoObject(dto.isParentGeoObjectType());
+      businessEdgeType.setIsChildGeoObject(dto.isChildGeObjectType());
+      businessEdgeType.setSequence(0L);
       businessEdgeType.apply();
 
       return businessEdgeType;

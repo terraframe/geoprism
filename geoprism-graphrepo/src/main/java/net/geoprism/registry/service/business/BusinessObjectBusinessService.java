@@ -3,25 +3,24 @@
  *
  * This file is part of Geoprism(tm).
  *
- * Geoprism(tm) is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
+ * Geoprism(tm) is free software: you can redistribute it and/or modify it under
+ * the terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation, either version 3 of the License, or (at your option) any
+ * later version.
  *
- * Geoprism(tm) is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
+ * Geoprism(tm) is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with Geoprism(tm).  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with Geoprism(tm). If not, see <http://www.gnu.org/licenses/>.
  */
 package net.geoprism.registry.service.business;
 
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
-import java.util.TreeMap;
 import java.util.stream.Collectors;
 
 import org.commongeoregistry.adapter.constants.DefaultAttribute;
@@ -60,9 +59,9 @@ import net.geoprism.registry.OriginException;
 import net.geoprism.registry.graph.DataSource;
 import net.geoprism.registry.model.BusinessObject;
 import net.geoprism.registry.model.ClassificationType;
-import net.geoprism.registry.model.EdgeDirection;
-import net.geoprism.registry.model.ServerGeoObjectIF;
-import net.geoprism.registry.model.ServerGeoObjectType;
+import net.geoprism.registry.model.EdgeConstant;
+import net.geoprism.registry.model.EdgeType;
+import net.geoprism.registry.model.graph.VertexComponent;
 import net.geoprism.registry.model.graph.VertexServerGeoObject;
 
 @Service
@@ -296,135 +295,43 @@ public class BusinessObjectBusinessService implements BusinessObjectBusinessServ
   }
 
   @Override
-  public boolean exists(BusinessObject object, BusinessEdgeType edgeType, ServerGeoObjectIF geoObject, EdgeDirection direction)
+  public boolean exists(VertexComponent object, BusinessEdgeType edgeType, VertexComponent parent)
   {
-    if (geoObject != null && geoObject instanceof VertexServerGeoObject)
-    {
-      return getEdge(object, edgeType, geoObject, direction) != null;
-    }
-
-    return false;
+    return getEdge(object, edgeType, parent) != null;
   }
 
-  protected EdgeObject getEdge(BusinessObject object, BusinessEdgeType edgeType, ServerGeoObjectIF geoObject, EdgeDirection direction)
+  protected EdgeObject getEdge(VertexComponent object, BusinessEdgeType edgeType, VertexComponent parent)
   {
-    VertexObject geoVertex = ( (VertexServerGeoObject) geoObject ).getVertex();
-
     String statement = "SELECT FROM " + edgeType.getMdEdgeDAO().getDBClassName();
     statement += " WHERE out = :parent";
     statement += " AND in = :child";
 
     GraphQuery<EdgeObject> query = new GraphQuery<EdgeObject>(statement);
-    query.setParameter("parent", direction.equals(EdgeDirection.PARENT) ? geoVertex.getRID() : object.getVertex().getRID());
-    query.setParameter("child", direction.equals(EdgeDirection.PARENT) ? object.getVertex().getRID() : geoVertex.getRID());
+    query.setParameter("parent", parent.getVertex().getRID());
+    query.setParameter("child", object.getVertex().getRID());
 
     return query.getSingleResult();
   }
 
   @Override
-  public Optional<EdgeObject> addGeoObject(BusinessObject object, BusinessEdgeType edgeType, ServerGeoObjectIF geoObject, EdgeDirection direction, String uid, DataSource source, boolean validateOrigin)
+  public boolean exists(BusinessEdgeType type, VertexComponent parent, VertexComponent child, Date startDate, Date endDate)
   {
-    if (validateOrigin)
-    {
-      if (!edgeType.getOrigin().equals(GeoprismProperties.getOrigin()))
-      {
-        throw new OriginException();
-      }
-    }
-
-    if (geoObject != null && geoObject instanceof VertexServerGeoObject && !this.exists(object, edgeType, geoObject, direction))
-    {
-      VertexObject geoVertex = ( (VertexServerGeoObject) geoObject ).getVertex();
-
-      if (direction.equals(EdgeDirection.CHILD))
-      {
-        EdgeObject newEdge = geoVertex.addParent(object.getVertex(), edgeType.getMdEdgeDAO());
-        newEdge.setValue(DefaultAttribute.UID.getName(), uid);
-        newEdge.setValue(DefaultAttribute.DATA_SOURCE.getName(), source);
-        newEdge.apply();
-
-        return Optional.of(newEdge);
-      }
-      else if (direction.equals(EdgeDirection.PARENT))
-      {
-        EdgeObject newEdge = geoVertex.addChild(object.getVertex(), edgeType.getMdEdgeDAO());
-        newEdge.setValue(DefaultAttribute.UID.getName(), uid);
-        newEdge.setValue(DefaultAttribute.DATA_SOURCE.getName(), source);
-        newEdge.apply();
-
-        return Optional.of(newEdge);
-      }
-      else
-      {
-        throw new UnsupportedOperationException();
-      }
-    }
-
-    return Optional.empty();
+    return getEdge(type, parent, child, startDate, endDate) != null;
   }
 
-  @Override
-  public void removeGeoObject(BusinessObject object, BusinessEdgeType edgeType, ServerGeoObjectIF geoObject, EdgeDirection direction, boolean validateOrigin)
-  {
-    if (validateOrigin)
-    {
-      if (!edgeType.getOrigin().equals(GeoprismProperties.getOrigin()))
-      {
-        throw new OriginException();
-      }
-    }
-
-    if (geoObject != null && geoObject instanceof VertexServerGeoObject)
-    {
-      VertexObject geoVertex = ( (VertexServerGeoObject) geoObject ).getVertex();
-
-      if (direction.equals(EdgeDirection.CHILD))
-      {
-        geoVertex.removeParent(object.getVertex(), edgeType.getMdEdgeDAO());
-      }
-      else if (direction.equals(EdgeDirection.PARENT))
-      {
-        geoVertex.removeChild(object.getVertex(), edgeType.getMdEdgeDAO());
-      }
-      else
-      {
-        throw new UnsupportedOperationException();
-      }
-
-    }
-  }
-
-  @Override
-  public List<VertexServerGeoObject> getGeoObjects(BusinessObject object, BusinessEdgeType edgeType, EdgeDirection direction)
-  {
-    List<VertexObject> geoObjects = direction.equals(EdgeDirection.PARENT) ? object.getVertex().getParents(edgeType.getMdEdgeDAO(), VertexObject.class) : object.getVertex().getChildren(edgeType.getMdEdgeDAO(), VertexObject.class);
-
-    return geoObjects.stream().map(geoVertex -> {
-      MdVertexDAOIF mdVertex = (MdVertexDAOIF) geoVertex.getMdClass();
-      ServerGeoObjectType vertexType = ServerGeoObjectType.get(mdVertex);
-
-      return new VertexServerGeoObject(vertexType, geoVertex, new TreeMap<>());
-
-    }).sorted((a, b) -> {
-      return a.getDisplayLabel().getValue().compareTo(b.getDisplayLabel().getValue());
-    }).collect(Collectors.toList());
-  }
-
-  @Override
-  public boolean exists(BusinessEdgeType type, BusinessObject parent, BusinessObject child)
-  {
-    return getEdge(type, parent, child) != null;
-  }
-
-  protected EdgeObject getEdge(BusinessEdgeType type, BusinessObject parent, BusinessObject child)
+  protected EdgeObject getEdge(BusinessEdgeType type, VertexComponent parent, VertexComponent child, Date startDate, Date endDate)
   {
     String statement = "SELECT FROM " + type.getMdEdgeDAO().getDBClassName();
     statement += " WHERE out = :parent";
     statement += " AND in = :child";
+    statement += " AND startDate = :startDate";
+    statement += " AND endDate = :endDate";
 
     GraphQuery<EdgeObject> query = new GraphQuery<EdgeObject>(statement);
     query.setParameter("parent", parent.getVertex().getRID());
     query.setParameter("child", child.getVertex().getRID());
+    query.setParameter("startDate", startDate);
+    query.setParameter("endDate", endDate);
 
     return query.getSingleResult();
   }
@@ -442,13 +349,13 @@ public class BusinessObjectBusinessService implements BusinessObjectBusinessServ
   }
 
   @Override
-  public Optional<EdgeObject> addParent(BusinessObject object, BusinessEdgeType type, BusinessObject parent, String uid, DataSource source)
+  public Optional<EdgeObject> addParent(VertexComponent object, BusinessEdgeType type, VertexComponent parent, String uid, Date startDate, Date endDate, DataSource source)
   {
-    return this.addParent(object, type, parent, uid, source, true);
+    return this.addParent(object, type, parent, uid, startDate, endDate, source, true);
   }
 
   @Override
-  public Optional<EdgeObject> addParent(BusinessObject object, BusinessEdgeType type, BusinessObject parent, String uid, DataSource source, boolean validateOrigin)
+  public Optional<EdgeObject> addParent(VertexComponent object, BusinessEdgeType type, VertexComponent parent, String uid, Date startDate, Date endDate, DataSource source, boolean validateOrigin)
   {
     if (validateOrigin)
     {
@@ -458,11 +365,13 @@ public class BusinessObjectBusinessService implements BusinessObjectBusinessServ
       }
     }
 
-    if (parent != null && !this.exists(type, parent, object))
+    if (parent != null && !this.exists(object, type, parent))
     {
       EdgeObject newEdge = object.getVertex().addParent(parent.getVertex(), type.getMdEdgeDAO());
       newEdge.setValue(DefaultAttribute.UID.getName(), uid);
       newEdge.setValue(DefaultAttribute.DATA_SOURCE.getName(), source);
+      newEdge.setValue(EdgeType.START_DATE, startDate);
+      newEdge.setValue(EdgeType.END_DATE, endDate);
       newEdge.apply();
 
       return Optional.of(newEdge);
@@ -472,13 +381,13 @@ public class BusinessObjectBusinessService implements BusinessObjectBusinessServ
   }
 
   @Override
-  public void removeParent(BusinessObject object, BusinessEdgeType type, BusinessObject parent)
+  public void removeParent(VertexComponent object, BusinessEdgeType type, VertexComponent parent, Date startDate, Date endDate)
   {
-    this.removeParent(object, type, parent, true);
+    this.removeParent(object, type, parent, startDate, endDate, true);
   }
 
   @Override
-  public void removeParent(BusinessObject object, BusinessEdgeType type, BusinessObject parent, boolean validateOrigin)
+  public void removeParent(VertexComponent object, BusinessEdgeType type, VertexComponent parent, Date startDate, Date endDate, boolean validateOrigin)
   {
     if (validateOrigin)
     {
@@ -490,16 +399,44 @@ public class BusinessObjectBusinessService implements BusinessObjectBusinessServ
 
     if (parent != null)
     {
-      object.getVertex().removeParent(parent.getVertex(), type.getMdEdgeDAO());
+      EdgeObject edge = this.getEdge(type, parent, object, startDate, endDate);
+
+      if (edge != null)
+      {
+        edge.delete();
+      }
     }
   }
 
   @Override
-  public List<BusinessObject> getParents(BusinessObject object, BusinessEdgeType type)
+  public List<VertexComponent> getParents(BusinessObject object, BusinessEdgeType type, Date date)
   {
-    List<VertexObject> vertexObjects = object.getVertex().getParents(type.getMdEdgeDAO(), VertexObject.class);
+    if (type.getIsParentGeoObject())
+    {
+      StringBuilder statement = new StringBuilder();
+      statement.append("TRAVERSE out('" + EdgeConstant.HAS_VALUE.getDBClassName() + "', '" + EdgeConstant.HAS_GEOMETRY.getDBClassName() + "') FROM (");
+      statement.append("  SELECT EXPAND(inE('" + type.getMdEdge().getDbClassName() + "')[:date BETWEEN startDate AND endDate].out)");
+      statement.append("  FROM :rid " + "\n");
+      statement.append(")");
 
-    return vertexObjects.stream().map(vertex -> {
+      GraphQuery<VertexObject> query = new GraphQuery<VertexObject>(statement.toString());
+      query.setParameter("rid", object.getVertex().getRID());
+      query.setParameter("date", date);
+
+      return VertexServerGeoObject.processTraverseResults(query.getResults(), date).stream().map(s -> (VertexComponent) s).toList();
+    }
+
+    StringBuilder statement = new StringBuilder();
+    statement.append("SELECT EXPAND(inE('" + type.getMdEdge().getDbClassName() + "')[:date BETWEEN startDate AND endDate].out)");
+    statement.append(" FROM :rid " + "\n");
+
+    GraphQuery<VertexObject> query = new GraphQuery<VertexObject>(statement.toString());
+    query.setParameter("rid", object.getVertex().getRID());
+    query.setParameter("date", date);
+
+    List<VertexObject> results = query.getResults();
+
+    return results.stream().map(vertex -> {
       MdVertexDAOIF mdVertex = (MdVertexDAOIF) vertex.getMdClass();
       BusinessType businessType = this.typeService.getByMdVertex(mdVertex);
 
@@ -511,13 +448,13 @@ public class BusinessObjectBusinessService implements BusinessObjectBusinessServ
   }
 
   @Override
-  public Optional<EdgeObject> addChild(BusinessObject object, BusinessEdgeType type, BusinessObject child, String uid, DataSource source)
+  public Optional<EdgeObject> addChild(VertexComponent object, BusinessEdgeType type, VertexComponent child, String uid, Date startDate, Date endDate, DataSource source)
   {
-    return this.addChild(object, type, child, uid, source, true);
+    return this.addChild(object, type, child, uid, startDate, endDate, source, true);
   }
 
   @Override
-  public Optional<EdgeObject> addChild(BusinessObject object, BusinessEdgeType type, BusinessObject child, String uid, DataSource source, boolean validateOrigin)
+  public Optional<EdgeObject> addChild(VertexComponent object, BusinessEdgeType type, VertexComponent child, String uid, Date startDate, Date endDate, DataSource source, boolean validateOrigin)
   {
     if (validateOrigin)
     {
@@ -527,11 +464,13 @@ public class BusinessObjectBusinessService implements BusinessObjectBusinessServ
       }
     }
 
-    if (child != null && !this.exists(type, object, child))
+    if (child != null && !this.exists(child, type, object))
     {
       EdgeObject newEdge = object.getVertex().addChild(child.getVertex(), type.getMdEdgeDAO());
       newEdge.setValue(DefaultAttribute.UID.getName(), uid);
       newEdge.setValue(DefaultAttribute.DATA_SOURCE.getName(), source);
+      newEdge.setValue(EdgeType.START_DATE, startDate);
+      newEdge.setValue(EdgeType.END_DATE, endDate);
       newEdge.apply();
 
       return Optional.of(newEdge);
@@ -541,26 +480,62 @@ public class BusinessObjectBusinessService implements BusinessObjectBusinessServ
   }
 
   @Override
-  public void removeChild(BusinessObject object, BusinessEdgeType type, BusinessObject child)
+  public void removeChild(VertexComponent object, BusinessEdgeType type, VertexComponent child, Date startDate, Date endDate)
   {
-    this.removeChild(object, type, child, true);
+    this.removeChild(object, type, child, startDate, endDate, true);
   }
 
   @Override
-  public void removeChild(BusinessObject object, BusinessEdgeType type, BusinessObject child, boolean validateOrigin)
+  public void removeChild(VertexComponent object, BusinessEdgeType type, VertexComponent child, Date startDate, Date endDate, boolean validateOrigin)
   {
+    if (validateOrigin)
+    {
+      if (!type.getOrigin().equals(GeoprismProperties.getOrigin()))
+      {
+        throw new OriginException();
+      }
+    }
+
     if (child != null)
     {
-      object.getVertex().removeChild(child.getVertex(), type.getMdEdgeDAO());
+      EdgeObject edge = this.getEdge(type, object, child, startDate, endDate);
+
+      if (edge != null)
+      {
+        edge.delete();
+      }
     }
   }
 
   @Override
-  public List<BusinessObject> getChildren(BusinessObject object, BusinessEdgeType type)
+  public List<VertexComponent> getChildren(BusinessObject object, BusinessEdgeType type, Date date)
   {
-    List<VertexObject> vertexObjects = object.getVertex().getChildren(type.getMdEdgeDAO(), VertexObject.class);
+    if (type.getIsChildGeoObject())
+    {
+      StringBuilder statement = new StringBuilder();
+      statement.append("TRAVERSE out('" + EdgeConstant.HAS_VALUE.getDBClassName() + "', '" + EdgeConstant.HAS_GEOMETRY.getDBClassName() + "') FROM (");
+      statement.append("  SELECT EXPAND(outE('" + type.getMdEdge().getDbClassName() + "')[:date BETWEEN startDate AND endDate].in)");
+      statement.append("  FROM :rid " + "\n");
+      statement.append(")");
 
-    return vertexObjects.stream().map(vertex -> {
+      GraphQuery<VertexObject> query = new GraphQuery<VertexObject>(statement.toString());
+      query.setParameter("rid", object.getVertex().getRID());
+      query.setParameter("date", date);
+
+      return VertexServerGeoObject.processTraverseResults(query.getResults(), date).stream().map(s -> (VertexComponent) s).toList();
+    }
+
+    StringBuilder statement = new StringBuilder();
+    statement.append("SELECT EXPAND(outE('" + type.getMdEdge().getDbClassName() + "')[:date BETWEEN startDate AND endDate].in)");
+    statement.append(" FROM :rid " + "\n");
+
+    GraphQuery<VertexObject> query = new GraphQuery<VertexObject>(statement.toString());
+    query.setParameter("rid", object.getVertex().getRID());
+    query.setParameter("date", date);
+
+    List<VertexObject> results = query.getResults();
+
+    return results.stream().map(vertex -> {
       MdVertexDAOIF mdVertex = (MdVertexDAOIF) vertex.getMdClass();
       BusinessType businessType = this.typeService.getByMdVertex(mdVertex);
 

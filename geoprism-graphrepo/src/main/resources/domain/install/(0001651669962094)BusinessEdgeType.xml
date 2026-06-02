@@ -34,6 +34,10 @@
             label="Organization"
             required="true"
             type="net.geoprism.registry.Organization" />          
+            
+          <boolean name="isParentGeoObject" required="true" label="Is Parent a GeoObject" />          
+          <boolean name="isChildGeoObject" required="true" label="Is Child a GeoObject" />          
+            
         </attributes>
       </mdBusiness>    
     </create>

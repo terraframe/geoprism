@@ -28,14 +28,15 @@ import org.springframework.stereotype.Service;
 import com.runwaysdk.session.Request;
 import com.runwaysdk.session.RequestType;
 
+import net.geoprism.registry.model.EdgeType;
 import net.geoprism.registry.model.GraphType;
-import net.geoprism.registry.service.business.GraphTypeBusinessServiceIF;
+import net.geoprism.registry.service.business.EdgeTypeBusinessServiceIF;
 
 @Service
 public class GraphTypeService implements GraphTypeServiceIF
 {
   @Autowired
-  protected GraphTypeBusinessServiceIF service;
+  protected EdgeTypeBusinessServiceIF service;
 
   /**
    * Returns the {@link GraphType}s with the given codes or all
@@ -51,7 +52,7 @@ public class GraphTypeService implements GraphTypeServiceIF
   @Request(RequestType.SESSION)
   public List<GraphTypeDTO> getGraphTypes(String sessionId, String[] codes)
   {
-    List<GraphType> types = service.getTypes(codes);
+    List<EdgeType> types = service.getGraphTypes(codes);
 
     return types.stream().map(type -> service.toDTO(type)).collect(Collectors.toList());
   }

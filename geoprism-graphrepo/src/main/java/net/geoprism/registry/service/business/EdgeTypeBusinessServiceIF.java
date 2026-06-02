@@ -16,23 +16,26 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with Geoprism(tm). If not, see <http://www.gnu.org/licenses/>.
  */
-package net.geoprism.registry.service.request;
+package net.geoprism.registry.service.business;
 
 import java.util.List;
 
+import org.commongeoregistry.adapter.metadata.GraphTypeDTO;
 import org.springframework.stereotype.Component;
 
-import net.geoprism.registry.view.BusinessEdgeTypeView;
+import net.geoprism.graph.GraphTypeReference;
+import net.geoprism.registry.model.EdgeType;
 
 @Component
-public interface BusinessEdgeTypeServiceIF
+public interface EdgeTypeBusinessServiceIF
 {
 
-  void delete(String sessionId, String code);
+  public GraphTypeDTO toDTO(EdgeType graphType);
 
-  List<BusinessEdgeTypeView> getAll(String sessionId);
+  public List<EdgeType> getGraphTypes(String... typeCodes);
 
-  BusinessEdgeTypeView getByCode(String sessionId, String code);
+  <T extends EdgeType> T getByCode(String relationshipType, String code);
 
-  BusinessEdgeTypeView apply(String sessionId, BusinessEdgeTypeView object);
+  <T extends EdgeType> T resolve(GraphTypeReference ref);
+
 }

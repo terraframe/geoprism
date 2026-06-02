@@ -30,8 +30,9 @@ import com.runwaysdk.dataaccess.MdGraphClassDAOIF;
 import com.runwaysdk.dataaccess.graph.attributes.ValueOverTimeCollection;
 
 import net.geoprism.registry.graph.DataSource;
+import net.geoprism.registry.model.graph.VertexComponent;
 
-public interface ServerGeoObjectIF
+public interface ServerGeoObjectIF extends VertexComponent
 {
   public boolean exists(ServerGeoObjectIF parent, ServerHierarchyType hierarchyType, Date startDate, Date endDate);
 

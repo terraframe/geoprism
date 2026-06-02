@@ -37,7 +37,7 @@ import net.geoprism.registry.conversion.ServerGeoObjectStrategyIF;
 import net.geoprism.registry.graph.DataSource;
 import net.geoprism.registry.service.business.DataSourceBusinessServiceIF;
 import net.geoprism.registry.service.business.GeoObjectBusinessServiceIF;
-import net.geoprism.registry.service.business.GraphTypeBusinessServiceIF;
+import net.geoprism.registry.service.business.EdgeTypeBusinessServiceIF;
 import net.geoprism.registry.service.business.ServiceFactory;
 
 public class ServerChildGraphNode extends ServerGraphNode
@@ -116,7 +116,7 @@ public class ServerChildGraphNode extends ServerGraphNode
       String graphCode = jo.get("graphType").getAsString();
       String graphTypeClass = jo.get("graphTypeClass").getAsString();
 
-      GraphTypeBusinessServiceIF service = ServiceFactory.getBean(GraphTypeBusinessServiceIF.class);
+      EdgeTypeBusinessServiceIF service = ServiceFactory.getBean(EdgeTypeBusinessServiceIF.class);
 
       graphType = service.getByCode(graphTypeClass, graphCode);
     }

@@ -3,30 +3,34 @@
  *
  * This file is part of Geoprism(tm).
  *
- * Geoprism(tm) is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
+ * Geoprism(tm) is free software: you can redistribute it and/or modify it under
+ * the terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation, either version 3 of the License, or (at your option) any
+ * later version.
  *
- * Geoprism(tm) is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
+ * Geoprism(tm) is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with Geoprism(tm).  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with Geoprism(tm). If not, see <http://www.gnu.org/licenses/>.
  */
 package net.geoprism.registry;
 
 import org.commongeoregistry.adapter.dataaccess.LocalizedValue;
+import org.commongeoregistry.adapter.metadata.GraphTypeDTO;
 
 import com.runwaysdk.dataaccess.MdEdgeDAOIF;
 import com.runwaysdk.dataaccess.metadata.graph.MdEdgeDAO;
 
+import net.geoprism.registry.conversion.LocalizedValueConverter;
 import net.geoprism.registry.conversion.RegistryLocalizedValueConverter;
+import net.geoprism.registry.model.EdgeType;
 import net.geoprism.registry.model.ServerElement;
+import net.geoprism.registry.model.VertexComponentType;
 
-public class BusinessEdgeType extends BusinessEdgeTypeBase implements ServerElement
+public class BusinessEdgeType extends BusinessEdgeTypeBase implements ServerElement, EdgeType
 {
   @SuppressWarnings("unused")
   private static final long  serialVersionUID = 1946865589;
@@ -66,4 +70,26 @@ public class BusinessEdgeType extends BusinessEdgeTypeBase implements ServerElem
     return MdEdgeDAO.get(this.getMdEdgeOid());
   }
 
+  @Override
+  public GraphTypeDTO toDTO()
+  {
+    LocalizedValue label = LocalizedValueConverter.convertNoAutoCoalesce(this.getDisplayLabel());
+    LocalizedValue description = LocalizedValueConverter.convertNoAutoCoalesce(this.getDescription());
+
+    final GraphTypeDTO dto = new GraphTypeDTO(EdgeType.BUSINESS_EDGE_TYPE, this.getCode(), label, description);
+
+    return dto;
+  }
+
+  @Override
+  public VertexComponentType getSourceType()
+  {
+    return this.getIsParentGeoObject() ? VertexComponentType.GEO_OBJECT : VertexComponentType.BUSINESS;
+  }
+
+  @Override
+  public VertexComponentType getTargetType()
+  {
+    return this.getIsChildGeoObject() ? VertexComponentType.GEO_OBJECT : VertexComponentType.BUSINESS;
+  }
 }

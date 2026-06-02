@@ -1,24 +1,6 @@
-/**
- * Copyright (c) 2023 TerraFrame, Inc. All rights reserved.
- *
- * This file is part of Geoprism(tm).
- *
- * Geoprism(tm) is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
- *
- * Geoprism(tm) is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with Geoprism(tm).  If not, see <http://www.gnu.org/licenses/>.
- */
 package net.geoprism.registry;
 
-@com.runwaysdk.business.ClassSignature(hash = 1136730355)
+@com.runwaysdk.business.ClassSignature(hash = -1731598917)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -203,6 +185,40 @@ public  class BusinessEdgeTypeQuery extends com.runwaysdk.query.GeneratedBusines
     com.runwaysdk.dataaccess.MdAttributeDAOIF mdAttributeIF = this.getComponentQuery().getMdAttributeROfromMap(net.geoprism.registry.BusinessEdgeType.ENTITYDOMAIN);
 
     return (com.runwaysdk.system.metadata.MdDomainQuery.MdDomainQueryReferenceIF)this.getComponentQuery().internalAttributeFactory(net.geoprism.registry.BusinessEdgeType.ENTITYDOMAIN, mdAttributeIF, this, alias, displayLabel);
+
+  }
+  public com.runwaysdk.query.SelectableBoolean getIsChildGeoObject()
+  {
+    return getIsChildGeoObject(null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableBoolean getIsChildGeoObject(String alias)
+  {
+    return (com.runwaysdk.query.SelectableBoolean)this.getComponentQuery().get(net.geoprism.registry.BusinessEdgeType.ISCHILDGEOOBJECT, alias, null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableBoolean getIsChildGeoObject(String alias, String displayLabel)
+  {
+    return (com.runwaysdk.query.SelectableBoolean)this.getComponentQuery().get(net.geoprism.registry.BusinessEdgeType.ISCHILDGEOOBJECT, alias, displayLabel);
+
+  }
+  public com.runwaysdk.query.SelectableBoolean getIsParentGeoObject()
+  {
+    return getIsParentGeoObject(null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableBoolean getIsParentGeoObject(String alias)
+  {
+    return (com.runwaysdk.query.SelectableBoolean)this.getComponentQuery().get(net.geoprism.registry.BusinessEdgeType.ISPARENTGEOOBJECT, alias, null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableBoolean getIsParentGeoObject(String alias, String displayLabel)
+  {
+    return (com.runwaysdk.query.SelectableBoolean)this.getComponentQuery().get(net.geoprism.registry.BusinessEdgeType.ISPARENTGEOOBJECT, alias, displayLabel);
 
   }
   public com.runwaysdk.query.SelectableChar getKeyName()
@@ -598,6 +614,12 @@ public  class BusinessEdgeTypeQuery extends com.runwaysdk.query.GeneratedBusines
     public com.runwaysdk.system.metadata.MdDomainQuery.MdDomainQueryReferenceIF getEntityDomain();
     public com.runwaysdk.system.metadata.MdDomainQuery.MdDomainQueryReferenceIF getEntityDomain(String alias);
     public com.runwaysdk.system.metadata.MdDomainQuery.MdDomainQueryReferenceIF getEntityDomain(String alias, String displayLabel);
+    public com.runwaysdk.query.SelectableBoolean getIsChildGeoObject();
+    public com.runwaysdk.query.SelectableBoolean getIsChildGeoObject(String alias);
+    public com.runwaysdk.query.SelectableBoolean getIsChildGeoObject(String alias, String displayLabel);
+    public com.runwaysdk.query.SelectableBoolean getIsParentGeoObject();
+    public com.runwaysdk.query.SelectableBoolean getIsParentGeoObject(String alias);
+    public com.runwaysdk.query.SelectableBoolean getIsParentGeoObject(String alias, String displayLabel);
     public com.runwaysdk.query.SelectableChar getKeyName();
     public com.runwaysdk.query.SelectableChar getKeyName(String alias);
     public com.runwaysdk.query.SelectableChar getKeyName(String alias, String displayLabel);
@@ -792,6 +814,40 @@ public  class BusinessEdgeTypeQuery extends com.runwaysdk.query.GeneratedBusines
   public com.runwaysdk.system.metadata.MdDomainQuery.MdDomainQueryReferenceIF getEntityDomain(String alias, String displayLabel)
   {
     return (com.runwaysdk.system.metadata.MdDomainQuery.MdDomainQueryReferenceIF)this.get(net.geoprism.registry.BusinessEdgeType.ENTITYDOMAIN,  alias, displayLabel);
+
+  }
+  public com.runwaysdk.query.SelectableBoolean getIsChildGeoObject()
+  {
+    return getIsChildGeoObject(null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableBoolean getIsChildGeoObject(String alias)
+  {
+    return (com.runwaysdk.query.SelectableBoolean)this.get(net.geoprism.registry.BusinessEdgeType.ISCHILDGEOOBJECT, alias, null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableBoolean getIsChildGeoObject(String alias, String displayLabel)
+  {
+    return (com.runwaysdk.query.SelectableBoolean)this.get(net.geoprism.registry.BusinessEdgeType.ISCHILDGEOOBJECT, alias, displayLabel);
+
+  }
+  public com.runwaysdk.query.SelectableBoolean getIsParentGeoObject()
+  {
+    return getIsParentGeoObject(null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableBoolean getIsParentGeoObject(String alias)
+  {
+    return (com.runwaysdk.query.SelectableBoolean)this.get(net.geoprism.registry.BusinessEdgeType.ISPARENTGEOOBJECT, alias, null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableBoolean getIsParentGeoObject(String alias, String displayLabel)
+  {
+    return (com.runwaysdk.query.SelectableBoolean)this.get(net.geoprism.registry.BusinessEdgeType.ISPARENTGEOOBJECT, alias, displayLabel);
 
   }
   public com.runwaysdk.query.SelectableChar getKeyName()
@@ -1128,6 +1184,12 @@ public  class BusinessEdgeTypeQuery extends com.runwaysdk.query.GeneratedBusines
     public com.runwaysdk.system.metadata.MdDomainQuery.MdDomainQueryReferenceIF getEntityDomain();
     public com.runwaysdk.system.metadata.MdDomainQuery.MdDomainQueryReferenceIF getEntityDomain(String alias);
     public com.runwaysdk.system.metadata.MdDomainQuery.MdDomainQueryReferenceIF getEntityDomain(String alias, String displayLabel);
+    public com.runwaysdk.query.SelectableBoolean getIsChildGeoObject();
+    public com.runwaysdk.query.SelectableBoolean getIsChildGeoObject(String alias);
+    public com.runwaysdk.query.SelectableBoolean getIsChildGeoObject(String alias, String displayLabel);
+    public com.runwaysdk.query.SelectableBoolean getIsParentGeoObject();
+    public com.runwaysdk.query.SelectableBoolean getIsParentGeoObject(String alias);
+    public com.runwaysdk.query.SelectableBoolean getIsParentGeoObject(String alias, String displayLabel);
     public com.runwaysdk.query.SelectableChar getKeyName();
     public com.runwaysdk.query.SelectableChar getKeyName(String alias);
     public com.runwaysdk.query.SelectableChar getKeyName(String alias, String displayLabel);
@@ -1371,6 +1433,40 @@ public  class BusinessEdgeTypeQuery extends com.runwaysdk.query.GeneratedBusines
   public com.runwaysdk.system.metadata.MdDomainQuery.MdDomainQueryReferenceIF getEntityDomain(String alias, String displayLabel)
   {
     return (com.runwaysdk.system.metadata.MdDomainQuery.MdDomainQueryReferenceIF)this.get(net.geoprism.registry.BusinessEdgeType.ENTITYDOMAIN,  alias, displayLabel);
+
+  }
+  public com.runwaysdk.query.SelectableBoolean getIsChildGeoObject()
+  {
+    return getIsChildGeoObject(null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableBoolean getIsChildGeoObject(String alias)
+  {
+    return (com.runwaysdk.query.SelectableBoolean)this.get(net.geoprism.registry.BusinessEdgeType.ISCHILDGEOOBJECT, alias, null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableBoolean getIsChildGeoObject(String alias, String displayLabel)
+  {
+    return (com.runwaysdk.query.SelectableBoolean)this.get(net.geoprism.registry.BusinessEdgeType.ISCHILDGEOOBJECT, alias, displayLabel);
+
+  }
+  public com.runwaysdk.query.SelectableBoolean getIsParentGeoObject()
+  {
+    return getIsParentGeoObject(null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableBoolean getIsParentGeoObject(String alias)
+  {
+    return (com.runwaysdk.query.SelectableBoolean)this.get(net.geoprism.registry.BusinessEdgeType.ISPARENTGEOOBJECT, alias, null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableBoolean getIsParentGeoObject(String alias, String displayLabel)
+  {
+    return (com.runwaysdk.query.SelectableBoolean)this.get(net.geoprism.registry.BusinessEdgeType.ISPARENTGEOOBJECT, alias, displayLabel);
 
   }
   public com.runwaysdk.query.SelectableChar getKeyName()

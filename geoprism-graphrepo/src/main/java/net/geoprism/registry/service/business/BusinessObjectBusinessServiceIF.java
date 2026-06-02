@@ -3,21 +3,22 @@
  *
  * This file is part of Geoprism(tm).
  *
- * Geoprism(tm) is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
+ * Geoprism(tm) is free software: you can redistribute it and/or modify it under
+ * the terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation, either version 3 of the License, or (at your option) any
+ * later version.
  *
- * Geoprism(tm) is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
+ * Geoprism(tm) is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with Geoprism(tm).  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with Geoprism(tm). If not, see <http://www.gnu.org/licenses/>.
  */
 package net.geoprism.registry.service.business;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -30,9 +31,7 @@ import net.geoprism.registry.BusinessEdgeType;
 import net.geoprism.registry.BusinessType;
 import net.geoprism.registry.graph.DataSource;
 import net.geoprism.registry.model.BusinessObject;
-import net.geoprism.registry.model.EdgeDirection;
-import net.geoprism.registry.model.ServerGeoObjectIF;
-import net.geoprism.registry.model.graph.VertexServerGeoObject;
+import net.geoprism.registry.model.graph.VertexComponent;
 
 @Component
 public interface BusinessObjectBusinessServiceIF
@@ -48,37 +47,31 @@ public interface BusinessObjectBusinessServiceIF
 
   public void delete(BusinessObject object, boolean validateOrigin);
 
-  public boolean exists(BusinessObject object, BusinessEdgeType edgeType, ServerGeoObjectIF geoObject, EdgeDirection direction);
+  public boolean exists(VertexComponent object, BusinessEdgeType edgeType, VertexComponent parent);
 
   public boolean exists(BusinessEdgeType type, String uid);
 
-  public Optional<EdgeObject> addGeoObject(BusinessObject object, BusinessEdgeType edgeType, ServerGeoObjectIF geoObject, EdgeDirection direction, String uid, DataSource source, boolean validateOrigin);
+  public boolean exists(BusinessEdgeType type, VertexComponent parent, VertexComponent child, Date startDate, Date endDate);
 
-  public void removeGeoObject(BusinessObject object, BusinessEdgeType edgeType, ServerGeoObjectIF geoObject, EdgeDirection direction, boolean validateOrigin);
+  public Optional<EdgeObject> addParent(VertexComponent object, BusinessEdgeType type, VertexComponent parent, String uid, Date startDate, Date endDate, DataSource source);
 
-  public List<VertexServerGeoObject> getGeoObjects(BusinessObject object, BusinessEdgeType edgeType, EdgeDirection direction);
+  public Optional<EdgeObject> addParent(VertexComponent object, BusinessEdgeType type, VertexComponent parent, String uid, Date startDate, Date endDate, DataSource source, boolean validateOrigin);
 
-  public boolean exists(BusinessEdgeType type, BusinessObject parent, BusinessObject child);
+  public void removeParent(VertexComponent object, BusinessEdgeType type, VertexComponent parent, Date startDate, Date endDate);
 
-  public Optional<EdgeObject> addParent(BusinessObject object, BusinessEdgeType type, BusinessObject parent, String uid, DataSource source);
+  public void removeParent(VertexComponent object, BusinessEdgeType type, VertexComponent parent, Date startDate, Date endDate, boolean validateOrigin);
 
-  public Optional<EdgeObject> addParent(BusinessObject object, BusinessEdgeType type, BusinessObject parent, String uid, DataSource source, boolean validateOrigin);
+  public List<VertexComponent> getParents(BusinessObject object, BusinessEdgeType type, Date date);
 
-  public void removeParent(BusinessObject object, BusinessEdgeType type, BusinessObject parent);
+  public Optional<EdgeObject> addChild(VertexComponent object, BusinessEdgeType type, VertexComponent child, String uid, Date startDate, Date endDate, DataSource source);
 
-  public void removeParent(BusinessObject object, BusinessEdgeType type, BusinessObject parent, boolean validateOrigin);
+  public Optional<EdgeObject> addChild(VertexComponent object, BusinessEdgeType type, VertexComponent child, String uid, Date startDate, Date endDate, DataSource source, boolean validateOrigin);
 
-  public List<BusinessObject> getParents(BusinessObject object, BusinessEdgeType type);
+  public void removeChild(VertexComponent object, BusinessEdgeType type, VertexComponent child, Date startDate, Date endDate);
 
-  public Optional<EdgeObject> addChild(BusinessObject object, BusinessEdgeType type, BusinessObject child, String uid, DataSource source);
+  public void removeChild(VertexComponent object, BusinessEdgeType type, VertexComponent child, Date startDate, Date endDate, boolean validateOrigin);
 
-  public Optional<EdgeObject> addChild(BusinessObject object, BusinessEdgeType type, BusinessObject child, String uid, DataSource source, boolean validateOrigin);
-
-  public void removeChild(BusinessObject object, BusinessEdgeType type, BusinessObject child);
-
-  public void removeChild(BusinessObject object, BusinessEdgeType type, BusinessObject child, boolean validateOrigin);
-
-  public List<BusinessObject> getChildren(BusinessObject object, BusinessEdgeType type);
+  public List<VertexComponent> getChildren(BusinessObject object, BusinessEdgeType type, Date date);
 
   public BusinessObject newInstance(BusinessType type);
 

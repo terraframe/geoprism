@@ -3,18 +3,18 @@
  *
  * This file is part of Geoprism(tm).
  *
- * Geoprism(tm) is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
+ * Geoprism(tm) is free software: you can redistribute it and/or modify it under
+ * the terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation, either version 3 of the License, or (at your option) any
+ * later version.
  *
- * Geoprism(tm) is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
+ * Geoprism(tm) is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with Geoprism(tm).  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with Geoprism(tm). If not, see <http://www.gnu.org/licenses/>.
  */
 package net.geoprism.registry.service.request;
 
@@ -38,6 +38,7 @@ import net.geoprism.registry.JsonCollectors;
 import net.geoprism.registry.OriginException;
 import net.geoprism.registry.service.business.BusinessEdgeTypeBusinessServiceIF;
 import net.geoprism.registry.service.business.BusinessTypeBusinessServiceIF;
+import net.geoprism.registry.view.BusinessEdgeTypeView;
 
 @Service
 public class BusinessTypeService
@@ -93,7 +94,7 @@ public class BusinessTypeService
   public void remove(String sessionId, String oid)
   {
     BusinessType type = BusinessType.get(oid);
-    
+
     if (!type.getOrigin().equals(GeoprismProperties.getOrigin()))
     {
       throw new OriginException();
@@ -109,7 +110,7 @@ public class BusinessTypeService
   public JsonObject edit(String sessionId, String oid)
   {
     BusinessType type = BusinessType.get(oid);
-    
+
     if (!type.getOrigin().equals(GeoprismProperties.getOrigin()))
     {
       throw new OriginException();
@@ -144,7 +145,7 @@ public class BusinessTypeService
   public AttributeType createAttributeType(String sessionId, String businessTypeCode, JsonObject attributeType)
   {
     BusinessType type = this.typeService.getByCode(businessTypeCode);
-    
+
     if (!type.getOrigin().equals(GeoprismProperties.getOrigin()))
     {
       throw new OriginException();
@@ -226,12 +227,12 @@ public class BusinessTypeService
   }
 
   @Request(RequestType.SESSION)
-  public JsonArray getEdgeTypes(String sessionId, String businessTypeCode)
+  public List<BusinessEdgeTypeView> getEdgeTypes(String sessionId, String businessTypeCode)
   {
     BusinessType type = this.typeService.getByCode(businessTypeCode);
     List<BusinessEdgeType> edgeTypes = this.typeService.getEdgeTypes(type);
 
-    return edgeTypes.stream().map(object -> this.edgeService.toJSON(object)).collect(JsonCollectors.toJsonArray());
+    return edgeTypes.stream().map(object -> this.edgeService.toDTO(object)).toList();
   }
 
 }

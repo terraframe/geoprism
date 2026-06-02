@@ -1,24 +1,6 @@
-/**
- * Copyright (c) 2023 TerraFrame, Inc. All rights reserved.
- *
- * This file is part of Geoprism(tm).
- *
- * Geoprism(tm) is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
- *
- * Geoprism(tm) is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with Geoprism(tm).  If not, see <http://www.gnu.org/licenses/>.
- */
 package net.geoprism.registry;
 
-@com.runwaysdk.business.ClassSignature(hash = -522220662)
+@com.runwaysdk.business.ClassSignature(hash = -1051306556)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -40,6 +22,8 @@ public abstract class BusinessEdgeTypeBase extends com.runwaysdk.business.Busine
   private com.runwaysdk.business.Struct displayLabel = null;
   
   public final static java.lang.String ENTITYDOMAIN = "entityDomain";
+  public final static java.lang.String ISCHILDGEOOBJECT = "isChildGeoObject";
+  public final static java.lang.String ISPARENTGEOOBJECT = "isParentGeoObject";
   public final static java.lang.String KEYNAME = "keyName";
   public final static java.lang.String LASTUPDATEDATE = "lastUpdateDate";
   public final static java.lang.String LASTUPDATEDBY = "lastUpdatedBy";
@@ -55,7 +39,7 @@ public abstract class BusinessEdgeTypeBase extends com.runwaysdk.business.Busine
   public final static java.lang.String SITEMASTER = "siteMaster";
   public final static java.lang.String TYPE = "type";
   @SuppressWarnings("unused")
-  private static final long serialVersionUID = -522220662;
+  private static final long serialVersionUID = -1051306556;
   
   public BusinessEdgeTypeBase()
   {
@@ -269,6 +253,62 @@ public abstract class BusinessEdgeTypeBase extends com.runwaysdk.business.Busine
     else
     {
       setValue(ENTITYDOMAIN, oid);
+    }
+  }
+  
+  public Boolean getIsChildGeoObject()
+  {
+    return com.runwaysdk.constants.MdAttributeBooleanUtil.getTypeSafeValue(getValue(ISCHILDGEOOBJECT));
+  }
+  
+  public void validateIsChildGeoObject()
+  {
+    this.validateAttribute(ISCHILDGEOOBJECT);
+  }
+  
+  public static com.runwaysdk.dataaccess.MdAttributeBooleanDAOIF getIsChildGeoObjectMd()
+  {
+    com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(net.geoprism.registry.BusinessEdgeType.CLASS);
+    return (com.runwaysdk.dataaccess.MdAttributeBooleanDAOIF)mdClassIF.definesAttribute(ISCHILDGEOOBJECT);
+  }
+  
+  public void setIsChildGeoObject(Boolean value)
+  {
+    if(value == null)
+    {
+      setValue(ISCHILDGEOOBJECT, "");
+    }
+    else
+    {
+      setValue(ISCHILDGEOOBJECT, java.lang.Boolean.toString(value));
+    }
+  }
+  
+  public Boolean getIsParentGeoObject()
+  {
+    return com.runwaysdk.constants.MdAttributeBooleanUtil.getTypeSafeValue(getValue(ISPARENTGEOOBJECT));
+  }
+  
+  public void validateIsParentGeoObject()
+  {
+    this.validateAttribute(ISPARENTGEOOBJECT);
+  }
+  
+  public static com.runwaysdk.dataaccess.MdAttributeBooleanDAOIF getIsParentGeoObjectMd()
+  {
+    com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(net.geoprism.registry.BusinessEdgeType.CLASS);
+    return (com.runwaysdk.dataaccess.MdAttributeBooleanDAOIF)mdClassIF.definesAttribute(ISPARENTGEOOBJECT);
+  }
+  
+  public void setIsParentGeoObject(Boolean value)
+  {
+    if(value == null)
+    {
+      setValue(ISPARENTGEOOBJECT, "");
+    }
+    else
+    {
+      setValue(ISPARENTGEOOBJECT, java.lang.Boolean.toString(value));
     }
   }
   
