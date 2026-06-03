@@ -47,6 +47,7 @@ import com.runwaysdk.query.QueryFactory;
 import com.runwaysdk.system.metadata.MdEdge;
 
 import net.geoprism.registry.BusinessEdgeType;
+import net.geoprism.registry.BusinessEdgeTypeException;
 import net.geoprism.registry.BusinessEdgeTypeQuery;
 import net.geoprism.registry.BusinessType;
 import net.geoprism.registry.DataNotFoundException;
@@ -238,7 +239,7 @@ public class BusinessEdgeTypeBusinessService implements BusinessEdgeTypeBusiness
   {
     if (dto.isParentGeoObjectType() && dto.isChildGeObjectType())
     {
-      throw new UnsupportedOperationException();
+      throw new BusinessEdgeTypeException();
     }
 
     if (!dto.hasGeoObject())

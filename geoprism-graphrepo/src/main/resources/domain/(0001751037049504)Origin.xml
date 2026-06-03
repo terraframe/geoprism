@@ -23,6 +23,8 @@
     <create>
       <mdException name="net.geoprism.registry.OriginException" label="Origin Exception" message="Cannot modify object for types which originated from a different node">
       </mdException>
+      <mdException name="net.geoprism.registry.BusinessEdgeTypeException" label="BusinessEdgeTypeException" message="Must contain at least one Business Type">
+      </mdException>      
     </create>
   
     <update>
@@ -90,6 +92,7 @@
       <object type="com.runwaysdk.system.metadata.MdAttribute" key="net.geoprism.registry.graph.HierarchicalRelationshipType.origin" />      
       <object type="com.runwaysdk.system.metadata.MdAttribute" key="net.geoprism.registry.graph.GeoObjectType.origin" />      
       <object type="com.runwaysdk.system.metadata.MdException" key="net.geoprism.registry.OriginException" />      
+      <object type="com.runwaysdk.system.metadata.MdException" key="net.geoprism.registry.BusinessEdgeTypeException"/>      
     </delete>
   </undoIt>
 </version>
