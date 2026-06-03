@@ -29,6 +29,7 @@ import net.geoprism.registry.conversion.RegistryLocalizedValueConverter;
 import net.geoprism.registry.model.EdgeType;
 import net.geoprism.registry.model.ServerElement;
 import net.geoprism.registry.model.VertexComponentType;
+import net.geoprism.registry.view.BusinessEdgeTypeView;
 
 public class BusinessEdgeType extends BusinessEdgeTypeBase implements ServerElement, EdgeType
 {
@@ -77,6 +78,8 @@ public class BusinessEdgeType extends BusinessEdgeTypeBase implements ServerElem
     LocalizedValue description = LocalizedValueConverter.convertNoAutoCoalesce(this.getDescription());
 
     final GraphTypeDTO dto = new GraphTypeDTO(EdgeType.BUSINESS_EDGE_TYPE, this.getCode(), label, description);
+    dto.setChildType(this.getIsChildGeoObject() ? BusinessEdgeTypeView.GEO_OBJECT_TYPE : this.getChildType().getTypeName());
+    dto.setParentType(this.getIsParentGeoObject() ? BusinessEdgeTypeView.GEO_OBJECT_TYPE : this.getParentType().getTypeName());
 
     return dto;
   }

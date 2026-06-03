@@ -59,7 +59,7 @@ public class BusinessObjectService
   @Request(RequestType.SESSION)
   public JsonObject get(String sessionId, String businessTypeCode, String code)
   {
-    BusinessType type = this.typeService.getByCode(businessTypeCode);
+    BusinessType type = this.typeService.getByCodeOrThrow(businessTypeCode);
     BusinessObject object = this.objectService.getByCode(type, code);
 
     return this.objectService.toJSON(object);
@@ -68,7 +68,7 @@ public class BusinessObjectService
   @Request(RequestType.SESSION)
   public JsonObject getTypeAndObject(String sessionId, String businessTypeCode, String code)
   {
-    BusinessType type = this.typeService.getByCode(businessTypeCode);
+    BusinessType type = this.typeService.getByCodeOrThrow(businessTypeCode);
     BusinessObject object = this.objectService.getByCode(type, code);
 
     JsonObject response = new JsonObject();
@@ -81,7 +81,7 @@ public class BusinessObjectService
   @Request(RequestType.SESSION)
   public JsonArray getParents(String sessionId, String businessTypeCode, String code, String businessEdgeTypeCode, Date date)
   {
-    BusinessType type = this.typeService.getByCode(businessTypeCode);
+    BusinessType type = this.typeService.getByCodeOrThrow(businessTypeCode);
     BusinessEdgeType relationshipType = this.edgeService.getByCodeOrThrow(businessEdgeTypeCode);
 
     BusinessObject object = this.objectService.getByCode(type, code);
@@ -94,7 +94,7 @@ public class BusinessObjectService
   @Request(RequestType.SESSION)
   public JsonArray getChildren(String sessionId, String businessTypeCode, String code, String businessEdgeTypeCode, Date date)
   {
-    BusinessType type = this.typeService.getByCode(businessTypeCode);
+    BusinessType type = this.typeService.getByCodeOrThrow(businessTypeCode);
     BusinessEdgeType relationshipType = this.edgeService.getByCodeOrThrow(businessEdgeTypeCode);
 
     BusinessObject object = this.objectService.getByCode(type, code);

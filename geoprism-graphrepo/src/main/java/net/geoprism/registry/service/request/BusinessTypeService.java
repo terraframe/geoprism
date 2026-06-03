@@ -66,7 +66,7 @@ public class BusinessTypeService
     // Refresh the users session
     ( (Session) Session.getCurrentSession() ).reloadPermissions();
 
-    return this.typeService.toJSON(type);
+    return this.typeService.toJSON(type, true, false);
   }
 
   @Request(RequestType.SESSION)
@@ -144,7 +144,7 @@ public class BusinessTypeService
   @Request(RequestType.SESSION)
   public AttributeType createAttributeType(String sessionId, String businessTypeCode, JsonObject attributeType)
   {
-    BusinessType type = this.typeService.getByCode(businessTypeCode);
+    BusinessType type = this.typeService.getByCodeOrThrow(businessTypeCode);
 
     if (!type.getOrigin().equals(GeoprismProperties.getOrigin()))
     {
@@ -174,7 +174,7 @@ public class BusinessTypeService
   @Request(RequestType.SESSION)
   public AttributeType updateAttributeType(String sessionId, String businessTypeCode, JsonObject attributeType)
   {
-    BusinessType type = this.typeService.getByCode(businessTypeCode);
+    BusinessType type = this.typeService.getByCodeOrThrow(businessTypeCode);
 
     if (!type.getOrigin().equals(GeoprismProperties.getOrigin()))
     {
@@ -205,7 +205,7 @@ public class BusinessTypeService
   @Request(RequestType.SESSION)
   public void removeAttributeType(String sessionId, String businessTypeCode, String attributeName)
   {
-    BusinessType type = this.typeService.getByCode(businessTypeCode);
+    BusinessType type = this.typeService.getByCodeOrThrow(businessTypeCode);
 
     if (!type.getOrigin().equals(GeoprismProperties.getOrigin()))
     {
@@ -221,7 +221,7 @@ public class BusinessTypeService
   @Request(RequestType.SESSION)
   public JsonObject data(String sessionId, String businessTypeCode, String json)
   {
-    BusinessType type = this.typeService.getByCode(businessTypeCode);
+    BusinessType type = this.typeService.getByCodeOrThrow(businessTypeCode);
 
     return this.typeService.data(type, JsonParser.parseString(json).getAsJsonObject()).toJSON();
   }
@@ -229,7 +229,7 @@ public class BusinessTypeService
   @Request(RequestType.SESSION)
   public List<BusinessEdgeTypeView> getEdgeTypes(String sessionId, String businessTypeCode)
   {
-    BusinessType type = this.typeService.getByCode(businessTypeCode);
+    BusinessType type = this.typeService.getByCodeOrThrow(businessTypeCode);
     List<BusinessEdgeType> edgeTypes = this.typeService.getEdgeTypes(type);
 
     return edgeTypes.stream().map(object -> this.edgeService.toDTO(object)).toList();

@@ -251,8 +251,8 @@ public class BusinessEdgeTypeBusinessService implements BusinessEdgeTypeBusiness
 
   private BusinessEdgeType createBasic(BusinessEdgeTypeView dto)
   {
-    BusinessType parentType = this.typeService.getByCode(dto.getParentTypeCode());
-    BusinessType childType = this.typeService.getByCode(dto.getChildTypeCode());
+    BusinessType parentType = this.typeService.getByCodeOrThrow(dto.getParentTypeCode());
+    BusinessType childType = this.typeService.getByCodeOrThrow(dto.getChildTypeCode());
     Organization organization = Organization.getByCode(dto.getOrganizationCode());
 
     try
@@ -330,7 +330,7 @@ public class BusinessEdgeTypeBusinessService implements BusinessEdgeTypeBusiness
   {
     String businessTypeCode = dto.isParentGeoObjectType() ? dto.getChildTypeCode() : dto.getParentTypeCode();
 
-    BusinessType buisnessType = this.typeService.getByCode(businessTypeCode);
+    BusinessType buisnessType = this.typeService.getByCodeOrThrow(businessTypeCode);
     MdVertexDAO mdVertexDAO = MdVertexDAO.getMdVertexDAO(GeoVertex.CLASS).getBusinessDAO();
 
     String code = dto.getCode();
