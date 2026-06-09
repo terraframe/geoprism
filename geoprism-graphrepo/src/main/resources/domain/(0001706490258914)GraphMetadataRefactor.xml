@@ -40,6 +40,7 @@
           <reference name="mdVertex" label="MdVertex" type="com.runwaysdk.system.metadata.MdVertex" />
           <reference name="rootTerm" label="Root Term" required="false" type="net.geoprism.ontology.Classifier"  />                
           <char name="dbClassName" label="DB Class Name" required="true" size="255"  />          
+          <reference name="geometryTable" label="Geometry Table" type="com.runwaysdk.system.metadata.MdBusiness" />          
         </attributes>
       </mdVertex>    
       
@@ -199,6 +200,11 @@
       <mdVertex name="net.geoprism.registry.graph.AttributeShapeValue" extends="net.geoprism.registry.graph.AttributeGeometryValue" label="Attribute Shape Value">
         <attributes>
           <shape name="value" label="Value" required="false" dimension="2" srid="4326"  />          
+        </attributes>
+      </mdVertex>    
+      <mdVertex name="net.geoprism.registry.graph.AttributeGeometryReferenceValue" extends="net.geoprism.registry.graph.AttributeGeometryValue" label="Attribute Geometry Reference Value">
+        <attributes>
+          <uuid name="value" label="Value" required="false"  />          
         </attributes>
       </mdVertex>    
       

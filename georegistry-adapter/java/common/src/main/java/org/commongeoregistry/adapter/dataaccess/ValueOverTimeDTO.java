@@ -40,7 +40,7 @@ public class ValueOverTimeDTO
   {
     Calendar cal = Calendar.getInstance(TimeZone.getTimeZone("GMT"));
     cal.clear();
-    cal.set(5000, Calendar.DECEMBER, 31);
+    cal.set(4710, Calendar.DECEMBER, 31);
 
     INFINITY_END_DATE = cal.getTime();
   }

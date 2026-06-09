@@ -3,18 +3,18 @@
  *
  * This file is part of Geoprism(tm).
  *
- * Geoprism(tm) is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
+ * Geoprism(tm) is free software: you can redistribute it and/or modify it under
+ * the terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation, either version 3 of the License, or (at your option) any
+ * later version.
  *
- * Geoprism(tm) is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
+ * Geoprism(tm) is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with Geoprism(tm).  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with Geoprism(tm). If not, see <http://www.gnu.org/licenses/>.
  */
 package net.geoprism.registry.model;
 
@@ -29,6 +29,7 @@ import org.locationtech.jts.geom.Polygon;
 
 import com.runwaysdk.business.graph.VertexObject;
 import com.runwaysdk.dataaccess.MdVertexDAOIF;
+import com.runwaysdk.system.metadata.MdBusiness;
 
 import net.geoprism.configuration.GeoprismProperties;
 import net.geoprism.registry.GeometrySizeException;
@@ -38,15 +39,17 @@ import net.geoprism.registry.graph.AttributeGeometryType;
 public class GeometryValueNodeStrategy extends ValueNodeStrategy
 {
 
+  private MdBusiness geometryTable;
+
   public GeometryValueNodeStrategy(AttributeGeometryType type, MdVertexDAOIF nodeVertex, String nodeAttribute)
   {
     super(type, nodeVertex, nodeAttribute);
   }
 
   @Override
-  public AttributeGeometryType getType()
+  public AttributeGeometryType getAttributeType()
   {
-    return (AttributeGeometryType) super.getType();
+    return (AttributeGeometryType) super.getAttributeType();
   }
 
   public boolean isValidGeometry(Geometry geometry)
@@ -88,16 +91,17 @@ public class GeometryValueNodeStrategy extends ValueNodeStrategy
 
   protected GeometryType getGeometryType()
   {
-    String geometryType = this.getType().getGeometryType();
+    String geometryType = this.getAttributeType().getGeometryType();
 
-    if(geometryType.equalsIgnoreCase(com.runwaysdk.system.gis.geo.GeometryType.SHAPE.name())) {
+    if (geometryType.equalsIgnoreCase(com.runwaysdk.system.gis.geo.GeometryType.SHAPE.name()))
+    {
       return GeometryType.MIXED;
     }
     return GeometryType.valueOf(geometryType);
   }
 
   @Override
-  protected void setNodeValue(VertexObject node, Object value, Boolean validate)
+  protected void setNodeValue(StateValue node, Object value, Boolean validate)
   {
     if (value instanceof Geometry)
     {
@@ -121,4 +125,21 @@ public class GeometryValueNodeStrategy extends ValueNodeStrategy
 
     super.setNodeValue(node, value, validate);
   }
+
+  public MdBusiness getGeomtryTable()
+  {
+    if (this.geometryTable == null)
+    {
+      this.geometryTable = this.getAttributeType().getGeoObjectType().getGeometryTable();
+    }
+
+    return this.geometryTable;
+  }
+
+  @Override
+  public StateValue construct(ServerGeoObjectType type, VertexObject vertex)
+  {
+    return new GeometryStateValue(type, vertex, this.getNodeAttribute());
+  }
+
 }

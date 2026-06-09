@@ -3,18 +3,18 @@
  *
  * This file is part of Geoprism(tm).
  *
- * Geoprism(tm) is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
+ * Geoprism(tm) is free software: you can redistribute it and/or modify it under
+ * the terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation, either version 3 of the License, or (at your option) any
+ * later version.
  *
- * Geoprism(tm) is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
+ * Geoprism(tm) is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with Geoprism(tm).  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with Geoprism(tm). If not, see <http://www.gnu.org/licenses/>.
  */
 package net.geoprism.registry.model;
 
@@ -62,48 +62,9 @@ public class LocalValueNodeStrategy extends ValueNodeStrategy implements ValueSt
   }
 
   @Override
-  protected void setNodeValue(VertexObject node, Object value, Boolean validate)
+  public StateValue construct(ServerGeoObjectType type, VertexObject vertex)
   {
-    if (value instanceof LocalizedValue)
-    {
-      LocalizedValue lValue = (LocalizedValue) value;
-
-      node.setValue(LocalizedValue.DEFAULT_LOCALE, lValue.getValue(LocalizedValue.DEFAULT_LOCALE));
-
-      Set<Locale> locales = LocalizationFacade.getInstalledLocales();
-
-      for (Locale locale : locales)
-      {
-        String localeName = locale.toString();
-
-        if (lValue.contains(locale) && node.hasAttribute(localeName))
-        {
-          node.setValue(localeName, lValue.getValue(localeName));
-        }
-      }
-    }
-  }
-
-  @SuppressWarnings("unchecked")
-  @Override
-  protected <T> T getNodeValue(VertexObject node)
-  {
-    LocalizedValue value = new LocalizedValue(node.getObjectValue(LocalizedValue.DEFAULT_LOCALE));
-    value.setValue(LocalizedValue.DEFAULT_LOCALE, node.getObjectValue(LocalizedValue.DEFAULT_LOCALE));
-
-    Set<Locale> locales = LocalizationFacade.getInstalledLocales();
-
-    for (Locale locale : locales)
-    {
-      String localeName = locale.toString();
-
-      if (node.hasAttribute(localeName))
-      {
-        value.setValue(locale, node.getObjectValue(localeName));
-      }
-    }
-
-    return (T) value;
+    return new LocalStateValue(vertex);
   }
 
 }

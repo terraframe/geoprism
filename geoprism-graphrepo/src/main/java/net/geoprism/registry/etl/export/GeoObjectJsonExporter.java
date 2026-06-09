@@ -30,6 +30,7 @@ import java.util.TreeMap;
 
 import org.commongeoregistry.adapter.dataaccess.GeoObject;
 import org.commongeoregistry.adapter.dataaccess.GeoObjectJsonAdapters;
+import org.commongeoregistry.adapter.dataaccess.ValueOverTimeDTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -41,7 +42,6 @@ import com.runwaysdk.business.graph.GraphQuery;
 import com.runwaysdk.business.graph.VertexObject;
 import com.runwaysdk.dataaccess.MdAttributeDAOIF;
 import com.runwaysdk.dataaccess.MdVertexDAOIF;
-import com.runwaysdk.dataaccess.graph.attributes.ValueOverTime;
 import com.runwaysdk.dataaccess.metadata.MdAttributeDAO;
 
 import net.geoprism.registry.graph.GeoVertex;
@@ -153,7 +153,7 @@ public class GeoObjectJsonExporter
     for (VertexObject vObject : vObjects)
     {
       VertexServerGeoObject vSGO = new VertexServerGeoObject(got, vObject, new TreeMap<>());
-      vSGO.setDate(ValueOverTime.INFINITY_END_DATE);
+      vSGO.setDate(ValueOverTimeDTO.INFINITY_END_DATE);
 
       response.add(vSGO);
     }

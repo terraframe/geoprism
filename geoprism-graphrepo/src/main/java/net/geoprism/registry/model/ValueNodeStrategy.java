@@ -3,18 +3,18 @@
  *
  * This file is part of Geoprism(tm).
  *
- * Geoprism(tm) is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
+ * Geoprism(tm) is free software: you can redistribute it and/or modify it under
+ * the terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation, either version 3 of the License, or (at your option) any
+ * later version.
  *
- * Geoprism(tm) is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
+ * Geoprism(tm) is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with Geoprism(tm).  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with Geoprism(tm). If not, see <http://www.gnu.org/licenses/>.
  */
 package net.geoprism.registry.model;
 
@@ -29,10 +29,11 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import org.commongeoregistry.adapter.dataaccess.ValueOverTimeDTO;
+
 import com.runwaysdk.business.graph.VertexObject;
 import com.runwaysdk.dataaccess.MdAttributeDAOIF;
 import com.runwaysdk.dataaccess.MdVertexDAOIF;
-import com.runwaysdk.dataaccess.graph.attributes.ValueOverTime;
 import com.runwaysdk.dataaccess.graph.attributes.ValueOverTimeCollection;
 
 import net.geoprism.registry.graph.AttributeType;
@@ -49,9 +50,9 @@ public class ValueNodeStrategy extends AbstractValueStrategy implements ValueStr
 
   private String        nodeAttribute;
 
-  public ValueNodeStrategy(AttributeType type, MdVertexDAOIF nodeVertex, String nodeAttribute)
+  public ValueNodeStrategy(AttributeType attributeType, MdVertexDAOIF nodeVertex, String nodeAttribute)
   {
-    super(type);
+    super(attributeType);
 
     this.nodeVertex = nodeVertex;
     this.nodeAttribute = nodeAttribute;
@@ -67,32 +68,11 @@ public class ValueNodeStrategy extends AbstractValueStrategy implements ValueStr
     return nodeVertex;
   }
 
-  private Date getEndDate(VertexObject node)
-  {
-    return node.getObjectValue(AttributeValue.ENDDATE);
-  }
-
-  private Date getStartDate(VertexObject node)
-  {
-    return node.getObjectValue(AttributeValue.STARTDATE);
-  }
-
   private AttributeState getState(Map<String, AttributeState> valueNodeMap)
   {
-    String key = this.getType().getCode();
-
-    valueNodeMap.putIfAbsent(key, new AttributeState(this.getType(), new LinkedList<>()));
+    String key = this.getAttributeType().getCode();
 
     return valueNodeMap.get(key);
-  }
-
-  private ValueOverTime toValueOverTime(VertexObject node)
-  {
-    Date startDate = this.getStartDate(node);
-    Date endDate = this.getEndDate(node);
-    Object value = this.getNodeValue(node);
-
-    return new ValueOverTime(node.getOid(), startDate, endDate, value);
   }
 
   @Override
@@ -102,7 +82,7 @@ public class ValueNodeStrategy extends AbstractValueStrategy implements ValueStr
 
     if (startDate != null && endDate != null)
     {
-      VertexObject node = this.createNode(value, startDate, endDate, validate);
+      StateValue node = this.createNode(state.getType(), value, startDate, endDate, validate);
 
       this.add(state, node, false);
     }
@@ -110,7 +90,7 @@ public class ValueNodeStrategy extends AbstractValueStrategy implements ValueStr
     {
       // TODO: HEADS UP - Determine if we want to support the use case for
       // setting values with no dates
-      VertexObject last = state.last();
+      StateValue last = state.last().orElse(null);
 
       if (last != null)
       {
@@ -118,21 +98,24 @@ public class ValueNodeStrategy extends AbstractValueStrategy implements ValueStr
       }
       else
       {
-        state.add(this.createNode(value, new Date(), ValueOverTime.INFINITY_END_DATE, validate));
+        state.add(this.createNode(state.getType(), value, new Date(), ValueOverTimeDTO.INFINITY_END_DATE, validate));
       }
     }
   }
 
-  protected VertexObject createNode(Object value, Date startDate, Date endDate, Boolean validate)
+  protected StateValue createNode(ServerGeoObjectType type, Object value, Date startDate, Date endDate, Boolean validate)
   {
     VertexObject node = new VertexObject(nodeVertex.definesType());
-    node.setValue(AttributeValue.ATTRIBUTENAME, this.getType().getCode());
+    node.setValue(AttributeValue.ATTRIBUTENAME, this.getAttributeType().getCode());
     node.setValue(AttributeValue.STARTDATE, startDate);
     node.setValue(AttributeValue.ENDDATE, endDate);
 
-    setNodeValue(node, value, validate);
+    StateValue state = this.construct(type, node);
 
-    return node;
+    setNodeValue(state, null, false);
+    setNodeValue(state, value, validate);
+
+    return state;
   }
 
   @Override
@@ -144,9 +127,9 @@ public class ValueNodeStrategy extends AbstractValueStrategy implements ValueStr
     return list;
   }
 
-  protected void setNodeValue(VertexObject node, Object value, Boolean validate)
+  protected void setNodeValue(StateValue state, Object value, Boolean validate)
   {
-    node.setValue(nodeAttribute, value);
+    state.setValue(value);
   }
 
   @Override
@@ -163,40 +146,45 @@ public class ValueNodeStrategy extends AbstractValueStrategy implements ValueStr
 
     if (date != null)
     {
-      Optional<VertexObject> optional = state.stream().filter(node -> {
-        return ( getStartDate(node).before(date) || getStartDate(node).equals(date) ) && ( getEndDate(node).after(date) || getEndDate(node).equals(date) );
+      Optional<StateValue> optional = state.stream().filter(node -> {
+        return ( node.getStartDate().before(date) || node.getStartDate().equals(date) ) && ( node.getEndDate().after(date) || node.getEndDate().equals(date) );
       }).findFirst();
 
-      if (optional.isPresent())
-      {
-        return getNodeValue(optional.get());
-      }
-    }
-    else
-    {
-      ValueOverTimeCollection votc = this.getValueOverTimeCollection(vertex, valueNodeMap);
-
-      if (votc.size() > 0)
-      {
-        return (T) votc.last().getValue();
-      }
+      return (T) optional.map(StateValue::getValue).orElse(null);
     }
 
-    return null;
+    return (T) state.last().map(StateValue::getValue).orElse(null);
   }
 
-  @SuppressWarnings("unchecked")
-  protected <T> T getNodeValue(VertexObject node)
+  @Override
+  public Optional<StateValue> getState(VertexObject vertex, Map<String, AttributeState> valueNodeMap, Date date)
   {
-    return (T) node.getObjectValue(nodeAttribute);
+    AttributeState state = getState(valueNodeMap);
+
+    if (date != null)
+    {
+      Optional<StateValue> optional = state.stream().filter(node -> {
+        return ( node.getStartDate().before(date) || node.getStartDate().equals(date) ) && ( node.getEndDate().after(date) || node.getEndDate().equals(date) );
+      }).findFirst();
+
+      return optional;
+    }
+
+    return state.last();
   }
+
+  // @SuppressWarnings("unchecked")
+  // protected <T> T getNodeValue(StateValue node)
+  // {
+  // return (T) node.getValue();
+  // }
 
   @Override
   public ValueOverTimeCollection getValueOverTimeCollection(VertexObject vertex, Map<String, AttributeState> valueNodeMap)
   {
     ValueOverTimeCollection collection = new ValueOverTimeCollection();
 
-    getState(valueNodeMap).stream().map(node -> toValueOverTime(node)).forEach(vot -> collection.add(vot, false));
+    getState(valueNodeMap).stream().map(node -> node.toValueOverTime()).forEach(vot -> collection.add(vot, false));
 
     return collection;
   }
@@ -220,19 +208,19 @@ public class ValueNodeStrategy extends AbstractValueStrategy implements ValueStr
     collection.forEach(vot -> {
       state.stream().filter(node -> vot.getOid().equals(node.getOid())).findAny().ifPresentOrElse(node -> {
         // Update the corresponding existing node if it exists for this vot
-        node.setValue(AttributeValue.STARTDATE, vot.getStartDate());
-        node.setValue(AttributeValue.ENDDATE, vot.getEndDate());
+        node.setStartDate(vot.getStartDate());
+        node.setEndDate(vot.getEndDate());
 
         this.setNodeValue(node, vot.getValue(), true);
 
       }, () -> {
         // No existing node corresponds to the vot, create a new one
-        state.add(this.createNode(vot.getValue(), vot.getStartDate(), vot.getEndDate(), true));
+        state.add(this.createNode(state.getType(), vot.getValue(), vot.getStartDate(), vot.getEndDate(), true));
       });
     });
   }
 
-  private boolean add(AttributeState state, VertexObject vot, boolean updateOnCollision)
+  private boolean add(AttributeState state, StateValue vot, boolean updateOnCollision)
   {
     boolean skip = this.replaceExistingValues(state, vot);
 
@@ -254,10 +242,10 @@ public class ValueNodeStrategy extends AbstractValueStrategy implements ValueStr
     }
   }
 
-  private boolean replaceExistingValues(AttributeState state, VertexObject inVot)
+  private boolean replaceExistingValues(AttributeState state, StateValue inVot)
   {
-    Date startDate = inVot.getObjectValue(AttributeValue.STARTDATE);
-    Date endDate = inVot.getObjectValue(AttributeValue.ENDDATE);
+    Date startDate = inVot.getStartDate();
+    Date endDate = inVot.getEndDate();
 
     boolean skip = true;
 
@@ -265,18 +253,18 @@ public class ValueNodeStrategy extends AbstractValueStrategy implements ValueStr
     {
       skip = false;
 
-      Iterator<VertexObject> it = state.iterator();
+      Iterator<StateValue> it = state.iterator();
       LocalDate iStartDate = startDate.toInstant().atZone(ZoneId.of("Z")).toLocalDate();
       LocalDate iEndDate = endDate.toInstant().atZone(ZoneId.of("Z")).toLocalDate();
 
-      List<VertexObject> segments = new LinkedList<VertexObject>();
+      List<StateValue> segments = new LinkedList<StateValue>();
 
       while (it.hasNext())
       {
-        VertexObject vot = it.next();
+        StateValue vot = it.next();
 
-        Date vStartDate = vot.getObjectValue(AttributeValue.STARTDATE);
-        Date vEndDate = vot.getObjectValue(AttributeValue.ENDDATE);
+        Date vStartDate = vot.getStartDate();
+        Date vEndDate = vot.getEndDate();
         LocalDate vLocalStartDate = vStartDate.toInstant().atZone(ZoneId.of("Z")).toLocalDate();
         LocalDate vLocalEndDate = vEndDate.toInstant().atZone(ZoneId.of("Z")).toLocalDate();
 
@@ -293,12 +281,12 @@ public class ValueNodeStrategy extends AbstractValueStrategy implements ValueStr
         // date of the entry to the end of the clear range
         else if (isAfterOrEqual(vLocalStartDate, iStartDate) && vLocalEndDate.isAfter(iEndDate) && isAfterOrEqual(iEndDate, vLocalStartDate))
         {
-          Object existingValue = this.getNodeValue(vot);
-          Object newValue = this.getNodeValue(inVot);
+          Object existingValue = vot.getValue();
+          Object newValue = inVot.getValue();
 
           if (this.areValuesEqual(existingValue, newValue))
           {
-            inVot.setValue(AttributeValue.ENDDATE, vEndDate);
+            inVot.setEndDate(vEndDate);
 
             state.delete(vot);
 
@@ -306,7 +294,7 @@ public class ValueNodeStrategy extends AbstractValueStrategy implements ValueStr
           }
           else
           {
-            vot.setValue(AttributeValue.STARTDATE, this.calculateDatePlusOneDay(endDate));
+            vot.setStartDate(this.calculateDatePlusOneDay(endDate));
           }
         }
 
@@ -314,12 +302,12 @@ public class ValueNodeStrategy extends AbstractValueStrategy implements ValueStr
         // date of the entry to the start of the clear range
         else if (vLocalStartDate.isBefore(iStartDate) && isBeforeOrEqual(vLocalEndDate, iEndDate) && isBeforeOrEqual(iStartDate, vLocalEndDate))
         {
-          Object existingValue = this.getNodeValue(vot);
-          Object newValue = this.getNodeValue(inVot);
+          Object existingValue = vot.getValue();
+          Object newValue = inVot.getValue();
 
           if (this.areValuesEqual(existingValue, newValue))
           {
-            inVot.setValue(AttributeValue.STARTDATE, vStartDate);
+            inVot.setStartDate(vStartDate);
 
             state.delete(vot);
 
@@ -327,15 +315,15 @@ public class ValueNodeStrategy extends AbstractValueStrategy implements ValueStr
           }
           else
           {
-            vot.setValue(AttributeValue.ENDDATE, this.calculateDateMinusOneDay(startDate));
+            vot.setEndDate(this.calculateDateMinusOneDay(startDate));
           }
         }
 
         // The incoming range is completely covered by the existing range
         else if (vLocalStartDate.isBefore(iStartDate) && vLocalEndDate.isAfter(iEndDate))
         {
-          Object existingValue = this.getNodeValue(vot);
-          Object newValue = this.getNodeValue(inVot);
+          Object existingValue = vot.getValue();
+          Object newValue = inVot.getValue();
 
           if (this.areValuesEqual(existingValue, newValue))
           {
@@ -347,13 +335,13 @@ public class ValueNodeStrategy extends AbstractValueStrategy implements ValueStr
 
             it.remove();
 
-            segments.add(this.createNode(existingValue, vStartDate, this.calculateDateMinusOneDay(startDate), true));
-            segments.add(this.createNode(existingValue, this.calculateDatePlusOneDay(endDate), vEndDate, true));
+            segments.add(this.createNode(state.getType(), existingValue, vStartDate, this.calculateDateMinusOneDay(startDate), true));
+            segments.add(this.createNode(state.getType(), existingValue, this.calculateDatePlusOneDay(endDate), vEndDate, true));
           }
         }
       }
 
-      for (VertexObject vot : segments)
+      for (StateValue vot : segments)
       {
         state.add(vot);
       }
@@ -422,6 +410,12 @@ public class ValueNodeStrategy extends AbstractValueStrategy implements ValueStr
     Instant instant = localEnd.atStartOfDay().atZone(ZoneId.of("Z")).toInstant();
 
     return Date.from(instant);
+  }
+
+  @Override
+  public StateValue construct(ServerGeoObjectType type, VertexObject vertex)
+  {
+    return new PrimitiveStateValue(vertex, nodeAttribute);
   }
 
 }

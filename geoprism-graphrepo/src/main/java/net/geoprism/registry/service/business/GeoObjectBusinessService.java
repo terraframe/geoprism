@@ -3,18 +3,18 @@
  *
  * This file is part of Geoprism(tm).
  *
- * Geoprism(tm) is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
+ * Geoprism(tm) is free software: you can redistribute it and/or modify it under
+ * the terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation, either version 3 of the License, or (at your option) any
+ * later version.
  *
- * Geoprism(tm) is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
+ * Geoprism(tm) is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with Geoprism(tm).  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with Geoprism(tm). If not, see <http://www.gnu.org/licenses/>.
  */
 package net.geoprism.registry.service.business;
 
@@ -104,6 +104,7 @@ import net.geoprism.registry.model.EdgeDirection;
 import net.geoprism.registry.model.EdgeValueOverTime;
 import net.geoprism.registry.model.GeoObjectMetadata;
 import net.geoprism.registry.model.GeoObjectTypeMetadata;
+import net.geoprism.registry.model.GeometryStateValue;
 import net.geoprism.registry.model.GraphType;
 import net.geoprism.registry.model.LocationInfo;
 import net.geoprism.registry.model.LocationInfoHolder;
@@ -1027,21 +1028,24 @@ public class GeoObjectBusinessService extends RegistryLocalizedValueConverter im
           }
           else if (attribute instanceof AttributeDataSourceType)
           {
-//            ID id = (ID) value;
-//
-//            DataSource source = this.sourceService.getByRid(id.getRid().toString()).orElseThrow();
-            
+            // ID id = (ID) value;
+            //
+            // DataSource source =
+            // this.sourceService.getByRid(id.getRid().toString()).orElseThrow();
+
             DataSource source = this.sourceService.get((String) value);
             geoObj.setValue(attributeName, source.getCode());
           }
           else if (attribute instanceof AttributeClassificationType)
           {
-//            ID id = (ID) value;
+            // ID id = (ID) value;
             String classificationTypeCode = ( (AttributeClassificationType) attribute ).getClassificationType();
             ClassificationType classificationType = this.cTypeService.getByCode(classificationTypeCode);
 
             Classification classification = this.cService.getByOid(classificationType, (String) value).orElseThrow(() -> {
-//            Classification classification = this.cService.getByRid(id.getRid().toString()).orElseThrow(() -> {
+              // Classification classification =
+              // this.cService.getByRid(id.getRid().toString()).orElseThrow(()
+              // -> {
               TermValueException ex = new TermValueException();
               ex.setAttributeLabel(attribute.getLabel().getValue());
               ex.setCode(value.toString());
@@ -1238,9 +1242,10 @@ public class GeoObjectBusinessService extends RegistryLocalizedValueConverter im
               }
               else if (attribute instanceof AttributeDataSourceType)
               {
-//                ID id = (ID) value;
-//
-//                DataSource source = this.sourceService.getByRid(id.getRid().toString()).orElseThrow();
+                // ID id = (ID) value;
+                //
+                // DataSource source =
+                // this.sourceService.getByRid(id.getRid().toString()).orElseThrow();
                 DataSource source = this.sourceService.get((String) value);
 
                 ValueOverTimeDTO votDTO = new ValueOverTimeDTO(vot.getOid(), vot.getStartDate(), vot.getEndDate(), votcDTO);
@@ -1249,14 +1254,16 @@ public class GeoObjectBusinessService extends RegistryLocalizedValueConverter im
               }
               else if (attribute instanceof AttributeClassificationType)
               {
-//                ID id = (ID) value;
-//
-//                Classification classification = this.cService.getByRid(id.getRid().toString()).orElseThrow(() -> {
-                
+                // ID id = (ID) value;
+                //
+                // Classification classification =
+                // this.cService.getByRid(id.getRid().toString()).orElseThrow(()
+                // -> {
+
                 String classificationTypeCode = ( (AttributeClassificationType) attribute ).getClassificationType();
                 ClassificationType classificationType = this.cTypeService.getByCode(classificationTypeCode);
 
-                Classification classification = this.cService.getByOid(classificationType, (String) value).orElseThrow(() -> {                
+                Classification classification = this.cService.getByOid(classificationType, (String) value).orElseThrow(() -> {
                   TermValueException ex = new TermValueException();
                   ex.setAttributeLabel(attribute.getLabel().getValue());
                   ex.setCode(value.toString());
@@ -1362,10 +1369,8 @@ public class GeoObjectBusinessService extends RegistryLocalizedValueConverter im
     ValueOverTimeCollectionDTO votcDTO = new ValueOverTimeCollectionDTO(geoObj.getGeometryAttributeType());
     for (ValueOverTime vot : votc)
     {
-      Object value = vot.getValue();
-
       ValueOverTimeDTO votDTO = new ValueOverTimeDTO(vot.getOid(), vot.getStartDate(), vot.getEndDate(), votcDTO);
-      votDTO.setValue(value);
+      votDTO.setValue(vot.getValue());
       votcDTO.add(votDTO);
     }
     geoObj.setValueCollection(DefaultAttribute.GEOMETRY.getName(), votcDTO);

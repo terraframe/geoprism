@@ -3,18 +3,18 @@
  *
  * This file is part of Geoprism(tm).
  *
- * Geoprism(tm) is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
+ * Geoprism(tm) is free software: you can redistribute it and/or modify it under
+ * the terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation, either version 3 of the License, or (at your option) any
+ * later version.
  *
- * Geoprism(tm) is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
+ * Geoprism(tm) is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with Geoprism(tm).  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with Geoprism(tm). If not, see <http://www.gnu.org/licenses/>.
  */
 package net.geoprism.registry.graph;
 
@@ -44,6 +44,7 @@ import net.geoprism.registry.model.Classification;
 import net.geoprism.registry.model.ClassificationType;
 import net.geoprism.registry.model.GeoObjectMetadata;
 import net.geoprism.registry.model.GraphRefNodeValueStrategy;
+import net.geoprism.registry.model.ServerGeoObjectType;
 import net.geoprism.registry.model.ValueStrategy;
 import net.geoprism.registry.model.VertexValueStrategy;
 import net.geoprism.registry.model.graph.GraphTableUtil;
@@ -194,7 +195,7 @@ public class AttributeClassificationType extends AttributeClassificationTypeBase
         ex.setTypeLabel(classificationType.getDisplayLabel().getValue());
         ex.setDataIdentifier(root.getCode());
         ex.setAttributeLabel(GeoObjectMetadata.get().getAttributeDisplayLabel(DefaultAttribute.CODE.getName()));
-        
+
         throw ex;
       });
 
@@ -266,13 +267,13 @@ public class AttributeClassificationType extends AttributeClassificationTypeBase
     if (!StringUtils.isBlank(oid))
     {
       ClassificationBusinessServiceIF service = ServiceFactory.getBean(ClassificationBusinessServiceIF.class);
-      
+
       return service.getByOid(type, oid).orElseThrow(() -> {
         net.geoprism.registry.DataNotFoundException ex = new net.geoprism.registry.DataNotFoundException();
         ex.setTypeLabel(type.getDisplayLabel().getValue());
         ex.setDataIdentifier(oid);
         ex.setAttributeLabel(GeoObjectMetadata.get().getAttributeDisplayLabel(DefaultAttribute.CODE.getName()));
-        
+
         throw ex;
       });
     }

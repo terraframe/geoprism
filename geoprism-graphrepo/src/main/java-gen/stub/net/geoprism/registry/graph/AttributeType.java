@@ -3,18 +3,18 @@
  *
  * This file is part of Geoprism(tm).
  *
- * Geoprism(tm) is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
+ * Geoprism(tm) is free software: you can redistribute it and/or modify it under
+ * the terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation, either version 3 of the License, or (at your option) any
+ * later version.
  *
- * Geoprism(tm) is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
+ * Geoprism(tm) is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with Geoprism(tm).  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with Geoprism(tm). If not, see <http://www.gnu.org/licenses/>.
  */
 package net.geoprism.registry.graph;
 
@@ -31,6 +31,7 @@ import com.runwaysdk.dataaccess.metadata.MdAttributeConcreteDAO;
 import com.runwaysdk.system.metadata.MdVertex;
 
 import net.geoprism.registry.conversion.LocalizedValueConverter;
+import net.geoprism.registry.model.ServerGeoObjectType;
 import net.geoprism.registry.model.ValueStrategy;
 
 public abstract class AttributeType extends AttributeTypeBase
@@ -100,14 +101,14 @@ public abstract class AttributeType extends AttributeTypeBase
     LocalizedValueConverter.populate(this, AttributeType.DESCRIPTION, dto.getDescription());
   }
 
-  public List<MdAttributeDAOIF> getValueAttributes()
+  public List<MdAttributeDAOIF> getValueAttributes(ServerGeoObjectType type)
   {
     return this.getStrategy().getValueAttributes();
   }
 
-  public List<String> getColumnNames()
+  public List<String> getColumnNames(ServerGeoObjectType type)
   {
-    return this.getValueAttributes().stream().map(mdAttribute -> mdAttribute.getColumnName()).collect(Collectors.toList());
+    return this.getValueAttributes(type).stream().map(mdAttribute -> mdAttribute.getColumnName()).collect(Collectors.toList());
   }
 
 }

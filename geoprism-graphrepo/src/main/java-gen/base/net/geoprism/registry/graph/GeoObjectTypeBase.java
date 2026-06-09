@@ -1,24 +1,6 @@
-/**
- * Copyright (c) 2023 TerraFrame, Inc. All rights reserved.
- *
- * This file is part of Geoprism(tm).
- *
- * Geoprism(tm) is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
- *
- * Geoprism(tm) is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with Geoprism(tm).  If not, see <http://www.gnu.org/licenses/>.
- */
 package net.geoprism.registry.graph;
 
-@com.runwaysdk.business.ClassSignature(hash = -124318214)
+@com.runwaysdk.business.ClassSignature(hash = -1928457584)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -32,6 +14,7 @@ public abstract class GeoObjectTypeBase extends net.geoprism.registry.graph.Base
   public final static java.lang.String DBCLASSNAME = "dbClassName";
   public final static java.lang.String DESCRIPTION = "description";
   public final static java.lang.String DISPLAYLABEL = "displayLabel";
+  public final static java.lang.String GEOMETRYTABLE = "geometryTable";
   public final static java.lang.String GEOMETRYTYPE = "geometryType";
   public final static java.lang.String ISABSTRACT = "isAbstract";
   public final static java.lang.String ISGEOMETRYEDITABLE = "isGeometryEditable";
@@ -43,7 +26,7 @@ public abstract class GeoObjectTypeBase extends net.geoprism.registry.graph.Base
   public final static java.lang.String SEQUENCE = "sequence";
   public final static java.lang.String SUPERTYPE = "superType";
   @SuppressWarnings("unused")
-  private static final long serialVersionUID = -124318214;
+  private static final long serialVersionUID = -1928457584;
   
   public GeoObjectTypeBase()
   {
@@ -96,6 +79,39 @@ public abstract class GeoObjectTypeBase extends net.geoprism.registry.graph.Base
   public void setDisplayLabel(com.runwaysdk.ComponentIF value)
   {
     this.setValue(DISPLAYLABEL, value);
+  }
+  
+  public com.runwaysdk.system.metadata.MdBusiness getGeometryTable()
+  {
+    if (this.getObjectValue(GEOMETRYTABLE) == null)
+    {
+      return null;
+    }
+    else
+    {
+      return com.runwaysdk.system.metadata.MdBusiness.get( (String) this.getObjectValue(GEOMETRYTABLE));
+    }
+  }
+  
+  public String getGeometryTableOid()
+  {
+    return (String) this.getObjectValue(GEOMETRYTABLE);
+  }
+  
+  public static com.runwaysdk.dataaccess.MdAttributeReferenceDAOIF getGeometryTableMd()
+  {
+    com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(net.geoprism.registry.graph.GeoObjectType.CLASS);
+    return (com.runwaysdk.dataaccess.MdAttributeReferenceDAOIF)mdClassIF.definesAttribute(GEOMETRYTABLE);
+  }
+  
+  public void setGeometryTable(com.runwaysdk.system.metadata.MdBusiness value)
+  {
+    this.setValue(GEOMETRYTABLE, value.getOid());
+  }
+  
+  public void setGeometryTableId(java.lang.String oid)
+  {
+    this.setValue(GEOMETRYTABLE, oid);
   }
   
   public String getGeometryType()

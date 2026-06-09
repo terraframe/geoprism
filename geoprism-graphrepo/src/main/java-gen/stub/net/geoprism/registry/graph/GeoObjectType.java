@@ -3,18 +3,18 @@
  *
  * This file is part of Geoprism(tm).
  *
- * Geoprism(tm) is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
+ * Geoprism(tm) is free software: you can redistribute it and/or modify it under
+ * the terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation, either version 3 of the License, or (at your option) any
+ * later version.
  *
- * Geoprism(tm) is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
+ * Geoprism(tm) is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with Geoprism(tm).  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with Geoprism(tm). If not, see <http://www.gnu.org/licenses/>.
  */
 package net.geoprism.registry.graph;
 
@@ -34,6 +34,7 @@ import com.runwaysdk.dataaccess.metadata.MdBusinessDAO;
 import com.runwaysdk.dataaccess.metadata.graph.MdVertexDAO;
 import com.runwaysdk.dataaccess.transaction.Transaction;
 import com.runwaysdk.system.gis.geo.GeometryType;
+import com.runwaysdk.system.metadata.MdBusiness;
 import com.runwaysdk.system.metadata.MdVertex;
 
 import net.geoprism.ontology.Classifier;
@@ -68,12 +69,18 @@ public class GeoObjectType extends GeoObjectTypeBase implements ServerElement
     this.getAttributes(false).stream().forEach(attributeType -> attributeType.delete());
 
     MdVertex mdVertex = this.getMdVertex();
+    MdBusiness geometryTable = this.getGeometryTable();
 
     super.delete();
 
     if (mdVertex != null)
     {
       mdVertex.delete();
+    }
+
+    if (geometryTable != null)
+    {
+      geometryTable.delete();
     }
   }
 
@@ -206,7 +213,7 @@ public class GeoObjectType extends GeoObjectTypeBase implements ServerElement
       labelAttr.setIsChangeOverTime(true);
       labelAttr.setIsDefault(true);
       labelAttr.apply();
-      
+
       AttributeDataSourceType sourceAttr = new AttributeDataSourceType();
       sourceAttr.setCode(DefaultAttribute.DATA_SOURCE.getName());
       sourceAttr.setEmbeddedValue(AttributeUUIDType.LABEL, LocalizedValue.DEFAULT_LOCALE, DefaultAttribute.DATA_SOURCE.getDefaultLocalizedName());

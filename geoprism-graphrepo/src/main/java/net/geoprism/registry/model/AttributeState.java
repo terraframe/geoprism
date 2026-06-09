@@ -3,18 +3,18 @@
  *
  * This file is part of Geoprism(tm).
  *
- * Geoprism(tm) is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
+ * Geoprism(tm) is free software: you can redistribute it and/or modify it under
+ * the terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation, either version 3 of the License, or (at your option) any
+ * later version.
  *
- * Geoprism(tm) is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
+ * Geoprism(tm) is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with Geoprism(tm).  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with Geoprism(tm). If not, see <http://www.gnu.org/licenses/>.
  */
 package net.geoprism.registry.model;
 
@@ -24,6 +24,7 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Optional;
 import java.util.SortedSet;
 import java.util.TreeSet;
 import java.util.stream.Stream;
@@ -32,39 +33,47 @@ import com.runwaysdk.business.graph.VertexObject;
 
 import net.geoprism.registry.graph.AttributeGeometryType;
 import net.geoprism.registry.graph.AttributeType;
-import net.geoprism.registry.graph.AttributeValue;
+import net.geoprism.registry.model.graph.VertexServerGeoObject;
 
 public class AttributeState
 {
-  private static final class VertexTimeComparator implements Comparator<VertexObject>, Serializable
+  private static final class VertexTimeComparator implements Comparator<StateValue>, Serializable
   {
     private static final long serialVersionUID = 5620180560116795690L;
 
     @Override
-    public int compare(VertexObject o1, VertexObject o2)
+    public int compare(StateValue o1, StateValue o2)
     {
-      Date d1 = o1.getObjectValue(AttributeValue.STARTDATE);
-      Date d2 = o2.getObjectValue(AttributeValue.STARTDATE);
+      Date d1 = o1.getStartDate();
+      Date d2 = o2.getStartDate();
 
       return d1.compareTo(d2);
     }
   }
 
-  private AttributeType           attributeType;
+  private ServerGeoObjectType   type;
 
-  private SortedSet<VertexObject> values;
+  private AttributeType         attributeType;
 
-  private List<VertexObject>      objectsToDelete;
+  private SortedSet<StateValue> values;
 
-  private boolean                 isModified;
+  private List<StateValue>      objectsToDelete;
 
-  public AttributeState(AttributeType attributeType, List<VertexObject> values)
+  private boolean               isModified;
+
+  public AttributeState(ServerGeoObjectType type, AttributeType attributeType, List<VertexObject> values)
   {
+    this.type = type;
     this.attributeType = attributeType;
     this.objectsToDelete = new LinkedList<>();
-    this.values = new TreeSet<VertexObject>(new VertexTimeComparator());
-    this.values.addAll(values);
+    this.values = new TreeSet<StateValue>(new VertexTimeComparator());
+    this.values.addAll(values.stream().map(vertex -> attributeType.getStrategy().construct(type, vertex)).toList());
     this.isModified = false;
+  }
+
+  public ServerGeoObjectType getType()
+  {
+    return type;
   }
 
   public AttributeType getAttributeType()
@@ -77,14 +86,14 @@ public class AttributeState
     return isModified;
   }
 
-  public boolean add(VertexObject node)
+  public boolean add(StateValue node)
   {
     this.isModified = true;
 
     return this.values.add(node);
   }
 
-  void delete(VertexObject node)
+  void delete(StateValue node)
   {
     this.isModified = true;
 
@@ -93,19 +102,19 @@ public class AttributeState
     this.values.remove(node);
   }
 
-  public void persit(VertexObject vertex)
+  public void persit(VertexServerGeoObject object, VertexObject vertex)
   {
     this.objectsToDelete.forEach(node -> node.delete());
     this.values.forEach(node -> {
-      node.apply();
+      node.apply(object);
 
       if (attributeType instanceof AttributeGeometryType)
       {
-        vertex.addChild(node, EdgeConstant.HAS_GEOMETRY.getMdEdge()).apply();
+        vertex.addChild(node.getVertex(), EdgeConstant.HAS_GEOMETRY.getMdEdge()).apply();
       }
       else
       {
-        vertex.addChild(node, EdgeConstant.HAS_VALUE.getMdEdge()).apply();
+        vertex.addChild(node.getVertex(), EdgeConstant.HAS_VALUE.getMdEdge()).apply();
       }
     });
   }
@@ -122,17 +131,17 @@ public class AttributeState
     this.objectsToDelete.clear();
   }
 
-  Iterator<VertexObject> iterator()
+  public Iterator<StateValue> iterator()
   {
-    return new LinkedList<VertexObject>(this.values).iterator();
+    return new LinkedList<StateValue>(this.values).iterator();
   }
 
-  VertexObject last()
+  public Optional<StateValue> last()
   {
-    return this.values.size() > 0 ? this.values.last() : null;
+    return this.values.size() > 0 ? Optional.of(this.values.last()) : Optional.empty();
   }
 
-  Stream<VertexObject> stream()
+  public Stream<StateValue> stream()
   {
     return this.values.stream();
   }

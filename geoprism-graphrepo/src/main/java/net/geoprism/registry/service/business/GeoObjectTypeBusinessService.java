@@ -3,18 +3,18 @@
  *
  * This file is part of Geoprism(tm).
  *
- * Geoprism(tm) is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
+ * Geoprism(tm) is free software: you can redistribute it and/or modify it under
+ * the terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation, either version 3 of the License, or (at your option) any
+ * later version.
  *
- * Geoprism(tm) is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
+ * Geoprism(tm) is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with Geoprism(tm).  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with Geoprism(tm). If not, see <http://www.gnu.org/licenses/>.
  */
 package net.geoprism.registry.service.business;
 
@@ -30,14 +30,16 @@ import java.util.TreeSet;
 import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
+import org.commongeoregistry.adapter.constants.DefaultAttribute;
+import org.commongeoregistry.adapter.constants.GeometryType;
 import org.commongeoregistry.adapter.metadata.AttributeBooleanType;
 import org.commongeoregistry.adapter.metadata.AttributeCharacterType;
 import org.commongeoregistry.adapter.metadata.AttributeClassificationType;
+import org.commongeoregistry.adapter.metadata.AttributeDataSourceType;
 import org.commongeoregistry.adapter.metadata.AttributeDateType;
 import org.commongeoregistry.adapter.metadata.AttributeFloatType;
 import org.commongeoregistry.adapter.metadata.AttributeIntegerType;
 import org.commongeoregistry.adapter.metadata.AttributeLocalType;
-import org.commongeoregistry.adapter.metadata.AttributeDataSourceType;
 import org.commongeoregistry.adapter.metadata.AttributeTermType;
 import org.commongeoregistry.adapter.metadata.AttributeType;
 import org.commongeoregistry.adapter.metadata.GeoObjectType;
@@ -50,15 +52,33 @@ import com.google.gson.JsonParser;
 import com.orientechnologies.orient.core.exception.OConcurrentModificationException;
 import com.runwaysdk.ComponentIF;
 import com.runwaysdk.business.BusinessFacade;
+import com.runwaysdk.business.rbac.ActorDAOIF;
 import com.runwaysdk.business.rbac.Operation;
 import com.runwaysdk.business.rbac.RoleDAO;
+import com.runwaysdk.constants.MdAttributeBooleanInfo;
+import com.runwaysdk.constants.MdAttributeCharacterInfo;
+import com.runwaysdk.constants.MdAttributeConcreteInfo;
+import com.runwaysdk.constants.MdAttributeLocalCharacterInfo;
+import com.runwaysdk.constants.MdAttributeLocalInfo;
+import com.runwaysdk.constants.MdBusinessInfo;
 import com.runwaysdk.dataaccess.DuplicateDataException;
 import com.runwaysdk.dataaccess.MdAttributeConcreteDAOIF;
 import com.runwaysdk.dataaccess.MdClassDAOIF;
+import com.runwaysdk.dataaccess.MdVertexDAOIF;
 import com.runwaysdk.dataaccess.ProgrammingErrorException;
 import com.runwaysdk.dataaccess.attributes.AttributeValueException;
+import com.runwaysdk.dataaccess.metadata.MdAttributeCharacterDAO;
+import com.runwaysdk.dataaccess.metadata.MdAttributeDateTimeDAO;
+import com.runwaysdk.dataaccess.metadata.MdAttributeLocalTextDAO;
+import com.runwaysdk.dataaccess.metadata.MdAttributeTextDAO;
+import com.runwaysdk.dataaccess.metadata.MdBusinessDAO;
 import com.runwaysdk.dataaccess.metadata.graph.MdVertexDAO;
 import com.runwaysdk.dataaccess.transaction.Transaction;
+import com.runwaysdk.gis.constants.MdAttributeMultiLineStringInfo;
+import com.runwaysdk.gis.dataaccess.metadata.MdAttributeMultiLineStringDAO;
+import com.runwaysdk.gis.dataaccess.metadata.MdAttributeMultiPointDAO;
+import com.runwaysdk.gis.dataaccess.metadata.MdAttributeMultiPolygonDAO;
+import com.runwaysdk.gis.dataaccess.metadata.MdAttributeShapeDAO;
 import com.runwaysdk.session.Session;
 import com.runwaysdk.system.Roles;
 import com.runwaysdk.system.gis.metadata.graph.MdGeoVertex;
@@ -72,6 +92,7 @@ import net.geoprism.registry.CodeLengthException;
 import net.geoprism.registry.DuplicateGeoObjectTypeException;
 import net.geoprism.registry.GeoObjectTypeAssignmentException;
 import net.geoprism.registry.HierarchyRootException;
+import net.geoprism.registry.RegistryConstants;
 import net.geoprism.registry.TypeInUseException;
 import net.geoprism.registry.command.CacheEventType;
 import net.geoprism.registry.command.GeoObjectTypeCacheEventCommand;
@@ -80,6 +101,7 @@ import net.geoprism.registry.conversion.TermConverter;
 import net.geoprism.registry.graph.GeoVertexType;
 import net.geoprism.registry.graph.HierarchicalRelationshipType;
 import net.geoprism.registry.graph.InheritedHierarchyAnnotation;
+import net.geoprism.registry.model.EdgeType;
 import net.geoprism.registry.model.ServerGeoObjectType;
 import net.geoprism.registry.model.ServerHierarchyType;
 import net.geoprism.registry.model.ServerOrganization;
@@ -404,12 +426,15 @@ public class GeoObjectTypeBusinessService implements GeoObjectTypeBusinessServic
 
     // 1st create the MdVertex
     MdVertexDAO mdVertex = GeoVertexType.create(dto.getCode(), isAbstract, superType);
+    MdBusinessDAO geometryTable = this.createGeometryTable(dto.getCode(), isAbstract, superType, dto.getGeometryType());
+
     ServerOrganization organization = ServerOrganization.getByCode(dto.getOrganizationCode(), true);
 
     net.geoprism.registry.graph.GeoObjectType type = new net.geoprism.registry.graph.GeoObjectType();
     type.setRootTerm(TermConverter.buildIfNotExistGeoObjectTypeClassifier(type));
     type.setOrganization(organization.getGraphOrganization());
     type.setValue(net.geoprism.registry.graph.GeoObjectType.MDVERTEX, mdVertex.getOid());
+    type.setValue(net.geoprism.registry.graph.GeoObjectType.GEOMETRYTABLE, geometryTable.getOid());
     type.setDbClassName(mdVertex.getDBClassName());
     type.setOrigin(StringUtils.isBlank(dto.getOrigin()) ? GeoprismProperties.getOrigin() : dto.getOrigin());
     type.setSequence(dto.getSequenceNumber());
@@ -440,6 +465,127 @@ public class GeoObjectTypeBusinessService implements GeoObjectTypeBusinessServic
     new GeoObjectTypeCacheEventCommand(sType, CacheEventType.CREATE).doIt();
 
     return sType;
+  }
+
+  /**
+   * 
+   * 
+   * @param code
+   * @param ownerActorId
+   *          = the ID of the {@link ActorDAOIF} that is the owner of the
+   *          {@link MdVertexDAOIF}.
+   * @param isAbstract
+   *          TODO
+   * @param parentType
+   *          TODO
+   * @param geometryType
+   * @return
+   */
+  protected MdBusinessDAO createGeometryTable(String code, Boolean isAbstract, ServerGeoObjectType parentType, GeometryType geometryType)
+  {
+    MdBusinessDAO mdBusiness = MdBusinessDAO.newInstance();
+    mdBusiness.setValue(MdBusinessInfo.PACKAGE, RegistryConstants.GEOMETRY_PACKAGE);
+    mdBusiness.setValue(MdBusinessInfo.NAME, code);
+
+    if (parentType != null)
+    {
+      mdBusiness.setValue(MdBusinessInfo.SUPER_MD_BUSINESS, parentType.getGeometryTable().getOid());
+    }
+
+    mdBusiness.setValue(MdBusinessInfo.GENERATE_SOURCE, MdAttributeBooleanInfo.FALSE);
+    mdBusiness.setValue(MdBusinessInfo.ABSTRACT, isAbstract.toString());
+    mdBusiness.apply();
+
+    if (parentType == null)
+    {
+      MdAttributeCharacterDAO codeMdAttr = MdAttributeCharacterDAO.newInstance();
+      codeMdAttr.setValue(MdAttributeConcreteInfo.NAME, DefaultAttribute.CODE.getName());
+      codeMdAttr.setStructValue(MdAttributeConcreteInfo.DISPLAY_LABEL, MdAttributeLocalInfo.DEFAULT_LOCALE, DefaultAttribute.CODE.getDefaultLocalizedName());
+      codeMdAttr.setStructValue(MdAttributeConcreteInfo.DESCRIPTION, MdAttributeLocalInfo.DEFAULT_LOCALE, DefaultAttribute.CODE.getDefaultDescription());
+      codeMdAttr.setValue(MdAttributeCharacterInfo.SIZE, MdAttributeCharacterInfo.MAX_CHARACTER_SIZE);
+      codeMdAttr.setValue(MdAttributeConcreteInfo.DEFINING_MD_CLASS, mdBusiness.getOid());
+      codeMdAttr.setValue(MdAttributeConcreteInfo.REQUIRED, MdAttributeBooleanInfo.TRUE);
+      codeMdAttr.apply();
+
+      MdAttributeTextDAO labelMdAttr = MdAttributeTextDAO.newInstance();
+      labelMdAttr.setValue(MdAttributeConcreteInfo.NAME, DefaultAttribute.DISPLAY_LABEL.getName());
+      labelMdAttr.setStructValue(MdAttributeConcreteInfo.DISPLAY_LABEL, MdAttributeLocalInfo.DEFAULT_LOCALE, DefaultAttribute.DISPLAY_LABEL.getDefaultLocalizedName());
+      labelMdAttr.setStructValue(MdAttributeConcreteInfo.DESCRIPTION, MdAttributeLocalInfo.DEFAULT_LOCALE, DefaultAttribute.DISPLAY_LABEL.getDefaultDescription());
+      labelMdAttr.setValue(MdAttributeConcreteInfo.DEFINING_MD_CLASS, mdBusiness.getOid());
+      labelMdAttr.setValue(MdAttributeConcreteInfo.REQUIRED, MdAttributeBooleanInfo.FALSE);
+      labelMdAttr.apply();
+
+      MdAttributeDateTimeDAO startDateMdAttr = MdAttributeDateTimeDAO.newInstance();
+      startDateMdAttr.setValue(MdAttributeConcreteInfo.NAME, EdgeType.START_DATE);
+      startDateMdAttr.setStructValue(MdAttributeConcreteInfo.DISPLAY_LABEL, MdAttributeLocalInfo.DEFAULT_LOCALE, "Start Date");
+      startDateMdAttr.setStructValue(MdAttributeConcreteInfo.DESCRIPTION, MdAttributeLocalInfo.DEFAULT_LOCALE, "Start Date");
+      startDateMdAttr.setValue(MdAttributeConcreteInfo.DEFINING_MD_CLASS, mdBusiness.getOid());
+      startDateMdAttr.setValue(MdAttributeConcreteInfo.REQUIRED, MdAttributeBooleanInfo.TRUE);
+      startDateMdAttr.apply();
+
+      MdAttributeDateTimeDAO endDateMdAttr = MdAttributeDateTimeDAO.newInstance();
+      endDateMdAttr.setValue(MdAttributeConcreteInfo.NAME, EdgeType.END_DATE);
+      endDateMdAttr.setStructValue(MdAttributeConcreteInfo.DISPLAY_LABEL, MdAttributeLocalInfo.DEFAULT_LOCALE, "End Date");
+      endDateMdAttr.setStructValue(MdAttributeConcreteInfo.DESCRIPTION, MdAttributeLocalInfo.DEFAULT_LOCALE, "End Date");
+      endDateMdAttr.setValue(MdAttributeConcreteInfo.DEFINING_MD_CLASS, mdBusiness.getOid());
+      endDateMdAttr.setValue(MdAttributeConcreteInfo.REQUIRED, MdAttributeBooleanInfo.TRUE);
+      endDateMdAttr.apply();
+
+      if (geometryType.equals(GeometryType.LINE) || geometryType.equals(GeometryType.MULTILINE))
+      {
+        MdAttributeMultiLineStringDAO geometryMdAttr = MdAttributeMultiLineStringDAO.newInstance();
+        geometryMdAttr.setValue(MdAttributeConcreteInfo.NAME, DefaultAttribute.GEOMETRY.getName());
+        geometryMdAttr.setStructValue(MdAttributeConcreteInfo.DISPLAY_LABEL, MdAttributeLocalInfo.DEFAULT_LOCALE, DefaultAttribute.GEOMETRY.getDefaultLocalizedName());
+        geometryMdAttr.setStructValue(MdAttributeConcreteInfo.DESCRIPTION, MdAttributeLocalInfo.DEFAULT_LOCALE, DefaultAttribute.GEOMETRY.getDefaultDescription());
+        geometryMdAttr.setValue(MdAttributeConcreteInfo.DEFINING_MD_CLASS, mdBusiness.getOid());
+        geometryMdAttr.setValue(MdAttributeConcreteInfo.REQUIRED, MdAttributeBooleanInfo.FALSE);
+        geometryMdAttr.setValue(MdAttributeMultiLineStringInfo.DIMENSION, "2");
+        geometryMdAttr.setValue(MdAttributeMultiLineStringInfo.SRID, "4326");
+        geometryMdAttr.apply();
+      }
+      else if (geometryType.equals(GeometryType.POINT) || geometryType.equals(GeometryType.MULTIPOINT))
+      {
+        MdAttributeMultiPointDAO geometryMdAttr = MdAttributeMultiPointDAO.newInstance();
+        geometryMdAttr.setValue(MdAttributeConcreteInfo.NAME, DefaultAttribute.GEOMETRY.getName());
+        geometryMdAttr.setStructValue(MdAttributeConcreteInfo.DISPLAY_LABEL, MdAttributeLocalInfo.DEFAULT_LOCALE, DefaultAttribute.GEOMETRY.getDefaultLocalizedName());
+        geometryMdAttr.setStructValue(MdAttributeConcreteInfo.DESCRIPTION, MdAttributeLocalInfo.DEFAULT_LOCALE, DefaultAttribute.GEOMETRY.getDefaultDescription());
+        geometryMdAttr.setValue(MdAttributeConcreteInfo.DEFINING_MD_CLASS, mdBusiness.getOid());
+        geometryMdAttr.setValue(MdAttributeConcreteInfo.REQUIRED, MdAttributeBooleanInfo.FALSE);
+        geometryMdAttr.setValue(MdAttributeMultiLineStringInfo.DIMENSION, "2");
+        geometryMdAttr.setValue(MdAttributeMultiLineStringInfo.SRID, "4326");
+        geometryMdAttr.apply();
+      }
+      else if (geometryType.equals(GeometryType.POLYGON) || geometryType.equals(GeometryType.MULTIPOLYGON))
+      {
+        MdAttributeMultiPolygonDAO geometryMdAttr = MdAttributeMultiPolygonDAO.newInstance();
+        geometryMdAttr.setValue(MdAttributeConcreteInfo.NAME, DefaultAttribute.GEOMETRY.getName());
+        geometryMdAttr.setStructValue(MdAttributeConcreteInfo.DISPLAY_LABEL, MdAttributeLocalInfo.DEFAULT_LOCALE, DefaultAttribute.GEOMETRY.getDefaultLocalizedName());
+        geometryMdAttr.setStructValue(MdAttributeConcreteInfo.DESCRIPTION, MdAttributeLocalInfo.DEFAULT_LOCALE, DefaultAttribute.GEOMETRY.getDefaultDescription());
+        geometryMdAttr.setValue(MdAttributeConcreteInfo.DEFINING_MD_CLASS, mdBusiness.getOid());
+        geometryMdAttr.setValue(MdAttributeConcreteInfo.REQUIRED, MdAttributeBooleanInfo.FALSE);
+        geometryMdAttr.setValue(MdAttributeMultiLineStringInfo.DIMENSION, "2");
+        geometryMdAttr.setValue(MdAttributeMultiLineStringInfo.SRID, "4326");
+        geometryMdAttr.apply();
+      }
+      else if (geometryType.equals(GeometryType.MIXED))
+      {
+        MdAttributeShapeDAO geometryMdAttr = MdAttributeShapeDAO.newInstance();
+        geometryMdAttr.setValue(MdAttributeConcreteInfo.NAME, DefaultAttribute.GEOMETRY.getName());
+        geometryMdAttr.setStructValue(MdAttributeConcreteInfo.DISPLAY_LABEL, MdAttributeLocalInfo.DEFAULT_LOCALE, DefaultAttribute.GEOMETRY.getDefaultLocalizedName());
+        geometryMdAttr.setStructValue(MdAttributeConcreteInfo.DESCRIPTION, MdAttributeLocalInfo.DEFAULT_LOCALE, DefaultAttribute.GEOMETRY.getDefaultDescription());
+        geometryMdAttr.setValue(MdAttributeConcreteInfo.DEFINING_MD_CLASS, mdBusiness.getOid());
+        geometryMdAttr.setValue(MdAttributeConcreteInfo.REQUIRED, MdAttributeBooleanInfo.FALSE);
+        geometryMdAttr.setValue(MdAttributeMultiLineStringInfo.DIMENSION, "2");
+        geometryMdAttr.setValue(MdAttributeMultiLineStringInfo.SRID, "4326");
+        geometryMdAttr.apply();
+      }
+      else
+      {
+        throw new UnsupportedOperationException();
+      }
+    }
+
+    return mdBusiness;
   }
 
   /**

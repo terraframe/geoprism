@@ -3,18 +3,18 @@
  *
  * This file is part of Geoprism(tm).
  *
- * Geoprism(tm) is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
+ * Geoprism(tm) is free software: you can redistribute it and/or modify it under
+ * the terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation, either version 3 of the License, or (at your option) any
+ * later version.
  *
- * Geoprism(tm) is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
+ * Geoprism(tm) is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with Geoprism(tm).  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with Geoprism(tm). If not, see <http://www.gnu.org/licenses/>.
  */
 package net.geoprism.registry.model.graph;
 
@@ -91,12 +91,14 @@ import net.geoprism.registry.model.AbstractServerGeoObject;
 import net.geoprism.registry.model.AttributeState;
 import net.geoprism.registry.model.EdgeConstant;
 import net.geoprism.registry.model.GeoObjectMetadata;
+import net.geoprism.registry.model.GeometryStateValue;
 import net.geoprism.registry.model.GraphType;
 import net.geoprism.registry.model.LocationInfo;
 import net.geoprism.registry.model.ServerGeoObjectIF;
 import net.geoprism.registry.model.ServerGeoObjectType;
 import net.geoprism.registry.model.ServerGraphNode;
 import net.geoprism.registry.model.ServerHierarchyType;
+import net.geoprism.registry.model.StateValue;
 import net.geoprism.registry.service.business.ServiceFactory;
 
 public class VertexServerGeoObject extends AbstractServerGeoObject implements ServerGeoObjectIF, LocationInfo, VertexComponent
@@ -140,17 +142,23 @@ public class VertexServerGeoObject extends AbstractServerGeoObject implements Se
     this.type = actualType;
     this.vertex = vertex;
 
+    // Add attribute states for attributes with previous entries
     this.valueNodeMap = valueNodeMap.entrySet().stream().map(entry -> {
 
       Optional<AttributeType> attribute = type.getAttribute(entry.getKey());
 
       if (attribute.isPresent())
       {
-        return new AttributeState(attribute.get(), entry.getValue());
+        return new AttributeState(type, attribute.get(), entry.getValue());
       }
 
       return null;
     }).filter(t -> t != null).collect(Collectors.toMap(s -> s.getAttributeType().getCode(), s -> s));
+
+    // Add attribute states for any attribute that doesn't have any entries
+    this.type.getAttributeMap().forEach((name, attributeType) -> {
+      this.valueNodeMap.putIfAbsent(name, new AttributeState(type, attributeType, new LinkedList<>()));
+    });
 
     this.date = date;
   }
@@ -164,7 +172,7 @@ public class VertexServerGeoObject extends AbstractServerGeoObject implements Se
     this.vertex.apply();
 
     this.valueNodeMap.forEach((attributeName, state) -> {
-      state.persit(this.vertex);
+      state.persit(this, this.vertex);
 
       // TODO: HEADS UP: Handle rollback of object on persist failure
       // Only clear the state after the transaction has passed
@@ -337,7 +345,7 @@ public class VertexServerGeoObject extends AbstractServerGeoObject implements Se
 
     if (endDate == null)
     {
-      endDate = ValueOverTime.INFINITY_END_DATE;
+      endDate = ValueOverTimeDTO.INFINITY_END_DATE;
     }
 
     for (ValueOverTime vot : votc)
@@ -373,7 +381,7 @@ public class VertexServerGeoObject extends AbstractServerGeoObject implements Se
         ex.setStartDate("null");
       }
 
-      if (ValueOverTime.INFINITY_END_DATE.equals(endDate))
+      if (ValueOverTimeDTO.INFINITY_END_DATE.equals(endDate))
       {
         ex.setEndDate(LocalizationFacade.localize("changeovertime.present"));
       }
@@ -446,7 +454,7 @@ public class VertexServerGeoObject extends AbstractServerGeoObject implements Se
   {
     return (String) this.getValue(DefaultAttribute.CODE.getName());
   }
-  
+
   @Override
   public String getUid()
   {
@@ -538,7 +546,7 @@ public class VertexServerGeoObject extends AbstractServerGeoObject implements Se
   {
     // Attributes created by the runway that do not have actual attribute type
     // metadata
-    return this.vertex.hasAttribute(attributeName) && ( attributeName.equals(DefaultAttribute.CREATE_DATE.getName()) || attributeName.equals(DefaultAttribute.LAST_UPDATE_DATE.getName())  );
+    return this.vertex.hasAttribute(attributeName) && ( attributeName.equals(DefaultAttribute.CREATE_DATE.getName()) || attributeName.equals(DefaultAttribute.LAST_UPDATE_DATE.getName()) );
   }
 
   @Override
@@ -697,7 +705,17 @@ public class VertexServerGeoObject extends AbstractServerGeoObject implements Se
 
   public Geometry getGeometry(Date date)
   {
-    return this.getValue(DefaultAttribute.GEOMETRY.getName(), date);
+    // return this.getValue(DefaultAttribute.GEOMETRY.getName(), date);
+    AttributeType at = this.type.getAttribute(DefaultAttribute.GEOMETRY.getName()).orElse(null);
+
+    if (at != null)
+    {
+      Optional<StateValue> optional = at.getStrategy().getState(this.vertex, this.valueNodeMap, date);
+
+      return optional.map(state -> ( (GeometryStateValue) state ).getGeometryValue()).orElse(null);
+    }
+
+    return null;
   }
 
   public Geometry getGeometry()
