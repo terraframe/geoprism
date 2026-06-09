@@ -32,6 +32,7 @@ import java.util.stream.Collectors;
 import org.apache.commons.lang3.StringUtils;
 import org.commongeoregistry.adapter.constants.DefaultAttribute;
 import org.commongeoregistry.adapter.constants.GeometryType;
+import org.commongeoregistry.adapter.dataaccess.LocalizedValue;
 import org.commongeoregistry.adapter.metadata.AttributeBooleanType;
 import org.commongeoregistry.adapter.metadata.AttributeCharacterType;
 import org.commongeoregistry.adapter.metadata.AttributeClassificationType;
@@ -71,6 +72,7 @@ import com.runwaysdk.dataaccess.metadata.MdAttributeCharacterDAO;
 import com.runwaysdk.dataaccess.metadata.MdAttributeDateTimeDAO;
 import com.runwaysdk.dataaccess.metadata.MdAttributeLocalTextDAO;
 import com.runwaysdk.dataaccess.metadata.MdAttributeTextDAO;
+import com.runwaysdk.dataaccess.metadata.MdAttributeUUIDDAO;
 import com.runwaysdk.dataaccess.metadata.MdBusinessDAO;
 import com.runwaysdk.dataaccess.metadata.graph.MdVertexDAO;
 import com.runwaysdk.dataaccess.transaction.Transaction;
@@ -506,6 +508,15 @@ public class GeoObjectTypeBusinessService implements GeoObjectTypeBusinessServic
       codeMdAttr.setValue(MdAttributeConcreteInfo.DEFINING_MD_CLASS, mdBusiness.getOid());
       codeMdAttr.setValue(MdAttributeConcreteInfo.REQUIRED, MdAttributeBooleanInfo.TRUE);
       codeMdAttr.apply();
+      
+      MdAttributeUUIDDAO uidAttr = MdAttributeUUIDDAO.newInstance();
+      uidAttr.setValue(MdAttributeConcreteInfo.NAME, DefaultAttribute.UID.getName());
+      uidAttr.setStructValue(MdAttributeBooleanInfo.DISPLAY_LABEL, LocalizedValue.DEFAULT_LOCALE, DefaultAttribute.UID.getDefaultLocalizedName());
+      uidAttr.setStructValue(MdAttributeBooleanInfo.DESCRIPTION, LocalizedValue.DEFAULT_LOCALE, DefaultAttribute.UID.getDefaultDescription());
+      uidAttr.setValue(MdAttributeConcreteInfo.DEFINING_MD_CLASS, mdBusiness.getOid());
+      uidAttr.setValue(MdAttributeConcreteInfo.REQUIRED, true);
+      uidAttr.apply();
+
 
       MdAttributeTextDAO labelMdAttr = MdAttributeTextDAO.newInstance();
       labelMdAttr.setValue(MdAttributeConcreteInfo.NAME, DefaultAttribute.DISPLAY_LABEL.getName());
@@ -538,7 +549,7 @@ public class GeoObjectTypeBusinessService implements GeoObjectTypeBusinessServic
         geometryMdAttr.setStructValue(MdAttributeConcreteInfo.DISPLAY_LABEL, MdAttributeLocalInfo.DEFAULT_LOCALE, DefaultAttribute.GEOMETRY.getDefaultLocalizedName());
         geometryMdAttr.setStructValue(MdAttributeConcreteInfo.DESCRIPTION, MdAttributeLocalInfo.DEFAULT_LOCALE, DefaultAttribute.GEOMETRY.getDefaultDescription());
         geometryMdAttr.setValue(MdAttributeConcreteInfo.DEFINING_MD_CLASS, mdBusiness.getOid());
-        geometryMdAttr.setValue(MdAttributeConcreteInfo.REQUIRED, MdAttributeBooleanInfo.FALSE);
+        geometryMdAttr.setValue(MdAttributeConcreteInfo.REQUIRED, MdAttributeBooleanInfo.TRUE);
         geometryMdAttr.setValue(MdAttributeMultiLineStringInfo.DIMENSION, "2");
         geometryMdAttr.setValue(MdAttributeMultiLineStringInfo.SRID, "4326");
         geometryMdAttr.apply();
@@ -550,7 +561,7 @@ public class GeoObjectTypeBusinessService implements GeoObjectTypeBusinessServic
         geometryMdAttr.setStructValue(MdAttributeConcreteInfo.DISPLAY_LABEL, MdAttributeLocalInfo.DEFAULT_LOCALE, DefaultAttribute.GEOMETRY.getDefaultLocalizedName());
         geometryMdAttr.setStructValue(MdAttributeConcreteInfo.DESCRIPTION, MdAttributeLocalInfo.DEFAULT_LOCALE, DefaultAttribute.GEOMETRY.getDefaultDescription());
         geometryMdAttr.setValue(MdAttributeConcreteInfo.DEFINING_MD_CLASS, mdBusiness.getOid());
-        geometryMdAttr.setValue(MdAttributeConcreteInfo.REQUIRED, MdAttributeBooleanInfo.FALSE);
+        geometryMdAttr.setValue(MdAttributeConcreteInfo.REQUIRED, MdAttributeBooleanInfo.TRUE);
         geometryMdAttr.setValue(MdAttributeMultiLineStringInfo.DIMENSION, "2");
         geometryMdAttr.setValue(MdAttributeMultiLineStringInfo.SRID, "4326");
         geometryMdAttr.apply();
@@ -562,7 +573,7 @@ public class GeoObjectTypeBusinessService implements GeoObjectTypeBusinessServic
         geometryMdAttr.setStructValue(MdAttributeConcreteInfo.DISPLAY_LABEL, MdAttributeLocalInfo.DEFAULT_LOCALE, DefaultAttribute.GEOMETRY.getDefaultLocalizedName());
         geometryMdAttr.setStructValue(MdAttributeConcreteInfo.DESCRIPTION, MdAttributeLocalInfo.DEFAULT_LOCALE, DefaultAttribute.GEOMETRY.getDefaultDescription());
         geometryMdAttr.setValue(MdAttributeConcreteInfo.DEFINING_MD_CLASS, mdBusiness.getOid());
-        geometryMdAttr.setValue(MdAttributeConcreteInfo.REQUIRED, MdAttributeBooleanInfo.FALSE);
+        geometryMdAttr.setValue(MdAttributeConcreteInfo.REQUIRED, MdAttributeBooleanInfo.TRUE);
         geometryMdAttr.setValue(MdAttributeMultiLineStringInfo.DIMENSION, "2");
         geometryMdAttr.setValue(MdAttributeMultiLineStringInfo.SRID, "4326");
         geometryMdAttr.apply();
@@ -574,7 +585,7 @@ public class GeoObjectTypeBusinessService implements GeoObjectTypeBusinessServic
         geometryMdAttr.setStructValue(MdAttributeConcreteInfo.DISPLAY_LABEL, MdAttributeLocalInfo.DEFAULT_LOCALE, DefaultAttribute.GEOMETRY.getDefaultLocalizedName());
         geometryMdAttr.setStructValue(MdAttributeConcreteInfo.DESCRIPTION, MdAttributeLocalInfo.DEFAULT_LOCALE, DefaultAttribute.GEOMETRY.getDefaultDescription());
         geometryMdAttr.setValue(MdAttributeConcreteInfo.DEFINING_MD_CLASS, mdBusiness.getOid());
-        geometryMdAttr.setValue(MdAttributeConcreteInfo.REQUIRED, MdAttributeBooleanInfo.FALSE);
+        geometryMdAttr.setValue(MdAttributeConcreteInfo.REQUIRED, MdAttributeBooleanInfo.TRUE);
         geometryMdAttr.setValue(MdAttributeMultiLineStringInfo.DIMENSION, "2");
         geometryMdAttr.setValue(MdAttributeMultiLineStringInfo.SRID, "4326");
         geometryMdAttr.apply();

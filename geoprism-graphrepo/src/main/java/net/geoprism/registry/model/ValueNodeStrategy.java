@@ -90,16 +90,12 @@ public class ValueNodeStrategy extends AbstractValueStrategy implements ValueStr
     {
       // TODO: HEADS UP - Determine if we want to support the use case for
       // setting values with no dates
-      StateValue last = state.last().orElse(null);
-
-      if (last != null)
-      {
+      state.last().ifPresentOrElse(last -> {
         this.setNodeValue(last, value, validate);
-      }
-      else
-      {
+      }, () -> {
         state.add(this.createNode(state.getType(), value, new Date(), ValueOverTimeDTO.INFINITY_END_DATE, validate));
-      }
+      });
+
     }
   }
 

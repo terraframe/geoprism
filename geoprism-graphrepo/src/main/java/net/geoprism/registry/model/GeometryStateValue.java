@@ -29,6 +29,12 @@ public class GeometryStateValue extends PrimitiveStateValue
   }
 
   @Override
+  public boolean hasValue()
+  {
+    return ( super.hasValue() || geometry != null );
+  }
+
+  @Override
   public void setValue(Object value)
   {
     if (value instanceof Geometry)
@@ -73,9 +79,8 @@ public class GeometryStateValue extends PrimitiveStateValue
         BusinessDAO.newInstance(geometryTable.definesType()) : //
         getGeometryInstance().getBusinessDAO();
 
+    geometryInstance.setValue(DefaultAttribute.UID.getName(), object.getUid());
     geometryInstance.setValue(DefaultAttribute.CODE.getName(), object.getCode());
-    // geometryInstance.setValue(DefaultAttribute.DISPLAY_LABEL.getName(),
-    // object.getCode());
     geometryInstance.setValue(DefaultAttribute.DISPLAY_LABEL.getName(), label);
     geometryInstance.setValue(EdgeType.START_DATE, this.getStartDate());
     geometryInstance.setValue(EdgeType.END_DATE, this.getEndDate());

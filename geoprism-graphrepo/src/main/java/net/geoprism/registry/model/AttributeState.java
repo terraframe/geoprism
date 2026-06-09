@@ -90,7 +90,12 @@ public class AttributeState
   {
     this.isModified = true;
 
-    return this.values.add(node);
+    if (node.hasValue())
+    {
+      return this.values.add(node);
+    }
+    
+    return false;
   }
 
   void delete(StateValue node)

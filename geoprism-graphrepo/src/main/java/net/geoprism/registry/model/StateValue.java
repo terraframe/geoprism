@@ -85,4 +85,9 @@ public abstract class StateValue
     this.node.delete();
   }
 
+  public boolean hasValue()
+  {
+    return ( this.getValue() != null );
+  }
+
 }
