@@ -25,10 +25,9 @@ import org.commongeoregistry.adapter.dataaccess.LocalizedValue;
 import org.commongeoregistry.adapter.metadata.GraphTypeDTO;
 import org.springframework.stereotype.Component;
 
-import com.google.gson.JsonObject;
 import com.runwaysdk.system.metadata.MdEdge;
 
-import net.geoprism.registry.UndirectedGraphType;
+import net.geoprism.registry.graph.UndirectedGraphType;
 
 @Component
 public interface UndirectedGraphTypeBusinessServiceIF

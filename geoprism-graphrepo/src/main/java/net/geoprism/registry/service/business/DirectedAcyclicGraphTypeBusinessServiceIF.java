@@ -27,7 +27,7 @@ import org.springframework.stereotype.Component;
 
 import com.runwaysdk.system.metadata.MdEdge;
 
-import net.geoprism.registry.DirectedAcyclicGraphType;
+import net.geoprism.registry.graph.DirectedAcyclicGraphType;
 
 @Component
 public interface DirectedAcyclicGraphTypeBusinessServiceIF

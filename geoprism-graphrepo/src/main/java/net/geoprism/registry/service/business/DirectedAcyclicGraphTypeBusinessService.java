@@ -3,22 +3,21 @@
  *
  * This file is part of Geoprism(tm).
  *
- * Geoprism(tm) is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
+ * Geoprism(tm) is free software: you can redistribute it and/or modify it under
+ * the terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation, either version 3 of the License, or (at your option) any
+ * later version.
  *
- * Geoprism(tm) is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
+ * Geoprism(tm) is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with Geoprism(tm).  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with Geoprism(tm). If not, see <http://www.gnu.org/licenses/>.
  */
 package net.geoprism.registry.service.business;
 
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 
@@ -27,6 +26,7 @@ import org.commongeoregistry.adapter.dataaccess.LocalizedValue;
 import org.commongeoregistry.adapter.metadata.GraphTypeDTO;
 import org.springframework.stereotype.Service;
 
+import com.runwaysdk.business.graph.GraphQuery;
 import com.runwaysdk.constants.MdAttributeBooleanInfo;
 import com.runwaysdk.constants.MdAttributeConcreteInfo;
 import com.runwaysdk.constants.MdAttributeDateTimeInfo;
@@ -41,18 +41,15 @@ import com.runwaysdk.dataaccess.metadata.MdAttributeUUIDDAO;
 import com.runwaysdk.dataaccess.metadata.graph.MdEdgeDAO;
 import com.runwaysdk.dataaccess.metadata.graph.MdVertexDAO;
 import com.runwaysdk.dataaccess.transaction.Transaction;
-import com.runwaysdk.query.OIterator;
-import com.runwaysdk.query.QueryFactory;
 import com.runwaysdk.system.metadata.MdEdge;
 
 import net.geoprism.configuration.GeoprismProperties;
-import net.geoprism.registry.DirectedAcyclicGraphType;
-import net.geoprism.registry.DirectedAcyclicGraphTypeQuery;
 import net.geoprism.registry.DuplicateHierarchyTypeException;
 import net.geoprism.registry.RegistryConstants;
 import net.geoprism.registry.cache.TransactionLRUCache;
 import net.geoprism.registry.conversion.RegistryLocalizedValueConverter;
 import net.geoprism.registry.graph.DataSource;
+import net.geoprism.registry.graph.DirectedAcyclicGraphType;
 import net.geoprism.registry.graph.GeoVertex;
 
 @Service
@@ -72,27 +69,18 @@ public class DirectedAcyclicGraphTypeBusinessService implements DirectedAcyclicG
   @Transaction
   public void update(DirectedAcyclicGraphType type, GraphTypeDTO object)
   {
-    try
+    if (object.getLabel() != null)
     {
-      type.appLock();
-
-      if (object.getLabel() != null)
-      {
-        RegistryLocalizedValueConverter.populate(type.getDisplayLabel(), object.getLabel());
-      }
-
-      if (object.getDescription() != null)
-      {
-        RegistryLocalizedValueConverter.populate(type.getDescription(), object.getDescription());
-      }
-
-      type.setSequence(type.getSequence() + 1);
-      type.apply();
+      RegistryLocalizedValueConverter.populate(type, DirectedAcyclicGraphType.DISPLAYLABEL, object.getLabel());
     }
-    finally
+
+    if (object.getDescription() != null)
     {
-      type.unlock();
+      RegistryLocalizedValueConverter.populate(type, DirectedAcyclicGraphType.DESCRIPTION, object.getDescription());
     }
+
+    type.setSequence(type.getSequence() + 1);
+    type.apply();
 
     this.cache.put(type);
   }
@@ -182,8 +170,8 @@ public class DirectedAcyclicGraphTypeBusinessService implements DirectedAcyclicG
       DirectedAcyclicGraphType graphType = new DirectedAcyclicGraphType();
       graphType.setCode(code);
       graphType.setMdEdgeId(mdEdgeDAO.getOid());
-      RegistryLocalizedValueConverter.populate(graphType.getDisplayLabel(), label);
-      RegistryLocalizedValueConverter.populate(graphType.getDescription(), description);
+      RegistryLocalizedValueConverter.populate(graphType, DirectedAcyclicGraphType.DISPLAYLABEL, label);
+      RegistryLocalizedValueConverter.populate(graphType, DirectedAcyclicGraphType.DESCRIPTION, description);
       graphType.setOrigin(origin);
       graphType.setSequence(seq);
       graphType.apply();
@@ -208,35 +196,40 @@ public class DirectedAcyclicGraphTypeBusinessService implements DirectedAcyclicG
   @Override
   public List<DirectedAcyclicGraphType> getAll(String... typeCodes)
   {
-    DirectedAcyclicGraphTypeQuery query = new DirectedAcyclicGraphTypeQuery(new QueryFactory());
+    MdVertexDAOIF mdVertex = MdVertexDAO.getMdVertexDAO(DirectedAcyclicGraphType.CLASS);
 
-    if (typeCodes != null && typeCodes.length > 0)
+    StringBuilder statement = new StringBuilder();
+    statement.append("SELECT FROM " + mdVertex.getDBClassName());
+
+    if (typeCodes.length > 0)
     {
-      query.AND(query.getCode().IN(typeCodes));
+      statement.append(" WHERE code IN (:codes)");
     }
 
-    try (OIterator<? extends DirectedAcyclicGraphType> it = query.getIterator())
+    GraphQuery<DirectedAcyclicGraphType> query = new GraphQuery<DirectedAcyclicGraphType>(statement.toString());
+
+    if (typeCodes.length > 0)
     {
-      return new LinkedList<DirectedAcyclicGraphType>(it.getAll());
+      query.setParameter("codes", typeCodes);
     }
+
+    return query.getResults();
   }
 
   @Override
   public Optional<DirectedAcyclicGraphType> getByCode(String code)
   {
     return this.cache.get(code, () -> {
-      DirectedAcyclicGraphTypeQuery query = new DirectedAcyclicGraphTypeQuery(new QueryFactory());
-      query.WHERE(query.getCode().EQ(code));
+      MdVertexDAOIF mdVertex = MdVertexDAO.getMdVertexDAO(DirectedAcyclicGraphType.CLASS);
 
-      try (OIterator<? extends DirectedAcyclicGraphType> it = query.getIterator())
-      {
-        if (it.hasNext())
-        {
-          return Optional.ofNullable(it.next());
-        }
-      }
+      StringBuilder statement = new StringBuilder();
+      statement.append("SELECT FROM " + mdVertex.getDBClassName());
+      statement.append(" WHERE code = :code");
 
-      return Optional.empty();
+      GraphQuery<DirectedAcyclicGraphType> query = new GraphQuery<DirectedAcyclicGraphType>(statement.toString());
+      query.setParameter("code", code);
+
+      return Optional.ofNullable(query.getSingleResult());
     });
 
   }
@@ -245,18 +238,16 @@ public class DirectedAcyclicGraphTypeBusinessService implements DirectedAcyclicG
   public DirectedAcyclicGraphType getByMdEdge(MdEdge mdEdge)
   {
     return this.cache.get(mdEdge.getOid(), () -> {
-      DirectedAcyclicGraphTypeQuery query = new DirectedAcyclicGraphTypeQuery(new QueryFactory());
-      query.WHERE(query.getMdEdge().EQ(mdEdge));
+      MdVertexDAOIF mdVertex = MdVertexDAO.getMdVertexDAO(DirectedAcyclicGraphType.CLASS);
 
-      try (OIterator<? extends DirectedAcyclicGraphType> it = query.getIterator())
-      {
-        if (it.hasNext())
-        {
-          return Optional.of(it.next());
-        }
-      }
+      StringBuilder statement = new StringBuilder();
+      statement.append("SELECT FROM " + mdVertex.getDBClassName());
+      statement.append(" WHERE mdEdge = :mdEdge");
 
-      return Optional.empty();
+      GraphQuery<DirectedAcyclicGraphType> query = new GraphQuery<DirectedAcyclicGraphType>(statement.toString());
+      query.setParameter("mdEdge", mdEdge.getOid());
+
+      return Optional.ofNullable(query.getSingleResult());
     }).orElse(null);
   }
 

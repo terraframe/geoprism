@@ -30,8 +30,8 @@ import org.springframework.stereotype.Service;
 import com.runwaysdk.dataaccess.ProgrammingErrorException;
 
 import net.geoprism.graph.GraphTypeReference;
-import net.geoprism.registry.DirectedAcyclicGraphType;
-import net.geoprism.registry.UndirectedGraphType;
+import net.geoprism.registry.graph.DirectedAcyclicGraphType;
+import net.geoprism.registry.graph.UndirectedGraphType;
 import net.geoprism.registry.model.EdgeType;
 import net.geoprism.registry.model.GraphType;
 import net.geoprism.registry.model.ServerHierarchyType;

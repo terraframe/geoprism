@@ -23,9 +23,9 @@ import org.commongeoregistry.adapter.metadata.GraphTypeDTO;
 import com.runwaysdk.dataaccess.MdEdgeDAOIF;
 
 import net.geoprism.graph.GraphTypeSnapshot;
-import net.geoprism.registry.DirectedAcyclicGraphType;
-import net.geoprism.registry.UndirectedGraphType;
 import net.geoprism.registry.graph.BusinessEdgeType;
+import net.geoprism.registry.graph.DirectedAcyclicGraphType;
+import net.geoprism.registry.graph.UndirectedGraphType;
 
 public interface EdgeType
 {

@@ -46,7 +46,13 @@ public class BusinessEdgeType extends BusinessEdgeTypeBase implements ServerElem
   public LocalizedValue getLabel()
   {
     return LocalizedValueConverter.convert(this.getEmbeddedComponent(BusinessEdgeType.DISPLAYLABEL));
+  }  
+
+  public LocalizedValue getDescriptionLV()
+  {
+    return LocalizedValueConverter.convert(this.getEmbeddedComponent(BusinessEdgeType.DESCRIPTION));
   }
+
 
   public MdEdgeDAOIF getMdEdgeDAO()
   {
@@ -62,16 +68,11 @@ public class BusinessEdgeType extends BusinessEdgeTypeBase implements ServerElem
   @Override
   public GraphTypeDTO toDTO()
   {
-    final GraphTypeDTO dto = new GraphTypeDTO(EdgeType.BUSINESS_EDGE_TYPE, this.getCode(), this.getLabel(), getLocalizedDescription());
+    final GraphTypeDTO dto = new GraphTypeDTO(EdgeType.BUSINESS_EDGE_TYPE, this.getCode(), this.getLabel(), getDescriptionLV());
     dto.setChildType(this.getIsChildGeoObject() ? BusinessEdgeTypeView.GEO_OBJECT_TYPE : this.getChildType().getTypeName());
     dto.setParentType(this.getIsParentGeoObject() ? BusinessEdgeTypeView.GEO_OBJECT_TYPE : this.getParentType().getTypeName());
 
     return dto;
-  }
-
-  public LocalizedValue getLocalizedDescription()
-  {
-    return LocalizedValueConverter.convert(this.getEmbeddedComponent(BusinessEdgeType.DESCRIPTION));
   }
 
   @Override

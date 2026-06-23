@@ -44,25 +44,7 @@
             <long name="sequence" label="Sequence"  />                  
           </attributes>
         </create>
-      </mdVertex>    
-      
-      <mdBusiness name="net.geoprism.registry.DirectedAcyclicGraphType">
-        <create>
-          <attributes>
-            <text name="origin" label="Origin"  />                   
-            <long name="sequence" label="Sequence"  />                              
-          </attributes>
-        </create>
-      </mdBusiness>    
-      
-      <mdBusiness name="net.geoprism.registry.UndirectedGraphType">
-        <create>
-          <attributes>
-            <text name="origin" label="Origin"  />                   
-            <long name="sequence" label="Sequence"  />                              
-          </attributes>
-        </create>
-      </mdBusiness>    
+      </mdVertex>          
     </update>
   </doIt>
   <undoIt>

@@ -37,9 +37,9 @@ import com.runwaysdk.business.graph.VertexObject;
 import com.runwaysdk.dataaccess.MdVertexDAOIF;
 import com.runwaysdk.dataaccess.graph.attributes.ValueOverTime;
 
-import net.geoprism.registry.UndirectedGraphType;
 import net.geoprism.registry.graph.DataSource;
 import net.geoprism.registry.graph.GeoVertex;
+import net.geoprism.registry.graph.UndirectedGraphType;
 import net.geoprism.registry.model.EdgeConstant;
 import net.geoprism.registry.model.EdgeValueOverTime;
 import net.geoprism.registry.model.ServerChildGraphNode;

@@ -158,7 +158,7 @@ public class BusinessEdgeTypeBusinessService implements BusinessEdgeTypeBusiness
     object.setParentTypeCode(parentTypeCode);
     object.setChildTypeCode(childTypeCode);
     object.setLabel(edgeType.getLabel());
-    object.setDescription(edgeType.getLocalizedDescription());
+    object.setDescription(edgeType.getDescriptionLV());
 
     return object;
   }

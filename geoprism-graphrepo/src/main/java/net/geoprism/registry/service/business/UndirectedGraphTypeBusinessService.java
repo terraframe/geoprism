@@ -3,22 +3,21 @@
  *
  * This file is part of Geoprism(tm).
  *
- * Geoprism(tm) is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
+ * Geoprism(tm) is free software: you can redistribute it and/or modify it under
+ * the terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation, either version 3 of the License, or (at your option) any
+ * later version.
  *
- * Geoprism(tm) is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
+ * Geoprism(tm) is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with Geoprism(tm).  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with Geoprism(tm). If not, see <http://www.gnu.org/licenses/>.
  */
 package net.geoprism.registry.service.business;
 
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 
@@ -27,6 +26,7 @@ import org.commongeoregistry.adapter.dataaccess.LocalizedValue;
 import org.commongeoregistry.adapter.metadata.GraphTypeDTO;
 import org.springframework.stereotype.Service;
 
+import com.runwaysdk.business.graph.GraphQuery;
 import com.runwaysdk.constants.MdAttributeBooleanInfo;
 import com.runwaysdk.constants.MdAttributeConcreteInfo;
 import com.runwaysdk.constants.MdAttributeDateTimeInfo;
@@ -41,19 +41,16 @@ import com.runwaysdk.dataaccess.metadata.MdAttributeUUIDDAO;
 import com.runwaysdk.dataaccess.metadata.graph.MdEdgeDAO;
 import com.runwaysdk.dataaccess.metadata.graph.MdVertexDAO;
 import com.runwaysdk.dataaccess.transaction.Transaction;
-import com.runwaysdk.query.OIterator;
-import com.runwaysdk.query.QueryFactory;
 import com.runwaysdk.system.metadata.MdEdge;
 
 import net.geoprism.configuration.GeoprismProperties;
 import net.geoprism.registry.DuplicateHierarchyTypeException;
 import net.geoprism.registry.RegistryConstants;
-import net.geoprism.registry.UndirectedGraphType;
-import net.geoprism.registry.UndirectedGraphTypeQuery;
 import net.geoprism.registry.cache.TransactionLRUCache;
 import net.geoprism.registry.conversion.RegistryLocalizedValueConverter;
 import net.geoprism.registry.graph.DataSource;
 import net.geoprism.registry.graph.GeoVertex;
+import net.geoprism.registry.graph.UndirectedGraphType;
 
 @Service
 public class UndirectedGraphTypeBusinessService implements UndirectedGraphTypeBusinessServiceIF
@@ -140,8 +137,8 @@ public class UndirectedGraphTypeBusinessService implements UndirectedGraphTypeBu
       UndirectedGraphType graphType = new UndirectedGraphType();
       graphType.setCode(code);
       graphType.setMdEdgeId(mdEdgeDAO.getOid());
-      RegistryLocalizedValueConverter.populate(graphType.getDisplayLabel(), label);
-      RegistryLocalizedValueConverter.populate(graphType.getDescription(), description);
+      RegistryLocalizedValueConverter.populate(graphType, UndirectedGraphType.DISPLAYLABEL, label);
+      RegistryLocalizedValueConverter.populate(graphType, UndirectedGraphType.DESCRIPTION, description);
       graphType.setOrigin(origin);
       graphType.setSequence(seq);
       graphType.apply();
@@ -167,27 +164,18 @@ public class UndirectedGraphTypeBusinessService implements UndirectedGraphTypeBu
   @Transaction
   public void update(UndirectedGraphType type, GraphTypeDTO object)
   {
-    try
+    if (object.getLabel() != null)
     {
-      type.appLock();
-
-      if (object.getLabel() != null)
-      {
-        RegistryLocalizedValueConverter.populate(type.getDisplayLabel(), object.getLabel());
-      }
-
-      if (object.getDescription() != null)
-      {
-        RegistryLocalizedValueConverter.populate(type.getDescription(), object.getDescription());
-      }
-
-      type.setSequence(type.getSequence() + 1);
-      type.apply();
+      RegistryLocalizedValueConverter.populate(type, UndirectedGraphType.DISPLAYLABEL, object.getLabel());
     }
-    finally
+
+    if (object.getDescription() != null)
     {
-      type.unlock();
+      RegistryLocalizedValueConverter.populate(type, UndirectedGraphType.DESCRIPTION, object.getDescription());
     }
+
+    type.setSequence(type.getSequence() + 1);
+    type.apply();
 
     this.cache.put(type);
   }
@@ -208,35 +196,40 @@ public class UndirectedGraphTypeBusinessService implements UndirectedGraphTypeBu
   @Override
   public List<UndirectedGraphType> getAll(String... typeCodes)
   {
-    UndirectedGraphTypeQuery query = new UndirectedGraphTypeQuery(new QueryFactory());
+    MdVertexDAOIF mdVertex = MdVertexDAO.getMdVertexDAO(UndirectedGraphType.CLASS);
 
-    if (typeCodes != null && typeCodes.length > 0)
+    StringBuilder statement = new StringBuilder();
+    statement.append("SELECT FROM " + mdVertex.getDBClassName());
+
+    if (typeCodes.length > 0)
     {
-      query.AND(query.getCode().IN(typeCodes));
+      statement.append(" WHERE code IN (:codes)");
     }
 
-    try (OIterator<? extends UndirectedGraphType> it = query.getIterator())
+    GraphQuery<UndirectedGraphType> query = new GraphQuery<UndirectedGraphType>(statement.toString());
+
+    if (typeCodes.length > 0)
     {
-      return new LinkedList<UndirectedGraphType>(it.getAll());
+      query.setParameter("codes", typeCodes);
     }
+
+    return query.getResults();
   }
 
   @Override
   public Optional<UndirectedGraphType> getByCode(String code)
   {
     return this.cache.get(code, () -> {
-      UndirectedGraphTypeQuery query = new UndirectedGraphTypeQuery(new QueryFactory());
-      query.WHERE(query.getCode().EQ(code));
+      MdVertexDAOIF mdVertex = MdVertexDAO.getMdVertexDAO(UndirectedGraphType.CLASS);
 
-      try (OIterator<? extends UndirectedGraphType> it = query.getIterator())
-      {
-        if (it.hasNext())
-        {
-          return Optional.ofNullable(it.next());
-        }
-      }
+      StringBuilder statement = new StringBuilder();
+      statement.append("SELECT FROM " + mdVertex.getDBClassName());
+      statement.append(" WHERE code = :code");
 
-      return Optional.empty();
+      GraphQuery<UndirectedGraphType> query = new GraphQuery<UndirectedGraphType>(statement.toString());
+      query.setParameter("code", code);
+
+      return Optional.ofNullable(query.getSingleResult());
     });
   }
 
@@ -244,18 +237,16 @@ public class UndirectedGraphTypeBusinessService implements UndirectedGraphTypeBu
   public UndirectedGraphType getByMdEdge(MdEdge mdEdge)
   {
     return this.cache.get(mdEdge.getOid(), () -> {
-      UndirectedGraphTypeQuery query = new UndirectedGraphTypeQuery(new QueryFactory());
-      query.WHERE(query.getMdEdge().EQ(mdEdge));
+      MdVertexDAOIF mdVertex = MdVertexDAO.getMdVertexDAO(UndirectedGraphType.CLASS);
 
-      try (OIterator<? extends UndirectedGraphType> it = query.getIterator())
-      {
-        if (it.hasNext())
-        {
-          return Optional.of(it.next());
-        }
-      }
+      StringBuilder statement = new StringBuilder();
+      statement.append("SELECT FROM " + mdVertex.getDBClassName());
+      statement.append(" WHERE mdEdge = :mdEdge");
 
-      return Optional.empty();
+      GraphQuery<UndirectedGraphType> query = new GraphQuery<UndirectedGraphType>(statement.toString());
+      query.setParameter("mdEdge", mdEdge.getOid());
+
+      return Optional.ofNullable(query.getSingleResult());
     }).orElse(null);
   }
 
