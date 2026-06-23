@@ -1,22 +1,4 @@
-/**
- * Copyright (c) 2023 TerraFrame, Inc. All rights reserved.
- *
- * This file is part of Geoprism(tm).
- *
- * Geoprism(tm) is free software: you can redistribute it and/or modify it under
- * the terms of the GNU Lesser General Public License as published by the Free
- * Software Foundation, either version 3 of the License, or (at your option) any
- * later version.
- *
- * Geoprism(tm) is distributed in the hope that it will be useful, but WITHOUT
- * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
- * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
- * details.
- *
- * You should have received a copy of the GNU Lesser General Public License
- * along with Geoprism(tm). If not, see <http://www.gnu.org/licenses/>.
- */
-package net.geoprism.registry;
+package net.geoprism.registry.graph;
 
 import org.commongeoregistry.adapter.dataaccess.LocalizedValue;
 import org.commongeoregistry.adapter.metadata.GraphTypeDTO;
@@ -34,7 +16,7 @@ import net.geoprism.registry.view.BusinessEdgeTypeView;
 public class BusinessEdgeType extends BusinessEdgeTypeBase implements ServerElement, EdgeType
 {
   @SuppressWarnings("unused")
-  private static final long  serialVersionUID = 1946865589;
+  private static final long  serialVersionUID = -1808640970;
 
   public static final String JSON_LABEL       = "label";
 
@@ -63,7 +45,7 @@ public class BusinessEdgeType extends BusinessEdgeTypeBase implements ServerElem
 
   public LocalizedValue getLabel()
   {
-    return RegistryLocalizedValueConverter.convertNoAutoCoalesce(this.getDisplayLabel());
+    return LocalizedValueConverter.convert(this.getEmbeddedComponent(BusinessEdgeType.DISPLAYLABEL));
   }
 
   public MdEdgeDAOIF getMdEdgeDAO()
@@ -72,16 +54,24 @@ public class BusinessEdgeType extends BusinessEdgeTypeBase implements ServerElem
   }
 
   @Override
+  public GraphOrganization getOrganization()
+  {
+    return GraphOrganization.get((String) this.getObjectValue(BusinessEdgeType.ORGANIZATION));
+  }
+
+  @Override
   public GraphTypeDTO toDTO()
   {
-    LocalizedValue label = LocalizedValueConverter.convertNoAutoCoalesce(this.getDisplayLabel());
-    LocalizedValue description = LocalizedValueConverter.convertNoAutoCoalesce(this.getDescription());
-
-    final GraphTypeDTO dto = new GraphTypeDTO(EdgeType.BUSINESS_EDGE_TYPE, this.getCode(), label, description);
+    final GraphTypeDTO dto = new GraphTypeDTO(EdgeType.BUSINESS_EDGE_TYPE, this.getCode(), this.getLabel(), getLocalizedDescription());
     dto.setChildType(this.getIsChildGeoObject() ? BusinessEdgeTypeView.GEO_OBJECT_TYPE : this.getChildType().getTypeName());
     dto.setParentType(this.getIsParentGeoObject() ? BusinessEdgeTypeView.GEO_OBJECT_TYPE : this.getParentType().getTypeName());
 
     return dto;
+  }
+
+  public LocalizedValue getLocalizedDescription()
+  {
+    return LocalizedValueConverter.convert(this.getEmbeddedComponent(BusinessEdgeType.DESCRIPTION));
   }
 
   @Override
@@ -95,4 +85,5 @@ public class BusinessEdgeType extends BusinessEdgeTypeBase implements ServerElem
   {
     return this.getIsChildGeoObject() ? VertexComponentType.GEO_OBJECT : VertexComponentType.BUSINESS;
   }
+
 }

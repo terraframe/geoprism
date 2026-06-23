@@ -1,22 +1,4 @@
-/**
- * Copyright (c) 2023 TerraFrame, Inc. All rights reserved.
- *
- * This file is part of Geoprism(tm).
- *
- * Geoprism(tm) is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
- *
- * Geoprism(tm) is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with Geoprism(tm).  If not, see <http://www.gnu.org/licenses/>.
- */
-package net.geoprism.registry;
+package net.geoprism.registry.graph;
 
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -28,9 +10,10 @@ import com.runwaysdk.dataaccess.MdAttributeConcreteDAOIF;
 import com.runwaysdk.dataaccess.MdVertexDAOIF;
 import com.runwaysdk.dataaccess.metadata.graph.MdVertexDAO;
 
+import net.geoprism.registry.conversion.LocalizedValueConverter;
 import net.geoprism.registry.conversion.RegistryAttributeTypeConverter;
-import net.geoprism.registry.conversion.RegistryLocalizedValueConverter;
 import net.geoprism.registry.model.ServerElement;
+import net.geoprism.registry.model.ServerOrganization;
 import net.geoprism.registry.model.graph.EdgeVertexType;
 
 public class BusinessType extends BusinessTypeBase implements ServerElement, EdgeVertexType
@@ -58,6 +41,12 @@ public class BusinessType extends BusinessTypeBase implements ServerElement, Edg
     super.delete();
   }
 
+  @Override
+  public GraphOrganization getOrganization()
+  {
+    return GraphOrganization.get((String) this.getObjectValue(BusinessEdgeType.ORGANIZATION));
+  }
+
   public MdVertexDAOIF getMdVertexDAO()
   {
     return MdVertexDAO.get(this.getMdVertexOid());
@@ -65,7 +54,7 @@ public class BusinessType extends BusinessTypeBase implements ServerElement, Edg
 
   public LocalizedValue getLabel()
   {
-    return RegistryLocalizedValueConverter.convertNoAutoCoalesce(this.getDisplayLabel());
+    return LocalizedValueConverter.convert(this.getEmbeddedComponent(BusinessType.DISPLAYLABEL));
   }
 
   public Map<String, AttributeType> getAttributeMap()
@@ -119,5 +108,15 @@ public class BusinessType extends BusinessTypeBase implements ServerElement, Edg
   public BusinessType toBusinessType()
   {
     return this;
+  }
+
+  public String getOrganizationGraphId()
+  {
+    return this.getObjectValue(ORGANIZATION);
+  }
+
+  public ServerOrganization getServerOrganization()
+  {
+    return ServerOrganization.getByGraphId(this.getOrganizationGraphId());
   }
 }

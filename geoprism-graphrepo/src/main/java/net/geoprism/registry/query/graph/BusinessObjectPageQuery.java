@@ -41,9 +41,9 @@ import com.runwaysdk.dataaccess.MdVertexDAOIF;
 import com.runwaysdk.session.Session;
 
 import net.geoprism.ontology.Classifier;
-import net.geoprism.registry.BusinessType;
 import net.geoprism.registry.DateFormatter;
 import net.geoprism.registry.conversion.RegistryLocalizedValueConverter;
+import net.geoprism.registry.graph.BusinessType;
 import net.geoprism.registry.view.JsonSerializable;
 import net.geoprism.registry.view.JsonWrapper;
 

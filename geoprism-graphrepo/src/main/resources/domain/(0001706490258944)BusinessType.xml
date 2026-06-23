@@ -21,11 +21,10 @@
 <version xsi:noNamespaceSchemaLocation="classpath:com/runwaysdk/resources/xsd/version.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <doIt>
     <create>
-      <mdBusiness
-        name="net.geoprism.registry.BusinessType"
+      <mdVertex
+        name="net.geoprism.registry.graph.BusinessType"
         label="Business Type"
-        generateController="false"
-        cacheAlgorithm="everything">
+        extends="net.geoprism.registry.graph.ObjectClass">
         <attributes>
           <char
             name="code"
@@ -38,23 +37,26 @@
             type="com.runwaysdk.system.metadata.MdVertex"
             required="true"
             label="MdVertex" />
-          <localChar
+          <reference
+            name="labelAttribute"
+            type="com.runwaysdk.system.metadata.MdAttribute"
+            required="false"
+            label="Label Attribute" />            
+          <localCharEmbedded
             name="displayLabel"
             label="Label"
             required="true" />
-          <reference
-            name="organization"
-            label="Organization"
-            required="false"
-            type="net.geoprism.registry.Organization" />
+          <graphReference name="organization" label="Organization" type="net.geoprism.registry.graph.GraphOrganization" />
+          <text name="origin" label="Origin"  />                   
+          <long name="sequence" label="Sequence"  />                                        
         </attributes>
-      </mdBusiness>
+      </mdVertex>
     </create>
     <update></update>
     <permissions>
       <role roleName="geoprism.admin.Administrator">
         <grant>
-          <mdBusinessPermission type="net.geoprism.registry.BusinessType">
+          <mdBusinessPermission type="net.geoprism.registry.graph.BusinessType">
             <operation name="ALL" />
           </mdBusinessPermission>
         </grant>
@@ -64,8 +66,8 @@
   <undoIt>
     <delete>
       <object
-        key="net.geoprism.registry.BusinessType"
-        type="com.runwaysdk.system.metadata.MdBusiness"></object>
+        key="net.geoprism.registry.graph.BusinessType"
+        type="com.runwaysdk.system.metadata.MdVertex"></object>
     </delete>
   </undoIt>
 </version>

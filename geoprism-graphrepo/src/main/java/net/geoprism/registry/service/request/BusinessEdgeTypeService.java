@@ -28,9 +28,9 @@ import com.runwaysdk.session.Request;
 import com.runwaysdk.session.RequestType;
 
 import net.geoprism.configuration.GeoprismProperties;
-import net.geoprism.registry.BusinessEdgeType;
 import net.geoprism.registry.DataNotFoundException;
 import net.geoprism.registry.OriginException;
+import net.geoprism.registry.graph.BusinessEdgeType;
 import net.geoprism.registry.service.business.BusinessEdgeTypeBusinessServiceIF;
 import net.geoprism.registry.view.BusinessEdgeTypeView;
 

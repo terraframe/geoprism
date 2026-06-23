@@ -46,24 +46,6 @@
         </create>
       </mdVertex>    
       
-      <mdBusiness name="net.geoprism.registry.BusinessType">
-        <create>
-          <attributes>
-            <text name="origin" label="Origin"  />                   
-            <long name="sequence" label="Sequence"  />                              
-          </attributes>
-        </create>
-      </mdBusiness>    
-      
-      <mdBusiness name="net.geoprism.registry.BusinessEdgeType">
-        <create>
-          <attributes>
-            <text name="origin" label="Origin"  />                   
-            <long name="sequence" label="Sequence"  />                              
-          </attributes>
-        </create>
-      </mdBusiness>    
-      
       <mdBusiness name="net.geoprism.registry.DirectedAcyclicGraphType">
         <create>
           <attributes>

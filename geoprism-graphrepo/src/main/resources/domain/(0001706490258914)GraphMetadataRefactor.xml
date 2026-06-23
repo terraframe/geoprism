@@ -21,7 +21,15 @@
 <version xsi:noNamespaceSchemaLocation="classpath:com/runwaysdk/resources/xsd/version.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <doIt>
     <create>
-      <mdVertex name="net.geoprism.registry.graph.BaseGeoObjectType" label="Base Geo Object Type">
+      <mdVertex name="net.geoprism.registry.graph.SchemaElement" label="Schema Element"  isAbstract="true" >
+      </mdVertex>
+      <mdVertex name="net.geoprism.registry.graph.EdgeClass" extends="net.geoprism.registry.graph.SchemaElement" isAbstract="true" label="Edge Class" >
+      </mdVertex>
+    
+      <mdVertex name="net.geoprism.registry.graph.ObjectClass" extends="net.geoprism.registry.graph.SchemaElement" isAbstract="true" label="Object Class">
+      </mdVertex>    
+      
+      <mdVertex name="net.geoprism.registry.graph.BaseGeoObjectType" extends="net.geoprism.registry.graph.ObjectClass" label="Base Geo Object Type">
         <attributes>
           <char name="code" label="Code" required="true" size="255" indexType="unique"  />          
         </attributes>
@@ -44,7 +52,7 @@
         </attributes>
       </mdVertex>    
       
-      <mdVertex name="net.geoprism.registry.graph.HierarchicalRelationshipType" label="Hierarchical Relationship" generateController="false">
+      <mdVertex name="net.geoprism.registry.graph.HierarchicalRelationshipType" extends="net.geoprism.registry.graph.EdgeClass" label="Hierarchical Relationship" generateController="false">
         <attributes>
           <char name="code" size="255" required="true" indexType="unique index" label="Code" />
           <localCharEmbedded name="displayLabel" label="Label" required="true" />        
@@ -65,7 +73,7 @@
         </attributes>
       </mdVertex>    
       
-      <mdVertex name="net.geoprism.registry.graph.AttributeType" isAbstract="true" label="AttributeType">
+      <mdVertex name="net.geoprism.registry.graph.AttributeType" extends="net.geoprism.registry.graph.SchemaElement" isAbstract="true" label="AttributeType">
         <attributes>
           <char name="code" label="Code" required="true" size="255" />
           <localCharEmbedded name="label" label="Label" required="true" />        
@@ -222,7 +230,8 @@
         </attributes>
       </mdVertex>
       
-
+      <mdBusiness name="net.geoprism.registry.geometry.GeometryTable" isAbstract="true" extendable="true" generateController="false" generateSource="false" label="AbstractGeometryTable">
+      </mdBusiness>    
     </create>
     
     <permissions>
@@ -362,7 +371,11 @@
       
       <object type="com.runwaysdk.system.metadata.MdVertex" key="net.geoprism.registry.graph.HierarchicalRelationshipType" />
       <object type="com.runwaysdk.system.metadata.MdVertex" key="net.geoprism.registry.graph.GeoObjectType" />      
-      <object type="com.runwaysdk.system.metadata.MdVertex" key="net.geoprism.registry.graph.BaseGeoObjectType" />      
+      <object type="com.runwaysdk.system.metadata.MdVertex" key="net.geoprism.registry.graph.BaseGeoObjectType" /> 
+      <object type="com.runwaysdk.system.metadata.MdVertex" key="net.geoprism.registry.graph.ObjectClass" />
+      <object type="com.runwaysdk.system.metadata.MdVertex" key="net.geoprism.registry.graph.EdgeClass" />
+      <object type="com.runwaysdk.system.metadata.MdVertex" key="net.geoprism.registry.graph.SchemaElement" />
+           
     </delete>
   </undoIt>
 </version>

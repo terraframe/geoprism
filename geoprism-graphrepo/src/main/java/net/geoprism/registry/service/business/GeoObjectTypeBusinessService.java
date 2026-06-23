@@ -59,18 +59,17 @@ import com.runwaysdk.business.rbac.RoleDAO;
 import com.runwaysdk.constants.MdAttributeBooleanInfo;
 import com.runwaysdk.constants.MdAttributeCharacterInfo;
 import com.runwaysdk.constants.MdAttributeConcreteInfo;
-import com.runwaysdk.constants.MdAttributeLocalCharacterInfo;
 import com.runwaysdk.constants.MdAttributeLocalInfo;
 import com.runwaysdk.constants.MdBusinessInfo;
 import com.runwaysdk.dataaccess.DuplicateDataException;
 import com.runwaysdk.dataaccess.MdAttributeConcreteDAOIF;
+import com.runwaysdk.dataaccess.MdBusinessDAOIF;
 import com.runwaysdk.dataaccess.MdClassDAOIF;
 import com.runwaysdk.dataaccess.MdVertexDAOIF;
 import com.runwaysdk.dataaccess.ProgrammingErrorException;
 import com.runwaysdk.dataaccess.attributes.AttributeValueException;
 import com.runwaysdk.dataaccess.metadata.MdAttributeCharacterDAO;
 import com.runwaysdk.dataaccess.metadata.MdAttributeDateTimeDAO;
-import com.runwaysdk.dataaccess.metadata.MdAttributeLocalTextDAO;
 import com.runwaysdk.dataaccess.metadata.MdAttributeTextDAO;
 import com.runwaysdk.dataaccess.metadata.MdAttributeUUIDDAO;
 import com.runwaysdk.dataaccess.metadata.MdBusinessDAO;
@@ -112,6 +111,8 @@ import net.geoprism.registry.permission.PermissionContext;
 @Service
 public class GeoObjectTypeBusinessService implements GeoObjectTypeBusinessServiceIF
 {
+  public static String                     GEOMETRY_TABLE = "net.geoprism.registry.geometry.GeometryTable";
+
   @Autowired
   private TransitionEventBusinessServiceIF tranEventServ;
 
@@ -493,6 +494,12 @@ public class GeoObjectTypeBusinessService implements GeoObjectTypeBusinessServic
     {
       mdBusiness.setValue(MdBusinessInfo.SUPER_MD_BUSINESS, parentType.getGeometryTable().getOid());
     }
+    else
+    {
+      MdBusinessDAOIF mdBusinessDAO = MdBusinessDAO.getMdBusinessDAO(GEOMETRY_TABLE);
+
+      mdBusiness.setValue(MdBusinessInfo.SUPER_MD_BUSINESS, mdBusinessDAO.getOid());
+    }
 
     mdBusiness.setValue(MdBusinessInfo.GENERATE_SOURCE, MdAttributeBooleanInfo.FALSE);
     mdBusiness.setValue(MdBusinessInfo.ABSTRACT, isAbstract.toString());
@@ -508,7 +515,7 @@ public class GeoObjectTypeBusinessService implements GeoObjectTypeBusinessServic
       codeMdAttr.setValue(MdAttributeConcreteInfo.DEFINING_MD_CLASS, mdBusiness.getOid());
       codeMdAttr.setValue(MdAttributeConcreteInfo.REQUIRED, MdAttributeBooleanInfo.TRUE);
       codeMdAttr.apply();
-      
+
       MdAttributeUUIDDAO uidAttr = MdAttributeUUIDDAO.newInstance();
       uidAttr.setValue(MdAttributeConcreteInfo.NAME, DefaultAttribute.UID.getName());
       uidAttr.setStructValue(MdAttributeBooleanInfo.DISPLAY_LABEL, LocalizedValue.DEFAULT_LOCALE, DefaultAttribute.UID.getDefaultLocalizedName());
@@ -516,7 +523,6 @@ public class GeoObjectTypeBusinessService implements GeoObjectTypeBusinessServic
       uidAttr.setValue(MdAttributeConcreteInfo.DEFINING_MD_CLASS, mdBusiness.getOid());
       uidAttr.setValue(MdAttributeConcreteInfo.REQUIRED, true);
       uidAttr.apply();
-
 
       MdAttributeTextDAO labelMdAttr = MdAttributeTextDAO.newInstance();
       labelMdAttr.setValue(MdAttributeConcreteInfo.NAME, DefaultAttribute.DISPLAY_LABEL.getName());

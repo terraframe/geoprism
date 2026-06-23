@@ -20,7 +20,7 @@ package net.geoprism.registry.service.permission;
 
 import org.springframework.stereotype.Component;
 
-import net.geoprism.registry.BusinessType;
+import net.geoprism.registry.graph.BusinessType;
 import net.geoprism.registry.model.ServerOrganization;
 
 @Component

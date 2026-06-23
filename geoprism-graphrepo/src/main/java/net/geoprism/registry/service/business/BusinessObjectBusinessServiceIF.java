@@ -27,8 +27,8 @@ import org.springframework.stereotype.Component;
 import com.google.gson.JsonObject;
 import com.runwaysdk.business.graph.EdgeObject;
 
-import net.geoprism.registry.BusinessEdgeType;
-import net.geoprism.registry.BusinessType;
+import net.geoprism.registry.graph.BusinessEdgeType;
+import net.geoprism.registry.graph.BusinessType;
 import net.geoprism.registry.graph.DataSource;
 import net.geoprism.registry.model.BusinessObject;
 import net.geoprism.registry.model.graph.VertexComponent;

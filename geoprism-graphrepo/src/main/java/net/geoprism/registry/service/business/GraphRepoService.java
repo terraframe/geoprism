@@ -26,12 +26,12 @@ import com.runwaysdk.query.OIterator;
 import com.runwaysdk.query.QueryFactory;
 import com.runwaysdk.session.Request;
 
-import net.geoprism.registry.BusinessEdgeType;
-import net.geoprism.registry.BusinessType;
 import net.geoprism.registry.DirectedAcyclicGraphType;
 import net.geoprism.registry.Organization;
 import net.geoprism.registry.OrganizationQuery;
 import net.geoprism.registry.UndirectedGraphType;
+import net.geoprism.registry.graph.BusinessEdgeType;
+import net.geoprism.registry.graph.BusinessType;
 import net.geoprism.registry.graph.HierarchicalRelationshipType;
 import net.geoprism.registry.graph.InheritedHierarchyAnnotation;
 import net.geoprism.registry.model.ServerElement;

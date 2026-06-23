@@ -49,6 +49,12 @@ public class GraphOrganization extends GraphOrganizationBase implements JsonSeri
   {
     super();
   }
+  
+  public LocalizedValue getLabel()
+  {
+    return LocalizedValueConverter.convert(this.getEmbeddedComponent(GraphOrganization.DISPLAYLABEL));
+  }
+
 
   public EdgeObject getEdge(GraphOrganization parent)
   {

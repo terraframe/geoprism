@@ -20,7 +20,7 @@ package net.geoprism.registry.model.graph;
 
 import com.runwaysdk.dataaccess.MdVertexDAOIF;
 
-import net.geoprism.registry.BusinessType;
+import net.geoprism.registry.graph.BusinessType;
 
 public interface EdgeVertexType
 {

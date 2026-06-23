@@ -52,10 +52,10 @@ import com.runwaysdk.dataaccess.transaction.Transaction;
 
 import net.geoprism.configuration.GeoprismProperties;
 import net.geoprism.ontology.Classifier;
-import net.geoprism.registry.BusinessEdgeType;
-import net.geoprism.registry.BusinessType;
 import net.geoprism.registry.DateFormatter;
 import net.geoprism.registry.OriginException;
+import net.geoprism.registry.graph.BusinessEdgeType;
+import net.geoprism.registry.graph.BusinessType;
 import net.geoprism.registry.graph.DataSource;
 import net.geoprism.registry.model.BusinessObject;
 import net.geoprism.registry.model.ClassificationType;

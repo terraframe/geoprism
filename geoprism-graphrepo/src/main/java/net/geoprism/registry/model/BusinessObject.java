@@ -29,9 +29,9 @@ import com.runwaysdk.business.graph.GraphObject;
 import com.runwaysdk.business.graph.VertexObject;
 import com.runwaysdk.system.metadata.MdAttribute;
 
-import net.geoprism.registry.BusinessType;
 import net.geoprism.registry.DateFormatter;
 import net.geoprism.registry.conversion.RegistryLocalizedValueConverter;
+import net.geoprism.registry.graph.BusinessType;
 import net.geoprism.registry.model.graph.VertexComponent;
 
 public class BusinessObject implements VertexComponent

@@ -29,9 +29,9 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.runwaysdk.dataaccess.MdVertexDAOIF;
 
-import net.geoprism.registry.BusinessEdgeType;
-import net.geoprism.registry.BusinessType;
 import net.geoprism.registry.Organization;
+import net.geoprism.registry.graph.BusinessEdgeType;
+import net.geoprism.registry.graph.BusinessType;
 import net.geoprism.registry.model.ServerOrganization;
 import net.geoprism.registry.view.JsonSerializable;
 import net.geoprism.registry.view.Page;

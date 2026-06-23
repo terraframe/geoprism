@@ -45,6 +45,7 @@ import org.springframework.stereotype.Service;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.runwaysdk.business.BusinessFacade;
+import com.runwaysdk.business.graph.GraphQuery;
 import com.runwaysdk.constants.IndexTypes;
 import com.runwaysdk.constants.MdAttributeBooleanInfo;
 import com.runwaysdk.constants.MdAttributeCharacterInfo;
@@ -57,21 +58,17 @@ import com.runwaysdk.dataaccess.MdAttributeConcreteDAOIF;
 import com.runwaysdk.dataaccess.MdAttributeDAOIF;
 import com.runwaysdk.dataaccess.MdAttributeMultiTermDAOIF;
 import com.runwaysdk.dataaccess.MdAttributeTermDAOIF;
-import com.runwaysdk.dataaccess.MdBusinessDAOIF;
 import com.runwaysdk.dataaccess.MdClassDAOIF;
 import com.runwaysdk.dataaccess.MdVertexDAOIF;
 import com.runwaysdk.dataaccess.cache.DataNotFoundException;
 import com.runwaysdk.dataaccess.metadata.MdAttributeCharacterDAO;
 import com.runwaysdk.dataaccess.metadata.MdAttributeConcreteDAO;
 import com.runwaysdk.dataaccess.metadata.MdAttributeGraphReferenceDAO;
-import com.runwaysdk.dataaccess.metadata.MdBusinessDAO;
 import com.runwaysdk.dataaccess.metadata.graph.MdVertexDAO;
 import com.runwaysdk.dataaccess.transaction.Transaction;
 import com.runwaysdk.gis.constants.MdGeoVertexInfo;
 import com.runwaysdk.localization.LocalizationFacade;
 import com.runwaysdk.localization.SupportedLocaleIF;
-import com.runwaysdk.query.OIterator;
-import com.runwaysdk.query.QueryFactory;
 import com.runwaysdk.session.Session;
 import com.runwaysdk.system.metadata.MdAttributeBoolean;
 import com.runwaysdk.system.metadata.MdAttributeCharacter;
@@ -92,10 +89,6 @@ import com.runwaysdk.system.metadata.MdVertex;
 
 import net.geoprism.configuration.GeoprismProperties;
 import net.geoprism.ontology.Classifier;
-import net.geoprism.registry.BusinessEdgeType;
-import net.geoprism.registry.BusinessEdgeTypeQuery;
-import net.geoprism.registry.BusinessType;
-import net.geoprism.registry.BusinessTypeQuery;
 import net.geoprism.registry.CodeLengthException;
 import net.geoprism.registry.JsonCollectors;
 import net.geoprism.registry.Organization;
@@ -104,6 +97,8 @@ import net.geoprism.registry.cache.TransactionLRUCache;
 import net.geoprism.registry.conversion.RegistryAttributeTypeConverter;
 import net.geoprism.registry.conversion.RegistryLocalizedValueConverter;
 import net.geoprism.registry.conversion.TermConverter;
+import net.geoprism.registry.graph.BusinessEdgeType;
+import net.geoprism.registry.graph.BusinessType;
 import net.geoprism.registry.graph.DataSource;
 import net.geoprism.registry.model.Classification;
 import net.geoprism.registry.model.ClassificationType;
@@ -214,7 +209,6 @@ public class BusinessTypeBusinessService implements BusinessTypeBusinessServiceI
     // Update the sequence number of the type
     if (type.getOrigin().equals(GeoprismProperties.getOrigin()))
     {
-      type.appLock();
       type.setSequence(type.getSequence() + 1);
       type.apply();
 
@@ -280,15 +274,14 @@ public class BusinessTypeBusinessService implements BusinessTypeBusinessServiceI
   @Override
   public JsonObject toJSON(BusinessType type, boolean includeAttribute, boolean flattenLocalAttributes, Predicate<AttributeType> filter)
   {
-    Organization organization = type.getOrganization();
-
+    ServerOrganization organization = type.getServerOrganization();
     JsonObject object = new JsonObject();
     object.addProperty(BusinessType.CODE, type.getCode());
     object.addProperty(BusinessType.ORGANIZATION, organization.getCode());
     object.addProperty(BusinessType.ORIGIN, type.getOrigin());
     object.addProperty(BusinessType.SEQUENCE, type.getSequence());
     object.addProperty("organizationLabel", organization.getDisplayLabel().getValue());
-    object.add(BusinessType.DISPLAYLABEL, RegistryLocalizedValueConverter.convertNoAutoCoalesce(type.getDisplayLabel()).toJSON());
+    object.add(BusinessType.DISPLAYLABEL, type.getLabel().toJSON());
 
     if (type.getLabelAttributeOid() != null && type.getLabelAttributeOid().length() > 0)
     {
@@ -299,7 +292,7 @@ public class BusinessTypeBusinessService implements BusinessTypeBusinessServiceI
       object.addProperty(BusinessType.LABELATTRIBUTE, BusinessType.CODE);
     }
 
-    if (type.isAppliedToDB())
+    if (type.isAppliedToDb())
     {
       object.addProperty(BusinessType.OID, type.getOid());
     }
@@ -359,7 +352,7 @@ public class BusinessTypeBusinessService implements BusinessTypeBusinessServiceI
   {
     String code = object.get(BusinessType.CODE).getAsString();
     String organizationCode = object.get(BusinessType.ORGANIZATION).getAsString();
-    Organization organization = Organization.getByCode(organizationCode);
+    ServerOrganization organization = ServerOrganization.getByCode(organizationCode);
     String origin = object.has(BusinessType.ORIGIN) ? object.get(BusinessType.ORIGIN).getAsString() : GeoprismProperties.getOrigin();
 
     ServiceFactory.getGeoObjectTypePermissionService().enforceCanCreate(organization.getCode(), false);
@@ -378,8 +371,8 @@ public class BusinessTypeBusinessService implements BusinessTypeBusinessServiceI
 
     BusinessType businessType = ( object.has(BusinessType.OID) && !object.get(BusinessType.OID).isJsonNull() ) ? BusinessType.get(object.get(BusinessType.OID).getAsString()) : new BusinessType();
     businessType.setCode(code);
-    businessType.setOrganization(organization);
-    RegistryLocalizedValueConverter.populate(businessType.getDisplayLabel(), localizedValue);
+    businessType.setOrganization(organization.getGraphOrganization());
+    RegistryLocalizedValueConverter.populate(businessType, BusinessType.DISPLAYLABEL, localizedValue);
 
     boolean isNew = businessType.isNew();
 
@@ -457,65 +450,70 @@ public class BusinessTypeBusinessService implements BusinessTypeBusinessServiceI
   @Override
   public List<BusinessEdgeType> getParentEdgeTypes(BusinessType type)
   {
-    BusinessEdgeTypeQuery query = new BusinessEdgeTypeQuery(new QueryFactory());
-    query.WHERE(query.getParentType().EQ(type.getMdVertex()));
-    query.ORDER_BY_DESC(query.getDisplayLabel().localize());
+    MdVertexDAOIF mdVertex = MdVertexDAO.getMdVertexDAO(BusinessEdgeType.CLASS);
 
-    try (OIterator<? extends BusinessEdgeType> iterator = query.getIterator())
-    {
-      List<? extends BusinessEdgeType> results = iterator.getAll();
+    StringBuilder statement = new StringBuilder();
+    statement.append("SELECT FROM " + mdVertex.getDBClassName());
+    statement.append(" WHERE parentType = :parentType");
 
-      return new LinkedList<BusinessEdgeType>(results);
-    }
+    GraphQuery<BusinessEdgeType> query = new GraphQuery<BusinessEdgeType>(statement.toString());
+    query.setParameter("parentType", type.getMdVertexOid());
+
+    return query.getResults().stream() //
+        .sorted((a, b) -> a.getLabel().getLocalizedValue().compareTo(b.getLabel().getLocalizedValue())) //
+        .toList();
   }
 
   @Override
   public List<BusinessEdgeType> getChildEdgeTypes(BusinessType type)
   {
-    BusinessEdgeTypeQuery query = new BusinessEdgeTypeQuery(new QueryFactory());
-    query.WHERE(query.getChildType().EQ(type.getMdVertex()));
-    query.ORDER_BY_DESC(query.getDisplayLabel().localize());
+    MdVertexDAOIF mdVertex = MdVertexDAO.getMdVertexDAO(BusinessEdgeType.CLASS);
 
-    try (OIterator<? extends BusinessEdgeType> iterator = query.getIterator())
-    {
-      List<? extends BusinessEdgeType> results = iterator.getAll();
+    StringBuilder statement = new StringBuilder();
+    statement.append("SELECT FROM " + mdVertex.getDBClassName());
+    statement.append(" WHERE childType = :childType");
 
-      return new LinkedList<BusinessEdgeType>(results);
-    }
+    GraphQuery<BusinessEdgeType> query = new GraphQuery<BusinessEdgeType>(statement.toString());
+    query.setParameter("childType", type.getMdVertexOid());
+
+    return query.getResults().stream() //
+        .sorted((a, b) -> a.getLabel().getLocalizedValue().compareTo(b.getLabel().getLocalizedValue())) //
+        .toList();
   }
 
   @Override
   public List<BusinessEdgeType> getEdgeTypes(BusinessType type)
   {
-    BusinessEdgeTypeQuery query = new BusinessEdgeTypeQuery(new QueryFactory());
-    query.WHERE(query.getParentType().EQ(type.getMdVertex()));
-    query.OR(query.getChildType().EQ(type.getMdVertex()));
-    query.ORDER_BY_DESC(query.getDisplayLabel().localize());
+    MdVertexDAOIF mdVertex = MdVertexDAO.getMdVertexDAO(BusinessEdgeType.CLASS);
 
-    try (OIterator<? extends BusinessEdgeType> iterator = query.getIterator())
-    {
-      List<? extends BusinessEdgeType> results = iterator.getAll();
+    StringBuilder statement = new StringBuilder();
+    statement.append("SELECT FROM " + mdVertex.getDBClassName());
+    statement.append(" WHERE childType = :type");
+    statement.append(" OR parentType = :type");
 
-      return new LinkedList<BusinessEdgeType>(results);
-    }
+    GraphQuery<BusinessEdgeType> query = new GraphQuery<BusinessEdgeType>(statement.toString());
+    query.setParameter("type", type.getMdVertexOid());
+
+    return query.getResults().stream() //
+        .sorted((a, b) -> a.getLabel().getLocalizedValue().compareTo(b.getLabel().getLocalizedValue())) //
+        .toList();
   }
 
   @Override
   public Optional<BusinessType> getByCode(String code)
   {
     return this.cache.get(code, () -> {
-      BusinessTypeQuery query = new BusinessTypeQuery(new QueryFactory());
-      query.WHERE(query.getCode().EQ(code));
 
-      try (OIterator<? extends BusinessType> it = query.getIterator())
-      {
-        if (it.hasNext())
-        {
-          return Optional.of(it.next());
-        }
-      }
+      MdVertexDAOIF mdVertex = MdVertexDAO.getMdVertexDAO(BusinessType.CLASS);
 
-      return Optional.empty();
+      StringBuilder statement = new StringBuilder();
+      statement.append("SELECT FROM " + mdVertex.getDBClassName());
+      statement.append(" WHERE code = :code");
+
+      GraphQuery<BusinessType> query = new GraphQuery<BusinessType>(statement.toString());
+      query.setParameter("code", code);
+
+      return Optional.ofNullable(query.getSingleResult());
     });
   }
 
@@ -523,10 +521,10 @@ public class BusinessTypeBusinessService implements BusinessTypeBusinessServiceI
   public BusinessType getByCodeOrThrow(String code)
   {
     return this.getByCode(code).orElseThrow(() -> {
-      MdBusinessDAOIF mdBusiness = MdBusinessDAO.getMdBusinessDAO(BusinessType.CLASS);
+      MdVertexDAOIF mdVertex = MdVertexDAO.getMdVertexDAO(BusinessType.CLASS);
 
       net.geoprism.registry.DataNotFoundException ex = new net.geoprism.registry.DataNotFoundException();
-      ex.setTypeLabel(mdBusiness.getDisplayLabel(Session.getCurrentLocale()));
+      ex.setTypeLabel(mdVertex.getDisplayLabel(Session.getCurrentLocale()));
       ex.setDataIdentifier(code);
       ex.setAttributeLabel(GeoObjectMetadata.get().getAttributeDisplayLabel(DefaultAttribute.CODE.getName()));
 
@@ -539,28 +537,27 @@ public class BusinessTypeBusinessService implements BusinessTypeBusinessServiceI
   {
     JsonArray response = new JsonArray();
 
-    List<ServerOrganization> organizations = ServerOrganization.getSortedOrganizations().stream().filter(org -> org.getEnabled()).collect(Collectors.toList());
+    List<ServerOrganization> organizations = ServerOrganization.getSortedOrganizations().stream() //
+        .filter(org -> org.getEnabled()) //
+        .collect(Collectors.toList());
 
     for (ServerOrganization org : organizations)
     {
-      BusinessTypeQuery query = new BusinessTypeQuery(new QueryFactory());
-      query.WHERE(query.getOrganization().EQ(org.getOrganization()));
-      query.ORDER_BY_DESC(query.getDisplayLabel().localize());
+      MdVertexDAOIF mdVertex = MdVertexDAO.getMdVertexDAO(BusinessType.CLASS);
 
-      JsonArray types = new JsonArray();
+      StringBuilder statement = new StringBuilder();
+      statement.append("SELECT FROM " + mdVertex.getDBClassName());
+      statement.append(" WHERE organization = :organization");
+      statement.append(" ORDER BY code DESC");
 
-      try (OIterator<? extends BusinessType> it = query.getIterator())
-      {
-        while (it.hasNext())
-        {
-          BusinessType type = it.next();
+      GraphQuery<BusinessType> query = new GraphQuery<BusinessType>(statement.toString());
+      query.setParameter("organization", org.getGraphOrganization().getRID());
 
-          if (this.permissions.canRead(type))
-          {
-            types.add(this.toJSON(type));
-          }
-        }
-      }
+      JsonArray types = query.getResults().stream() //
+          .filter(type -> this.permissions.canRead(type)) //
+          .sorted((a, b) -> a.getLabel().getValue().compareTo(b.getLabel().getValue())) //
+          .map(type -> this.toJSON(type)) //
+          .collect(JsonCollectors.toJsonArray());
 
       JsonObject object = new JsonObject();
       object.addProperty("oid", org.getOid());
@@ -582,17 +579,19 @@ public class BusinessTypeBusinessService implements BusinessTypeBusinessServiceI
 
     ServerOrganization.getSortedOrganizations().stream().filter(o -> this.permissions.isMember(o)).forEach(org -> {
 
-      BusinessTypeQuery query = new BusinessTypeQuery(new QueryFactory());
-      query.WHERE(query.getOrganization().EQ(org.getOrganization()));
-      query.ORDER_BY_DESC(query.getDisplayLabel().localize());
+      MdVertexDAOIF mdVertex = MdVertexDAO.getMdVertexDAO(BusinessType.CLASS);
 
-      try (OIterator<? extends BusinessType> it = query.getIterator())
-      {
-        while (it.hasNext())
-        {
-          response.add(it.next());
-        }
-      }
+      StringBuilder statement = new StringBuilder();
+      statement.append("SELECT FROM " + mdVertex.getDBClassName());
+      statement.append(" WHERE organization = :organization");
+      statement.append(" ORDER BY code DESC");
+
+      GraphQuery<BusinessType> query = new GraphQuery<BusinessType>(statement.toString());
+      query.setParameter("organization", org.getGraphOrganization().getRID());
+
+      query.getResults().stream() //
+          .sorted((a, b) -> a.getLabel().getValue().compareTo(b.getLabel().getValue())) //
+          .forEach(type -> response.add(type)); //
     });
 
     return response;
@@ -607,32 +606,36 @@ public class BusinessTypeBusinessService implements BusinessTypeBusinessServiceI
   @Override
   public List<BusinessType> getForOrganization(Organization organization)
   {
-    BusinessTypeQuery query = new BusinessTypeQuery(new QueryFactory());
-    query.WHERE(query.getOrganization().EQ(organization));
-    query.ORDER_BY_DESC(query.getDisplayLabel().localize());
+    ServerOrganization org = ServerOrganization.get(organization);
 
-    try (OIterator<? extends BusinessType> it = query.getIterator())
-    {
-      return it.getAll().stream().map(type -> (BusinessType) type).collect(Collectors.toList());
-    }
+    MdVertexDAOIF mdVertex = MdVertexDAO.getMdVertexDAO(BusinessType.CLASS);
+
+    StringBuilder statement = new StringBuilder();
+    statement.append("SELECT FROM " + mdVertex.getDBClassName());
+    statement.append(" WHERE organization = :organization");
+    statement.append(" ORDER BY code DESC");
+
+    GraphQuery<BusinessType> query = new GraphQuery<BusinessType>(statement.toString());
+    query.setParameter("organization", org.getGraphOrganization().getRID());
+
+    return query.getResults();
   }
 
   @Override
   public BusinessType getByMdVertex(MdVertexDAOIF mdVertex)
   {
     return this.cache.get(mdVertex.getOid(), () -> {
-      BusinessTypeQuery query = new BusinessTypeQuery(new QueryFactory());
-      query.WHERE(query.getMdVertex().EQ(mdVertex.getOid()));
+      MdVertexDAOIF table = MdVertexDAO.getMdVertexDAO(BusinessType.CLASS);
 
-      try (OIterator<? extends BusinessType> it = query.getIterator())
-      {
-        if (it.hasNext())
-        {
-          return Optional.of(it.next());
-        }
-      }
+      StringBuilder statement = new StringBuilder();
+      statement.append("SELECT FROM " + table.getDBClassName());
+      statement.append(" WHERE mdVertex = :mdVertex");
+      statement.append(" ORDER BY code DESC");
 
-      return Optional.empty();
+      GraphQuery<BusinessType> query = new GraphQuery<BusinessType>(statement.toString());
+      query.setParameter("mdVertex", mdVertex.getOid());
+
+      return Optional.ofNullable(query.getSingleResult());
     }).orElse(null);
   }
 
@@ -780,7 +783,6 @@ public class BusinessTypeBusinessService implements BusinessTypeBusinessServiceI
     // Update the sequence number of the type
     if (type.getOrigin().equals(GeoprismProperties.getOrigin()))
     {
-      type.appLock();
       type.setSequence(type.getSequence() + 1);
       type.apply();
     }

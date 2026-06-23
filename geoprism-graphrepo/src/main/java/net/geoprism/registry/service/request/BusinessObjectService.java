@@ -30,9 +30,9 @@ import com.google.gson.JsonObject;
 import com.runwaysdk.session.Request;
 import com.runwaysdk.session.RequestType;
 
-import net.geoprism.registry.BusinessEdgeType;
-import net.geoprism.registry.BusinessType;
 import net.geoprism.registry.JsonCollectors;
+import net.geoprism.registry.graph.BusinessEdgeType;
+import net.geoprism.registry.graph.BusinessType;
 import net.geoprism.registry.model.BusinessObject;
 import net.geoprism.registry.model.ServerGeoObjectIF;
 import net.geoprism.registry.model.graph.VertexComponent;

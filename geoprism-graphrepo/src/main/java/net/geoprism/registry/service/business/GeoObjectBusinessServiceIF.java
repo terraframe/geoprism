@@ -36,9 +36,9 @@ import com.runwaysdk.dataaccess.DuplicateDataException;
 import com.runwaysdk.dataaccess.MdEdgeDAOIF;
 import com.runwaysdk.dataaccess.graph.attributes.ValueOverTimeCollection;
 
-import net.geoprism.registry.BusinessEdgeType;
 import net.geoprism.registry.conversion.ServerGeoObjectStrategyIF;
 import net.geoprism.registry.etl.upload.ClassifierVertexCache;
+import net.geoprism.registry.graph.BusinessEdgeType;
 import net.geoprism.registry.graph.DataSource;
 import net.geoprism.registry.model.BusinessObject;
 import net.geoprism.registry.model.EdgeDirection;

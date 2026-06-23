@@ -26,7 +26,7 @@ import org.springframework.stereotype.Component;
 
 import com.runwaysdk.system.metadata.MdEdge;
 
-import net.geoprism.registry.BusinessEdgeType;
+import net.geoprism.registry.graph.BusinessEdgeType;
 import net.geoprism.registry.model.graph.EdgeVertexType;
 import net.geoprism.registry.view.BusinessEdgeTypeView;
 

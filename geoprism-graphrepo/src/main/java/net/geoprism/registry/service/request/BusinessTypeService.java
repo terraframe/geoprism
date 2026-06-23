@@ -32,10 +32,10 @@ import com.runwaysdk.session.RequestType;
 import com.runwaysdk.session.Session;
 
 import net.geoprism.configuration.GeoprismProperties;
-import net.geoprism.registry.BusinessEdgeType;
-import net.geoprism.registry.BusinessType;
 import net.geoprism.registry.JsonCollectors;
 import net.geoprism.registry.OriginException;
+import net.geoprism.registry.graph.BusinessEdgeType;
+import net.geoprism.registry.graph.BusinessType;
 import net.geoprism.registry.service.business.BusinessEdgeTypeBusinessServiceIF;
 import net.geoprism.registry.service.business.BusinessTypeBusinessServiceIF;
 import net.geoprism.registry.view.BusinessEdgeTypeView;
@@ -116,16 +116,12 @@ public class BusinessTypeService
       throw new OriginException();
     }
 
-    type.lock();
-
     return this.typeService.toJSON(type, true, false);
   }
 
   @Request(RequestType.SESSION)
   public void unlock(String sessionId, String oid)
   {
-    BusinessType type = BusinessType.get(oid);
-    type.unlock();
   }
 
   /**

@@ -18,7 +18,6 @@
  */
 package net.geoprism.registry.service.business;
 
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 
@@ -28,6 +27,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.runwaysdk.business.BusinessFacade;
+import com.runwaysdk.business.graph.GraphQuery;
 import com.runwaysdk.constants.MdAttributeBooleanInfo;
 import com.runwaysdk.constants.MdAttributeConcreteInfo;
 import com.runwaysdk.constants.MdAttributeDateTimeInfo;
@@ -42,23 +42,20 @@ import com.runwaysdk.dataaccess.metadata.MdAttributeUUIDDAO;
 import com.runwaysdk.dataaccess.metadata.graph.MdEdgeDAO;
 import com.runwaysdk.dataaccess.metadata.graph.MdVertexDAO;
 import com.runwaysdk.dataaccess.transaction.Transaction;
-import com.runwaysdk.query.OIterator;
-import com.runwaysdk.query.QueryFactory;
 import com.runwaysdk.system.metadata.MdEdge;
 
-import net.geoprism.registry.BusinessEdgeType;
 import net.geoprism.registry.BusinessEdgeTypeException;
-import net.geoprism.registry.BusinessEdgeTypeQuery;
-import net.geoprism.registry.BusinessType;
 import net.geoprism.registry.DataNotFoundException;
 import net.geoprism.registry.DuplicateHierarchyTypeException;
-import net.geoprism.registry.Organization;
 import net.geoprism.registry.RegistryConstants;
 import net.geoprism.registry.cache.TransactionLRUCache;
 import net.geoprism.registry.conversion.RegistryLocalizedValueConverter;
+import net.geoprism.registry.graph.BusinessEdgeType;
+import net.geoprism.registry.graph.BusinessType;
 import net.geoprism.registry.graph.DataSource;
 import net.geoprism.registry.graph.GeoVertex;
 import net.geoprism.registry.model.EdgeType;
+import net.geoprism.registry.model.ServerOrganization;
 import net.geoprism.registry.model.graph.EdgeVertexType;
 import net.geoprism.registry.model.graph.GeoVertexEdgeType;
 import net.geoprism.registry.view.BusinessEdgeTypeView;
@@ -117,27 +114,18 @@ public class BusinessEdgeTypeBusinessService implements BusinessEdgeTypeBusiness
   @Transaction
   public void update(BusinessEdgeType edgeType, LocalizedValue label, LocalizedValue description)
   {
-    try
+    if (label != null)
     {
-      edgeType.appLock();
-
-      if (label != null)
-      {
-        RegistryLocalizedValueConverter.populate(edgeType.getDisplayLabel(), label);
-      }
-
-      if (description != null)
-      {
-        RegistryLocalizedValueConverter.populate(edgeType.getDescription(), description);
-      }
-
-      edgeType.setSequence(edgeType.getSequence() + 1);
-      edgeType.apply();
+      RegistryLocalizedValueConverter.populate(edgeType, BusinessEdgeType.DISPLAYLABEL, label);
     }
-    finally
+
+    if (description != null)
     {
-      edgeType.unlock();
+      RegistryLocalizedValueConverter.populate(edgeType, BusinessEdgeType.DESCRIPTION, description);
     }
+
+    edgeType.setSequence(edgeType.getSequence() + 1);
+    edgeType.apply();
 
     this.cache.put(edgeType);
   }
@@ -169,8 +157,8 @@ public class BusinessEdgeTypeBusinessService implements BusinessEdgeTypeBusiness
     object.setOrganizationCode(edgeType.getOrganization().getCode());
     object.setParentTypeCode(parentTypeCode);
     object.setChildTypeCode(childTypeCode);
-    object.setLabel(RegistryLocalizedValueConverter.convertNoAutoCoalesce(edgeType.getDisplayLabel()));
-    object.setDescription(RegistryLocalizedValueConverter.convertNoAutoCoalesce(edgeType.getDescription()));
+    object.setLabel(edgeType.getLabel());
+    object.setDescription(edgeType.getLocalizedDescription());
 
     return object;
   }
@@ -178,30 +166,30 @@ public class BusinessEdgeTypeBusinessService implements BusinessEdgeTypeBusiness
   @Override
   public List<BusinessEdgeType> getAll()
   {
-    BusinessEdgeTypeQuery query = new BusinessEdgeTypeQuery(new QueryFactory());
+    MdVertexDAOIF mdVertex = MdVertexDAO.getMdVertexDAO(BusinessEdgeType.CLASS);
 
-    try (OIterator<? extends BusinessEdgeType> it = query.getIterator())
-    {
-      return new LinkedList<BusinessEdgeType>(it.getAll());
-    }
+    StringBuilder statement = new StringBuilder();
+    statement.append("SELECT FROM " + mdVertex.getDBClassName());
+
+    GraphQuery<BusinessEdgeType> query = new GraphQuery<BusinessEdgeType>(statement.toString());
+
+    return query.getResults();
   }
 
   @Override
   public Optional<BusinessEdgeType> getByCode(String code)
   {
     return this.cache.get(code, () -> {
-      BusinessEdgeTypeQuery query = new BusinessEdgeTypeQuery(new QueryFactory());
-      query.WHERE(query.getCode().EQ(code));
+      MdVertexDAOIF mdVertex = MdVertexDAO.getMdVertexDAO(BusinessEdgeType.CLASS);
 
-      try (OIterator<? extends BusinessEdgeType> it = query.getIterator())
-      {
-        if (it.hasNext())
-        {
-          return Optional.of(it.next());
-        }
-      }
+      StringBuilder statement = new StringBuilder();
+      statement.append("SELECT FROM " + mdVertex.getDBClassName());
+      statement.append(" WHERE code = :code");
 
-      return Optional.empty();
+      GraphQuery<BusinessEdgeType> query = new GraphQuery<BusinessEdgeType>(statement.toString());
+      query.setParameter("code", code);
+
+      return Optional.ofNullable(query.getSingleResult());
     });
 
   }
@@ -218,18 +206,17 @@ public class BusinessEdgeTypeBusinessService implements BusinessEdgeTypeBusiness
   public BusinessEdgeType getByMdEdge(MdEdge mdEdge)
   {
     return this.cache.get(mdEdge.getOid(), () -> {
-      BusinessEdgeTypeQuery query = new BusinessEdgeTypeQuery(new QueryFactory());
-      query.WHERE(query.getMdEdge().EQ(mdEdge));
+      MdVertexDAOIF mdVertex = MdVertexDAO.getMdVertexDAO(BusinessEdgeType.CLASS);
 
-      try (OIterator<? extends BusinessEdgeType> it = query.getIterator())
-      {
-        if (it.hasNext())
-        {
-          return Optional.of(it.next());
-        }
-      }
+      StringBuilder statement = new StringBuilder();
+      statement.append("SELECT FROM " + mdVertex.getDBClassName());
+      statement.append(" WHERE mdEdge = :mdEdge");
 
-      return Optional.empty();
+      GraphQuery<BusinessEdgeType> query = new GraphQuery<BusinessEdgeType>(statement.toString());
+      query.setParameter("mdEdge", mdEdge.getOid());
+
+      return Optional.ofNullable(query.getSingleResult());
+
     }).orElse(null);
   }
 
@@ -254,7 +241,7 @@ public class BusinessEdgeTypeBusinessService implements BusinessEdgeTypeBusiness
   {
     BusinessType parentType = this.typeService.getByCodeOrThrow(dto.getParentTypeCode());
     BusinessType childType = this.typeService.getByCodeOrThrow(dto.getChildTypeCode());
-    Organization organization = Organization.getByCode(dto.getOrganizationCode());
+    ServerOrganization organization = ServerOrganization.getByCode(dto.getOrganizationCode());
 
     try
     {
@@ -302,14 +289,14 @@ public class BusinessEdgeTypeBusinessService implements BusinessEdgeTypeBusiness
       hierarchyService.grantWritePermissionsOnMdTermRel(mdEdgeDAO);
 
       BusinessEdgeType businessEdgeType = new BusinessEdgeType();
-      businessEdgeType.setOrganization(organization);
+      businessEdgeType.setOrganization(organization.getGraphOrganization());
       businessEdgeType.setCode(dto.getCode());
       businessEdgeType.setMdEdgeId(mdEdgeDAO.getOid());
       businessEdgeType.setParentTypeId(parentType.getMdVertexOid());
       businessEdgeType.setChildTypeId(childType.getMdVertexOid());
       businessEdgeType.setOrigin(dto.getOrigin());
-      RegistryLocalizedValueConverter.populate(businessEdgeType.getDisplayLabel(), dto.getLabel());
-      RegistryLocalizedValueConverter.populate(businessEdgeType.getDescription(), dto.getDescription());
+      RegistryLocalizedValueConverter.populate(businessEdgeType, BusinessEdgeType.DISPLAYLABEL, dto.getLabel());
+      RegistryLocalizedValueConverter.populate(businessEdgeType, BusinessEdgeType.DESCRIPTION, dto.getDescription());
       businessEdgeType.setIsParentGeoObject(false);
       businessEdgeType.setIsChildGeoObject(false);
       businessEdgeType.setSequence(dto.getSeq());
@@ -337,7 +324,7 @@ public class BusinessEdgeTypeBusinessService implements BusinessEdgeTypeBusiness
     String code = dto.getCode();
     LocalizedValue label = dto.getLabel();
     LocalizedValue description = dto.getDescription();
-    Organization organization = Organization.getByCode(dto.getOrganizationCode());
+    ServerOrganization organization = ServerOrganization.getByCode(dto.getOrganizationCode());
 
     try
     {
@@ -388,13 +375,13 @@ public class BusinessEdgeTypeBusinessService implements BusinessEdgeTypeBusiness
       hierarchyService.grantWritePermissionsOnMdTermRel(mdEdgeDAO);
 
       BusinessEdgeType businessEdgeType = new BusinessEdgeType();
-      businessEdgeType.setOrganization(organization);
+      businessEdgeType.setOrganization(organization.getGraphOrganization());
       businessEdgeType.setCode(code);
       businessEdgeType.setMdEdgeId(mdEdgeDAO.getOid());
       businessEdgeType.setParentTypeId(parentOid);
       businessEdgeType.setChildTypeId(childOid);
-      RegistryLocalizedValueConverter.populate(businessEdgeType.getDisplayLabel(), label);
-      RegistryLocalizedValueConverter.populate(businessEdgeType.getDescription(), description);
+      RegistryLocalizedValueConverter.populate(businessEdgeType, MdEdgeInfo.DISPLAY_LABEL, label);
+      RegistryLocalizedValueConverter.populate(businessEdgeType, MdEdgeInfo.DESCRIPTION, description);
       businessEdgeType.setOrigin(dto.getOrigin());
       businessEdgeType.setSequence(dto.getSeq());
       businessEdgeType.setIsParentGeoObject(dto.isParentGeoObjectType());
