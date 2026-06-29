@@ -3,27 +3,34 @@
  *
  * This file is part of Common Geo Registry Adapter(tm).
  *
- * Common Geo Registry Adapter(tm) is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
+ * Common Geo Registry Adapter(tm) is free software: you can redistribute it
+ * and/or modify it under the terms of the GNU Lesser General Public License as
+ * published by the Free Software Foundation, either version 3 of the License,
+ * or (at your option) any later version.
  *
- * Common Geo Registry Adapter(tm) is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
+ * Common Geo Registry Adapter(tm) is distributed in the hope that it will be
+ * useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser
+ * General Public License for more details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with Common Geo Registry Adapter(tm).  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with Common Geo Registry Adapter(tm). If not, see
+ * <http://www.gnu.org/licenses/>.
  */
 package org.commongeoregistry.adapter.metadata;
 
 import java.io.Serializable;
-import java.util.Locale;
 
 import org.commongeoregistry.adapter.constants.DefaultAttribute;
 import org.commongeoregistry.adapter.dataaccess.LocalizedValue;
+import org.commongeoregistry.adapter.serialization.LocalizedValueDeserializer;
+import org.commongeoregistry.adapter.serialization.LocalizedValueSerializer;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonSubTypes;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.google.gson.JsonObject;
 
 /**
@@ -32,6 +39,20 @@ import com.google.gson.JsonObject;
  * @author nathan
  *
  */
+@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, // use logical type name
+    include = JsonTypeInfo.As.PROPERTY, property = "type")
+@JsonSubTypes({ //
+    @JsonSubTypes.Type(value = AttributeBooleanType.class, name = AttributeBooleanType.TYPE), //
+    @JsonSubTypes.Type(value = AttributeClassificationType.class, name = AttributeClassificationType.TYPE), //
+    @JsonSubTypes.Type(value = AttributeDataSourceType.class, name = AttributeDataSourceType.TYPE), //
+    @JsonSubTypes.Type(value = AttributeGeometryType.class, name = AttributeGeometryType.TYPE), //
+    @JsonSubTypes.Type(value = AttributeListType.class, name = AttributeListType.TYPE), //
+    @JsonSubTypes.Type(value = AttributeCharacterType.class, name = AttributeCharacterType.TYPE), //
+    @JsonSubTypes.Type(value = AttributeDateType.class, name = AttributeDateType.TYPE), //
+    @JsonSubTypes.Type(value = AttributeFloatType.class, name = AttributeFloatType.TYPE), //
+    @JsonSubTypes.Type(value = AttributeIntegerType.class, name = AttributeIntegerType.TYPE), //
+    @JsonSubTypes.Type(value = AttributeLocalType.class, name = AttributeLocalType.TYPE) //
+})
 public abstract class AttributeType implements Serializable
 {
   /**
@@ -58,22 +79,21 @@ public abstract class AttributeType implements Serializable
   /**
    * Unique code of the attribute
    */
-  private String             name;
+  private String             code;
 
   /**
    * Label of the attribute
    */
+  @JsonSerialize(using = LocalizedValueSerializer.class)
+  @JsonDeserialize(using = LocalizedValueDeserializer.class)
   private LocalizedValue     label;
 
   /**
    * Description of the type
    */
+  @JsonSerialize(using = LocalizedValueSerializer.class)
+  @JsonDeserialize(using = LocalizedValueDeserializer.class)
   private LocalizedValue     description;
-
-  /**
-   * Attribute type constant
-   */
-  private String             type;
 
   /**
    * Flag denoting if the attribute represents a default attribute as opposed to
@@ -93,31 +113,43 @@ public abstract class AttributeType implements Serializable
 
   private boolean            isChangeOverTime;
 
-  public AttributeType(String _name, LocalizedValue _label, LocalizedValue _description, String _type, boolean _isDefault, boolean _required, boolean _unique)
+  public AttributeType()
   {
-    this.name = _name;
-    this.label = _label;
-    this.description = _description;
-    this.type = _type;
-    this.isDefault = _isDefault;
-    this.required = _required;
-    this.unique = _unique;
     this.isChangeOverTime = true;
   }
 
-  public String getName()
+  public AttributeType(String code, LocalizedValue _label, LocalizedValue _description, boolean _isDefault, boolean _required, boolean _unique)
   {
-    return this.name;
+    this(code, _label, _description, _isDefault, _required, _unique, true);
   }
 
-  public String getType()
+  public AttributeType(String code, LocalizedValue _label, LocalizedValue _description, boolean _isDefault, boolean _required, boolean _unique, boolean isChangeOverTime)
   {
-    return this.type;
+    this.code = code;
+    this.label = _label;
+    this.description = _description;
+    this.isDefault = _isDefault;
+    this.required = _required;
+    this.unique = _unique;
+    this.isChangeOverTime = isChangeOverTime;
+  }
+
+  @JsonIgnore
+  public abstract String getType();
+
+  public String getCode()
+  {
+    return code;
+  }
+
+  public void setCode(String code)
+  {
+    this.code = code;
   }
 
   public LocalizedValue getLabel()
   {
-    return this.label;
+    return label;
   }
 
   public void setLabel(LocalizedValue label)
@@ -125,24 +157,9 @@ public abstract class AttributeType implements Serializable
     this.label = label;
   }
 
-  public void setLabel(String label)
-  {
-    this.label.setValue(label);
-  }
-
-  public void setLabel(Locale locale, String label)
-  {
-    this.label.setValue(locale, label);
-  }
-
-  public void setLabel(String key, String label)
-  {
-    this.label.setValue(key, label);
-  }
-
   public LocalizedValue getDescription()
   {
-    return this.description;
+    return description;
   }
 
   public void setDescription(LocalizedValue description)
@@ -150,24 +167,14 @@ public abstract class AttributeType implements Serializable
     this.description = description;
   }
 
-  public void setDescription(String description)
+  public boolean isDefault()
   {
-    this.description.setValue(description);
+    return isDefault;
   }
 
-  public void setDescription(Locale locale, String description)
+  public void setDefault(boolean isDefault)
   {
-    this.description.setValue(locale, description);
-  }
-
-  public void setDescription(String key, String description)
-  {
-    this.description.setValue(key, description);
-  }
-
-  public boolean getIsDefault()
-  {
-    return this.isDefault;
+    this.isDefault = isDefault;
   }
 
   public boolean isRequired()
@@ -190,6 +197,16 @@ public abstract class AttributeType implements Serializable
     this.unique = unique;
   }
 
+  public boolean isChangeOverTime()
+  {
+    return isChangeOverTime;
+  }
+
+  public void setChangeOverTime(boolean isChangeOverTime)
+  {
+    this.isChangeOverTime = isChangeOverTime;
+  }
+
   public void validate(Object _value)
   {
     // Stub method used to validate the value according to the metadata of the
@@ -201,21 +218,11 @@ public abstract class AttributeType implements Serializable
     return this.toJSON(new DefaultSerializer());
   }
 
-  public boolean isChangeOverTime()
-  {
-    return isChangeOverTime;
-  }
-
-  public void setIsChangeOverTime(boolean isChangeOverTime)
-  {
-    this.isChangeOverTime = isChangeOverTime;
-  }
-
   public JsonObject toJSON(CustomSerializer serializer)
   {
     JsonObject json = new JsonObject();
 
-    json.addProperty(JSON_CODE, this.getName());
+    json.addProperty(JSON_CODE, this.getCode());
 
     json.addProperty(JSON_TYPE, this.getType());
 
@@ -223,7 +230,7 @@ public abstract class AttributeType implements Serializable
 
     json.add(JSON_LOCALIZED_DESCRIPTION, this.getDescription().toJSON(serializer));
 
-    json.addProperty(JSON_IS_DEFAULT, this.getIsDefault());
+    json.addProperty(JSON_IS_DEFAULT, this.isDefault());
     json.addProperty(JSON_REQUIRED, this.isRequired());
     json.addProperty(JSON_UNIQUE, this.isUnique());
     json.addProperty(JSON_IS_CHANGE, this.isChangeOverTime());
@@ -247,7 +254,7 @@ public abstract class AttributeType implements Serializable
   public static AttributeType factory(String _name, LocalizedValue _label, LocalizedValue _description, String _type, boolean _required, boolean _unique, boolean _isChange)
   {
     AttributeType attributeType = null;
-    
+
     DefaultAttribute defaultAttr = DefaultAttribute.getByAttributeName(_name);
     boolean _isDefault = defaultAttr == null ? false : defaultAttr.getIsDefault();
 
@@ -271,10 +278,6 @@ public abstract class AttributeType implements Serializable
     {
       attributeType = new AttributeFloatType(_name, _label, _description, _isDefault, _required, _unique);
     }
-    else if (_type.equals(AttributeTermType.TYPE))
-    {
-      attributeType = new AttributeTermType(_name, _label, _description, _isDefault, _required, _unique);
-    }
     else if (_type.equals(AttributeClassificationType.TYPE))
     {
       attributeType = new AttributeClassificationType(_name, _label, _description, _isDefault, _required, _unique);
@@ -296,7 +299,7 @@ public abstract class AttributeType implements Serializable
       attributeType = new AttributeListType(_name, _label, _description, _isDefault, _required, _unique);
     }
 
-    attributeType.setIsChangeOverTime(_isChange);
+    attributeType.setChangeOverTime(_isChange);
 
     return attributeType;
   }

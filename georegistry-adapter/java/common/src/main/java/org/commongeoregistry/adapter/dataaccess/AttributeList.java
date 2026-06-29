@@ -3,18 +3,19 @@
  *
  * This file is part of Common Geo Registry Adapter(tm).
  *
- * Common Geo Registry Adapter(tm) is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
+ * Common Geo Registry Adapter(tm) is free software: you can redistribute it
+ * and/or modify it under the terms of the GNU Lesser General Public License as
+ * published by the Free Software Foundation, either version 3 of the License,
+ * or (at your option) any later version.
  *
- * Common Geo Registry Adapter(tm) is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
+ * Common Geo Registry Adapter(tm) is distributed in the hope that it will be
+ * useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser
+ * General Public License for more details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with Common Geo Registry Adapter(tm).  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with Common Geo Registry Adapter(tm). If not, see
+ * <http://www.gnu.org/licenses/>.
  */
 package org.commongeoregistry.adapter.dataaccess;
 
@@ -31,16 +32,16 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.JsonPrimitive;
 
-public class AttributeList<T> extends Attribute
+public class AttributeList extends Attribute
 {
 
-  private static final long serialVersionUID = 6874451021655655964L;
-  
-  public static final String TYPE = "list";
-  
-  private List<T> list;
-  
-  private String elementType;
+  private static final long  serialVersionUID = 6874451021655655964L;
+
+  public static final String TYPE             = "list";
+
+  private List<?>            list;
+
+  private String             elementType;
 
   public AttributeList(String name, String elementType)
   {
@@ -49,7 +50,7 @@ public class AttributeList<T> extends Attribute
   }
 
   @Override
-  public List<T> getValue()
+  public List<?> getValue()
   {
     return this.list;
   }
@@ -58,9 +59,9 @@ public class AttributeList<T> extends Attribute
   @Override
   public void setValue(Object value)
   {
-    this.list = (List<T>) value;
+    this.list = (List<?>) value;
   }
-  
+
   public String getElementType()
   {
     return elementType;
@@ -77,9 +78,9 @@ public class AttributeList<T> extends Attribute
     if (this.getValue() != null)
     {
       JsonArray ja = new JsonArray();
-      List<T> list = this.getValue();
-      
-      for (T t : list)
+      List<?> list = this.getValue();
+
+      for (Object t : list)
       {
         if (t instanceof String)
         {
@@ -87,12 +88,12 @@ public class AttributeList<T> extends Attribute
         }
         else if (t instanceof Number)
         {
-          ja.add((Number) t); 
+          ja.add((Number) t);
         }
         else if (t instanceof AlternateId)
         {
-          String json = ((AlternateId) t).toJSON().toString();
-          
+          String json = ( (AlternateId) t ).toJSON().toString();
+
           ja.add(JsonParser.parseString(json));
         }
         else
@@ -103,10 +104,10 @@ public class AttributeList<T> extends Attribute
 
       return ja;
     }
-    
+
     return null;
   }
-  
+
   @SuppressWarnings("unchecked")
   @Override
   public void fromJSON(JsonElement jValue, RegistryAdapter registry)
@@ -115,38 +116,37 @@ public class AttributeList<T> extends Attribute
     {
       this.setValue(null);
     }
-    else if (! jValue.isJsonArray())
+    else if (!jValue.isJsonArray())
     {
       throw new UnsupportedOperationException();
     }
     else
     {
-      List<T> list = new ArrayList<T>();
+      List<Object> list = new ArrayList<Object>();
       JsonArray ja = jValue.getAsJsonArray();
-      
+
       for (int i = 0; i < ja.size(); ++i)
       {
         JsonElement ele = ja.get(i);
-        
+
         if (this.elementType.equals(DefaultAttribute.ALTERNATE_ID_ELEMENT_TYPE))
         {
-          list.add((T) AlternateId.fromJSON(ele));
+          list.add(AlternateId.fromJSON(ele));
         }
         else if (this.elementType.equals(String.class.getName()))
         {
-          list.add((T) ele.getAsString());
+          list.add(ele.getAsString());
         }
-        else if (this.elementType.equals(Integer.class.getName()) || this.elementType.equals(Double.class.getName()) || this.elementType.equals(Float.class.getName())
-            || this.elementType.equals(Long.class.getName()))
+        else if (this.elementType.equals(Integer.class.getName()) || this.elementType.equals(Double.class.getName()) || this.elementType.equals(Float.class.getName()) || this.elementType.equals(Long.class.getName()))
         {
-          list.add((T) ele.getAsNumber());
+          list.add(ele.getAsNumber());
         }
         else
         {
           throw new UnsupportedOperationException("Element [" + ele.toString() + "] not supported for list with expected element type [" + this.elementType + "].");
         }
       }
-      
+
       this.setValue(list);
     }
   }

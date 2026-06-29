@@ -26,6 +26,7 @@ import org.springframework.stereotype.Component;
 
 import com.google.gson.JsonObject;
 import com.runwaysdk.business.graph.EdgeObject;
+import com.runwaysdk.business.graph.VertexObject;
 
 import net.geoprism.registry.graph.BusinessEdgeType;
 import net.geoprism.registry.graph.BusinessType;
@@ -82,5 +83,9 @@ public interface BusinessObjectBusinessServiceIF
   public BusinessObject newInstance(BusinessType type, JsonObject json);
 
   public void populate(BusinessObject object, JsonObject json);
+
+  public List<BusinessObject> processTraverseResults(List<VertexObject> results, Date date);
+
+  public BusinessObject processSingleResult(List<VertexObject> list, Date date);
 
 }

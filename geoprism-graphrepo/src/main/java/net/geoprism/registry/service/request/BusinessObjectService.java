@@ -25,8 +25,13 @@ import org.commongeoregistry.adapter.dataaccess.GeoObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+import com.google.gson.JsonSyntaxException;
+import com.runwaysdk.dataaccess.ProgrammingErrorException;
 import com.runwaysdk.session.Request;
 import com.runwaysdk.session.RequestType;
 
@@ -40,6 +45,7 @@ import net.geoprism.registry.service.business.BusinessEdgeTypeBusinessServiceIF;
 import net.geoprism.registry.service.business.BusinessObjectBusinessServiceIF;
 import net.geoprism.registry.service.business.BusinessTypeBusinessServiceIF;
 import net.geoprism.registry.service.business.GeoObjectBusinessServiceIF;
+import net.geoprism.registry.view.BusinessTypeDTO;
 
 @Service
 public class BusinessObjectService
@@ -71,8 +77,10 @@ public class BusinessObjectService
     BusinessType type = this.typeService.getByCodeOrThrow(businessTypeCode);
     BusinessObject object = this.objectService.getByCode(type, code);
 
+    BusinessTypeDTO dto = this.typeService.toDTO(type, true, false);
+
     JsonObject response = new JsonObject();
-    response.add("type", this.typeService.toJSON(type, true, false));
+    response.add("type", JsonParser.parseString(BusinessTypeDTO.toJson(dto)));
     response.add("object", this.objectService.toJSON(object));
 
     return response;

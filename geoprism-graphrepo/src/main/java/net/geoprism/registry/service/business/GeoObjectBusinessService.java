@@ -22,7 +22,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -31,11 +30,9 @@ import java.util.SortedSet;
 import java.util.TreeMap;
 import java.util.TreeSet;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 import org.apache.commons.collections4.map.HashedMap;
 import org.apache.commons.lang3.StringUtils;
-import org.commongeoregistry.adapter.Term;
 import org.commongeoregistry.adapter.constants.DefaultAttribute;
 import org.commongeoregistry.adapter.dataaccess.Attribute;
 import org.commongeoregistry.adapter.dataaccess.GeoObject;
@@ -48,7 +45,6 @@ import org.commongeoregistry.adapter.dataaccess.ValueOverTimeDTO;
 import org.commongeoregistry.adapter.metadata.AttributeClassificationType;
 import org.commongeoregistry.adapter.metadata.AttributeDataSourceType;
 import org.commongeoregistry.adapter.metadata.AttributeLocalType;
-import org.commongeoregistry.adapter.metadata.AttributeTermType;
 import org.commongeoregistry.adapter.metadata.AttributeType;
 import org.commongeoregistry.adapter.metadata.GeoObjectType;
 import org.locationtech.jts.geom.Geometry;
@@ -76,7 +72,6 @@ import com.runwaysdk.system.AbstractClassification;
 
 import net.geoprism.configuration.GeoprismProperties;
 import net.geoprism.dashboard.GeometryUpdateException;
-import net.geoprism.ontology.Classifier;
 import net.geoprism.registry.DataNotFoundException;
 import net.geoprism.registry.DuplicateGeoObjectCodeException;
 import net.geoprism.registry.DuplicateGeoObjectException;
@@ -85,7 +80,6 @@ import net.geoprism.registry.OriginException;
 import net.geoprism.registry.RequiredAttributeException;
 import net.geoprism.registry.conversion.RegistryLocalizedValueConverter;
 import net.geoprism.registry.conversion.ServerGeoObjectStrategyIF;
-import net.geoprism.registry.conversion.TermConverter;
 import net.geoprism.registry.conversion.VertexGeoObjectStrategy;
 import net.geoprism.registry.etl.export.GeoObjectExportFormat;
 import net.geoprism.registry.etl.export.GeoObjectJsonExporter;
@@ -112,7 +106,7 @@ import net.geoprism.registry.model.ServerGeoObjectIF;
 import net.geoprism.registry.model.ServerGeoObjectType;
 import net.geoprism.registry.model.ServerHierarchyType;
 import net.geoprism.registry.model.ServerParentTreeNode;
-import net.geoprism.registry.model.graph.EdgeVertexType;
+import net.geoprism.registry.model.graph.DirectedAcyclicGraphStrategy.Edge;
 import net.geoprism.registry.model.graph.VertexComponent;
 import net.geoprism.registry.model.graph.VertexServerGeoObject;
 import net.geoprism.registry.model.graph.VertexServerGeoObject.EdgeComparator;
@@ -421,28 +415,7 @@ public class GeoObjectBusinessService extends RegistryLocalizedValueConverter im
       }
       else if (sgo.hasAttribute(attributeName))
       {
-        if (attribute instanceof AttributeTermType)
-        {
-          Iterator<String> it = (Iterator<String>) dto.getValue(attributeName);
-
-          if (it.hasNext())
-          {
-            String code = it.next();
-
-            Term root = ( (AttributeTermType) attribute ).getRootTerm();
-            String parent = TermConverter.buildClassifierKeyFromTermCode(root.getCode());
-
-            String classifierKey = Classifier.buildKey(parent, code);
-            Classifier classifier = Classifier.getByKey(classifierKey);
-
-            sgo.setValue(attributeName, classifier.getOid(), startDate, endDate);
-          }
-          else
-          {
-            sgo.setValue(attributeName, (String) null, startDate, endDate);
-          }
-        }
-        else if (attribute instanceof AttributeDataSourceType)
+        if (attribute instanceof AttributeDataSourceType)
         {
           String value = (String) dto.getValue(attributeName);
 
@@ -540,28 +513,7 @@ public class GeoObjectBusinessService extends RegistryLocalizedValueConverter im
 
         for (ValueOverTimeDTO votDTO : collection)
         {
-          if (attribute instanceof AttributeTermType)
-          {
-            Iterator<String> it = (Iterator<String>) votDTO.getValue();
-
-            if (it.hasNext())
-            {
-              String code = it.next();
-
-              Term root = ( (AttributeTermType) attribute ).getRootTerm();
-              String parent = TermConverter.buildClassifierKeyFromTermCode(root.getCode());
-
-              String classifierKey = Classifier.buildKey(parent, code);
-              Classifier classifier = Classifier.getByKey(classifierKey);
-
-              c.add(new ValueOverTime(votDTO.getStartDate(), votDTO.getEndDate(), classifier.getOid()));
-            }
-            else
-            {
-              c.add(new ValueOverTime(votDTO.getStartDate(), votDTO.getEndDate(), (String) null));
-            }
-          }
-          else if (attribute instanceof AttributeDataSourceType)
+          if (attribute instanceof AttributeDataSourceType)
           {
             String value = (String) votDTO.getValue();
 
@@ -1008,30 +960,8 @@ public class GeoObjectBusinessService extends RegistryLocalizedValueConverter im
 
         if (value != null)
         {
-          if (attribute instanceof AttributeTermType)
+          if (attribute instanceof AttributeDataSourceType)
           {
-            Classifier classifier = (Classifier) value;
-
-            try
-            {
-              geoObj.setValue(attributeName, classifier.getClassifierId());
-            }
-            catch (UnknownTermException e)
-            {
-              TermValueException ex = new TermValueException();
-              ex.setAttributeLabel(e.getAttribute().getLabel().getValue());
-              ex.setCode(e.getCode());
-
-              throw e;
-            }
-          }
-          else if (attribute instanceof AttributeDataSourceType)
-          {
-            // ID id = (ID) value;
-            //
-            // DataSource source =
-            // this.sourceService.getByRid(id.getRid().toString()).orElseThrow();
-
             DataSource source = this.sourceService.get((String) value);
             geoObj.setValue(attributeName, source.getCode());
           }
@@ -1220,26 +1150,7 @@ public class GeoObjectBusinessService extends RegistryLocalizedValueConverter im
 
             if (value != null)
             {
-              if (attribute instanceof AttributeTermType)
-              {
-                Classifier classifier = Classifier.get((String) value);
-
-                try
-                {
-                  ValueOverTimeDTO votDTO = new ValueOverTimeDTO(vot.getOid(), vot.getStartDate(), vot.getEndDate(), votcDTO);
-                  votDTO.setValue(classifier.getClassifierId());
-                  votcDTO.add(votDTO);
-                }
-                catch (UnknownTermException e)
-                {
-                  TermValueException ex = new TermValueException();
-                  ex.setAttributeLabel(e.getAttribute().getLabel().getValue());
-                  ex.setCode(e.getCode());
-
-                  throw e;
-                }
-              }
-              else if (attribute instanceof AttributeDataSourceType)
+              if (attribute instanceof AttributeDataSourceType)
               {
                 // ID id = (ID) value;
                 //
@@ -1292,24 +1203,7 @@ public class GeoObjectBusinessService extends RegistryLocalizedValueConverter im
 
           if (value != null)
           {
-            if (attribute instanceof AttributeTermType)
-            {
-              Classifier classifier = Classifier.get((String) value);
-
-              try
-              {
-                geoObj.setValue(attributeName, classifier.getClassifierId());
-              }
-              catch (UnknownTermException e)
-              {
-                TermValueException ex = new TermValueException();
-                ex.setAttributeLabel(e.getAttribute().getLabel().getValue());
-                ex.setCode(e.getCode());
-
-                throw e;
-              }
-            }
-            else if (attribute instanceof AttributeClassificationType)
+            if (attribute instanceof AttributeClassificationType)
             {
               String classificationTypeCode = ( (AttributeClassificationType) attribute ).getClassificationType();
               ClassificationType classificationType = this.cTypeService.getByCode(classificationTypeCode);
@@ -1502,7 +1396,7 @@ public class GeoObjectBusinessService extends RegistryLocalizedValueConverter im
 
     StringBuilder statement = new StringBuilder();
     statement.append("SELECT " + VertexAndEdgeResultSetConverter.geoVertexColumns(parent.getMdClass()));
-    statement.append(", " + VertexAndEdgeResultSetConverter.geoVertexAttributeColumns(parent.getType().definesAttributes()));
+    statement.append(", " + VertexAndEdgeResultSetConverter.geoVertexAttributeColumns(parent.getType().getAttributes()));
     statement.append(", edgeClass, edgeOid, edgeUid, edgeSource" + "\n");
     statement.append(" FROM ( " + "\n");
     statement.append("   SELECT v, v.out('" + EdgeConstant.HAS_VALUE.getDBClassName() + "', '" + EdgeConstant.HAS_GEOMETRY.getDBClassName() + "') as attr");
@@ -1593,7 +1487,7 @@ public class GeoObjectBusinessService extends RegistryLocalizedValueConverter im
 
     StringBuilder statement = new StringBuilder();
     statement.append("SELECT " + VertexAndEdgeResultSetConverter.geoVertexColumns(child.getMdClass()));
-    statement.append(", " + VertexAndEdgeResultSetConverter.geoVertexAttributeColumns(child.getType().definesAttributes()));
+    statement.append(", " + VertexAndEdgeResultSetConverter.geoVertexAttributeColumns(child.getType().getAttributes()));
     statement.append(", edgeClass, edgeOid, edgeUid, edgeSource" + "\n");
     statement.append(" FROM ( " + "\n");
     statement.append("   SELECT v, v.out('" + EdgeConstant.HAS_VALUE.getDBClassName() + "', '" + EdgeConstant.HAS_GEOMETRY.getDBClassName() + "') as attr");
@@ -2111,11 +2005,21 @@ public class GeoObjectBusinessService extends RegistryLocalizedValueConverter im
   @Override
   public List<BusinessObject> getBusinessObjects(VertexServerGeoObject object, BusinessEdgeType edgeType, EdgeDirection direction)
   {
-    List<VertexObject> objects = direction.equals(EdgeDirection.PARENT) ? object.getVertex().getParents(edgeType.getMdEdgeDAO(), VertexObject.class) : object.getVertex().getChildren(edgeType.getMdEdgeDAO(), VertexObject.class);
+    Edge edge = direction.equals(EdgeDirection.PARENT) ? Edge.IN : Edge.OUT;
 
-    EdgeVertexType type = direction.equals(EdgeDirection.PARENT) ? this.businessEdgeTypeService.getParent(edgeType) : this.businessEdgeTypeService.getChild(edgeType);
+    StringBuilder statement = new StringBuilder();
+    statement.append("TRAVERSE out('" + EdgeConstant.HAS_VALUE.getDBClassName() + "', '" + EdgeConstant.HAS_GEOMETRY.getDBClassName() + "') FROM (");
+    statement.append("  SELECT EXPAND( " + edge.getName() + "(");
+    statement.append("'" + edgeType.getMdEdgeDAO().getDBClassName() + "'");
+    statement.append(")");
 
-    return objects.stream().map(o -> new BusinessObject(o, type.toBusinessType())).collect(Collectors.toList());
+    statement.append("." + edge.getVertex() + ") FROM :rid");
+    statement.append(")");
+
+    GraphQuery<VertexObject> query = new GraphQuery<VertexObject>(statement.toString());
+    query.setParameter("rid", object.getVertex().getRID());
+
+    return this.businessObjectService.processTraverseResults(query.getResults(), object.getDate());
   }
 
 }

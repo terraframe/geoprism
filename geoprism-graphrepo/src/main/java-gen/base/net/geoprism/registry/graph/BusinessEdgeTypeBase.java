@@ -12,7 +12,6 @@ public abstract class BusinessEdgeTypeBase extends net.geoprism.registry.graph.E
 {
   public final static String CLASS = "net.geoprism.registry.graph.BusinessEdgeType";
   public final static java.lang.String CHILDTYPE = "childType";
-  public final static java.lang.String CODE = "code";
   public final static java.lang.String DESCRIPTION = "description";
   public final static java.lang.String DISPLAYLABEL = "displayLabel";
   public final static java.lang.String ISCHILDGEOOBJECT = "isChildGeoObject";
@@ -61,22 +60,6 @@ public abstract class BusinessEdgeTypeBase extends net.geoprism.registry.graph.E
   public void setChildTypeId(java.lang.String oid)
   {
     this.setValue(CHILDTYPE, oid);
-  }
-  
-  public String getCode()
-  {
-    return (String) this.getObjectValue(CODE);
-  }
-  
-  public static com.runwaysdk.dataaccess.MdAttributeCharacterDAOIF getCodeMd()
-  {
-    com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(net.geoprism.registry.graph.BusinessEdgeType.CLASS);
-    return (com.runwaysdk.dataaccess.MdAttributeCharacterDAOIF)mdClassIF.definesAttribute(CODE);
-  }
-  
-  public void setCode(String value)
-  {
-    this.setValue(CODE, value);
   }
   
   public com.runwaysdk.ComponentIF getDescription()

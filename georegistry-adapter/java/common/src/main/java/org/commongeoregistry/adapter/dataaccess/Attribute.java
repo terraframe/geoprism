@@ -3,18 +3,19 @@
  *
  * This file is part of Common Geo Registry Adapter(tm).
  *
- * Common Geo Registry Adapter(tm) is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
+ * Common Geo Registry Adapter(tm) is free software: you can redistribute it
+ * and/or modify it under the terms of the GNU Lesser General Public License as
+ * published by the Free Software Foundation, either version 3 of the License,
+ * or (at your option) any later version.
  *
- * Common Geo Registry Adapter(tm) is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
+ * Common Geo Registry Adapter(tm) is distributed in the hope that it will be
+ * useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser
+ * General Public License for more details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with Common Geo Registry Adapter(tm).  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with Common Geo Registry Adapter(tm). If not, see
+ * <http://www.gnu.org/licenses/>.
  */
 package org.commongeoregistry.adapter.dataaccess;
 
@@ -23,14 +24,13 @@ import java.io.Serializable;
 import org.commongeoregistry.adapter.RegistryAdapter;
 import org.commongeoregistry.adapter.metadata.AttributeBooleanType;
 import org.commongeoregistry.adapter.metadata.AttributeClassificationType;
+import org.commongeoregistry.adapter.metadata.AttributeDataSourceType;
 import org.commongeoregistry.adapter.metadata.AttributeDateType;
 import org.commongeoregistry.adapter.metadata.AttributeFloatType;
 import org.commongeoregistry.adapter.metadata.AttributeGeometryType;
 import org.commongeoregistry.adapter.metadata.AttributeIntegerType;
 import org.commongeoregistry.adapter.metadata.AttributeListType;
 import org.commongeoregistry.adapter.metadata.AttributeLocalType;
-import org.commongeoregistry.adapter.metadata.AttributeDataSourceType;
-import org.commongeoregistry.adapter.metadata.AttributeTermType;
 import org.commongeoregistry.adapter.metadata.AttributeType;
 import org.commongeoregistry.adapter.metadata.CustomSerializer;
 
@@ -84,47 +84,43 @@ public abstract class Attribute implements Serializable
 
     if (attributeType instanceof AttributeDateType)
     {
-      attribute = new AttributeDate(attributeType.getName());
+      attribute = new AttributeDate(attributeType.getCode());
     }
     else if (attributeType instanceof AttributeIntegerType)
     {
-      attribute = new AttributeInteger(attributeType.getName());
+      attribute = new AttributeInteger(attributeType.getCode());
     }
     else if (attributeType instanceof AttributeFloatType)
     {
-      attribute = new AttributeFloat(attributeType.getName());
-    }
-    else if (attributeType instanceof AttributeTermType)
-    {
-      attribute = new AttributeTerm(attributeType.getName());
+      attribute = new AttributeFloat(attributeType.getCode());
     }
     else if (attributeType instanceof AttributeClassificationType)
     {
-      attribute = new AttributeClassification(attributeType.getName());
+      attribute = new AttributeClassification(attributeType.getCode());
     }
     else if (attributeType instanceof AttributeBooleanType)
     {
-      attribute = new AttributeBoolean(attributeType.getName());
+      attribute = new AttributeBoolean(attributeType.getCode());
     }
     else if (attributeType instanceof AttributeDataSourceType)
     {
-      attribute = new AttributeDataSource(attributeType.getName());
+      attribute = new AttributeDataSource(attributeType.getCode());
     }
     else if (attributeType instanceof AttributeLocalType)
     {
-      attribute = new AttributeLocal(attributeType.getName());
+      attribute = new AttributeLocal(attributeType.getCode());
     }
     else if (attributeType instanceof AttributeGeometryType)
     {
-      attribute = new AttributeGeometry(attributeType.getName());
+      attribute = new AttributeGeometry(attributeType.getCode());
     }
     else if (attributeType instanceof AttributeListType)
     {
-      attribute = new AttributeList<>(attributeType.getName(), ( (AttributeListType<?>) attributeType ).getElementType());
+      attribute = new AttributeList(attributeType.getCode(), ( (AttributeListType) attributeType ).getElementType());
     }
     else
     {
-      attribute = new AttributeCharacter(attributeType.getName());
+      attribute = new AttributeCharacter(attributeType.getCode());
     }
 
     return attribute;

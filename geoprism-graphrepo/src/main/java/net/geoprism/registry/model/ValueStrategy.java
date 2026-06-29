@@ -27,6 +27,8 @@ import com.runwaysdk.business.graph.VertexObject;
 import com.runwaysdk.dataaccess.MdAttributeDAOIF;
 import com.runwaysdk.dataaccess.graph.attributes.ValueOverTimeCollection;
 
+import net.geoprism.registry.model.graph.ObjectClassIF;
+
 public interface ValueStrategy
 {
 
@@ -48,5 +50,5 @@ public interface ValueStrategy
 
   public List<MdAttributeDAOIF> getValueAttributes();
 
-  public StateValue construct(ServerGeoObjectType type, VertexObject vertex);
+  public StateValue construct(ObjectClassIF type, VertexObject vertex);
 }

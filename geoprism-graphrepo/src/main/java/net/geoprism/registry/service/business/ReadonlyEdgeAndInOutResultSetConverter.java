@@ -28,9 +28,7 @@ import org.commongeoregistry.adapter.constants.DefaultAttribute;
 import org.commongeoregistry.adapter.dataaccess.Attribute;
 import org.commongeoregistry.adapter.dataaccess.GeoObject;
 import org.commongeoregistry.adapter.dataaccess.LocalizedValue;
-import org.commongeoregistry.adapter.dataaccess.UnknownTermException;
 import org.commongeoregistry.adapter.metadata.AttributeClassificationType;
-import org.commongeoregistry.adapter.metadata.AttributeTermType;
 import org.commongeoregistry.adapter.metadata.AttributeType;
 import org.commongeoregistry.adapter.metadata.GeoObjectType;
 import org.locationtech.jts.geom.Geometry;
@@ -41,7 +39,6 @@ import com.runwaysdk.dataaccess.graph.GraphRequest;
 import com.runwaysdk.dataaccess.graph.orientdb.ResultSetConverter;
 import com.runwaysdk.dataaccess.metadata.graph.MdGraphClassDAO;
 
-import net.geoprism.ontology.Classifier;
 import net.geoprism.registry.graph.AttributeValue;
 import net.geoprism.registry.io.TermValueException;
 import net.geoprism.registry.model.Classification;
@@ -157,24 +154,7 @@ public class ReadonlyEdgeAndInOutResultSetConverter extends ResultSetConverter
 
           if (value != null)
           {
-            if (attribute instanceof AttributeTermType)
-            {
-              Classifier classifier = Classifier.get((String) value);
-
-              try
-              {
-                geoObj.setValue(attributeName, classifier == null ? null : classifier.getClassifierId());
-              }
-              catch (UnknownTermException e)
-              {
-                TermValueException ex = new TermValueException();
-                ex.setAttributeLabel(e.getAttribute().getLabel().getValue());
-                ex.setCode(e.getCode());
-
-                throw e;
-              }
-            }
-            else if (attribute instanceof AttributeClassificationType)
+            if (attribute instanceof AttributeClassificationType)
             {
               final String rid = value.toString();
 

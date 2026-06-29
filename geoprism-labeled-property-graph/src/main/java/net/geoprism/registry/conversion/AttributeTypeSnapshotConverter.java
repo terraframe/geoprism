@@ -24,25 +24,22 @@ import org.commongeoregistry.adapter.dataaccess.LocalizedValue;
 import org.commongeoregistry.adapter.metadata.AttributeBooleanType;
 import org.commongeoregistry.adapter.metadata.AttributeCharacterType;
 import org.commongeoregistry.adapter.metadata.AttributeClassificationType;
+import org.commongeoregistry.adapter.metadata.AttributeDataSourceType;
 import org.commongeoregistry.adapter.metadata.AttributeDateType;
 import org.commongeoregistry.adapter.metadata.AttributeFloatType;
 import org.commongeoregistry.adapter.metadata.AttributeIntegerType;
 import org.commongeoregistry.adapter.metadata.AttributeLocalType;
-import org.commongeoregistry.adapter.metadata.AttributeDataSourceType;
-import org.commongeoregistry.adapter.metadata.AttributeTermType;
 import org.commongeoregistry.adapter.metadata.AttributeType;
 
 import net.geoprism.graph.AttributeBooleanTypeSnapshot;
 import net.geoprism.graph.AttributeCharacterTypeSnapshot;
 import net.geoprism.graph.AttributeClassificationTypeSnapshot;
+import net.geoprism.graph.AttributeDataSourceTypeSnapshot;
 import net.geoprism.graph.AttributeDateTypeSnapshot;
 import net.geoprism.graph.AttributeDoubleTypeSnapshot;
 import net.geoprism.graph.AttributeLocalTypeSnapshot;
 import net.geoprism.graph.AttributeLongTypeSnapshot;
-import net.geoprism.graph.AttributeDataSourceTypeSnapshot;
-import net.geoprism.graph.AttributeTermTypeSnapshot;
 import net.geoprism.graph.AttributeTypeSnapshot;
-import net.geoprism.registry.model.Classification;
 import net.geoprism.registry.model.ClassificationType;
 import net.geoprism.registry.service.business.ClassificationBusinessServiceIF;
 import net.geoprism.registry.service.business.ClassificationTypeBusinessServiceIF;
@@ -119,10 +116,6 @@ public class AttributeTypeSnapshotConverter
       }
 
       return attributeType;
-    }
-    else if (attribute instanceof AttributeTermTypeSnapshot)
-    {
-      return (AttributeTermType) AttributeType.factory(attributeName, displayLabel, description, AttributeTermType.TYPE, required, unique, isChangeOverTime);
     }
 
     throw new UnsupportedOperationException("Unsupported attribute type [" + attribute.getClass().getSimpleName() + "]");

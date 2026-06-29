@@ -442,7 +442,7 @@ public class GeoObject implements Serializable
   @SuppressWarnings("unchecked")
   public void setAlternateIds(List<AlternateId> ids)
   {
-    AttributeList<AlternateId> attr = (AttributeList<AlternateId>) this.attributeMap.get(DefaultAttribute.ALT_IDS.getName());
+    AttributeList attr = (AttributeList) this.attributeMap.get(DefaultAttribute.ALT_IDS.getName());
     
     attr.setValue(ids);
   }
@@ -456,9 +456,9 @@ public class GeoObject implements Serializable
   @SuppressWarnings("unchecked")
   public void addAlternateId(ExternalId id)
   {
-    AttributeList<AlternateId> attr = (AttributeList<AlternateId>) this.attributeMap.get(DefaultAttribute.ALT_IDS.getName());
+    AttributeList attr = (AttributeList) this.attributeMap.get(DefaultAttribute.ALT_IDS.getName());
     
-    List<AlternateId> ids = attr.getValue();
+    List<AlternateId> ids = (List<AlternateId>) attr.getValue();
     
     if (ids == null)
     {

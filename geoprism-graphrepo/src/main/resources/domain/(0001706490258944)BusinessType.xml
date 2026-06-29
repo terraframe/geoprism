@@ -26,12 +26,6 @@
         label="Business Type"
         extends="net.geoprism.registry.graph.ObjectClass">
         <attributes>
-          <char
-            name="code"
-            size="32"
-            required="true"
-            indexType="unique index"
-            label="Code" />
           <reference
             name="mdVertex"
             type="com.runwaysdk.system.metadata.MdVertex"

@@ -33,7 +33,8 @@ import com.runwaysdk.business.graph.VertexObject;
 
 import net.geoprism.registry.graph.AttributeGeometryType;
 import net.geoprism.registry.graph.AttributeType;
-import net.geoprism.registry.model.graph.VertexServerGeoObject;
+import net.geoprism.registry.model.graph.ObjectClassIF;
+import net.geoprism.registry.model.graph.ServerObjectVertex;
 
 public class AttributeState
 {
@@ -51,7 +52,7 @@ public class AttributeState
     }
   }
 
-  private ServerGeoObjectType   type;
+  private ObjectClassIF         type;
 
   private AttributeType         attributeType;
 
@@ -61,7 +62,7 @@ public class AttributeState
 
   private boolean               isModified;
 
-  public AttributeState(ServerGeoObjectType type, AttributeType attributeType, List<VertexObject> values)
+  public AttributeState(ObjectClassIF type, AttributeType attributeType, List<VertexObject> values)
   {
     this.type = type;
     this.attributeType = attributeType;
@@ -71,7 +72,7 @@ public class AttributeState
     this.isModified = false;
   }
 
-  public ServerGeoObjectType getType()
+  public ObjectClassIF getType()
   {
     return type;
   }
@@ -94,7 +95,7 @@ public class AttributeState
     {
       return this.values.add(node);
     }
-    
+
     return false;
   }
 
@@ -107,7 +108,7 @@ public class AttributeState
     this.values.remove(node);
   }
 
-  public void persit(VertexServerGeoObject object, VertexObject vertex)
+  public void persit(ServerObjectVertex object, VertexObject vertex)
   {
     this.objectsToDelete.forEach(node -> node.delete());
     this.values.forEach(node -> {

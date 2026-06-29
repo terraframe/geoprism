@@ -29,12 +29,11 @@ import org.commongeoregistry.adapter.constants.GeometryType;
 import org.commongeoregistry.adapter.metadata.AttributeBooleanType;
 import org.commongeoregistry.adapter.metadata.AttributeCharacterType;
 import org.commongeoregistry.adapter.metadata.AttributeClassificationType;
+import org.commongeoregistry.adapter.metadata.AttributeDataSourceType;
 import org.commongeoregistry.adapter.metadata.AttributeDateType;
 import org.commongeoregistry.adapter.metadata.AttributeFloatType;
 import org.commongeoregistry.adapter.metadata.AttributeIntegerType;
 import org.commongeoregistry.adapter.metadata.AttributeLocalType;
-import org.commongeoregistry.adapter.metadata.AttributeDataSourceType;
-import org.commongeoregistry.adapter.metadata.AttributeTermType;
 import org.commongeoregistry.adapter.metadata.AttributeType;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -83,12 +82,12 @@ import com.runwaysdk.system.metadata.MdGraphClassQuery;
 import net.geoprism.graph.AttributeBooleanTypeSnapshot;
 import net.geoprism.graph.AttributeCharacterTypeSnapshot;
 import net.geoprism.graph.AttributeClassificationTypeSnapshot;
+import net.geoprism.graph.AttributeDataSourceTypeSnapshot;
 import net.geoprism.graph.AttributeDateTypeSnapshot;
 import net.geoprism.graph.AttributeDoubleTypeSnapshot;
 import net.geoprism.graph.AttributeGeometryTypeSnapshot;
 import net.geoprism.graph.AttributeLocalTypeSnapshot;
 import net.geoprism.graph.AttributeLongTypeSnapshot;
-import net.geoprism.graph.AttributeDataSourceTypeSnapshot;
 import net.geoprism.graph.AttributeTypeSnapshot;
 import net.geoprism.graph.AttributeTypeSnapshotQuery;
 import net.geoprism.graph.ObjectTypeSnapshot;
@@ -186,9 +185,6 @@ public abstract class ObjectTypeSnapshotBusinessService<T extends ObjectTypeSnap
       attributeTypeSnapshot.setValue(AttributeDoubleTypeSnapshot.PRECISION, Integer.toString(attributeFloatType.getPrecision()));
       attributeTypeSnapshot.setValue(AttributeDoubleTypeSnapshot.SCALE, Integer.toString(attributeFloatType.getScale()));
     }
-    else if (attributeType.getType().equals(AttributeTermType.TYPE))
-    {
-    }
     else if (attributeType.getType().equals(AttributeClassificationType.TYPE))
     {
       AttributeClassificationType attributeClassificationType = (AttributeClassificationType) attributeType;
@@ -213,10 +209,10 @@ public abstract class ObjectTypeSnapshotBusinessService<T extends ObjectTypeSnap
       throw new UnsupportedOperationException();
     }
 
-    attributeTypeSnapshot.setCode(attributeType.getName());
+    attributeTypeSnapshot.setCode(attributeType.getCode());
     attributeTypeSnapshot.setIsRequired(attributeType.isRequired());
     attributeTypeSnapshot.setIsUnique(attributeType.isUnique());
-    attributeTypeSnapshot.setIsDefault(attributeType.getIsDefault());
+    attributeTypeSnapshot.setIsDefault(attributeType.isDefault());
     attributeTypeSnapshot.setIsChangeOverTime(attributeType.isChangeOverTime());
 
     LocalizedValueConverter.populate(attributeTypeSnapshot.getLabel(), attributeType.getLabel());
@@ -273,15 +269,6 @@ public abstract class ObjectTypeSnapshotBusinessService<T extends ObjectTypeSnap
       mdAttribute.setValue(MdAttributeDoubleInfo.LENGTH, Integer.toString(attributeFloatType.getPrecision()));
       mdAttribute.setValue(MdAttributeDoubleInfo.DECIMAL, Integer.toString(attributeFloatType.getScale()));
     }
-    else if (attributeType.getType().equals(AttributeTermType.TYPE))
-    {
-      // mdAttribute = new MdAttributeTerm();
-      // MdAttributeTerm mdAttributeTerm = (MdAttributeTerm) mdAttribute;
-      //
-      // MdBusiness classifierMdBusiness =
-      // MdBusiness.getMdBusiness(Classifier.CLASS);
-      // mdAttributeTerm.setMdBusiness(classifierMdBusiness);
-    }
     else if (attributeType.getType().equals(AttributeClassificationType.TYPE))
     {
       AttributeClassificationType attributeClassificationType = (AttributeClassificationType) attributeType;
@@ -336,7 +323,7 @@ public abstract class ObjectTypeSnapshotBusinessService<T extends ObjectTypeSnap
       throw new UnsupportedOperationException();
     }
 
-    mdAttribute.setAttributeName(attributeType.getName());
+    mdAttribute.setAttributeName(attributeType.getCode());
     mdAttribute.setValue(MdAttributeConcreteInfo.REQUIRED, Boolean.toString(attributeType.isRequired()));
 
     if (attributeType.isUnique())
@@ -350,33 +337,6 @@ public abstract class ObjectTypeSnapshotBusinessService<T extends ObjectTypeSnap
     mdAttribute.setDefiningMdClass(mdClass);
     mdAttribute.apply();
 
-    if (attributeType.getType().equals(AttributeTermType.TYPE))
-    {
-      // MdAttributeTerm mdAttributeTerm = (MdAttributeTerm) mdAttribute;
-      //
-      // // Build the parent class term root if it does not exist.
-      // Classifier classTerm =
-      // TermConverter.buildIfNotExistdMdBusinessClassifier(mdClass);
-      //
-      // // Create the root term node for this attribute
-      // Classifier attributeTermRoot =
-      // TermConverter.buildIfNotExistAttribute(mdClass,
-      // mdAttributeTerm.getAttributeName(), classTerm);
-      //
-      // // Make this the root term of the multi-attribute
-      // attributeTermRoot.addClassifierTermAttributeRoots(mdAttributeTerm).apply();
-      //
-      // AttributeTermType attributeTermType = (AttributeTermType)
-      // attributeType;
-      //
-      // LocalizedValue label =
-      // LocalizedValueConverter.convert(attributeTermRoot.getDisplayLabel());
-      //
-      // org.commongeoregistry.adapter.Term term = new
-      // org.commongeoregistry.adapter.Term(attributeTermRoot.getClassifierId(),
-      // label, new LocalizedValue(""));
-      // attributeTermType.setRootTerm(term);
-    }
     return mdAttribute;
   }
 

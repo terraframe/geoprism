@@ -11,7 +11,6 @@ package net.geoprism.registry.graph;
 public abstract class DirectedAcyclicGraphTypeBase extends net.geoprism.registry.graph.EdgeClass
 {
   public final static String CLASS = "net.geoprism.registry.graph.DirectedAcyclicGraphType";
-  public final static java.lang.String CODE = "code";
   public final static java.lang.String DESCRIPTION = "description";
   public final static java.lang.String DISPLAYLABEL = "displayLabel";
   public final static java.lang.String MDEDGE = "mdEdge";
@@ -23,22 +22,6 @@ public abstract class DirectedAcyclicGraphTypeBase extends net.geoprism.registry
   public DirectedAcyclicGraphTypeBase()
   {
     super();
-  }
-  
-  public String getCode()
-  {
-    return (String) this.getObjectValue(CODE);
-  }
-  
-  public static com.runwaysdk.dataaccess.MdAttributeCharacterDAOIF getCodeMd()
-  {
-    com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(net.geoprism.registry.graph.DirectedAcyclicGraphType.CLASS);
-    return (com.runwaysdk.dataaccess.MdAttributeCharacterDAOIF)mdClassIF.definesAttribute(CODE);
-  }
-  
-  public void setCode(String value)
-  {
-    this.setValue(CODE, value);
   }
   
   public com.runwaysdk.ComponentIF getDescription()

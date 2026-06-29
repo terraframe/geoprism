@@ -31,6 +31,7 @@ import com.runwaysdk.dataaccess.MdVertexDAOIF;
 import com.runwaysdk.localization.LocalizationFacade;
 
 import net.geoprism.registry.graph.AttributeType;
+import net.geoprism.registry.model.graph.ObjectClassIF;
 
 public class LocalValueNodeStrategy extends ValueNodeStrategy implements ValueStrategy
 {
@@ -62,7 +63,7 @@ public class LocalValueNodeStrategy extends ValueNodeStrategy implements ValueSt
   }
 
   @Override
-  public StateValue construct(ServerGeoObjectType type, VertexObject vertex)
+  public StateValue construct(ObjectClassIF type, VertexObject vertex)
   {
     return new LocalStateValue(vertex);
   }

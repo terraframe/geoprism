@@ -24,7 +24,6 @@ import org.commongeoregistry.adapter.metadata.AttributeType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.runwaysdk.session.Request;
@@ -32,13 +31,14 @@ import com.runwaysdk.session.RequestType;
 import com.runwaysdk.session.Session;
 
 import net.geoprism.configuration.GeoprismProperties;
-import net.geoprism.registry.JsonCollectors;
 import net.geoprism.registry.OriginException;
 import net.geoprism.registry.graph.BusinessEdgeType;
 import net.geoprism.registry.graph.BusinessType;
 import net.geoprism.registry.service.business.BusinessEdgeTypeBusinessServiceIF;
 import net.geoprism.registry.service.business.BusinessTypeBusinessServiceIF;
 import net.geoprism.registry.view.BusinessEdgeTypeView;
+import net.geoprism.registry.view.BusinessTypeDTO;
+import net.geoprism.registry.view.OrganizationGroup;
 
 @Service
 public class BusinessTypeService
@@ -58,36 +58,35 @@ public class BusinessTypeService
    * @return newly created {@link BusinessType}
    */
   @Request(RequestType.SESSION)
-  public JsonObject apply(String sessionId, String ptJSON)
+  public BusinessTypeDTO apply(String sessionId, BusinessTypeDTO dto)
   {
-    JsonObject json = JsonParser.parseString(ptJSON).getAsJsonObject();
-    BusinessType type = this.typeService.apply(json.get("type").getAsJsonObject());
+    BusinessType type = this.typeService.apply(dto);
 
     // Refresh the users session
     ( (Session) Session.getCurrentSession() ).reloadPermissions();
 
-    return this.typeService.toJSON(type, true, false);
+    return this.typeService.toDTO(type, true, false);
   }
 
   @Request(RequestType.SESSION)
-  public JsonArray listByOrg(String sessionId)
+  public List<OrganizationGroup<BusinessTypeDTO>> listByOrg(String sessionId)
   {
     return this.typeService.listByOrg();
   }
 
   @Request(RequestType.SESSION)
-  public JsonArray getAll(String sessionId)
+  public List<BusinessTypeDTO> getAll(String sessionId)
   {
     return this.typeService.getAll().stream().map(object -> {
-      return this.typeService.toJSON(object);
-    }).collect(JsonCollectors.toJsonArray());
+      return this.typeService.toDTO(object);
+    }).toList();
   }
 
   @Request(RequestType.SESSION)
-  public JsonObject get(String sessionId, String oid)
+  public BusinessTypeDTO get(String sessionId, String oid)
   {
     BusinessType type = BusinessType.get(oid);
-    return this.typeService.toJSON(type, true, false);
+    return this.typeService.toDTO(type, true, false);
   }
 
   @Request(RequestType.SESSION)
@@ -107,7 +106,7 @@ public class BusinessTypeService
   }
 
   @Request(RequestType.SESSION)
-  public JsonObject edit(String sessionId, String oid)
+  public BusinessTypeDTO edit(String sessionId, String oid)
   {
     BusinessType type = BusinessType.get(oid);
 
@@ -116,7 +115,7 @@ public class BusinessTypeService
       throw new OriginException();
     }
 
-    return this.typeService.toJSON(type, true, false);
+    return this.typeService.toDTO(type, true, false);
   }
 
   @Request(RequestType.SESSION)
@@ -138,7 +137,7 @@ public class BusinessTypeService
    * @return updated {@link BusinessType}
    */
   @Request(RequestType.SESSION)
-  public AttributeType createAttributeType(String sessionId, String businessTypeCode, JsonObject attributeType)
+  public AttributeType createAttributeType(String sessionId, String businessTypeCode, AttributeType attributeType)
   {
     BusinessType type = this.typeService.getByCodeOrThrow(businessTypeCode);
 
@@ -168,7 +167,7 @@ public class BusinessTypeService
    * @return updated {@link AttributeType}
    */
   @Request(RequestType.SESSION)
-  public AttributeType updateAttributeType(String sessionId, String businessTypeCode, JsonObject attributeType)
+  public AttributeType updateAttributeType(String sessionId, String businessTypeCode, AttributeType attributeType)
   {
     BusinessType type = this.typeService.getByCodeOrThrow(businessTypeCode);
 
@@ -211,7 +210,7 @@ public class BusinessTypeService
     // ServiceFactory.getBusinessTypePermissionService().enforceCanWrite(type.getOrganization().getCode(),
     // type, type.getIsPrivate());
 
-    this.typeService.removeAttribute(type, attributeName);
+    this.typeService.removeAttributeType(type, attributeName);
   }
 
   @Request(RequestType.SESSION)

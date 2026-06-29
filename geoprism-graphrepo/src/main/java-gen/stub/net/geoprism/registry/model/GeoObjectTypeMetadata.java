@@ -46,7 +46,7 @@ public class GeoObjectTypeMetadata extends GeoObjectTypeMetadataBase
       {
         AttributeType attr = type.getAttribute(defaultAttr.getName()).get();
         
-        LocalizedValueIF val = LocalizationFacade.localizeAll("geoObjectType.attr."  + attr.getName());
+        LocalizedValueIF val = LocalizationFacade.localizeAll("geoObjectType.attr."  + attr.getCode());
         
         if (val != null)
         {

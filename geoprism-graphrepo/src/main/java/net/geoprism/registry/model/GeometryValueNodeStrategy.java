@@ -35,6 +35,8 @@ import net.geoprism.configuration.GeoprismProperties;
 import net.geoprism.registry.GeometrySizeException;
 import net.geoprism.registry.GeometryTypeException;
 import net.geoprism.registry.graph.AttributeGeometryType;
+import net.geoprism.registry.graph.GeoObjectType;
+import net.geoprism.registry.model.graph.ObjectClassIF;
 
 public class GeometryValueNodeStrategy extends ValueNodeStrategy
 {
@@ -130,14 +132,14 @@ public class GeometryValueNodeStrategy extends ValueNodeStrategy
   {
     if (this.geometryTable == null)
     {
-      this.geometryTable = this.getAttributeType().getGeoObjectType().getGeometryTable();
+      this.geometryTable = ( (GeoObjectType) this.getAttributeType().getObjectType() ).getGeometryTable();
     }
 
     return this.geometryTable;
   }
 
   @Override
-  public StateValue construct(ServerGeoObjectType type, VertexObject vertex)
+  public StateValue construct(ObjectClassIF type, VertexObject vertex)
   {
     return new GeometryStateValue(type, vertex, this.getNodeAttribute());
   }

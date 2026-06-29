@@ -3,25 +3,23 @@
  *
  * This file is part of Geoprism(tm).
  *
- * Geoprism(tm) is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
+ * Geoprism(tm) is free software: you can redistribute it and/or modify it under
+ * the terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation, either version 3 of the License, or (at your option) any
+ * later version.
  *
- * Geoprism(tm) is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
+ * Geoprism(tm) is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with Geoprism(tm).  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with Geoprism(tm). If not, see <http://www.gnu.org/licenses/>.
  */
 package net.geoprism.graph;
 
-import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
-
 import net.geoprism.registry.conversion.LocalizedValueConverter;
+import net.geoprism.registry.view.BusinessTypeDTO;
 
 public class BusinessTypeSnapshot extends BusinessTypeSnapshotBase
 {
@@ -38,7 +36,7 @@ public class BusinessTypeSnapshot extends BusinessTypeSnapshotBase
   {
     super();
   }
-  
+
   @Override
   public String getKey()
   {
@@ -51,21 +49,16 @@ public class BusinessTypeSnapshot extends BusinessTypeSnapshotBase
     return this.getCode();
   }
 
-  public JsonObject toJSON()
+  public BusinessTypeDTO toDTO()
   {
-    JsonArray attributes = new JsonArray();
-
-    this.getAttributeTypes().stream().forEach(attribute -> attributes.add(attribute.toJSON()));
-
-    JsonObject typeObject = new JsonObject();
-    typeObject.addProperty(CODE, this.getCode());
-    typeObject.addProperty(ORGCODE, this.getOrgCode());
-    typeObject.addProperty(ORIGIN, this.getOrigin());
-    typeObject.addProperty(ORGCODE, this.getOrgCode());
-    typeObject.addProperty(SEQUENCE, this.getSequence());
-    typeObject.addProperty(LABELATTRIBUTE, this.getLabelAttribute());
-    typeObject.add(DISPLAYLABEL, LocalizedValueConverter.convertNoAutoCoalesce(this.getDisplayLabel()).toJSON());
-    typeObject.add("attributes", attributes);
+    BusinessTypeDTO typeObject = new BusinessTypeDTO();
+    typeObject.setCode(this.getCode());
+    typeObject.setOrganization(this.getOrgCode());
+    typeObject.setOrigin(this.getOrigin());
+    typeObject.setSequence(this.getSequence());
+    typeObject.setLabelAttribute(this.getLabelAttribute());
+    typeObject.setDisplayLabel(LocalizedValueConverter.convertNoAutoCoalesce(this.getDisplayLabel()));
+    typeObject.setAttributes(this.getAttributeTypes());
 
     return typeObject;
   }

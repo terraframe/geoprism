@@ -43,9 +43,10 @@ import net.geoprism.registry.conversion.LocalizedValueConverter;
 import net.geoprism.registry.graph.AttributeType;
 import net.geoprism.registry.graph.BaseGeoObjectType;
 import net.geoprism.registry.graph.GeoObjectType;
+import net.geoprism.registry.model.graph.ObjectClassIF;
 import net.geoprism.registry.service.business.ServiceFactory;
 
-public class ServerGeoObjectType extends CachableObjectWrapper<BaseGeoObjectType> implements ServerElement
+public class ServerGeoObjectType extends CachableObjectWrapper<BaseGeoObjectType> implements ServerElement, ObjectClassIF
 {
   // private Logger logger = LoggerFactory.getLogger(ServerLeafGeoObject.class);
 
@@ -70,12 +71,9 @@ public class ServerGeoObjectType extends CachableObjectWrapper<BaseGeoObjectType
     this.attributes = attributes;
   }
 
-  protected Map<String, AttributeType> getAttributes()
+  public List<AttributeType> getAttributes()
   {
-    // Ensure the object isn't dirty and up to date
-    this.getType();
-
-    return this.attributes;
+    return new LinkedList<>(this.getAttributeMap().values());
   }
 
   @Override
@@ -192,17 +190,15 @@ public class ServerGeoObjectType extends CachableObjectWrapper<BaseGeoObjectType
 
   public Map<String, AttributeType> getAttributeMap()
   {
-    return getAttributes();
+    // Ensure the object isn't dirty and up to date
+    this.getType();
+
+    return this.attributes;
   }
 
   public Optional<AttributeType> getAttribute(String name)
   {
-    return Optional.ofNullable(getAttributes().get(name));
-  }
-
-  public List<AttributeType> definesAttributes()
-  {
-    return new LinkedList<AttributeType>(getAttributes().values());
+    return Optional.ofNullable(this.getAttributeMap().get(name));
   }
 
   /**
@@ -363,13 +359,13 @@ public class ServerGeoObjectType extends CachableObjectWrapper<BaseGeoObjectType
 
   public synchronized void removeAttribute(String attributeName)
   {
-    AttributeType attributeType = getAttributes().get(attributeName);
+    AttributeType attributeType = getAttributeMap().get(attributeName);
 
     if (attributeType != null)
     {
       attributeType.delete();
 
-      getAttributes().remove(attributeName);
+      getAttributeMap().remove(attributeName);
     }
   }
 

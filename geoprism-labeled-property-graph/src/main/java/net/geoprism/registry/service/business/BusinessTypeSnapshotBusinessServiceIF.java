@@ -26,6 +26,7 @@ import com.runwaysdk.dataaccess.MdVertexDAOIF;
 
 import net.geoprism.graph.BusinessTypeSnapshot;
 import net.geoprism.registry.model.SnapshotContainer;
+import net.geoprism.registry.view.BusinessTypeDTO;
 
 @Component
 public interface BusinessTypeSnapshotBusinessServiceIF extends ObjectTypeSnapshotBusinessServiceIF<BusinessTypeSnapshot>
@@ -37,7 +38,7 @@ public interface BusinessTypeSnapshotBusinessServiceIF extends ObjectTypeSnapsho
 
   String getTableName(String className);
 
-  BusinessTypeSnapshot create(SnapshotContainer<?> version, JsonObject typeDto);
+  BusinessTypeSnapshot create(SnapshotContainer<?> version, BusinessTypeDTO typeDto);
 
   JsonObject toDTO(BusinessTypeSnapshot snapshot, VertexObject vertex);
 

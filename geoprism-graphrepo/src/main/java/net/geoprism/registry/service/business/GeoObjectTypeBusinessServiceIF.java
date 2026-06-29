@@ -25,10 +25,6 @@ import org.commongeoregistry.adapter.metadata.AttributeType;
 import org.commongeoregistry.adapter.metadata.GeoObjectType;
 import org.springframework.stereotype.Component;
 
-import com.runwaysdk.dataaccess.MdAttributeConcreteDAOIF;
-import com.runwaysdk.system.metadata.MdBusiness;
-import com.runwaysdk.system.metadata.MdClass;
-
 import net.geoprism.registry.graph.HierarchicalRelationshipType;
 import net.geoprism.registry.graph.InheritedHierarchyAnnotation;
 import net.geoprism.registry.model.ServerGeoObjectType;
@@ -118,16 +114,4 @@ public interface GeoObjectTypeBusinessServiceIF
   <T extends AttributeType> T updateAttributeType(ServerGeoObjectType serverType, String attributeTypeJSON);
 
   <T extends AttributeType> T updateAttributeType(ServerGeoObjectType serverType, AttributeType dto);
-
-  /**
-   * Returns the {link MdAttributeConcreteDAOIF} for the given
-   * {@link AttributeType} defined on the given {@link MdBusiness} or null no
-   * such attribute is defined.
-   * 
-   * @param attributeName
-   * 
-   * @return
-   */
-  MdAttributeConcreteDAOIF getMdAttribute(MdClass mdClass, String attributeName);
-
 }

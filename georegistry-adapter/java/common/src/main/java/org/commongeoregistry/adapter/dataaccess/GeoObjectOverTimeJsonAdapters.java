@@ -149,7 +149,7 @@ public class GeoObjectOverTimeJsonAdapters
         AttributeType type = votc.getAttributeType();
         
         JsonObject attributeOverTime = new JsonObject();
-        attributeOverTime.addProperty("name", type.getName());
+        attributeOverTime.addProperty("name", type.getCode());
         attributeOverTime.addProperty("type", type.getType());
         
         JsonArray values = new JsonArray();
@@ -161,7 +161,7 @@ public class GeoObjectOverTimeJsonAdapters
         
         attributeOverTime.add("values", values);
         
-        attrs.add(type.getName(), attributeOverTime);
+        attrs.add(type.getCode(), attributeOverTime);
       }
       
       for (String key : go.attributeMap.keySet())

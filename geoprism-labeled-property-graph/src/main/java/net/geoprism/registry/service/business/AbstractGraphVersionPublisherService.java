@@ -26,7 +26,6 @@ import org.commongeoregistry.adapter.dataaccess.GeoObject;
 import org.commongeoregistry.adapter.dataaccess.LocalizedValue;
 import org.commongeoregistry.adapter.metadata.AttributeClassificationType;
 import org.commongeoregistry.adapter.metadata.AttributeDataSourceType;
-import org.commongeoregistry.adapter.metadata.AttributeTermType;
 import org.commongeoregistry.adapter.metadata.AttributeType;
 import org.commongeoregistry.adapter.metadata.GeoObjectType;
 import org.locationtech.jts.geom.Geometry;
@@ -117,30 +116,7 @@ public abstract class AbstractGraphVersionPublisherService
 
       if (node.hasAttribute(attributeName))
       {
-        if (attribute instanceof AttributeTermType)
-        {
-          // Iterator<String> it = (Iterator<String>)
-          // geoObject.getValue(attributeName);
-          //
-          // if (it.hasNext())
-          // {
-          // String code = it.next();
-          //
-          // Term root = ( (AttributeTermType) attribute ).getRootTerm();
-          // String parent =
-          // TermConverter.buildClassifierKeyFromTermCode(root.getCode());
-          //
-          // String classifierKey = Classifier.buildKey(parent, code);
-          // Classifier classifier = Classifier.getByKey(classifierKey);
-          //
-          // node.setValue(attributeName, classifier.getOid());
-          // }
-          // else
-          // {
-          // node.setValue(attributeName, (String) null);
-          // }
-        }
-        else if (attribute instanceof AttributeClassificationType)
+        if (attribute instanceof AttributeClassificationType)
         {
           String value = (String) geoObject.getValue(attributeName);
 

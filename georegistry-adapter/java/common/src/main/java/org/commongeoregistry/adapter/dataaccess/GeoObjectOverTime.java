@@ -80,13 +80,13 @@ public class GeoObjectOverTime implements Serializable
       {
         ValueOverTimeCollectionDTO votc = new ValueOverTimeCollectionDTO(attributeType);
   
-        attributeMap.put(attributeType.getName(), votc);
+        attributeMap.put(attributeType.getCode(), votc);
       }
     }
     
     AttributeGeometryType geometry = (AttributeGeometryType) DefaultAttribute.GEOMETRY.createAttributeType();
     ValueOverTimeCollectionDTO votc = new ValueOverTimeCollectionDTO(geometry);
-    attributeMap.put(geometry.getName(), votc);
+    attributeMap.put(geometry.getCode(), votc);
 
     return attributeMap;
   }
@@ -441,7 +441,7 @@ public class GeoObjectOverTime implements Serializable
   @SuppressWarnings("unchecked")
   public void setAlternateIds(List<AlternateId> ids)
   {
-    AttributeList<AlternateId> attr = (AttributeList<AlternateId>) this.attributeMap.get(DefaultAttribute.ALT_IDS.getName());
+    AttributeList attr = (AttributeList) this.attributeMap.get(DefaultAttribute.ALT_IDS.getName());
     
     attr.setValue(ids);
   }
@@ -455,9 +455,9 @@ public class GeoObjectOverTime implements Serializable
   @SuppressWarnings("unchecked")
   public void addAlternateId(AlternateId id)
   {
-    AttributeList<AlternateId> attr = (AttributeList<AlternateId>) this.attributeMap.get(DefaultAttribute.ALT_IDS.getName());
+    AttributeList attr = (AttributeList) this.attributeMap.get(DefaultAttribute.ALT_IDS.getName());
     
-    List<AlternateId> ids = attr.getValue();
+    List<AlternateId> ids = (List<AlternateId>) attr.getValue();
     
     if (ids == null)
     {

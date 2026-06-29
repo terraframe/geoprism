@@ -23,103 +23,54 @@ import java.util.List;
 import java.util.Optional;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
-import org.apache.commons.lang.StringUtils;
-import org.commongeoregistry.adapter.Term;
 import org.commongeoregistry.adapter.constants.DefaultAttribute;
 import org.commongeoregistry.adapter.dataaccess.LocalizedValue;
-import org.commongeoregistry.adapter.metadata.AttributeBooleanType;
-import org.commongeoregistry.adapter.metadata.AttributeCharacterType;
-import org.commongeoregistry.adapter.metadata.AttributeClassificationType;
-import org.commongeoregistry.adapter.metadata.AttributeDataSourceType;
-import org.commongeoregistry.adapter.metadata.AttributeDateType;
-import org.commongeoregistry.adapter.metadata.AttributeFloatType;
-import org.commongeoregistry.adapter.metadata.AttributeIntegerType;
-import org.commongeoregistry.adapter.metadata.AttributeLocalType;
-import org.commongeoregistry.adapter.metadata.AttributeTermType;
-import org.commongeoregistry.adapter.metadata.AttributeType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
-import com.runwaysdk.business.BusinessFacade;
 import com.runwaysdk.business.graph.GraphQuery;
-import com.runwaysdk.constants.IndexTypes;
 import com.runwaysdk.constants.MdAttributeBooleanInfo;
-import com.runwaysdk.constants.MdAttributeCharacterInfo;
-import com.runwaysdk.constants.MdAttributeConcreteInfo;
-import com.runwaysdk.constants.MdAttributeDoubleInfo;
-import com.runwaysdk.constants.MdAttributeGraphReferenceInfo;
-import com.runwaysdk.constants.MdAttributeLocalInfo;
 import com.runwaysdk.constants.graph.MdVertexInfo;
-import com.runwaysdk.dataaccess.MdAttributeConcreteDAOIF;
 import com.runwaysdk.dataaccess.MdAttributeDAOIF;
-import com.runwaysdk.dataaccess.MdAttributeMultiTermDAOIF;
-import com.runwaysdk.dataaccess.MdAttributeTermDAOIF;
-import com.runwaysdk.dataaccess.MdClassDAOIF;
 import com.runwaysdk.dataaccess.MdVertexDAOIF;
-import com.runwaysdk.dataaccess.cache.DataNotFoundException;
-import com.runwaysdk.dataaccess.metadata.MdAttributeCharacterDAO;
-import com.runwaysdk.dataaccess.metadata.MdAttributeConcreteDAO;
-import com.runwaysdk.dataaccess.metadata.MdAttributeGraphReferenceDAO;
 import com.runwaysdk.dataaccess.metadata.graph.MdVertexDAO;
 import com.runwaysdk.dataaccess.transaction.Transaction;
 import com.runwaysdk.gis.constants.MdGeoVertexInfo;
-import com.runwaysdk.localization.LocalizationFacade;
-import com.runwaysdk.localization.SupportedLocaleIF;
 import com.runwaysdk.session.Session;
-import com.runwaysdk.system.metadata.MdAttributeBoolean;
-import com.runwaysdk.system.metadata.MdAttributeCharacter;
-import com.runwaysdk.system.metadata.MdAttributeClassification;
-import com.runwaysdk.system.metadata.MdAttributeConcrete;
-import com.runwaysdk.system.metadata.MdAttributeDateTime;
-import com.runwaysdk.system.metadata.MdAttributeDouble;
-import com.runwaysdk.system.metadata.MdAttributeGraphReference;
-import com.runwaysdk.system.metadata.MdAttributeIndices;
-import com.runwaysdk.system.metadata.MdAttributeLocalCharacterEmbedded;
-import com.runwaysdk.system.metadata.MdAttributeLocalText;
-import com.runwaysdk.system.metadata.MdAttributeLong;
-import com.runwaysdk.system.metadata.MdAttributeTerm;
-import com.runwaysdk.system.metadata.MdBusiness;
-import com.runwaysdk.system.metadata.MdClass;
-import com.runwaysdk.system.metadata.MdGraphClass;
 import com.runwaysdk.system.metadata.MdVertex;
 
 import net.geoprism.configuration.GeoprismProperties;
 import net.geoprism.ontology.Classifier;
 import net.geoprism.registry.CodeLengthException;
-import net.geoprism.registry.JsonCollectors;
 import net.geoprism.registry.Organization;
 import net.geoprism.registry.RegistryConstants;
 import net.geoprism.registry.cache.TransactionLRUCache;
-import net.geoprism.registry.conversion.RegistryAttributeTypeConverter;
 import net.geoprism.registry.conversion.RegistryLocalizedValueConverter;
 import net.geoprism.registry.conversion.TermConverter;
+import net.geoprism.registry.graph.AttributeBooleanType;
+import net.geoprism.registry.graph.AttributeCharacterType;
+import net.geoprism.registry.graph.AttributeDataSourceType;
+import net.geoprism.registry.graph.AttributeType;
+import net.geoprism.registry.graph.AttributeUUIDType;
 import net.geoprism.registry.graph.BusinessEdgeType;
 import net.geoprism.registry.graph.BusinessType;
-import net.geoprism.registry.graph.DataSource;
-import net.geoprism.registry.model.Classification;
-import net.geoprism.registry.model.ClassificationType;
+import net.geoprism.registry.graph.BusinessVertex;
 import net.geoprism.registry.model.GeoObjectMetadata;
 import net.geoprism.registry.model.ServerOrganization;
 import net.geoprism.registry.query.graph.BusinessObjectPageQuery;
 import net.geoprism.registry.service.permission.PermissionServiceIF;
+import net.geoprism.registry.view.BusinessTypeDTO;
 import net.geoprism.registry.view.JsonSerializable;
+import net.geoprism.registry.view.OrganizationGroup;
 import net.geoprism.registry.view.Page;
 
 @Service
-public class BusinessTypeBusinessService implements BusinessTypeBusinessServiceIF
+public class BusinessTypeBusinessService extends ObjectClassBusinessService<BusinessType> implements BusinessTypeBusinessServiceIF
 {
   @Autowired
   private ClassificationTypeBusinessServiceIF             cTypeService;
-
-  @Autowired
-  private ClassificationBusinessServiceIF                 cService;
-
-  @Autowired
-  private GeoObjectTypeBusinessServiceIF                  typeService;
 
   @Autowired
   private PermissionServiceIF                             permissions;
@@ -132,6 +83,12 @@ public class BusinessTypeBusinessService implements BusinessTypeBusinessServiceI
 
       return new String[] { v.getCode(), v.getMdVertexOid() };
     }, 20);
+  }
+
+  @Override
+  protected void put(BusinessType type)
+  {
+    this.cache.put(type);
   }
 
   @Override
@@ -152,39 +109,6 @@ public class BusinessTypeBusinessService implements BusinessTypeBusinessServiceI
   }
 
   @Override
-  public AttributeType createAttributeType(BusinessType type, AttributeType attributeType)
-  {
-    MdAttributeConcrete mdAttribute = this.createMdAttributeFromAttributeType(type, attributeType);
-
-    // Refresh the users session
-    if (Session.getCurrentSession() != null)
-    {
-      // Refresh the users session
-      ( (Session) Session.getCurrentSession() ).reloadPermissions();
-    }
-
-    this.cache.put(type);
-
-    return new RegistryAttributeTypeConverter().build(MdAttributeConcreteDAO.get(mdAttribute.getOid()));
-  }
-
-  @Override
-  public AttributeType createAttributeType(BusinessType type, JsonObject attrObj)
-  {
-    AttributeType attrType = AttributeType.parse(attrObj);
-
-    return createAttributeType(type, attrType);
-  }
-
-  @Override
-  public AttributeType updateAttributeType(BusinessType type, JsonObject attrObj)
-  {
-    AttributeType attrType = AttributeType.parse(attrObj);
-
-    return updateAttributeType(type, attrType);
-  }
-
-  @Override
   public void setLabelAttribute(BusinessType type, String attributeName)
   {
     MdVertexDAOIF mdVertex = type.getMdVertexDAO();
@@ -194,150 +118,58 @@ public class BusinessTypeBusinessService implements BusinessTypeBusinessServiceI
   }
 
   @Override
-  public AttributeType updateAttributeType(BusinessType type, AttributeType attrType)
+  public BusinessTypeDTO toDTO(BusinessType type)
   {
-    MdAttributeConcrete mdAttribute = this.updateMdAttributeFromAttributeType(type, attrType);
-
-    return new RegistryAttributeTypeConverter().build(MdAttributeConcreteDAO.get(mdAttribute.getOid()));
+    return toDTO(type, false, false);
   }
 
   @Override
-  public void removeAttribute(BusinessType type, String attributeName)
+  public BusinessTypeDTO toDTO(BusinessType type, boolean includeAttribute, boolean flattenLocalAttributes)
   {
-    this.deleteMdAttributeFromAttributeType(type, attributeName);
-
-    // Update the sequence number of the type
-    if (type.getOrigin().equals(GeoprismProperties.getOrigin()))
-    {
-      type.setSequence(type.getSequence() + 1);
-      type.apply();
-
-      this.cache.put(type);
-    }
-
-    // Refresh the users session
-    if (Session.getCurrentSession() != null)
-    {
-      // Refresh the users session
-      ( (Session) Session.getCurrentSession() ).reloadPermissions();
-    }
-  }
-
-  /**
-   * Delete the {@link MdAttributeConcreteDAOIF} from the given {
-   * 
-   * @param type
-   *          TODO
-   * @param mdBusiness
-   * @param attributeName
-   */
-  @Override
-  @Transaction
-  public void deleteMdAttributeFromAttributeType(BusinessType type, String attributeName)
-  {
-    MdAttributeConcreteDAOIF mdAttributeConcreteDAOIF = this.typeService.getMdAttribute(type.getMdVertex(), attributeName);
-
-    if (mdAttributeConcreteDAOIF != null)
-    {
-      if (mdAttributeConcreteDAOIF instanceof MdAttributeTermDAOIF || mdAttributeConcreteDAOIF instanceof MdAttributeMultiTermDAOIF)
-      {
-        String attributeTermKey = TermConverter.buildtAtttributeKey(type.getMdVertex().getTypeName(), mdAttributeConcreteDAOIF.definesAttribute());
-
-        try
-        {
-          Classifier attributeTerm = Classifier.getByKey(attributeTermKey);
-          attributeTerm.delete();
-        }
-        catch (DataNotFoundException e)
-        {
-        }
-      }
-
-      mdAttributeConcreteDAOIF.getBusinessDAO().delete();
-    }
-
-    this.cache.put(type);
+    return this.toDTO(type, includeAttribute, flattenLocalAttributes, (attribute) -> true);
   }
 
   @Override
-  public JsonObject toJSON(BusinessType type)
+  public BusinessTypeDTO toDTO(BusinessType type, boolean includeAttribute, boolean flattenLocalAttributes, Predicate<AttributeType> filter)
   {
-    return toJSON(type, false, false);
-  }
 
-  @Override
-  public JsonObject toJSON(BusinessType type, boolean includeAttribute, boolean flattenLocalAttributes)
-  {
-    return this.toJSON(type, includeAttribute, flattenLocalAttributes, (attribute) -> true);
-  }
-
-  @Override
-  public JsonObject toJSON(BusinessType type, boolean includeAttribute, boolean flattenLocalAttributes, Predicate<AttributeType> filter)
-  {
     ServerOrganization organization = type.getServerOrganization();
-    JsonObject object = new JsonObject();
-    object.addProperty(BusinessType.CODE, type.getCode());
-    object.addProperty(BusinessType.ORGANIZATION, organization.getCode());
-    object.addProperty(BusinessType.ORIGIN, type.getOrigin());
-    object.addProperty(BusinessType.SEQUENCE, type.getSequence());
-    object.addProperty("organizationLabel", organization.getDisplayLabel().getValue());
-    object.add(BusinessType.DISPLAYLABEL, type.getLabel().toJSON());
+
+    BusinessTypeDTO dto = new BusinessTypeDTO();
+    dto.setCode(type.getCode());
+    dto.setOrganization(organization.getCode());
+    dto.setOrganizationLabel(organization.getDisplayLabel().getValue());
+    dto.setOrigin(type.getOrigin());
+    dto.setSequence(type.getSequence());
+    dto.setDisplayLabel(type.getLabel());
 
     if (type.getLabelAttributeOid() != null && type.getLabelAttributeOid().length() > 0)
     {
-      object.addProperty(BusinessType.LABELATTRIBUTE, type.getLabelAttribute().getAttributeName());
+      dto.setLabelAttribute(type.getLabelAttribute().getAttributeName());
     }
     else
     {
-      object.addProperty(BusinessType.LABELATTRIBUTE, BusinessType.CODE);
+      dto.setLabelAttribute(BusinessType.CODE);
     }
 
     if (type.isAppliedToDb())
     {
-      object.addProperty(BusinessType.OID, type.getOid());
+      dto.setOid(type.getOid());
     }
 
     if (includeAttribute)
     {
-      JsonArray attributes = type.getAttributeMap().values().stream() //
+      List<org.commongeoregistry.adapter.metadata.AttributeType> attributes = type.getAttributes().stream() //
           .filter(filter) //
           .sorted((a, b) -> {
-            return a.getName().compareTo(b.getName());
-          }).flatMap(attr -> {
-            if (flattenLocalAttributes && attr instanceof AttributeLocalType)
-            {
-              List<JsonObject> list = new LinkedList<>();
-              list.add(this.serializeLocale(type, attr, LocalizedValue.DEFAULT_LOCALE, LocalizationFacade.localize(DefaultAttribute.DISPLAY_LABEL.getName())));
+            return a.getCode().compareTo(b.getCode());
+          }).map(a -> a.toDTO()).toList();
 
-              for (SupportedLocaleIF locale : LocalizationFacade.getSupportedLocales())
-              {
-                list.add(this.serializeLocale(type, attr, locale.getLocale().toString(), locale.getDisplayLabel().getValue()));
-              }
-
-              return list.stream();
-            }
-
-            return Stream.of(attr.toJSON());
-          }).collect(JsonCollectors.toJsonArray());
-
-      object.add(BusinessType.JSON_ATTRIBUTES, attributes);
+      dto.setAttributes(attributes);
     }
 
-    return object;
-  }
+    return dto;
 
-  private JsonObject serializeLocale(BusinessType type, AttributeType attributeType, String key, String label)
-  {
-    JsonObject object = attributeType.toJSON();
-    object.addProperty("locale", key);
-    object.addProperty(AttributeType.JSON_CODE, attributeType.getName());
-
-    JsonObject jaLabel = object.get(AttributeType.JSON_LOCALIZED_LABEL).getAsJsonObject();
-    String value = jaLabel.get(LocalizedValue.LOCALIZED_VALUE).getAsString();
-    value += " (" + label + ")";
-    jaLabel.addProperty(LocalizedValue.LOCALIZED_VALUE, value);
-
-    return object;
   }
 
   @Override
@@ -348,12 +180,12 @@ public class BusinessTypeBusinessService implements BusinessTypeBusinessServiceI
 
   @Transaction
   @Override
-  public BusinessType apply(JsonObject object)
+  public BusinessType apply(BusinessTypeDTO object)
   {
-    String code = object.get(BusinessType.CODE).getAsString();
-    String organizationCode = object.get(BusinessType.ORGANIZATION).getAsString();
+    String code = object.getCode();
+    String organizationCode = object.getOrganization();
     ServerOrganization organization = ServerOrganization.getByCode(organizationCode);
-    String origin = object.has(BusinessType.ORIGIN) ? object.get(BusinessType.ORIGIN).getAsString() : GeoprismProperties.getOrigin();
+    String origin = object.hasOrigin() ? object.getOrigin() : GeoprismProperties.getOrigin();
 
     ServiceFactory.getGeoObjectTypePermissionService().enforceCanCreate(organization.getCode(), false);
 
@@ -367,9 +199,9 @@ public class BusinessTypeBusinessService implements BusinessTypeBusinessServiceI
       throw ex;
     }
 
-    LocalizedValue localizedValue = LocalizedValue.fromJSON(object.get(BusinessType.DISPLAYLABEL).getAsJsonObject());
+    LocalizedValue localizedValue = object.getDisplayLabel();
 
-    BusinessType businessType = ( object.has(BusinessType.OID) && !object.get(BusinessType.OID).isJsonNull() ) ? BusinessType.get(object.get(BusinessType.OID).getAsString()) : new BusinessType();
+    BusinessType businessType = object.hasOid() ? BusinessType.get(object.getOid()) : new BusinessType();
     businessType.setCode(code);
     businessType.setOrganization(organization.getGraphOrganization());
     RegistryLocalizedValueConverter.populate(businessType, BusinessType.DISPLAYLABEL, localizedValue);
@@ -378,38 +210,20 @@ public class BusinessTypeBusinessService implements BusinessTypeBusinessServiceI
 
     if (isNew)
     {
+      MdVertexDAOIF superMdVertex = MdVertexDAO.getMdVertexDAO(BusinessVertex.CLASS);
+
       MdVertexDAO mdVertex = MdVertexDAO.newInstance();
       mdVertex.setValue(MdGeoVertexInfo.PACKAGE, RegistryConstants.BUSINESS_PACKAGE);
       mdVertex.setValue(MdGeoVertexInfo.NAME, code);
       mdVertex.setValue(MdGeoVertexInfo.ENABLE_CHANGE_OVER_TIME, MdAttributeBooleanInfo.FALSE);
       mdVertex.setValue(MdGeoVertexInfo.GENERATE_SOURCE, MdAttributeBooleanInfo.FALSE);
+      mdVertex.setValue(MdGeoVertexInfo.SUPER_MD_VERTEX, superMdVertex.getOid());
       RegistryLocalizedValueConverter.populate(mdVertex, MdVertexInfo.DISPLAY_LABEL, localizedValue);
       mdVertex.apply();
 
-      // DefaultAttribute.CODE
-      MdAttributeCharacterDAO vertexCodeMdAttr = MdAttributeCharacterDAO.newInstance();
-      vertexCodeMdAttr.setValue(MdAttributeConcreteInfo.NAME, DefaultAttribute.CODE.getName());
-      vertexCodeMdAttr.setStructValue(MdAttributeConcreteInfo.DISPLAY_LABEL, MdAttributeLocalInfo.DEFAULT_LOCALE, DefaultAttribute.CODE.getDefaultLocalizedName());
-      vertexCodeMdAttr.setStructValue(MdAttributeConcreteInfo.DESCRIPTION, MdAttributeLocalInfo.DEFAULT_LOCALE, DefaultAttribute.CODE.getDefaultDescription());
-      vertexCodeMdAttr.setValue(MdAttributeCharacterInfo.SIZE, MdAttributeCharacterInfo.MAX_CHARACTER_SIZE);
-      vertexCodeMdAttr.setValue(MdAttributeConcreteInfo.DEFINING_MD_CLASS, mdVertex.getOid());
-      vertexCodeMdAttr.setValue(MdAttributeConcreteInfo.REQUIRED, MdAttributeBooleanInfo.TRUE);
-      vertexCodeMdAttr.addItem(MdAttributeConcreteInfo.INDEX_TYPE, IndexTypes.UNIQUE_INDEX.getOid());
-      vertexCodeMdAttr.apply();
-
-      // DefaultAttribute.DATA_SOURCE
-      MdAttributeGraphReferenceDAO sourceAttr = MdAttributeGraphReferenceDAO.newInstance();
-      sourceAttr.setValue(MdAttributeConcreteInfo.NAME, DefaultAttribute.DATA_SOURCE.getName());
-      sourceAttr.setStructValue(MdAttributeBooleanInfo.DISPLAY_LABEL, LocalizedValue.DEFAULT_LOCALE, DefaultAttribute.DATA_SOURCE.getDefaultLocalizedName());
-      sourceAttr.setStructValue(MdAttributeBooleanInfo.DESCRIPTION, LocalizedValue.DEFAULT_LOCALE, DefaultAttribute.DATA_SOURCE.getDefaultDescription());
-      sourceAttr.setValue(MdAttributeConcreteInfo.DEFINING_MD_CLASS, mdVertex.getOid());
-      sourceAttr.setValue(MdAttributeGraphReferenceInfo.REFERENCE_MD_VERTEX, MdVertexDAO.getMdVertexDAO(DataSource.CLASS).getOid());
-      sourceAttr.setValue(MdAttributeConcreteInfo.REQUIRED, false);
-      sourceAttr.apply();
-
       businessType.setMdVertexId(mdVertex.getOid());
       businessType.setOrigin(origin);
-      businessType.setSequence(object.has(BusinessType.SEQUENCE) ? object.get(BusinessType.SEQUENCE).getAsLong() : 0L);
+      businessType.setSequence(object.hasSequence() ? object.getSequence() : 0L);
     }
     else
     {
@@ -417,23 +231,49 @@ public class BusinessTypeBusinessService implements BusinessTypeBusinessServiceI
       {
         businessType.setSequence(businessType.getSequence() + 1);
       }
-      else if (object.has(BusinessType.SEQUENCE))
+      else if (object.hasSequence())
       {
-        businessType.setSequence(object.get(BusinessType.SEQUENCE).getAsLong());
+        businessType.setSequence(object.getSequence());
       }
     }
 
-    if (object.has(BusinessType.LABELATTRIBUTE) && !object.get(BusinessType.LABELATTRIBUTE).isJsonNull())
+    if (object.hasLabelAttribute())
     {
-      String attributeName = object.get(BusinessType.LABELATTRIBUTE).getAsString();
+      String attributeName = object.getLabelAttribute();
 
-      if (!StringUtils.isEmpty(attributeName))
-      {
-        this.setLabelAttribute(businessType, attributeName);
-      }
+      this.setLabelAttribute(businessType, attributeName);
     }
 
-    return apply(businessType);
+    businessType.apply();
+
+    if (isNew)
+    {
+      AttributeCharacterType codeAttr = new AttributeCharacterType();
+      codeAttr.setCode(DefaultAttribute.CODE.getName());
+      codeAttr.setEmbeddedValue(AttributeUUIDType.LABEL, LocalizedValue.DEFAULT_LOCALE, DefaultAttribute.CODE.getDefaultLocalizedName());
+      codeAttr.setEmbeddedValue(AttributeUUIDType.DESCRIPTION, LocalizedValue.DEFAULT_LOCALE, DefaultAttribute.CODE.getDefaultDescription());
+      codeAttr.setValue(AttributeBooleanType.OBJECTTYPE, businessType.getOid());
+      codeAttr.setRequired(true);
+      codeAttr.setUnique(true);
+      codeAttr.setIsChangeOverTime(false);
+      codeAttr.setIsDefault(true);
+      codeAttr.apply();
+
+      AttributeDataSourceType sourceAttr = new AttributeDataSourceType();
+      sourceAttr.setCode(DefaultAttribute.DATA_SOURCE.getName());
+      sourceAttr.setEmbeddedValue(AttributeUUIDType.LABEL, LocalizedValue.DEFAULT_LOCALE, DefaultAttribute.DATA_SOURCE.getDefaultLocalizedName());
+      sourceAttr.setEmbeddedValue(AttributeUUIDType.DESCRIPTION, LocalizedValue.DEFAULT_LOCALE, DefaultAttribute.DATA_SOURCE.getDefaultDescription());
+      sourceAttr.setValue(AttributeBooleanType.OBJECTTYPE, businessType.getOid());
+      sourceAttr.setRequired(false);
+      sourceAttr.setUnique(false);
+      sourceAttr.setIsChangeOverTime(false);
+      sourceAttr.setIsDefault(true);
+      sourceAttr.apply();
+    }
+
+    this.cache.put(businessType);
+
+    return businessType;
   }
 
   @Transaction
@@ -533,9 +373,9 @@ public class BusinessTypeBusinessService implements BusinessTypeBusinessServiceI
   }
 
   @Override
-  public JsonArray listByOrg()
+  public List<OrganizationGroup<BusinessTypeDTO>> listByOrg()
   {
-    JsonArray response = new JsonArray();
+    List<OrganizationGroup<BusinessTypeDTO>> response = new LinkedList<>();
 
     List<ServerOrganization> organizations = ServerOrganization.getSortedOrganizations().stream() //
         .filter(org -> org.getEnabled()) //
@@ -553,20 +393,20 @@ public class BusinessTypeBusinessService implements BusinessTypeBusinessServiceI
       GraphQuery<BusinessType> query = new GraphQuery<BusinessType>(statement.toString());
       query.setParameter("organization", org.getGraphOrganization().getRID());
 
-      JsonArray types = query.getResults().stream() //
+      List<BusinessTypeDTO> types = query.getResults().stream() //
           .filter(type -> this.permissions.canRead(type)) //
           .sorted((a, b) -> a.getLabel().getValue().compareTo(b.getLabel().getValue())) //
-          .map(type -> this.toJSON(type)) //
-          .collect(JsonCollectors.toJsonArray());
+          .map(type -> this.toDTO(type)) //
+          .toList();
 
-      JsonObject object = new JsonObject();
-      object.addProperty("oid", org.getOid());
-      object.addProperty("code", org.getCode());
-      object.addProperty("label", org.getDisplayLabel().getValue());
-      object.addProperty("write", this.permissions.isAdmin(org));
-      object.add("types", types);
+      OrganizationGroup<BusinessTypeDTO> group = new OrganizationGroup<BusinessTypeDTO>();
+      group.setOid(org.getOid());
+      group.setCode(org.getCode());
+      group.setLabel(org.getDisplayLabel().getValue());
+      group.setWrite(this.permissions.isAdmin(org));
+      group.setTypes(types);
 
-      response.add(object);
+      response.add(group);
     }
 
     return response;
@@ -637,238 +477,6 @@ public class BusinessTypeBusinessService implements BusinessTypeBusinessServiceI
 
       return Optional.ofNullable(query.getSingleResult());
     }).orElse(null);
-  }
-
-  private MdAttributeConcreteDAOIF getMdAttribute(MdClass mdClass, String attributeName)
-  {
-    MdClassDAOIF mdClassDAO = (MdClassDAOIF) BusinessFacade.getEntityDAO(mdClass);
-
-    return (MdAttributeConcreteDAOIF) mdClassDAO.definesAttribute(attributeName);
-  }
-
-  @Transaction
-  private MdAttributeConcrete createMdAttributeFromAttributeType(BusinessType type, AttributeType attributeType)
-  {
-    MdVertex mdClass = type.getMdVertex();
-
-    MdAttributeConcrete mdAttribute = null;
-
-    if (attributeType.getType().equals(AttributeCharacterType.TYPE))
-    {
-      mdAttribute = new MdAttributeCharacter();
-      MdAttributeCharacter mdAttributeCharacter = (MdAttributeCharacter) mdAttribute;
-      mdAttributeCharacter.setDatabaseSize(MdAttributeCharacterInfo.MAX_CHARACTER_SIZE);
-    }
-    else if (attributeType.getType().equals(AttributeDateType.TYPE))
-    {
-      mdAttribute = new MdAttributeDateTime();
-    }
-    else if (attributeType.getType().equals(AttributeIntegerType.TYPE))
-    {
-      mdAttribute = new MdAttributeLong();
-    }
-    else if (attributeType.getType().equals(AttributeFloatType.TYPE))
-    {
-      AttributeFloatType attributeFloatType = (AttributeFloatType) attributeType;
-
-      mdAttribute = new MdAttributeDouble();
-      mdAttribute.setValue(MdAttributeDoubleInfo.LENGTH, Integer.toString(attributeFloatType.getPrecision()));
-      mdAttribute.setValue(MdAttributeDoubleInfo.DECIMAL, Integer.toString(attributeFloatType.getScale()));
-    }
-    else if (attributeType.getType().equals(AttributeTermType.TYPE))
-    {
-      mdAttribute = new MdAttributeTerm();
-      MdAttributeTerm mdAttributeTerm = (MdAttributeTerm) mdAttribute;
-
-      MdBusiness classifierMdBusiness = MdBusiness.getMdBusiness(Classifier.CLASS);
-      mdAttributeTerm.setMdBusiness(classifierMdBusiness);
-      // TODO implement support for multi-term
-      // mdAttribute = new MdAttributeMultiTerm();
-      // MdAttributeMultiTerm mdAttributeMultiTerm =
-      // (MdAttributeMultiTerm)mdAttribute;
-      //
-      // MdBusiness classifierMdBusiness =
-      // MdBusiness.getMdBusiness(Classifier.CLASS);
-      // mdAttributeMultiTerm.setMdBusiness(classifierMdBusiness);
-    }
-    else if (attributeType.getType().equals(AttributeClassificationType.TYPE))
-    {
-      AttributeClassificationType attributeClassificationType = (AttributeClassificationType) attributeType;
-      String classificationTypeCode = attributeClassificationType.getClassificationType();
-
-      ClassificationType classificationType = this.cTypeService.getByCode(classificationTypeCode);
-
-      mdAttribute = new MdAttributeClassification();
-      MdAttributeClassification mdAttributeTerm = (MdAttributeClassification) mdAttribute;
-      mdAttributeTerm.setReferenceMdClassification(classificationType.getMdClassificationObject());
-
-      Term root = attributeClassificationType.getRootTerm();
-
-      if (root != null)
-      {
-        Classification classification = this.cService.getByCode(classificationType, root.getCode()).orElseThrow(() -> {
-          net.geoprism.registry.DataNotFoundException ex = new net.geoprism.registry.DataNotFoundException();
-          ex.setTypeLabel(classificationType.getDisplayLabel().getValue());
-          ex.setDataIdentifier(root.getCode());
-          ex.setAttributeLabel(GeoObjectMetadata.get().getAttributeDisplayLabel(DefaultAttribute.CODE.getName()));
-
-          throw ex;
-        });
-
-        mdAttributeTerm.setValue(MdAttributeClassification.ROOT, classification.getOid());
-      }
-    }
-    else if (attributeType.getType().equals(AttributeDataSourceType.TYPE))
-    {
-      MdVertexDAOIF mdVertex = MdVertexDAO.getMdVertexDAO(DataSource.CLASS);
-
-      mdAttribute = new MdAttributeGraphReference();
-      mdAttribute.setValue(MdAttributeGraphReferenceInfo.REFERENCE_MD_VERTEX, mdVertex.getOid());
-    }
-    else if (attributeType.getType().equals(AttributeBooleanType.TYPE))
-    {
-      mdAttribute = new MdAttributeBoolean();
-    }
-    else if (attributeType.getType().equals(AttributeLocalType.TYPE))
-    {
-      if (mdClass instanceof MdGraphClass)
-      {
-        mdAttribute = new MdAttributeLocalCharacterEmbedded();
-      }
-      else
-      {
-        mdAttribute = new MdAttributeLocalText();
-      }
-    }
-    else
-    {
-      throw new UnsupportedOperationException();
-    }
-
-    mdAttribute.setAttributeName(attributeType.getName());
-    mdAttribute.setValue(MdAttributeConcreteInfo.REQUIRED, Boolean.toString(attributeType.isRequired()));
-
-    if (attributeType.isUnique())
-    {
-      mdAttribute.addIndexType(MdAttributeIndices.UNIQUE_INDEX);
-    }
-
-    RegistryLocalizedValueConverter.populate(mdAttribute.getDisplayLabel(), attributeType.getLabel());
-    RegistryLocalizedValueConverter.populate(mdAttribute.getDescription(), attributeType.getDescription());
-
-    mdAttribute.setDefiningMdClass(mdClass);
-    mdAttribute.apply();
-
-    if (attributeType.getType().equals(AttributeTermType.TYPE))
-    {
-      MdAttributeTerm mdAttributeTerm = (MdAttributeTerm) mdAttribute;
-
-      // Build the parent class term root if it does not exist.
-      Classifier classTerm = TermConverter.buildIfNotExistGeoObjectTypeClassifier(type);
-
-      // Create the root term node for this attribute
-      Classifier attributeTermRoot = TermConverter.buildIfNotExistAttribute(type, mdAttributeTerm.getAttributeName(), classTerm);
-
-      // Make this the root term of the multi-attribute
-      attributeTermRoot.addClassifierTermAttributeRoots(mdAttributeTerm).apply();
-
-      AttributeTermType attributeTermType = (AttributeTermType) attributeType;
-
-      LocalizedValue label = RegistryLocalizedValueConverter.convertNoAutoCoalesce(attributeTermRoot.getDisplayLabel());
-
-      org.commongeoregistry.adapter.Term term = new org.commongeoregistry.adapter.Term(attributeTermRoot.getClassifierId(), label, new LocalizedValue(""));
-      attributeTermType.setRootTerm(term);
-    }
-
-    // Update the sequence number of the type
-    if (type.getOrigin().equals(GeoprismProperties.getOrigin()))
-    {
-      type.setSequence(type.getSequence() + 1);
-      type.apply();
-    }
-
-    return mdAttribute;
-  }
-
-  @Transaction
-  private MdAttributeConcrete updateMdAttributeFromAttributeType(BusinessType type, AttributeType attributeType)
-  {
-    MdVertex mdClass = type.getMdVertex();
-
-    MdAttributeConcreteDAOIF mdAttributeConcreteDAOIF = getMdAttribute(mdClass, attributeType.getName());
-
-    if (mdAttributeConcreteDAOIF != null)
-    {
-      // Get the type safe version
-      MdAttributeConcrete mdAttribute = (MdAttributeConcrete) BusinessFacade.get(mdAttributeConcreteDAOIF);
-      mdAttribute.lock();
-
-      try
-      {
-        // The name cannot be updated
-        // mdAttribute.setAttributeName(attributeType.getName());
-        RegistryLocalizedValueConverter.populate(mdAttribute.getDisplayLabel(), attributeType.getLabel());
-        RegistryLocalizedValueConverter.populate(mdAttribute.getDescription(), attributeType.getDescription());
-
-        if (attributeType instanceof AttributeFloatType)
-        {
-          // Refresh the terms
-          AttributeFloatType attributeFloatType = (AttributeFloatType) attributeType;
-
-          mdAttribute.setValue(MdAttributeDoubleInfo.LENGTH, Integer.toString(attributeFloatType.getPrecision()));
-          mdAttribute.setValue(MdAttributeDoubleInfo.DECIMAL, Integer.toString(attributeFloatType.getScale()));
-        }
-        else if (attributeType instanceof AttributeClassificationType)
-        {
-          MdAttributeClassification mdAttributeTerm = (MdAttributeClassification) mdAttribute;
-
-          AttributeClassificationType attributeClassificationType = (AttributeClassificationType) attributeType;
-          String classificationTypeCode = attributeClassificationType.getClassificationType();
-
-          ClassificationType classificationType = this.cTypeService.getByCode(classificationTypeCode);
-
-          Term root = attributeClassificationType.getRootTerm();
-
-          if (root != null)
-          {
-            Classification classification = this.cService.getByCode(classificationType, root.getCode()).orElseThrow(() -> {
-              net.geoprism.registry.DataNotFoundException ex = new net.geoprism.registry.DataNotFoundException();
-              ex.setTypeLabel(classificationType.getDisplayLabel().getValue());
-              ex.setDataIdentifier(root.getCode());
-              ex.setAttributeLabel(GeoObjectMetadata.get().getAttributeDisplayLabel(DefaultAttribute.CODE.getName()));
-
-              throw ex;
-            });
-
-            mdAttributeTerm.setValue(MdAttributeClassification.ROOT, classification.getOid());
-          }
-        }
-
-        mdAttribute.apply();
-      }
-      finally
-      {
-        mdAttribute.unlock();
-      }
-
-      if (attributeType instanceof AttributeTermType)
-      {
-        // Refresh the terms
-        AttributeTermType attributeTermType = (AttributeTermType) attributeType;
-
-        org.commongeoregistry.adapter.Term getRootTerm = attributeTermType.getRootTerm();
-        String classifierKey = TermConverter.buildClassifierKeyFromTermCode(getRootTerm.getCode());
-
-        TermConverter termBuilder = new TermConverter(classifierKey);
-        attributeTermType.setRootTerm(termBuilder.build());
-      }
-
-      return mdAttribute;
-    }
-
-    this.cache.put(type);
-
-    return null;
   }
 
 }

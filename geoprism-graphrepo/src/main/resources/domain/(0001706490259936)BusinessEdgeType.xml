@@ -23,7 +23,6 @@
     <create>
       <mdVertex name="net.geoprism.registry.graph.BusinessEdgeType" extends="net.geoprism.registry.graph.EdgeClass"  label="Business Relationship" >
         <attributes>
-          <char name="code" size="255" required="true" indexType="unique index" label="Code" />
           <localCharEmbedded
             name="displayLabel"
             label="Label"

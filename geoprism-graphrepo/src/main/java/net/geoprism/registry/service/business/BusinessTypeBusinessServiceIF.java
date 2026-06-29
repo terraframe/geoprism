@@ -22,43 +22,32 @@ import java.util.List;
 import java.util.Optional;
 import java.util.function.Predicate;
 
-import org.commongeoregistry.adapter.metadata.AttributeType;
 import org.springframework.stereotype.Component;
 
-import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.runwaysdk.dataaccess.MdVertexDAOIF;
 
 import net.geoprism.registry.Organization;
+import net.geoprism.registry.graph.AttributeType;
 import net.geoprism.registry.graph.BusinessEdgeType;
 import net.geoprism.registry.graph.BusinessType;
 import net.geoprism.registry.model.ServerOrganization;
+import net.geoprism.registry.view.BusinessTypeDTO;
 import net.geoprism.registry.view.JsonSerializable;
+import net.geoprism.registry.view.OrganizationGroup;
 import net.geoprism.registry.view.Page;
 
 @Component
-public interface BusinessTypeBusinessServiceIF
+public interface BusinessTypeBusinessServiceIF extends ObjectClassBusinessServiceIF<BusinessType>
 {
 
   void delete(BusinessType type);
 
-  AttributeType createAttributeType(BusinessType type, AttributeType attributeType);
-
-  AttributeType createAttributeType(BusinessType type, JsonObject attrObj);
-
-  AttributeType updateAttributeType(BusinessType type, JsonObject attrObj);
-
   void setLabelAttribute(BusinessType type, String attributeName);
-
-  AttributeType updateAttributeType(BusinessType type, AttributeType attrType);
-
-  void removeAttribute(BusinessType type, String attributeName);
-
-  void deleteMdAttributeFromAttributeType(BusinessType type, String attributeName);
 
   Page<JsonSerializable> data(BusinessType type, JsonObject criteria);
 
-  BusinessType apply(JsonObject object);
+  BusinessType apply(BusinessTypeDTO object);
 
   List<BusinessEdgeType> getParentEdgeTypes(BusinessType type);
 
@@ -70,7 +59,7 @@ public interface BusinessTypeBusinessServiceIF
 
   BusinessType getByCodeOrThrow(String code);
 
-  JsonArray listByOrg();
+  List<OrganizationGroup<BusinessTypeDTO>> listByOrg();
 
   List<BusinessType> getAll();
 
@@ -82,10 +71,10 @@ public interface BusinessTypeBusinessServiceIF
 
   BusinessType apply(BusinessType businessType);
 
-  JsonObject toJSON(BusinessType type);
+  BusinessTypeDTO toDTO(BusinessType type);
 
-  JsonObject toJSON(BusinessType type, boolean includeAttribute, boolean flattenLocalAttributes);
+  BusinessTypeDTO toDTO(BusinessType type, boolean includeAttribute, boolean flattenLocalAttributes);
 
-  JsonObject toJSON(BusinessType type, boolean includeAttribute, boolean flattenLocalAttributes, Predicate<AttributeType> filter);
+  BusinessTypeDTO toDTO(BusinessType type, boolean includeAttribute, boolean flattenLocalAttributes, Predicate<AttributeType> filter);
 
 }

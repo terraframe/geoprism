@@ -27,8 +27,20 @@
           <reference name="universal" label="Universal" required="true" type="com.runwaysdk.system.gis.geo.Universal" />                
         </attributes>
       </mdVertex>    
-      
-      <mdVertex name="net.geoprism.registry.graph.GeoVertex" label="Geo Vertex" isAbstract="true" enableChangeOverTime="false">
+
+      <mdVertex name="net.geoprism.registry.graph.ObjectVertex" label="Object Vertex" isAbstract="true" enableChangeOverTime="false">
+        <attributes>
+        </attributes>
+      </mdVertex>
+      <mdVertex name="net.geoprism.registry.graph.BusinessVertex" extends="net.geoprism.registry.graph.ObjectVertex" label="Business Vertex" isAbstract="true" enableChangeOverTime="false">
+        <attributes>
+        </attributes>
+      </mdVertex>
+      <mdVertex name="net.geoprism.registry.graph.ConceptVertex" extends="net.geoprism.registry.graph.ObjectVertex" label="Concept Vertex" isAbstract="true" enableChangeOverTime="false">
+        <attributes>
+        </attributes>
+      </mdVertex>           
+      <mdVertex name="net.geoprism.registry.graph.GeoVertex" extends="net.geoprism.registry.graph.ObjectVertex" label="Geo Vertex" isAbstract="true" enableChangeOverTime="false">
         <attributes>
         </attributes>
       </mdVertex>

@@ -29,7 +29,6 @@ package net.geoprism.registry.graph;
 public abstract class BaseGeoObjectTypeBase extends ObjectClass
 {
   public final static String CLASS = "net.geoprism.registry.graph.BaseGeoObjectType";
-  public final static java.lang.String CODE = "code";
   @SuppressWarnings("unused")
   private static final long serialVersionUID = 1501997198;
   
@@ -38,22 +37,6 @@ public abstract class BaseGeoObjectTypeBase extends ObjectClass
     super();
   }
   
-  public String getCode()
-  {
-    return (String) this.getObjectValue(CODE);
-  }
-  
-  public static com.runwaysdk.dataaccess.MdAttributeCharacterDAOIF getCodeMd()
-  {
-    com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(net.geoprism.registry.graph.BaseGeoObjectType.CLASS);
-    return (com.runwaysdk.dataaccess.MdAttributeCharacterDAOIF)mdClassIF.definesAttribute(CODE);
-  }
-  
-  public void setCode(String value)
-  {
-    this.setValue(CODE, value);
-  }
-    
   protected String getDeclaredType()
   {
     return CLASS;

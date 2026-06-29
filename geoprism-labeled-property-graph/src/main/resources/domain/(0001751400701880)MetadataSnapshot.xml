@@ -191,11 +191,6 @@
         <attributes>
         </attributes>
       </mdBusiness>    
-      <mdBusiness name="net.geoprism.graph.AttributeTermTypeSnapshot" extends="net.geoprism.graph.AttributeTypeSnapshot" label="Attribute Term TypeSnapshot">
-        <attributes>
-          <reference name="rootTerm" label="Root Term" required="false" type="net.geoprism.ontology.Classifier"  />     
-        </attributes>
-      </mdBusiness>    
       <mdBusiness name="net.geoprism.graph.AttributeClassificationTypeSnapshot" extends="net.geoprism.graph.AttributeTypeSnapshot" label="Attribute Classification TypeSnapshot">
         <attributes>
           <text name="classificationType" label="Classification Type" required="true"/>          

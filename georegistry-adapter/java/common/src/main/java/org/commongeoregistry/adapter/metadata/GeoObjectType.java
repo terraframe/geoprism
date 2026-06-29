@@ -463,7 +463,7 @@ public class GeoObjectType implements Serializable
    */
   public void addAttribute(AttributeType attributeType)
   {
-    this.attributeMap.put(attributeType.getName(), attributeType);
+    this.attributeMap.put(attributeType.getCode(), attributeType);
   }
 
   /**
@@ -531,7 +531,7 @@ public class GeoObjectType implements Serializable
     AttributeDataSourceType source = (AttributeDataSourceType) DefaultAttribute.DATA_SOURCE.createAttributeType();
     defaultAttributeMap.put(DefaultAttribute.DATA_SOURCE.getName(), source);
 
-    @SuppressWarnings("unchecked") AttributeListType<String> alternateIds = (AttributeListType<String>) DefaultAttribute.ALT_IDS.createAttributeType();
+    AttributeListType alternateIds = (AttributeListType) DefaultAttribute.ALT_IDS.createAttributeType();
     defaultAttributeMap.put(DefaultAttribute.ALT_IDS.getName(), alternateIds);
 
     // AttributeCharacterType organization = (AttributeCharacterType)
@@ -599,7 +599,7 @@ public class GeoObjectType implements Serializable
       JsonObject joAttr = oJsonAttrs.get(i).getAsJsonObject();
       AttributeType attrType = AttributeType.parse(joAttr);
 
-      attributeMap.put(attrType.getName(), attrType);
+      attributeMap.put(attrType.getCode(), attrType);
     }
 
     // TODO Need to validate that the default attributes are still defined.

@@ -3,18 +3,18 @@
  *
  * This file is part of Geoprism(tm).
  *
- * Geoprism(tm) is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
+ * Geoprism(tm) is free software: you can redistribute it and/or modify it under
+ * the terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation, either version 3 of the License, or (at your option) any
+ * later version.
  *
- * Geoprism(tm) is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
+ * Geoprism(tm) is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with Geoprism(tm).  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with Geoprism(tm). If not, see <http://www.gnu.org/licenses/>.
  */
 package net.geoprism.registry.service.business;
 
@@ -43,6 +43,7 @@ import net.geoprism.graph.BusinessTypeSnapshot;
 import net.geoprism.graph.GeoObjectTypeSnapshot;
 import net.geoprism.graph.GraphTypeSnapshot;
 import net.geoprism.graph.LabeledPropertyGraphTypeVersion;
+import net.geoprism.registry.view.BusinessTypeDTO;
 
 @Service
 public class LabeledPropertyGraphJsonExporterService
@@ -79,11 +80,11 @@ public class LabeledPropertyGraphJsonExporterService
 
   private static class BusinessTypeSnapshotCacheObject implements CacheObject
   {
-    private JsonObject type;
+    private BusinessTypeDTO type;
 
     public BusinessTypeSnapshotCacheObject(BusinessTypeSnapshot snapshot)
     {
-      this.type = snapshot.toJSON();
+      this.type = snapshot.toDTO();
     }
 
     @Override
@@ -188,7 +189,7 @@ public class LabeledPropertyGraphJsonExporterService
     return cache.get(mdClass.getOid()).toGeoObject().type;
   }
 
-  private JsonObject getBusinessType(Map<String, CacheObject> cache, LabeledPropertyGraphTypeVersion version, MdClassDAOIF mdClass)
+  private BusinessTypeDTO getBusinessType(Map<String, CacheObject> cache, LabeledPropertyGraphTypeVersion version, MdClassDAOIF mdClass)
   {
 
     if (!cache.containsKey(mdClass.getOid()))
@@ -198,7 +199,7 @@ public class LabeledPropertyGraphJsonExporterService
       cache.put(mdClass.getOid(), new BusinessTypeSnapshotCacheObject(snapshot));
     }
 
-    return cache.get(mdClass.getOid()).toBusiness().type;
+    return cache.get(mdClass.getOid()).toBusiness().type; 
   }
 
   public JsonArray getEdges(LabeledPropertyGraphTypeVersion version, Long skip, Integer blockSize)
@@ -294,11 +295,11 @@ public class LabeledPropertyGraphJsonExporterService
 
       MdGraphClassDAOIF parentVertex = MdVertexDAO.getMdGraphClassByTableName(parentClass);
 
-      String parentCode = snapshot.getIsParentGeoObject() ? this.getType(cache, version, parentVertex).getCode() : this.getBusinessType(cache, version, parentVertex).get(BusinessTypeSnapshot.CODE).getAsString();
+      String parentCode = snapshot.getIsParentGeoObject() ? this.getType(cache, version, parentVertex).getCode() : this.getBusinessType(cache, version, parentVertex).getCode();
 
       MdGraphClassDAOIF childVertex = MdVertexDAO.getMdGraphClassByTableName(childClass);
 
-      String childCode = snapshot.getIsChildGeoObject() ? this.getType(cache, version, childVertex).getCode() : this.getBusinessType(cache, version, childVertex).get(BusinessTypeSnapshot.CODE).getAsString();
+      String childCode = snapshot.getIsChildGeoObject() ? this.getType(cache, version, childVertex).getCode() : this.getBusinessType(cache, version, childVertex).getCode();
 
       JsonObject jsonEdge = new JsonObject();
       jsonEdge.addProperty("startNode", parentUid);

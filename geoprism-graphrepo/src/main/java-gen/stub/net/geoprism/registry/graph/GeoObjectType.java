@@ -136,7 +136,7 @@ public class GeoObjectType extends GeoObjectTypeBase implements ServerElement
   {
     GeoObjectType superType = this.getSuperType();
     MdVertexDAOIF mdVertexDAO = MdVertexDAO.getMdVertexDAO(AttributeType.CLASS);
-    MdAttributeDAOIF mdAttribute = mdVertexDAO.definesAttribute(AttributeType.GEOOBJECTTYPE);
+    MdAttributeDAOIF mdAttribute = mdVertexDAO.definesAttribute(AttributeType.OBJECTTYPE);
 
     StringBuilder statement = new StringBuilder();
     statement.append("SELECT FROM " + mdVertexDAO.getDBClassName());
@@ -174,7 +174,7 @@ public class GeoObjectType extends GeoObjectTypeBase implements ServerElement
       uidAttr.setCode(DefaultAttribute.UID.getName());
       uidAttr.setEmbeddedValue(AttributeUUIDType.LABEL, LocalizedValue.DEFAULT_LOCALE, DefaultAttribute.UID.getDefaultLocalizedName());
       uidAttr.setEmbeddedValue(AttributeUUIDType.DESCRIPTION, LocalizedValue.DEFAULT_LOCALE, DefaultAttribute.UID.getDefaultDescription());
-      uidAttr.setValue(AttributeBooleanType.GEOOBJECTTYPE, this.getOid());
+      uidAttr.setValue(AttributeBooleanType.OBJECTTYPE, this.getOid());
       uidAttr.setRequired(true);
       uidAttr.setUnique(true);
       uidAttr.setIsChangeOverTime(false);
@@ -185,7 +185,7 @@ public class GeoObjectType extends GeoObjectTypeBase implements ServerElement
       exists.setCode(DefaultAttribute.EXISTS.getName());
       exists.setEmbeddedValue(AttributeBooleanType.LABEL, LocalizedValue.DEFAULT_LOCALE, DefaultAttribute.EXISTS.getDefaultLocalizedName());
       exists.setEmbeddedValue(AttributeBooleanType.DESCRIPTION, LocalizedValue.DEFAULT_LOCALE, DefaultAttribute.EXISTS.getDefaultDescription());
-      exists.setValue(AttributeBooleanType.GEOOBJECTTYPE, this.getOid());
+      exists.setValue(AttributeBooleanType.OBJECTTYPE, this.getOid());
       exists.setRequired(false);
       exists.setUnique(false);
       exists.setIsChangeOverTime(true);
@@ -196,7 +196,7 @@ public class GeoObjectType extends GeoObjectTypeBase implements ServerElement
       invald.setCode(DefaultAttribute.INVALID.getName());
       invald.setEmbeddedValue(AttributeBooleanType.LABEL, LocalizedValue.DEFAULT_LOCALE, DefaultAttribute.INVALID.getDefaultLocalizedName());
       invald.setEmbeddedValue(AttributeBooleanType.DESCRIPTION, LocalizedValue.DEFAULT_LOCALE, DefaultAttribute.INVALID.getDefaultDescription());
-      invald.setValue(AttributeBooleanType.GEOOBJECTTYPE, this.getOid());
+      invald.setValue(AttributeBooleanType.OBJECTTYPE, this.getOid());
       invald.setRequired(true);
       invald.setUnique(false);
       invald.setIsChangeOverTime(false);
@@ -207,7 +207,7 @@ public class GeoObjectType extends GeoObjectTypeBase implements ServerElement
       labelAttr.setCode(DefaultAttribute.DISPLAY_LABEL.getName());
       labelAttr.setEmbeddedValue(AttributeUUIDType.LABEL, LocalizedValue.DEFAULT_LOCALE, DefaultAttribute.DISPLAY_LABEL.getDefaultLocalizedName());
       labelAttr.setEmbeddedValue(AttributeUUIDType.DESCRIPTION, LocalizedValue.DEFAULT_LOCALE, DefaultAttribute.DISPLAY_LABEL.getDefaultDescription());
-      labelAttr.setValue(AttributeBooleanType.GEOOBJECTTYPE, this.getOid());
+      labelAttr.setValue(AttributeBooleanType.OBJECTTYPE, this.getOid());
       labelAttr.setRequired(false);
       labelAttr.setUnique(false);
       labelAttr.setIsChangeOverTime(true);
@@ -218,7 +218,7 @@ public class GeoObjectType extends GeoObjectTypeBase implements ServerElement
       sourceAttr.setCode(DefaultAttribute.DATA_SOURCE.getName());
       sourceAttr.setEmbeddedValue(AttributeUUIDType.LABEL, LocalizedValue.DEFAULT_LOCALE, DefaultAttribute.DATA_SOURCE.getDefaultLocalizedName());
       sourceAttr.setEmbeddedValue(AttributeUUIDType.DESCRIPTION, LocalizedValue.DEFAULT_LOCALE, DefaultAttribute.DATA_SOURCE.getDefaultDescription());
-      sourceAttr.setValue(AttributeBooleanType.GEOOBJECTTYPE, this.getOid());
+      sourceAttr.setValue(AttributeBooleanType.OBJECTTYPE, this.getOid());
       sourceAttr.setRequired(false);
       sourceAttr.setUnique(false);
       sourceAttr.setIsChangeOverTime(true);
@@ -229,7 +229,7 @@ public class GeoObjectType extends GeoObjectTypeBase implements ServerElement
       geometryAttr.setCode(DefaultAttribute.GEOMETRY.getName());
       geometryAttr.setEmbeddedValue(AttributeUUIDType.LABEL, LocalizedValue.DEFAULT_LOCALE, DefaultAttribute.GEOMETRY.getDefaultLocalizedName());
       geometryAttr.setEmbeddedValue(AttributeUUIDType.DESCRIPTION, LocalizedValue.DEFAULT_LOCALE, DefaultAttribute.GEOMETRY.getDefaultDescription());
-      geometryAttr.setValue(AttributeBooleanType.GEOOBJECTTYPE, this.getOid());
+      geometryAttr.setValue(AttributeBooleanType.OBJECTTYPE, this.getOid());
       geometryAttr.setRequired(false);
       geometryAttr.setUnique(false);
       geometryAttr.setIsChangeOverTime(true);
@@ -244,7 +244,7 @@ public class GeoObjectType extends GeoObjectTypeBase implements ServerElement
       code.setCode(DefaultAttribute.CODE.getName());
       code.setEmbeddedValue(AttributeUUIDType.LABEL, LocalizedValue.DEFAULT_LOCALE, DefaultAttribute.CODE.getDefaultLocalizedName());
       code.setEmbeddedValue(AttributeUUIDType.DESCRIPTION, LocalizedValue.DEFAULT_LOCALE, DefaultAttribute.CODE.getDefaultDescription());
-      code.setValue(AttributeBooleanType.GEOOBJECTTYPE, this.getOid());
+      code.setValue(AttributeBooleanType.OBJECTTYPE, this.getOid());
       code.setRequired(true);
       code.setUnique(true);
       code.setIsChangeOverTime(false);

@@ -13,19 +13,26 @@ import com.runwaysdk.dataaccess.BusinessDAOIF;
 import com.runwaysdk.dataaccess.MdBusinessDAOIF;
 import com.runwaysdk.dataaccess.graph.attributes.ValueOverTime;
 
+import net.geoprism.registry.model.graph.ObjectClassIF;
+import net.geoprism.registry.model.graph.ServerObjectVertex;
 import net.geoprism.registry.model.graph.VertexServerGeoObject;
 
 public class GeometryStateValue extends PrimitiveStateValue
 {
-  private ServerGeoObjectType type;
+  private ObjectClassIF type;
 
-  private Geometry            geometry;
+  private Geometry      geometry;
 
-  public GeometryStateValue(ServerGeoObjectType type, VertexObject node, String nodeAttribute)
+  public GeometryStateValue(ObjectClassIF type, VertexObject node, String nodeAttribute)
   {
     super(node, nodeAttribute);
 
     this.type = type;
+
+    if (! ( type instanceof ServerGeoObjectType ))
+    {
+      throw new UnsupportedOperationException();
+    }
   }
 
   @Override
@@ -63,14 +70,16 @@ public class GeometryStateValue extends PrimitiveStateValue
   }
 
   @Override
-  public void apply(VertexServerGeoObject object)
+  public void apply(ServerObjectVertex v)
   {
     if (this.hasGeometryObject() && this.geometry == null)
     {
       return;
     }
 
-    MdBusinessDAOIF geometryTable = this.type.getGeometryTable();
+    VertexServerGeoObject object = (VertexServerGeoObject) v;
+
+    MdBusinessDAOIF geometryTable = ( (ServerGeoObjectType) this.type ).getGeometryTable();
     LocalizedValue localizedValue = object.getDisplayLabel(getStartDate());
     String label = localizedValue != null ? localizedValue.getValue() : object.getCode();
 

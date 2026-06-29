@@ -6,7 +6,7 @@ import com.runwaysdk.business.graph.VertexObject;
 import com.runwaysdk.dataaccess.graph.attributes.ValueOverTime;
 
 import net.geoprism.registry.graph.AttributeValue;
-import net.geoprism.registry.model.graph.VertexServerGeoObject;
+import net.geoprism.registry.model.graph.ServerObjectVertex;
 
 public abstract class StateValue
 {
@@ -70,7 +70,7 @@ public abstract class StateValue
     return new ValueOverTime(node.getOid(), startDate, endDate, value);
   }
 
-  public void apply(VertexServerGeoObject object)
+  public void apply(ServerObjectVertex object)
   {
     this.node.apply();
   }

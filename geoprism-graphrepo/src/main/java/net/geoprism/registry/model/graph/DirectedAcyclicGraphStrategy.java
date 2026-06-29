@@ -3,18 +3,18 @@
  *
  * This file is part of Geoprism(tm).
  *
- * Geoprism(tm) is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
+ * Geoprism(tm) is free software: you can redistribute it and/or modify it under
+ * the terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation, either version 3 of the License, or (at your option) any
+ * later version.
  *
- * Geoprism(tm) is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
+ * Geoprism(tm) is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with Geoprism(tm).  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with Geoprism(tm). If not, see <http://www.gnu.org/licenses/>.
  */
 package net.geoprism.registry.model.graph;
 
@@ -59,6 +59,16 @@ public class DirectedAcyclicGraphStrategy extends AbstractGraphStrategy implemen
     {
       this.name = name;
       this.vertex = vertex;
+    }
+
+    public String getName()
+    {
+      return name;
+    }
+
+    public String getVertex()
+    {
+      return vertex;
     }
 
   }
@@ -240,7 +250,7 @@ public class DirectedAcyclicGraphStrategy extends AbstractGraphStrategy implemen
     votc.add(new EdgeValueOverTime(startDate, endDate, parent, uid));
 
     SortedSet<EdgeObject> newEdges = this.setParentCollection(geoObject, votc, source);
-    
+
     EdgeObject edge = newEdges.first();
 
     // TODO: Figure out uid and source values
@@ -433,7 +443,7 @@ public class DirectedAcyclicGraphStrategy extends AbstractGraphStrategy implemen
         newEdge.setValue(GeoVertex.START_DATE, vot.getStartDate());
         newEdge.setValue(GeoVertex.END_DATE, vot.getEndDate());
         newEdge.setValue(DefaultAttribute.UID.getName(), uid);
-        newEdge.setValue(DefaultAttribute.DATA_SOURCE.getName(), source);        
+        newEdge.setValue(DefaultAttribute.DATA_SOURCE.getName(), source);
         newEdge.apply();
 
         resultEdges.add(newEdge);

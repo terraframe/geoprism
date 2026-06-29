@@ -19,14 +19,14 @@
 package net.geoprism.registry.service.business;
 
 import java.util.Date;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.TreeMap;
 import java.util.stream.Collectors;
 
 import org.commongeoregistry.adapter.constants.DefaultAttribute;
-import org.commongeoregistry.adapter.metadata.AttributeClassificationType;
-import org.commongeoregistry.adapter.metadata.AttributeDataSourceType;
-import org.commongeoregistry.adapter.metadata.AttributeTermType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -47,16 +47,23 @@ import com.runwaysdk.dataaccess.MdAttributeTermDAOIF;
 import com.runwaysdk.dataaccess.MdClassDAOIF;
 import com.runwaysdk.dataaccess.MdClassificationDAOIF;
 import com.runwaysdk.dataaccess.MdVertexDAOIF;
+import com.runwaysdk.dataaccess.ProgrammingErrorException;
 import com.runwaysdk.dataaccess.graph.VertexObjectDAO;
+import com.runwaysdk.dataaccess.metadata.graph.MdVertexDAO;
 import com.runwaysdk.dataaccess.transaction.Transaction;
 
 import net.geoprism.configuration.GeoprismProperties;
 import net.geoprism.ontology.Classifier;
 import net.geoprism.registry.DateFormatter;
 import net.geoprism.registry.OriginException;
+import net.geoprism.registry.graph.AttributeClassificationType;
+import net.geoprism.registry.graph.AttributeDataSourceType;
+import net.geoprism.registry.graph.AttributeValue;
 import net.geoprism.registry.graph.BusinessEdgeType;
 import net.geoprism.registry.graph.BusinessType;
+import net.geoprism.registry.graph.BusinessVertex;
 import net.geoprism.registry.graph.DataSource;
+import net.geoprism.registry.graph.GeoVertex;
 import net.geoprism.registry.model.BusinessObject;
 import net.geoprism.registry.model.ClassificationType;
 import net.geoprism.registry.model.EdgeConstant;
@@ -87,24 +94,19 @@ public class BusinessObjectBusinessService implements BusinessObjectBusinessServ
     BusinessType type = object.getType();
 
     type.getAttributeMap().values().stream() //
-        .filter(attribute -> !attribute.getName().equals(BusinessObject.CODE)) //
+        .filter(attribute -> !attribute.getCode().equals(BusinessObject.CODE)) //
+//        .filter(attribute -> !attribute.getIsChangeOverTime()) //
         .forEach(attribute -> {
 
-          String attributeName = attribute.getName();
+          String attributeName = attribute.getCode();
 
-          Object value = object.getVertex().getObjectValue(attributeName);
+          Object value = object.getValue(attributeName);
 
           if (value != null)
           {
-            if (attribute instanceof AttributeTermType)
+            if (attribute instanceof AttributeClassificationType)
             {
-              Classifier classifier = Classifier.get((String) value);
-
-              data.addProperty(attributeName, classifier.getDisplayLabel().getValue());
-            }
-            else if (attribute instanceof AttributeClassificationType)
-            {
-              ClassificationType classificationType = this.classificationTypeService.getByCode( ( (AttributeClassificationType) attribute ).getClassificationType(), true);
+              ClassificationType classificationType = this.classificationTypeService.getByCode( ( (AttributeClassificationType) attribute ).getClassificationType().getCode(), true);
 
               this.classificationService.getByOid(classificationType, (String) value).ifPresent(classification -> {
                 data.addProperty(attributeName, classification.getCode());
@@ -411,38 +413,22 @@ public class BusinessObjectBusinessService implements BusinessObjectBusinessServ
   @Override
   public List<VertexComponent> getParents(BusinessObject object, BusinessEdgeType type, Date date)
   {
-    if (type.getIsParentGeoObject())
-    {
-      StringBuilder statement = new StringBuilder();
-      statement.append("TRAVERSE out('" + EdgeConstant.HAS_VALUE.getDBClassName() + "', '" + EdgeConstant.HAS_GEOMETRY.getDBClassName() + "') FROM (");
-      statement.append("  SELECT EXPAND(inE('" + type.getMdEdge().getDbClassName() + "')[:date BETWEEN startDate AND endDate].out)");
-      statement.append("  FROM :rid " + "\n");
-      statement.append(")");
-
-      GraphQuery<VertexObject> query = new GraphQuery<VertexObject>(statement.toString());
-      query.setParameter("rid", object.getVertex().getRID());
-      query.setParameter("date", date);
-
-      return VertexServerGeoObject.processTraverseResults(query.getResults(), date).stream().map(s -> (VertexComponent) s).toList();
-    }
-
     StringBuilder statement = new StringBuilder();
-    statement.append("SELECT EXPAND(inE('" + type.getMdEdge().getDbClassName() + "')[:date BETWEEN startDate AND endDate].out)");
-    statement.append(" FROM :rid " + "\n");
+    statement.append("TRAVERSE out('" + EdgeConstant.HAS_VALUE.getDBClassName() + "', '" + EdgeConstant.HAS_GEOMETRY.getDBClassName() + "') FROM (");
+    statement.append("  SELECT EXPAND(inE('" + type.getMdEdge().getDbClassName() + "')[:date BETWEEN startDate AND endDate].out)");
+    statement.append("  FROM :rid " + "\n");
+    statement.append(")");
 
     GraphQuery<VertexObject> query = new GraphQuery<VertexObject>(statement.toString());
     query.setParameter("rid", object.getVertex().getRID());
     query.setParameter("date", date);
 
-    List<VertexObject> results = query.getResults();
+    if (type.getIsParentGeoObject())
+    {
+      return VertexServerGeoObject.processTraverseResults(query.getResults(), date).stream().map(s -> (VertexComponent) s).toList();
+    }
 
-    return results.stream().map(vertex -> {
-      MdVertexDAOIF mdVertex = (MdVertexDAOIF) vertex.getMdClass();
-      BusinessType businessType = this.typeService.getByMdVertex(mdVertex);
-
-      return new BusinessObject(vertex, businessType);
-
-    }).sorted((a, b) -> {
+    return this.processTraverseResults(query.getResults(), date).stream().sorted((a, b) -> {
       return a.getLabel().compareTo(b.getLabel());
     }).collect(Collectors.toList());
   }
@@ -510,38 +496,22 @@ public class BusinessObjectBusinessService implements BusinessObjectBusinessServ
   @Override
   public List<VertexComponent> getChildren(BusinessObject object, BusinessEdgeType type, Date date)
   {
-    if (type.getIsChildGeoObject())
-    {
-      StringBuilder statement = new StringBuilder();
-      statement.append("TRAVERSE out('" + EdgeConstant.HAS_VALUE.getDBClassName() + "', '" + EdgeConstant.HAS_GEOMETRY.getDBClassName() + "') FROM (");
-      statement.append("  SELECT EXPAND(outE('" + type.getMdEdge().getDbClassName() + "')[:date BETWEEN startDate AND endDate].in)");
-      statement.append("  FROM :rid " + "\n");
-      statement.append(")");
-
-      GraphQuery<VertexObject> query = new GraphQuery<VertexObject>(statement.toString());
-      query.setParameter("rid", object.getVertex().getRID());
-      query.setParameter("date", date);
-
-      return VertexServerGeoObject.processTraverseResults(query.getResults(), date).stream().map(s -> (VertexComponent) s).toList();
-    }
-
     StringBuilder statement = new StringBuilder();
-    statement.append("SELECT EXPAND(outE('" + type.getMdEdge().getDbClassName() + "')[:date BETWEEN startDate AND endDate].in)");
-    statement.append(" FROM :rid " + "\n");
+    statement.append("TRAVERSE out('" + EdgeConstant.HAS_VALUE.getDBClassName() + "', '" + EdgeConstant.HAS_GEOMETRY.getDBClassName() + "') FROM (");
+    statement.append("  SELECT EXPAND(outE('" + type.getMdEdge().getDbClassName() + "')[:date BETWEEN startDate AND endDate].in)");
+    statement.append("  FROM :rid " + "\n");
+    statement.append(")");
 
     GraphQuery<VertexObject> query = new GraphQuery<VertexObject>(statement.toString());
     query.setParameter("rid", object.getVertex().getRID());
     query.setParameter("date", date);
 
-    List<VertexObject> results = query.getResults();
+    if (type.getIsChildGeoObject())
+    {
+      return VertexServerGeoObject.processTraverseResults(query.getResults(), date).stream().map(s -> (VertexComponent) s).toList();
+    }
 
-    return results.stream().map(vertex -> {
-      MdVertexDAOIF mdVertex = (MdVertexDAOIF) vertex.getMdClass();
-      BusinessType businessType = this.typeService.getByMdVertex(mdVertex);
-
-      return new BusinessObject(vertex, businessType);
-
-    }).sorted((a, b) -> {
+    return this.processTraverseResults(query.getResults(), date).stream().sorted((a, b) -> {
       return a.getLabel().compareTo(b.getLabel());
     }).collect(Collectors.toList());
   }
@@ -551,7 +521,7 @@ public class BusinessObjectBusinessService implements BusinessObjectBusinessServ
   {
     VertexObject vertex = VertexObject.instantiate(VertexObjectDAO.newInstance(type.getMdVertexDAO()));
 
-    return new BusinessObject(vertex, type);
+    return new BusinessObject(type, vertex, new TreeMap<>());
   }
 
   @Override
@@ -561,26 +531,89 @@ public class BusinessObjectBusinessService implements BusinessObjectBusinessServ
     MdAttributeDAOIF mdAttribute = mdVertex.definesAttribute(attributeName);
 
     StringBuilder statement = new StringBuilder();
-    statement.append("SELECT FROM " + mdVertex.getDBClassName());
-    statement.append(" WHERE " + mdAttribute.getColumnName() + " = :" + attributeName);
+    statement.append("TRAVERSE out('" + EdgeConstant.HAS_VALUE.getDBClassName() + "', '" + EdgeConstant.HAS_GEOMETRY.getDBClassName() + "') FROM (");
+    statement.append("  SELECT FROM " + mdVertex.getDBClassName());
+    statement.append("  WHERE " + mdAttribute.getColumnName() + " = :" + attributeName);
+    statement.append(")");
 
     GraphQuery<VertexObject> query = new GraphQuery<VertexObject>(statement.toString());
     query.setParameter(attributeName, value);
 
-    VertexObject result = query.getSingleResult();
-
-    if (result != null)
-    {
-      return new BusinessObject(result, type);
-    }
-
-    return null;
+    return this.processSingleResult(query.getResults(), null);
   }
 
   @Override
   public BusinessObject getByCode(BusinessType type, Object value)
   {
     return this.get(type, DefaultAttribute.CODE.getName(), value);
+  }
+
+  public List<BusinessObject> processTraverseResults(List<VertexObject> results, Date date)
+  {
+    MdVertexDAOIF mdBusinessVertex = MdVertexDAO.getMdVertexDAO(BusinessVertex.CLASS);
+    List<BusinessObject> list = new LinkedList<BusinessObject>();
+    
+    VertexObject current = null;
+    List<VertexObject> currentAttributes = new LinkedList<>();
+
+    for (VertexObject result : results)
+    {
+      MdVertexDAOIF mdClass = (MdVertexDAOIF) result.getMdClass();
+      List<? extends MdVertexDAOIF> superClasses = mdClass.getSuperClasses();
+      if (superClasses.contains(mdBusinessVertex))
+      {
+        if (current != null)
+        {
+          BusinessType type = this.typeService.getByMdVertex((MdVertexDAOIF) current.getMdClass());
+
+          Map<String, List<VertexObject>> nodeMap = currentAttributes.stream().collect(Collectors.groupingBy(v -> {
+            return (String) v.getObjectValue(AttributeValue.ATTRIBUTENAME);
+          }));
+
+          BusinessObject bObject = new BusinessObject(type, current, nodeMap, date);
+          list.add(bObject);
+        }
+
+        current = result;
+        currentAttributes = new LinkedList<>();
+      }
+      else
+      {
+        currentAttributes.add(result);
+      }
+    }
+
+    if (current != null)
+    {
+      BusinessType type = this.typeService.getByMdVertex((MdVertexDAOIF) current.getMdClass());
+
+      Map<String, List<VertexObject>> nodeMap = currentAttributes.stream().collect(Collectors.groupingBy(v -> {
+        return (String) v.getObjectValue(AttributeValue.ATTRIBUTENAME);
+      }));
+
+      BusinessObject vsgo = new BusinessObject(type, current, nodeMap, date);
+      list.add(vsgo);
+    }
+
+    return list;
+  }
+
+  public BusinessObject processSingleResult(List<VertexObject> list, Date date)
+  {
+    List<BusinessObject> results = this.processTraverseResults(list, date);
+
+    if (results.size() == 0)
+    {
+      return null;
+    }
+    else if (results.size() == 1)
+    {
+      return results.get(0);
+    }
+    else
+    {
+      throw new ProgrammingErrorException("Multiple results were returned when only one is allowed");
+    }
   }
 
 }

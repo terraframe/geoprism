@@ -71,7 +71,7 @@ public class AttributeBooleanType extends AttributeBooleanTypeBase
   {
     if (!this.getIsChangeOverTime())
     {
-      GeoObjectType type = this.getGeoObjectType();
+      ObjectClass type = this.getObjectType();
       MdVertexDAOIF mdVertex = MdVertexDAO.get(type.getMdVertexOid());
       MdAttributeDAOIF mdAttribute = mdVertex.definesAttribute(this.getCode());
 

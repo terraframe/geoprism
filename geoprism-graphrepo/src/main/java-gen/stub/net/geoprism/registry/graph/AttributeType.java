@@ -49,11 +49,11 @@ public abstract class AttributeType extends AttributeTypeBase
   public abstract ValueStrategy getStrategy();
 
   @Override
-  public GeoObjectType getGeoObjectType()
+  public ObjectClass getObjectType()
   {
-    String oid = this.getObjectValue(GEOOBJECTTYPE);
+    String oid = this.getObjectValue(OBJECTTYPE);
 
-    return GeoObjectType.get(oid);
+    return ObjectClass.get(oid);
   }
 
   public LocalizedValue getLocalizedLabel()
@@ -70,12 +70,12 @@ public abstract class AttributeType extends AttributeTypeBase
   {
     dto.setUnique(this.getUnique());
     dto.setRequired(this.getRequired());
-    dto.setIsChangeOverTime(this.getIsChangeOverTime());
+    dto.setChangeOverTime(this.getIsChangeOverTime());
   }
 
   protected void populate(MdAttributeConcreteDAO mdAttribute)
   {
-    GeoObjectType type = this.getGeoObjectType();
+    ObjectClass type = this.getObjectType();
     MdVertex mdVertex = type.getMdVertex();
 
     mdAttribute.setValue(MdAttributeConcreteInfo.NAME, this.getCode());
@@ -92,7 +92,7 @@ public abstract class AttributeType extends AttributeTypeBase
 
   public void fromDTO(org.commongeoregistry.adapter.metadata.AttributeType dto)
   {
-    this.setCode(dto.getName());
+    this.setCode(dto.getCode());
     this.setRequired(dto.isRequired());
     this.setUnique(dto.isUnique());
     this.setIsChangeOverTime(dto.isChangeOverTime());

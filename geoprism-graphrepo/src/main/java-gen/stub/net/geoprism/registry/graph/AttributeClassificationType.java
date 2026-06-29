@@ -83,7 +83,7 @@ public class AttributeClassificationType extends AttributeClassificationTypeBase
       else
       {
         // Update the precision and scale of the value attribute
-        MdVertexDAOIF mdVertex = MdVertexDAO.get(this.getGeoObjectType().getMdVertexOid());
+        MdVertexDAOIF mdVertex = MdVertexDAO.get(this.getObjectType().getMdVertexOid());
 
         mdAttribute = (MdAttributeClassificationDAO) mdVertex.definesAttribute(this.getCode()).getBusinessDAO();
       }
@@ -148,7 +148,7 @@ public class AttributeClassificationType extends AttributeClassificationTypeBase
     if (!this.getIsChangeOverTime())
     {
       // Update the precision and scale of the value attribute
-      MdVertexDAOIF mdVertex = MdVertexDAO.get(this.getGeoObjectType().getMdVertexOid());
+      MdVertexDAOIF mdVertex = MdVertexDAO.get(this.getObjectType().getMdVertexOid());
       BusinessDAO mdAttribute = mdVertex.definesAttribute(this.getCode()).getBusinessDAO();
       mdAttribute.delete();
     }

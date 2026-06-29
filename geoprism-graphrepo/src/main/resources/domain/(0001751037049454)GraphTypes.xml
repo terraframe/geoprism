@@ -23,7 +23,6 @@
     <create>
       <mdVertex name="net.geoprism.registry.graph.DirectedAcyclicGraphType" extends="net.geoprism.registry.graph.EdgeClass" label="Directed Acyclic Graph">
         <attributes>
-          <char name="code" size="255" required="true" indexType="unique index" label="Code" />
           <localCharEmbedded
             name="displayLabel"
             label="Label"
@@ -40,7 +39,6 @@
       </mdVertex>    
       <mdVertex name="net.geoprism.registry.graph.UndirectedGraphType" extends="net.geoprism.registry.graph.EdgeClass" label="Directed Acyclic Graph">
         <attributes>
-          <char name="code" size="255" required="true" indexType="unique index" label="Code" />
           <localCharEmbedded
             name="displayLabel"
             label="Label"

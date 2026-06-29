@@ -69,7 +69,7 @@ public class AttributeDoubleType extends AttributeDoubleTypeBase
       else
       {
         // Update the precision and scale of the value attribute
-        MdVertexDAOIF mdVertex = MdVertexDAO.get(this.getGeoObjectType().getMdVertexOid());
+        MdVertexDAOIF mdVertex = MdVertexDAO.get(this.getObjectType().getMdVertexOid());
 
         mdAttribute = (MdAttributeDoubleDAO) mdVertex.definesAttribute(this.getCode()).getBusinessDAO();
       }

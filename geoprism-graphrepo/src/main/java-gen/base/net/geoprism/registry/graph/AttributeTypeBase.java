@@ -31,7 +31,7 @@ public abstract class AttributeTypeBase extends SchemaElement
   public final static String CLASS = "net.geoprism.registry.graph.AttributeType";
   public final static java.lang.String CODE = "code";
   public final static java.lang.String DESCRIPTION = "description";
-  public final static java.lang.String GEOOBJECTTYPE = "geoObjectType";
+  public final static java.lang.String OBJECTTYPE = "objectType";
   public final static java.lang.String ISCHANGEOVERTIME = "isChangeOverTime";
   public final static java.lang.String ISDEFAULT = "isDefault";
   public final static java.lang.String LABEL = "label";
@@ -77,20 +77,20 @@ public abstract class AttributeTypeBase extends SchemaElement
     this.setValue(DESCRIPTION, value);
   }
   
-  public net.geoprism.registry.graph.GeoObjectType getGeoObjectType()
+  public net.geoprism.registry.graph.ObjectClass getObjectType()
   {
-    return (net.geoprism.registry.graph.GeoObjectType) this.getObjectValue(GEOOBJECTTYPE);
+    return (net.geoprism.registry.graph.ObjectClass) this.getObjectValue(OBJECTTYPE);
   }
   
-  public static com.runwaysdk.dataaccess.MdAttributeGraphReferenceDAOIF getGeoObjectTypeMd()
+  public static com.runwaysdk.dataaccess.MdAttributeGraphReferenceDAOIF getObjectTypeMd()
   {
     com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(net.geoprism.registry.graph.AttributeType.CLASS);
-    return (com.runwaysdk.dataaccess.MdAttributeGraphReferenceDAOIF)mdClassIF.definesAttribute(GEOOBJECTTYPE);
+    return (com.runwaysdk.dataaccess.MdAttributeGraphReferenceDAOIF)mdClassIF.definesAttribute(OBJECTTYPE);
   }
   
-  public void setGeoObjectType(net.geoprism.registry.graph.GeoObjectType value)
+  public void setObjectType(net.geoprism.registry.graph.ObjectClass value)
   {
-    this.setValue(GEOOBJECTTYPE, value);
+    this.setValue(OBJECTTYPE, value);
   }
   
   public Boolean getIsChangeOverTime()

@@ -3,18 +3,18 @@
  *
  * This file is part of Geoprism(tm).
  *
- * Geoprism(tm) is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
+ * Geoprism(tm) is free software: you can redistribute it and/or modify it under
+ * the terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation, either version 3 of the License, or (at your option) any
+ * later version.
  *
- * Geoprism(tm) is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
+ * Geoprism(tm) is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with Geoprism(tm).  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with Geoprism(tm). If not, see <http://www.gnu.org/licenses/>.
  */
 package net.geoprism.registry.service.business;
 
@@ -23,11 +23,9 @@ import java.util.List;
 
 import org.commongeoregistry.adapter.constants.DefaultAttribute;
 import org.commongeoregistry.adapter.dataaccess.LocalizedValue;
-import org.commongeoregistry.adapter.metadata.AttributeTermType;
 import org.commongeoregistry.adapter.metadata.AttributeType;
 import org.springframework.stereotype.Service;
 
-import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.runwaysdk.ComponentIF;
 import com.runwaysdk.business.BusinessFacade;
@@ -46,34 +44,34 @@ import com.runwaysdk.system.metadata.MdVertex;
 import net.geoprism.configuration.GeoprismProperties;
 import net.geoprism.graph.BusinessTypeSnapshot;
 import net.geoprism.graph.BusinessTypeSnapshotQuery;
-import net.geoprism.graph.GeoObjectTypeSnapshot;
 import net.geoprism.graph.LabeledPropertyGraphTypeSnapshotQuery;
 import net.geoprism.graph.LabeledPropertyGraphTypeVersion;
 import net.geoprism.registry.DateFormatter;
 import net.geoprism.registry.conversion.LocalizedValueConverter;
 import net.geoprism.registry.model.SnapshotContainer;
+import net.geoprism.registry.view.BusinessTypeDTO;
 
 @Service
 public class BusinessTypeSnapshotBusinessService extends ObjectTypeSnapshotBusinessService<BusinessTypeSnapshot> implements BusinessTypeSnapshotBusinessServiceIF
 {
   @Transaction
   @Override
-  public BusinessTypeSnapshot create(SnapshotContainer<?> version, JsonObject type)
+  public BusinessTypeSnapshot create(SnapshotContainer<?> version, BusinessTypeDTO type)
   {
-    String code = type.get(BusinessTypeSnapshot.CODE).getAsString();
-    String orgCode = type.get(BusinessTypeSnapshot.ORGCODE).getAsString();
-    String origin = type.has(BusinessTypeSnapshot.ORIGIN) ? type.get(BusinessTypeSnapshot.ORIGIN).getAsString() : GeoprismProperties.getOrigin();
-    Long sequence = type.has(GeoObjectTypeSnapshot.SEQUENCE) ? type.get(GeoObjectTypeSnapshot.SEQUENCE).getAsLong() : 0;    
+    String code = type.getCode();
+    String orgCode = type.getOrganization();
+    String origin = type.hasOrigin() ? type.getOrigin() : GeoprismProperties.getOrigin();
+    Long sequence = type.hasSequence() ? type.getSequence() : 0;
     String viewName = getTableName(code);
-    LocalizedValue label = LocalizedValue.fromJSON(type.get(BusinessTypeSnapshot.DISPLAYLABEL).getAsJsonObject());
+    LocalizedValue label = type.getDisplayLabel();
 
-    JsonArray attributes = type.get("attributes").getAsJsonArray();
+    List<AttributeType> attributes = type.getAttributes();
 
     MdVertex mdTable = createMdVertex(version, viewName, label, attributes);
 
     BusinessTypeSnapshot snapshot = new BusinessTypeSnapshot();
     snapshot.setGraphMdVertex(mdTable);
-    snapshot.setLabelAttribute(type.get(BusinessTypeSnapshot.LABELATTRIBUTE).getAsString());
+    snapshot.setLabelAttribute(type.getLabelAttribute());
     snapshot.setCode(code);
     snapshot.setOrgCode(orgCode);
     snapshot.setOrigin(origin);
@@ -83,19 +81,14 @@ public class BusinessTypeSnapshotBusinessService extends ObjectTypeSnapshotBusin
 
     version.addSnapshot(snapshot).apply();
 
-    attributes.forEach(joAttr -> {
-      AttributeType attributeType = AttributeType.parse(joAttr.getAsJsonObject());
-
-      if (! ( attributeType instanceof AttributeTermType ))
-      {
-        this.createAttributeTypeSnapshot(snapshot, attributeType);
-      }
+    attributes.forEach(attributeType -> {
+      this.createAttributeTypeSnapshot(snapshot, attributeType);
     });
 
     return snapshot;
   }
 
-  protected MdVertex createMdVertex(SnapshotContainer<?> version, String viewName, LocalizedValue label, JsonArray attributes)
+  protected MdVertex createMdVertex(SnapshotContainer<?> version, String viewName, LocalizedValue label, List<AttributeType> attributes)
   {
     // Create the MdTable
     if (version.createTablesWithSnapshot())
@@ -111,20 +104,15 @@ public class BusinessTypeSnapshotBusinessService extends ObjectTypeSnapshotBusin
 
       MdVertex mdTable = (MdVertex) BusinessFacade.get(mdTableDAO);
 
-      attributes.forEach(joAttr -> {
-        AttributeType attributeType = AttributeType.parse(joAttr.getAsJsonObject());
-
-        if (! ( attributeType instanceof AttributeTermType ))
-        {
-          this.createMdAttributeFromAttributeType(mdTable, attributeType);
-        }
+      attributes.forEach(attributeType -> {
+        this.createMdAttributeFromAttributeType(mdTable, attributeType);
       });
 
       this.assignPermissions(mdTableDAO);
 
       return mdTable;
     }
-    
+
     return null;
   }
 
@@ -160,7 +148,8 @@ public class BusinessTypeSnapshotBusinessService extends ObjectTypeSnapshotBusin
     vQuery.WHERE(vQuery.getParent().EQ((LabeledPropertyGraphTypeVersion) version));
 
     BusinessTypeSnapshotQuery query = new BusinessTypeSnapshotQuery(factory);
-    query.WHERE(query.EQ(vQuery.getChild()));;
+    query.WHERE(query.EQ(vQuery.getChild()));
+    ;
     query.AND(query.getGraphMdVertex().EQ(mdVertex.getOid()));
 
     try (OIterator<? extends BusinessTypeSnapshot> it = query.getIterator())

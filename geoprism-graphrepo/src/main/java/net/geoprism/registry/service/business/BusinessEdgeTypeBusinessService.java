@@ -50,14 +50,15 @@ import net.geoprism.registry.DuplicateHierarchyTypeException;
 import net.geoprism.registry.RegistryConstants;
 import net.geoprism.registry.cache.TransactionLRUCache;
 import net.geoprism.registry.conversion.RegistryLocalizedValueConverter;
+import net.geoprism.registry.graph.BaseGeoObjectType;
 import net.geoprism.registry.graph.BusinessEdgeType;
 import net.geoprism.registry.graph.BusinessType;
 import net.geoprism.registry.graph.DataSource;
+import net.geoprism.registry.graph.GeoObjectType;
 import net.geoprism.registry.graph.GeoVertex;
+import net.geoprism.registry.graph.ObjectClass;
 import net.geoprism.registry.model.EdgeType;
 import net.geoprism.registry.model.ServerOrganization;
-import net.geoprism.registry.model.graph.EdgeVertexType;
-import net.geoprism.registry.model.graph.GeoVertexEdgeType;
 import net.geoprism.registry.view.BusinessEdgeTypeView;
 
 @Service
@@ -80,25 +81,25 @@ public class BusinessEdgeTypeBusinessService implements BusinessEdgeTypeBusiness
   }
 
   @Override
-  public EdgeVertexType getParent(BusinessEdgeType edgeType)
+  public ObjectClass getParent(BusinessEdgeType edgeType)
   {
     return getEdgeVertexType((MdVertexDAOIF) BusinessFacade.getEntityDAO(edgeType.getParentType()));
   }
 
-  private EdgeVertexType getEdgeVertexType(MdVertexDAOIF mdVertex)
+  private ObjectClass getEdgeVertexType(MdVertexDAOIF mdVertex)
   {
     MdVertexDAOIF mdBusGeoEntity = MdVertexDAO.getMdVertexDAO(GeoVertex.CLASS);
 
     if (mdVertex.equals(mdBusGeoEntity))
     {
-      return new GeoVertexEdgeType(mdBusGeoEntity);
+      return BaseGeoObjectType.getByCode(GeoObjectType.ROOT);
     }
 
     return this.typeService.getByMdVertex(mdVertex);
   }
 
   @Override
-  public EdgeVertexType getChild(BusinessEdgeType edgeType)
+  public ObjectClass getChild(BusinessEdgeType edgeType)
   {
     return getEdgeVertexType((MdVertexDAOIF) BusinessFacade.getEntityDAO(edgeType.getChildType()));
   }

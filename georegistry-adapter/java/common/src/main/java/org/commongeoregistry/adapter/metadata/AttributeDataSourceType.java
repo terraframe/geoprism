@@ -3,34 +3,55 @@
  *
  * This file is part of Common Geo Registry Adapter(tm).
  *
- * Common Geo Registry Adapter(tm) is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
+ * Common Geo Registry Adapter(tm) is free software: you can redistribute it
+ * and/or modify it under the terms of the GNU Lesser General Public License as
+ * published by the Free Software Foundation, either version 3 of the License,
+ * or (at your option) any later version.
  *
- * Common Geo Registry Adapter(tm) is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
+ * Common Geo Registry Adapter(tm) is distributed in the hope that it will be
+ * useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser
+ * General Public License for more details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with Common Geo Registry Adapter(tm).  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with Common Geo Registry Adapter(tm). If not, see
+ * <http://www.gnu.org/licenses/>.
  */
 package org.commongeoregistry.adapter.metadata;
 
 import org.commongeoregistry.adapter.dataaccess.LocalizedValue;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 public class AttributeDataSourceType extends AttributeType
 {
   /**
    * 
    */
-  private static final long serialVersionUID = -6889939609956215822L;
+  private static final long  serialVersionUID = -6889939609956215822L;
 
-  public static String      TYPE             = "source";
+  public static final String TYPE             = "source";
+
+  public AttributeDataSourceType()
+  {
+    super();
+  }
 
   public AttributeDataSourceType(String _name, LocalizedValue _label, LocalizedValue _description, boolean _isDefault, boolean _required, boolean _unique)
   {
-    super(_name, _label, _description, TYPE, _isDefault, _required, _unique);
+    super(_name, _label, _description, _isDefault, _required, _unique);
   }
+
+  public AttributeDataSourceType(String _name, LocalizedValue _label, LocalizedValue _description, boolean _isDefault, boolean _required, boolean _unique, boolean isChangeOverTime)
+  {
+    super(_name, _label, _description, _isDefault, _required, _unique, isChangeOverTime);
+  }
+
+  @Override
+  @JsonIgnore
+  public String getType()
+  {
+    return TYPE;
+  }
+
 }

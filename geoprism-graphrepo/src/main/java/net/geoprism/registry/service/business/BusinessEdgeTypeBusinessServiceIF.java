@@ -27,16 +27,16 @@ import org.springframework.stereotype.Component;
 import com.runwaysdk.system.metadata.MdEdge;
 
 import net.geoprism.registry.graph.BusinessEdgeType;
-import net.geoprism.registry.model.graph.EdgeVertexType;
+import net.geoprism.registry.graph.ObjectClass;
 import net.geoprism.registry.view.BusinessEdgeTypeView;
 
 @Component
 public interface BusinessEdgeTypeBusinessServiceIF
 {
 
-  EdgeVertexType getParent(BusinessEdgeType edgeType);
+  ObjectClass getParent(BusinessEdgeType edgeType);
 
-  EdgeVertexType getChild(BusinessEdgeType edgeType);
+  ObjectClass getChild(BusinessEdgeType edgeType);
 
   void update(BusinessEdgeType edgeType, BusinessEdgeTypeView dto);
 

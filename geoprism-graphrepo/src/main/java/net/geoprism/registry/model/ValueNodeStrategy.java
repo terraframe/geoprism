@@ -38,6 +38,7 @@ import com.runwaysdk.dataaccess.graph.attributes.ValueOverTimeCollection;
 
 import net.geoprism.registry.graph.AttributeType;
 import net.geoprism.registry.graph.AttributeValue;
+import net.geoprism.registry.model.graph.ObjectClassIF;
 
 /**
  * Strategy used for setting a value on an object value node
@@ -99,7 +100,7 @@ public class ValueNodeStrategy extends AbstractValueStrategy implements ValueStr
     }
   }
 
-  protected StateValue createNode(ServerGeoObjectType type, Object value, Date startDate, Date endDate, Boolean validate)
+  protected StateValue createNode(ObjectClassIF type, Object value, Date startDate, Date endDate, Boolean validate)
   {
     VertexObject node = new VertexObject(nodeVertex.definesType());
     node.setValue(AttributeValue.ATTRIBUTENAME, this.getAttributeType().getCode());
@@ -409,7 +410,7 @@ public class ValueNodeStrategy extends AbstractValueStrategy implements ValueStr
   }
 
   @Override
-  public StateValue construct(ServerGeoObjectType type, VertexObject vertex)
+  public StateValue construct(ObjectClassIF type, VertexObject vertex)
   {
     return new PrimitiveStateValue(vertex, nodeAttribute);
   }

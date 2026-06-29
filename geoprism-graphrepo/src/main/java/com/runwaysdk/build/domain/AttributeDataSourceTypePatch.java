@@ -51,7 +51,7 @@ public class AttributeDataSourceTypePatch
       sourceAttr.setCode(DefaultAttribute.DATA_SOURCE.getName());
       sourceAttr.setEmbeddedValue(AttributeUUIDType.LABEL, LocalizedValue.DEFAULT_LOCALE, DefaultAttribute.DATA_SOURCE.getDefaultLocalizedName());
       sourceAttr.setEmbeddedValue(AttributeUUIDType.DESCRIPTION, LocalizedValue.DEFAULT_LOCALE, DefaultAttribute.DATA_SOURCE.getDefaultDescription());
-      sourceAttr.setValue(AttributeBooleanType.GEOOBJECTTYPE, type.getOid());
+      sourceAttr.setValue(AttributeBooleanType.OBJECTTYPE, type.getOid());
       sourceAttr.setRequired(false);
       sourceAttr.setUnique(false);
       sourceAttr.setIsChangeOverTime(true);

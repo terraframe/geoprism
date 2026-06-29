@@ -31,6 +31,7 @@ import com.runwaysdk.dataaccess.graph.attributes.ValueOverTimeCollection;
 import com.runwaysdk.dataaccess.metadata.graph.MdVertexDAO;
 
 import net.geoprism.registry.graph.AttributeType;
+import net.geoprism.registry.model.graph.ObjectClassIF;
 
 /**
  * Strategy used for setting a value directly on the vertex object as opposed to
@@ -85,7 +86,7 @@ public class VertexValueStrategy extends AbstractValueStrategy implements ValueS
   @Override
   public List<MdAttributeDAOIF> getValueAttributes()
   {
-    MdVertexDAOIF mdVertex = MdVertexDAO.get(this.getAttributeType().getGeoObjectType().getMdVertexOid());
+    MdVertexDAOIF mdVertex = MdVertexDAO.get(this.getAttributeType().getObjectType().getMdVertexOid());
 
     List<MdAttributeDAOIF> list = new LinkedList<MdAttributeDAOIF>();
     list.add(mdVertex.definesAttribute(this.getAttributeType().getCode()));
@@ -94,7 +95,7 @@ public class VertexValueStrategy extends AbstractValueStrategy implements ValueS
   }
 
   @Override
-  public StateValue construct(ServerGeoObjectType type, VertexObject vertex)
+  public StateValue construct(ObjectClassIF type, VertexObject vertex)
   {
     throw new UnsupportedOperationException();
   }

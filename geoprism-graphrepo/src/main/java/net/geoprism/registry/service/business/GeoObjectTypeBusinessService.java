@@ -41,7 +41,6 @@ import org.commongeoregistry.adapter.metadata.AttributeDateType;
 import org.commongeoregistry.adapter.metadata.AttributeFloatType;
 import org.commongeoregistry.adapter.metadata.AttributeIntegerType;
 import org.commongeoregistry.adapter.metadata.AttributeLocalType;
-import org.commongeoregistry.adapter.metadata.AttributeTermType;
 import org.commongeoregistry.adapter.metadata.AttributeType;
 import org.commongeoregistry.adapter.metadata.GeoObjectType;
 import org.commongeoregistry.adapter.metadata.RegistryRole;
@@ -62,9 +61,7 @@ import com.runwaysdk.constants.MdAttributeConcreteInfo;
 import com.runwaysdk.constants.MdAttributeLocalInfo;
 import com.runwaysdk.constants.MdBusinessInfo;
 import com.runwaysdk.dataaccess.DuplicateDataException;
-import com.runwaysdk.dataaccess.MdAttributeConcreteDAOIF;
 import com.runwaysdk.dataaccess.MdBusinessDAOIF;
-import com.runwaysdk.dataaccess.MdClassDAOIF;
 import com.runwaysdk.dataaccess.MdVertexDAOIF;
 import com.runwaysdk.dataaccess.ProgrammingErrorException;
 import com.runwaysdk.dataaccess.attributes.AttributeValueException;
@@ -85,7 +82,6 @@ import com.runwaysdk.system.Roles;
 import com.runwaysdk.system.gis.metadata.graph.MdGeoVertex;
 import com.runwaysdk.system.metadata.MdAttributeConcrete;
 import com.runwaysdk.system.metadata.MdBusiness;
-import com.runwaysdk.system.metadata.MdClass;
 
 import net.geoprism.configuration.GeoprismProperties;
 import net.geoprism.registry.ChainInheritanceException;
@@ -943,7 +939,7 @@ public class GeoObjectTypeBusinessService implements GeoObjectTypeBusinessServic
   @Transaction
   public net.geoprism.registry.graph.AttributeType createAttributeTypeFromDTO(ServerGeoObjectType type, AttributeType dto)
   {
-    if (type.getAttributeMap().containsKey(dto.getName()))
+    if (type.getAttributeMap().containsKey(dto.getCode()))
     {
       // TODO: Change exception type
       throw new UnsupportedOperationException("Duplicate attribute");
@@ -967,10 +963,6 @@ public class GeoObjectTypeBusinessService implements GeoObjectTypeBusinessServic
     {
       attributeType = new net.geoprism.registry.graph.AttributeDoubleType();
     }
-    else if (dto.getType().equals(AttributeTermType.TYPE))
-    {
-      attributeType = new net.geoprism.registry.graph.AttributeTermType();
-    }
     else if (dto.getType().equals(AttributeClassificationType.TYPE))
     {
       attributeType = new net.geoprism.registry.graph.AttributeClassificationType();
@@ -992,7 +984,7 @@ public class GeoObjectTypeBusinessService implements GeoObjectTypeBusinessServic
       throw new UnsupportedOperationException();
     }
 
-    attributeType.setGeoObjectType(type.getType());
+    attributeType.setObjectType(type.getType());
     attributeType.fromDTO(dto);
     attributeType.setIsDefault(false);
     attributeType.apply();
@@ -1029,23 +1021,6 @@ public class GeoObjectTypeBusinessService implements GeoObjectTypeBusinessServic
   }
 
   /**
-   * Returns the {link MdAttributeConcreteDAOIF} for the given
-   * {@link AttributeType} defined on the given {@link MdBusiness} or null no
-   * such attribute is defined.
-   * 
-   * @param attributeName
-   * 
-   * @return
-   */
-  @Override
-  public MdAttributeConcreteDAOIF getMdAttribute(MdClass mdClass, String attributeName)
-  {
-    MdClassDAOIF mdClassDAO = (MdClassDAOIF) BusinessFacade.getEntityDAO(mdClass);
-
-    return (MdAttributeConcreteDAOIF) mdClassDAO.definesAttribute(attributeName);
-  }
-
-  /**
    * Creates an {@link MdAttributeConcrete} for the given {@link MdBusiness}
    * from the given {@link AttributeType}
    * 
@@ -1061,7 +1036,7 @@ public class GeoObjectTypeBusinessService implements GeoObjectTypeBusinessServic
   @Transaction
   public net.geoprism.registry.graph.AttributeType updateAttributeTypeFromDTO(ServerGeoObjectType type, AttributeType dto)
   {
-    Optional<net.geoprism.registry.graph.AttributeType> optional = type.getAttribute(dto.getName());
+    Optional<net.geoprism.registry.graph.AttributeType> optional = type.getAttribute(dto.getCode());
 
     if (optional.isPresent())
     {

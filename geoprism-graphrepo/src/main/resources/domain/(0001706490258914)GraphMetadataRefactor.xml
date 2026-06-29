@@ -23,16 +23,18 @@
     <create>
       <mdVertex name="net.geoprism.registry.graph.SchemaElement" label="Schema Element"  isAbstract="true" >
       </mdVertex>
-      <mdVertex name="net.geoprism.registry.graph.EdgeClass" extends="net.geoprism.registry.graph.SchemaElement" isAbstract="true" label="Edge Class" >
+      <mdVertex name="net.geoprism.registry.graph.TableClass" extends="net.geoprism.registry.graph.SchemaElement" isAbstract="true" label="Table Class" >
+        <attributes>
+          <char name="code" label="Code" required="true" size="255" indexType="unique"  />          
+        </attributes>            
+      </mdVertex>
+      <mdVertex name="net.geoprism.registry.graph.EdgeClass" extends="net.geoprism.registry.graph.TableClass" isAbstract="true" label="Edge Class" >
       </mdVertex>
     
-      <mdVertex name="net.geoprism.registry.graph.ObjectClass" extends="net.geoprism.registry.graph.SchemaElement" isAbstract="true" label="Object Class">
+      <mdVertex name="net.geoprism.registry.graph.ObjectClass" extends="net.geoprism.registry.graph.TableClass" isAbstract="true" label="Object Class">
       </mdVertex>    
       
       <mdVertex name="net.geoprism.registry.graph.BaseGeoObjectType" extends="net.geoprism.registry.graph.ObjectClass" label="Base Geo Object Type">
-        <attributes>
-          <char name="code" label="Code" required="true" size="255" indexType="unique"  />          
-        </attributes>
       </mdVertex>    
       
       <mdVertex name="net.geoprism.registry.graph.GeoObjectType" extends="net.geoprism.registry.graph.BaseGeoObjectType" label="GeoObjectType">
@@ -54,7 +56,6 @@
       
       <mdVertex name="net.geoprism.registry.graph.HierarchicalRelationshipType" extends="net.geoprism.registry.graph.EdgeClass" label="Hierarchical Relationship" generateController="false">
         <attributes>
-          <char name="code" size="255" required="true" indexType="unique index" label="Code" />
           <localCharEmbedded name="displayLabel" label="Label" required="true" />        
           <localCharEmbedded name="description" label="Description" />        
           <graphReference name="organization" label="Organization" type="net.geoprism.registry.graph.GraphOrganization" />
@@ -82,7 +83,7 @@
           <boolean name="unique" label="Unique" />
           <boolean name="isDefault" label="Is Default" />
           <boolean name="isChangeOverTime" label="Is Change Over Time" />
-          <graphReference name="geoObjectType" label="Geo Object Type" required="true" type="net.geoprism.registry.graph.GeoObjectType"/>
+          <graphReference name="objectType" label="Geo Object Type" required="true" type="net.geoprism.registry.graph.ObjectClass"/>
         </attributes>
       </mdVertex>    
       <mdVertex name="net.geoprism.registry.graph.AttributeBooleanType" extends="net.geoprism.registry.graph.AttributeType" label="Attribute Boolean Type">
@@ -114,11 +115,6 @@
       </mdVertex>    
       <mdVertex name="net.geoprism.registry.graph.AttributeLocalType" extends="net.geoprism.registry.graph.AttributeType" label="Attribute Local Type">
         <attributes>
-        </attributes>
-      </mdVertex>    
-      <mdVertex name="net.geoprism.registry.graph.AttributeTermType" extends="net.geoprism.registry.graph.AttributeType" label="Attribute Term Type">
-        <attributes>
-          <reference name="rootTerm" label="Root Term" required="false" type="net.geoprism.ontology.Classifier"  />     
         </attributes>
       </mdVertex>    
       <mdVertex name="net.geoprism.registry.graph.AttributeClassificationType" extends="net.geoprism.registry.graph.AttributeType" label="Attribute Classification Type">
@@ -172,11 +168,6 @@
           <text name="defaultLocale" label="Default Locale" required="false"  />          
         </attributes>
       </mdVertex>    
-      <mdVertex name="net.geoprism.registry.graph.AttributeTermValue" extends="net.geoprism.registry.graph.AttributeBasicValue" label="Attribute Term Value">
-        <attributes>
-          <reference name="value" label="Value" required="false" type="net.geoprism.ontology.Classifier"  />          
-        </attributes>
-      </mdVertex>    
 <!--       
       <mdVertex name="net.geoprism.registry.graph.AttributeClassificationValue" isAbstract="true" label="AttributeValue">
         <attributes>
@@ -216,7 +207,7 @@
         </attributes>
       </mdVertex>    
       
-      <mdEdge name="net.geoprism.registry.graph.HasValue" label="Has Value" parent="net.geoprism.registry.graph.GeoVertex" child="net.geoprism.registry.graph.AttributeBasicValue" generateSource="false">
+      <mdEdge name="net.geoprism.registry.graph.HasValue" label="Has Value" parent="net.geoprism.registry.graph.ObjectVertex" child="net.geoprism.registry.graph.AttributeBasicValue" generateSource="false">
       </mdEdge>
 
       <mdEdge name="net.geoprism.registry.graph.HasGeometry" label="Has Geometry" parent="net.geoprism.registry.graph.GeoVertex" child="net.geoprism.registry.graph.AttributeGeometryValue" generateSource="false">
@@ -270,9 +261,6 @@
           <mdBusinessPermission type="net.geoprism.registry.graph.AttributeLocalType">
             <operation name="ALL" />
           </mdBusinessPermission>
-          <mdBusinessPermission type="net.geoprism.registry.graph.AttributeTermType">
-            <operation name="ALL" />
-          </mdBusinessPermission>
           <mdBusinessPermission type="net.geoprism.registry.graph.AttributeClassificationType">
             <operation name="ALL" />
           </mdBusinessPermission>
@@ -298,9 +286,6 @@
             <operation name="ALL" />
           </mdBusinessPermission>
           <mdBusinessPermission type="net.geoprism.registry.graph.AttributeLocalValue">
-            <operation name="ALL" />
-          </mdBusinessPermission>
-          <mdBusinessPermission type="net.geoprism.registry.graph.AttributeTermValue">
             <operation name="ALL" />
           </mdBusinessPermission>
           <mdBusinessPermission type="net.geoprism.registry.graph.AttributeGeometryValue">
@@ -348,7 +333,6 @@
       <object type="com.runwaysdk.system.metadata.MdVertex" key="net.geoprism.registry.graph.AttributeMultiPolygonValue" />
       <object type="com.runwaysdk.system.metadata.MdVertex" key="net.geoprism.registry.graph.AttributeMultiPointValue" />
       <object type="com.runwaysdk.system.metadata.MdVertex" key="net.geoprism.registry.graph.AttributeGeometryValue" />
-      <object type="com.runwaysdk.system.metadata.MdVertex" key="net.geoprism.registry.graph.AttributeTermValue" />
       <object type="com.runwaysdk.system.metadata.MdVertex" key="net.geoprism.registry.graph.AttributeLocalValue" />
       <object type="com.runwaysdk.system.metadata.MdVertex" key="net.geoprism.registry.graph.AttributeLongValue" />
       <object type="com.runwaysdk.system.metadata.MdVertex" key="net.geoprism.registry.graph.AttributeDateValue" />
@@ -359,7 +343,6 @@
       
       <object type="com.runwaysdk.system.metadata.MdVertex" key="net.geoprism.registry.graph.AttributeGeometryType" />
       <object type="com.runwaysdk.system.metadata.MdVertex" key="net.geoprism.registry.graph.AttributeClassificationType" />
-      <object type="com.runwaysdk.system.metadata.MdVertex" key="net.geoprism.registry.graph.AttributeTermType" />
       <object type="com.runwaysdk.system.metadata.MdVertex" key="net.geoprism.registry.graph.AttributeLocalType" />
       <object type="com.runwaysdk.system.metadata.MdVertex" key="net.geoprism.registry.graph.AttributeDoubleType" />
       <object type="com.runwaysdk.system.metadata.MdVertex" key="net.geoprism.registry.graph.AttributeLongType" />

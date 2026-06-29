@@ -3,23 +3,25 @@
  *
  * This file is part of Geoprism(tm).
  *
- * Geoprism(tm) is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
+ * Geoprism(tm) is free software: you can redistribute it and/or modify it under
+ * the terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation, either version 3 of the License, or (at your option) any
+ * later version.
  *
- * Geoprism(tm) is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
+ * Geoprism(tm) is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with Geoprism(tm).  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with Geoprism(tm). If not, see <http://www.gnu.org/licenses/>.
  */
 package net.geoprism.registry.service.business;
 
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
@@ -33,9 +35,14 @@ import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+import com.google.gson.JsonSyntaxException;
+import com.runwaysdk.business.BusinessDTO;
 import com.runwaysdk.business.BusinessFacade;
 import com.runwaysdk.business.graph.GraphQuery;
 import com.runwaysdk.business.graph.VertexObject;
@@ -71,6 +78,7 @@ import net.geoprism.registry.JsonCollectors;
 import net.geoprism.registry.LPGTileCache;
 import net.geoprism.registry.lpg.LPGPublishProgressMonitorIF;
 import net.geoprism.registry.model.ClassificationType;
+import net.geoprism.registry.view.BusinessTypeDTO;
 
 @Service
 public class LabeledPropertyGraphTypeVersionBusinessService implements LabeledPropertyGraphTypeVersionBusinessServiceIF
@@ -180,7 +188,8 @@ public class LabeledPropertyGraphTypeVersionBusinessService implements LabeledPr
     vQuery.WHERE(vQuery.getParent().EQ(version));
 
     GeoObjectTypeSnapshotQuery query = new GeoObjectTypeSnapshotQuery(factory);
-    query.WHERE(query.EQ(vQuery.getChild()));;
+    query.WHERE(query.EQ(vQuery.getChild()));
+    ;
 
     try (OIterator<? extends GeoObjectTypeSnapshot> it = query.getIterator())
     {
@@ -197,7 +206,8 @@ public class LabeledPropertyGraphTypeVersionBusinessService implements LabeledPr
     vQuery.WHERE(vQuery.getParent().EQ(version));
 
     BusinessTypeSnapshotQuery query = new BusinessTypeSnapshotQuery(factory);
-    query.WHERE(query.EQ(vQuery.getChild()));;
+    query.WHERE(query.EQ(vQuery.getChild()));
+    ;
 
     try (OIterator<? extends BusinessTypeSnapshot> it = query.getIterator())
     {
@@ -214,7 +224,8 @@ public class LabeledPropertyGraphTypeVersionBusinessService implements LabeledPr
     vQuery.WHERE(vQuery.getParent().EQ(version));
 
     BusinessEdgeTypeSnapshotQuery query = new BusinessEdgeTypeSnapshotQuery(factory);
-    query.WHERE(query.EQ(vQuery.getChild()));;
+    query.WHERE(query.EQ(vQuery.getChild()));
+    ;
 
     try (OIterator<? extends BusinessEdgeTypeSnapshot> it = query.getIterator())
     {
@@ -232,7 +243,8 @@ public class LabeledPropertyGraphTypeVersionBusinessService implements LabeledPr
     vQuery.WHERE(vQuery.getParent().EQ(version));
 
     HierarchyTypeSnapshotQuery query = new HierarchyTypeSnapshotQuery(factory);
-    query.WHERE(query.EQ(vQuery.getChild()));;
+    query.WHERE(query.EQ(vQuery.getChild()));
+    ;
 
     try (OIterator<? extends HierarchyTypeSnapshot> it = query.getIterator())
     {
@@ -250,7 +262,8 @@ public class LabeledPropertyGraphTypeVersionBusinessService implements LabeledPr
     vQuery.WHERE(vQuery.getParent().EQ(version));
 
     DirectedAcyclicGraphTypeSnapshotQuery query = new DirectedAcyclicGraphTypeSnapshotQuery(factory);
-    query.WHERE(query.EQ(vQuery.getChild()));;
+    query.WHERE(query.EQ(vQuery.getChild()));
+    ;
 
     try (OIterator<? extends DirectedAcyclicGraphTypeSnapshot> it = query.getIterator())
     {
@@ -268,7 +281,8 @@ public class LabeledPropertyGraphTypeVersionBusinessService implements LabeledPr
     vQuery.WHERE(vQuery.getParent().EQ(version));
 
     UndirectedGraphTypeSnapshotQuery query = new UndirectedGraphTypeSnapshotQuery(factory);
-    query.WHERE(query.EQ(vQuery.getChild()));;
+    query.WHERE(query.EQ(vQuery.getChild()));
+    ;
 
     try (OIterator<? extends UndirectedGraphTypeSnapshot> it = query.getIterator())
     {
@@ -306,7 +320,8 @@ public class LabeledPropertyGraphTypeVersionBusinessService implements LabeledPr
     vQuery.WHERE(vQuery.getParent().EQ(version));
 
     GeoObjectTypeSnapshotQuery query = new GeoObjectTypeSnapshotQuery(factory);
-    query.WHERE(query.EQ(vQuery.getChild()));;
+    query.WHERE(query.EQ(vQuery.getChild()));
+    ;
     query.AND(query.getCode().EQ(typeCode));
 
     try (OIterator<? extends GeoObjectTypeSnapshot> it = query.getIterator())
@@ -329,7 +344,8 @@ public class LabeledPropertyGraphTypeVersionBusinessService implements LabeledPr
     vQuery.WHERE(vQuery.getParent().EQ(version));
 
     HierarchyTypeSnapshotQuery query = new HierarchyTypeSnapshotQuery(factory);
-    query.WHERE(query.EQ(vQuery.getChild()));;
+    query.WHERE(query.EQ(vQuery.getChild()));
+    ;
     query.AND(query.getCode().EQ(typeCode));
 
     try (OIterator<? extends HierarchyTypeSnapshot> it = query.getIterator())
@@ -455,13 +471,13 @@ public class LabeledPropertyGraphTypeVersionBusinessService implements LabeledPr
 
       object.add("graphTypes", graphTypes);
 
-      JsonArray businessTypes = new JsonArray();
+      List<BusinessTypeDTO> businessTypes = new LinkedList<>();
 
       this.getBusinessTypes(version).forEach(type -> {
-        businessTypes.add(type.toJSON());
+        businessTypes.add(type.toDTO());
       });
 
-      object.add("businessTypes", businessTypes);
+      object.add("businessTypes", JsonParser.parseString(BusinessTypeDTO.toJson(businessTypes)));
 
       JsonArray businessEdges = new JsonArray();
 
@@ -576,11 +592,13 @@ public class LabeledPropertyGraphTypeVersionBusinessService implements LabeledPr
       this.objectService.create(version, element.getAsJsonObject());
     }
 
-    JsonArray businessTypes = json.has("businessTypes") ? json.get("businessTypes").getAsJsonArray() : new JsonArray();
+    List<BusinessTypeDTO> businessTypes = json.has("businessTypes") ? //
+        BusinessTypeDTO.parseList(json.get("businessTypes").toString()) : //
+        new LinkedList<>();
 
-    for (JsonElement element : businessTypes)
+    for (BusinessTypeDTO businessType : businessTypes)
     {
-      this.businessService.create(version, element.getAsJsonObject());
+      this.businessService.create(version, businessType);
     }
 
     JsonArray graphTypes = json.has("graphTypes") ? json.get("graphTypes").getAsJsonArray() : new JsonArray();
@@ -589,7 +607,7 @@ public class LabeledPropertyGraphTypeVersionBusinessService implements LabeledPr
     {
       this.graphService.create(version, element.getAsJsonObject(), root);
     }
-    
+
     JsonArray businessEdges = json.has("businessEdges") ? json.get("businessEdges").getAsJsonArray() : new JsonArray();
 
     for (JsonElement element : businessEdges)

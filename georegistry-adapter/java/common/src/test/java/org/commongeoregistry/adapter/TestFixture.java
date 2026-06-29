@@ -21,8 +21,6 @@ package org.commongeoregistry.adapter;
 import org.commongeoregistry.adapter.constants.GeometryType;
 import org.commongeoregistry.adapter.dataaccess.GeoObject;
 import org.commongeoregistry.adapter.dataaccess.LocalizedValue;
-import org.commongeoregistry.adapter.metadata.AttributeTermType;
-import org.commongeoregistry.adapter.metadata.AttributeType;
 import org.commongeoregistry.adapter.metadata.GeoObjectType;
 import org.commongeoregistry.adapter.metadata.HierarchyNode;
 import org.commongeoregistry.adapter.metadata.HierarchyType;
@@ -68,7 +66,6 @@ public class TestFixture
 
     GeoObjectType healthFacility = MetadataFactory.newGeoObjectType(HEALTH_FACILITY, GeometryType.POLYGON, new LocalizedValue("Health Facility"), new LocalizedValue(""), true, null, registry);
 
-    healthFacility.addAttribute(createHealthFacilityTypeAttribute(registry));
 
     String organizationCode = "";
 
@@ -122,34 +119,5 @@ public class TestFixture
     geoObject.setDisplayLabel(LocalizedValue.DEFAULT_LOCALE, genKey + " Display Label");
 
     return geoObject;
-  }
-
-  private static AttributeTermType createHealthFacilityTypeAttribute(RegistryAdapter registry)
-  {
-    AttributeTermType attrType = (AttributeTermType) AttributeType.factory(HEALTH_FACILITY_ATTRIBUTE, new LocalizedValue("Health Facility Type"), new LocalizedValue("The type of health facility"), AttributeTermType.TYPE, false, false, false);
-
-    Term rootTerm = createHealthFacilityTerms(registry);
-
-    attrType.setRootTerm(rootTerm);
-
-    return attrType;
-  }
-
-  private static Term createHealthFacilityTerms(RegistryAdapter registry)
-  {
-    Term rootTerm = MetadataFactory.newTerm("CM:Health-Facility-Types", new LocalizedValue("Health Facility Types"), new LocalizedValue("The types of health facilities within a country"), registry);
-    Term dispensary = MetadataFactory.newTerm("CM:Dispensary", new LocalizedValue("Dispensary"), new LocalizedValue(""), registry);
-    Term privateClinic = MetadataFactory.newTerm("CM:Private-Clinic", new LocalizedValue("Private Clinic"), new LocalizedValue(""), registry);
-    Term publicClinic = MetadataFactory.newTerm("CM:Public-Clinic", new LocalizedValue("Public Clinic"), new LocalizedValue(""), registry);
-    Term matWard = MetadataFactory.newTerm("CM:Maternity-Ward", new LocalizedValue("Maternity Ward"), new LocalizedValue(""), registry);
-    Term nursing = MetadataFactory.newTerm("CM:Nursing-Home", new LocalizedValue("Nursing Home"), new LocalizedValue(""), registry);
-
-    rootTerm.addChild(dispensary);
-    rootTerm.addChild(privateClinic);
-    rootTerm.addChild(publicClinic);
-    rootTerm.addChild(matWard);
-    rootTerm.addChild(nursing);
-
-    return rootTerm;
   }
 }
