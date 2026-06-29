@@ -209,6 +209,12 @@ public class ServerGeoObjectType extends CachableObjectWrapper<BaseGeoObjectType
     return ServiceFactory.getMetadataCache().getOrganization(this.getOrganizationCode()).orElseThrow();
   }
 
+  @Override
+  public ServerOrganization getServerOrganization()
+  {
+    return ServiceFactory.getMetadataCache().getOrganization(this.getOrganizationCode()).orElseThrow();
+  }
+  
   public String getOrganizationCode()
   {
     // Use the DTO to avoid a call to the database to get the organization

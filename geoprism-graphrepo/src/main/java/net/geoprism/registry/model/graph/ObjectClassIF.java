@@ -5,6 +5,7 @@ import java.util.Map;
 import java.util.Optional;
 
 import net.geoprism.registry.graph.AttributeType;
+import net.geoprism.registry.model.ServerOrganization;
 
 public interface ObjectClassIF
 {
@@ -14,5 +15,7 @@ public interface ObjectClassIF
   public List<AttributeType> getAttributes();
 
   public Map<String, AttributeType> getAttributeMap();
+
+  public ServerOrganization getServerOrganization();
 
 }

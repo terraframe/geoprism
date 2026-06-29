@@ -20,7 +20,6 @@ package net.geoprism.registry.service.request;
 
 import java.util.List;
 
-import org.commongeoregistry.adapter.metadata.AttributeType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -28,20 +27,16 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.runwaysdk.session.Request;
 import com.runwaysdk.session.RequestType;
-import com.runwaysdk.session.Session;
 
-import net.geoprism.configuration.GeoprismProperties;
-import net.geoprism.registry.OriginException;
 import net.geoprism.registry.graph.BusinessEdgeType;
 import net.geoprism.registry.graph.BusinessType;
 import net.geoprism.registry.service.business.BusinessEdgeTypeBusinessServiceIF;
 import net.geoprism.registry.service.business.BusinessTypeBusinessServiceIF;
 import net.geoprism.registry.view.BusinessEdgeTypeView;
 import net.geoprism.registry.view.BusinessTypeDTO;
-import net.geoprism.registry.view.OrganizationGroup;
 
 @Service
-public class BusinessTypeService
+public class BusinessTypeService extends ObjectClassService<BusinessType, BusinessTypeDTO> implements BusinessTypeServiceIF
 {
   @Autowired
   private BusinessTypeBusinessServiceIF     typeService;
@@ -49,170 +44,12 @@ public class BusinessTypeService
   @Autowired
   private BusinessEdgeTypeBusinessServiceIF edgeService;
 
-  /**
-   * Creates a {@link BusinessType} from the given JSON.
-   * 
-   * @param sessionId
-   * @param ptJSON
-   *          JSON of the {@link BusinessType} to be created.
-   * @return newly created {@link BusinessType}
-   */
-  @Request(RequestType.SESSION)
-  public BusinessTypeDTO apply(String sessionId, BusinessTypeDTO dto)
+  protected BusinessTypeBusinessServiceIF getTypeService()
   {
-    BusinessType type = this.typeService.apply(dto);
-
-    // Refresh the users session
-    ( (Session) Session.getCurrentSession() ).reloadPermissions();
-
-    return this.typeService.toDTO(type, true, false);
+    return typeService;
   }
 
-  @Request(RequestType.SESSION)
-  public List<OrganizationGroup<BusinessTypeDTO>> listByOrg(String sessionId)
-  {
-    return this.typeService.listByOrg();
-  }
-
-  @Request(RequestType.SESSION)
-  public List<BusinessTypeDTO> getAll(String sessionId)
-  {
-    return this.typeService.getAll().stream().map(object -> {
-      return this.typeService.toDTO(object);
-    }).toList();
-  }
-
-  @Request(RequestType.SESSION)
-  public BusinessTypeDTO get(String sessionId, String oid)
-  {
-    BusinessType type = BusinessType.get(oid);
-    return this.typeService.toDTO(type, true, false);
-  }
-
-  @Request(RequestType.SESSION)
-  public void remove(String sessionId, String oid)
-  {
-    BusinessType type = BusinessType.get(oid);
-
-    if (!type.getOrigin().equals(GeoprismProperties.getOrigin()))
-    {
-      throw new OriginException();
-    }
-
-    this.typeService.delete(type);
-
-    // Refresh the users session
-    ( (Session) Session.getCurrentSession() ).reloadPermissions();
-  }
-
-  @Request(RequestType.SESSION)
-  public BusinessTypeDTO edit(String sessionId, String oid)
-  {
-    BusinessType type = BusinessType.get(oid);
-
-    if (!type.getOrigin().equals(GeoprismProperties.getOrigin()))
-    {
-      throw new OriginException();
-    }
-
-    return this.typeService.toDTO(type, true, false);
-  }
-
-  @Request(RequestType.SESSION)
-  public void unlock(String sessionId, String oid)
-  {
-  }
-
-  /**
-   * Adds an attribute to the given {@link BusinessType}.
-   * 
-   * @pre given {@link BusinessType} must already exist.
-   * 
-   * @param sessionId
-   *
-   * @param businessTypeCode
-   *          string of the {@link BusinessType} to be updated.
-   * @param attributeTypeJSON
-   *          AttributeType to be added to the BusinessType
-   * @return updated {@link BusinessType}
-   */
-  @Request(RequestType.SESSION)
-  public AttributeType createAttributeType(String sessionId, String businessTypeCode, AttributeType attributeType)
-  {
-    BusinessType type = this.typeService.getByCodeOrThrow(businessTypeCode);
-
-    if (!type.getOrigin().equals(GeoprismProperties.getOrigin()))
-    {
-      throw new OriginException();
-    }
-
-    // ServiceFactory.getBusinessTypePermissionService().enforceCanWrite(type.getOrganization().getCode(),
-    // type, type.getIsPrivate());
-
-    AttributeType attrType = this.typeService.createAttributeType(type, attributeType);
-
-    return attrType;
-  }
-
-  /**
-   * Updates an attribute in the given {@link BusinessType}.
-   * 
-   * @pre given {@link BusinessType} must already exist.
-   * 
-   * @param sessionId
-   * @param businessTypeCode
-   *          string of the {@link BusinessType} to be updated.
-   * @param attributeTypeJSON
-   *          AttributeType to be added to the BusinessType
-   * @return updated {@link AttributeType}
-   */
-  @Request(RequestType.SESSION)
-  public AttributeType updateAttributeType(String sessionId, String businessTypeCode, AttributeType attributeType)
-  {
-    BusinessType type = this.typeService.getByCodeOrThrow(businessTypeCode);
-
-    if (!type.getOrigin().equals(GeoprismProperties.getOrigin()))
-    {
-      throw new OriginException();
-    }
-
-    // ServiceFactory.getBusinessTypePermissionService().enforceCanWrite(type.getOrganization().getCode(),
-    // type, type.getIsPrivate());
-
-    AttributeType attrType = this.typeService.updateAttributeType(type, attributeType);
-
-    return attrType;
-  }
-
-  /**
-   * Deletes an attribute from the given {@link BusinessType}.
-   * 
-   * @pre given {@link BusinessType} must already exist.
-   * @pre given {@link BusinessType} must already exist.
-   * 
-   * @param sessionId
-   * @param code
-   *          string of the {@link BusinessType} to be updated.
-   * @param attributeName
-   *          Name of the attribute to be removed from the BusinessType
-   * @return updated {@link BusinessType}
-   */
-  @Request(RequestType.SESSION)
-  public void removeAttributeType(String sessionId, String businessTypeCode, String attributeName)
-  {
-    BusinessType type = this.typeService.getByCodeOrThrow(businessTypeCode);
-
-    if (!type.getOrigin().equals(GeoprismProperties.getOrigin()))
-    {
-      throw new OriginException();
-    }
-
-    // ServiceFactory.getBusinessTypePermissionService().enforceCanWrite(type.getOrganization().getCode(),
-    // type, type.getIsPrivate());
-
-    this.typeService.removeAttributeType(type, attributeName);
-  }
-
+  @Override
   @Request(RequestType.SESSION)
   public JsonObject data(String sessionId, String businessTypeCode, String json)
   {
@@ -221,6 +58,7 @@ public class BusinessTypeService
     return this.typeService.data(type, JsonParser.parseString(json).getAsJsonObject()).toJSON();
   }
 
+  @Override
   @Request(RequestType.SESSION)
   public List<BusinessEdgeTypeView> getEdgeTypes(String sessionId, String businessTypeCode)
   {

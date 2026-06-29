@@ -18,18 +18,53 @@
  */
 package net.geoprism.registry.service.business;
 
+import java.util.List;
+import java.util.Optional;
+import java.util.function.Predicate;
+
 import org.commongeoregistry.adapter.metadata.AttributeType;
 import org.springframework.stereotype.Component;
 
+import com.runwaysdk.dataaccess.MdVertexDAOIF;
+
+import net.geoprism.registry.Organization;
 import net.geoprism.registry.graph.ObjectClass;
+import net.geoprism.registry.model.ServerOrganization;
+import net.geoprism.registry.view.OrganizationGroup;
 
 @Component
-public interface ObjectClassBusinessServiceIF<T extends ObjectClass>
+public interface ObjectClassBusinessServiceIF<T extends ObjectClass, D>
 {
+  public void delete(T type);
+
+  public T apply(D dto);
+
   public <K extends AttributeType> K createAttributeType(T type, AttributeType attributeType);
 
   public <K extends AttributeType> K updateAttributeType(T serverType, AttributeType dto);
 
   public void removeAttributeType(T type, String attributeName);
+
+  public T get(String oid);
+
+  public Optional<T> getByCode(String code);
+
+  public T getByCodeOrThrow(String code);
+
+  public T getByMdVertex(MdVertexDAOIF mdVertex);
+
+  public List<T> getAll();
+
+  public List<OrganizationGroup<D>> listByOrg();
+
+  public List<T> getForOrganization(ServerOrganization organization);
+
+  public List<T> getForOrganization(Organization organization);
+
+  D toDTO(T type);
+
+  D toDTO(T type, boolean includeAttribute, boolean flattenLocalAttributes);
+
+  D toDTO(T type, boolean includeAttribute, boolean flattenLocalAttributes, Predicate<net.geoprism.registry.graph.AttributeType> filter);
 
 }

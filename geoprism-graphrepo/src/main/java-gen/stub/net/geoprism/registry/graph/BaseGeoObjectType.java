@@ -25,6 +25,8 @@ import com.runwaysdk.dataaccess.MdVertexDAOIF;
 import com.runwaysdk.dataaccess.metadata.graph.MdVertexDAO;
 import com.runwaysdk.system.metadata.MdVertex;
 
+import net.geoprism.registry.model.ServerOrganization;
+
 public class BaseGeoObjectType extends BaseGeoObjectTypeBase
 {
   @SuppressWarnings("unused")
@@ -88,6 +90,12 @@ public class BaseGeoObjectType extends BaseGeoObjectTypeBase
   public String getMdVertexOid()
   {
     // TODO Auto-generated method stub
+    return null;
+  }
+  
+  @Override
+  public ServerOrganization getServerOrganization()
+  {
     return null;
   }
 

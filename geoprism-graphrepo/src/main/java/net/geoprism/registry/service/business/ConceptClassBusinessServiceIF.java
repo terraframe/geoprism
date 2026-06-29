@@ -18,46 +18,14 @@
  */
 package net.geoprism.registry.service.business;
 
-import java.util.List;
-import java.util.Optional;
-import java.util.function.Predicate;
-
-import org.commongeoregistry.adapter.metadata.AttributeType;
 import org.springframework.stereotype.Component;
 
-import com.runwaysdk.dataaccess.MdVertexDAOIF;
-
-import net.geoprism.registry.Organization;
 import net.geoprism.registry.graph.ConceptClass;
-import net.geoprism.registry.model.ServerOrganization;
 import net.geoprism.registry.view.ConceptClassDTO;
 
 @Component
-public interface ConceptClassBusinessServiceIF extends ObjectClassBusinessServiceIF<ConceptClass>
+public interface ConceptClassBusinessServiceIF extends ObjectClassBusinessServiceIF<ConceptClass, ConceptClassDTO>
 {
 
-  void delete(ConceptClass type);
-
-  ConceptClass apply(ConceptClassDTO object);
-
-  Optional<ConceptClass> getByCode(String code);
-
-  ConceptClass getByCodeOrThrow(String code);
-
-  List<ConceptClass> getAll();
-
-  List<ConceptClass> getForOrganization(ServerOrganization organization);
-
-  List<ConceptClass> getForOrganization(Organization organization);
-
-  ConceptClass getByMdVertex(MdVertexDAOIF mdVertex);
-
-  ConceptClass apply(ConceptClass ConceptClass);
-
-  ConceptClassDTO toDTO(ConceptClass type);
-
-  ConceptClassDTO toDTO(ConceptClass type, boolean includeAttribute, boolean flattenLocalAttributes);
-
-  ConceptClassDTO toDTO(ConceptClass type, boolean includeAttribute, boolean flattenLocalAttributes, Predicate<AttributeType> filter);
-
+  ConceptClass apply(ConceptClass conceptClass);
 }

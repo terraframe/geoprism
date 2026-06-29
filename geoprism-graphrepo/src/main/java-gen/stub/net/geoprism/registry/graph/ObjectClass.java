@@ -30,6 +30,7 @@ import com.runwaysdk.dataaccess.metadata.graph.MdVertexDAO;
 import com.runwaysdk.system.metadata.MdVertex;
 
 import net.geoprism.registry.model.ServerElement;
+import net.geoprism.registry.model.ServerOrganization;
 import net.geoprism.registry.model.graph.ObjectClassIF;
 
 public abstract class ObjectClass extends ObjectClassBase implements ServerElement, ObjectClassIF
@@ -56,6 +57,8 @@ public abstract class ObjectClass extends ObjectClassBase implements ServerEleme
 
   public abstract String getMdVertexOid();
 
+  public abstract ServerOrganization getServerOrganization();
+
   public Optional<AttributeType> getAttribute(String attributeName)
   {
     return this.getAttributes().stream().filter(t -> t.getCode().equals(attributeName)).findFirst();
@@ -73,7 +76,7 @@ public abstract class ObjectClass extends ObjectClassBase implements ServerEleme
 
   public List<AttributeType> getAttributes()
   {
-//    if (this.attributes == null)
+    if (this.attributes == null)
     {
       MdVertexDAOIF mdVertexDAO = MdVertexDAO.getMdVertexDAO(AttributeType.CLASS);
       MdAttributeDAOIF mdAttribute = mdVertexDAO.definesAttribute(AttributeType.OBJECTTYPE);

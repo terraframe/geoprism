@@ -18,11 +18,10 @@
  */
 package net.geoprism.registry.service.business;
 
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Predicate;
-import java.util.stream.Collectors;
+import java.util.function.Supplier;
 
 import org.commongeoregistry.adapter.constants.DefaultAttribute;
 import org.commongeoregistry.adapter.dataaccess.LocalizedValue;
@@ -38,13 +37,11 @@ import com.runwaysdk.dataaccess.MdVertexDAOIF;
 import com.runwaysdk.dataaccess.metadata.graph.MdVertexDAO;
 import com.runwaysdk.dataaccess.transaction.Transaction;
 import com.runwaysdk.gis.constants.MdGeoVertexInfo;
-import com.runwaysdk.session.Session;
 import com.runwaysdk.system.metadata.MdVertex;
 
 import net.geoprism.configuration.GeoprismProperties;
 import net.geoprism.ontology.Classifier;
 import net.geoprism.registry.CodeLengthException;
-import net.geoprism.registry.Organization;
 import net.geoprism.registry.RegistryConstants;
 import net.geoprism.registry.cache.TransactionLRUCache;
 import net.geoprism.registry.conversion.RegistryLocalizedValueConverter;
@@ -57,28 +54,25 @@ import net.geoprism.registry.graph.AttributeUUIDType;
 import net.geoprism.registry.graph.BusinessEdgeType;
 import net.geoprism.registry.graph.BusinessType;
 import net.geoprism.registry.graph.BusinessVertex;
-import net.geoprism.registry.model.GeoObjectMetadata;
 import net.geoprism.registry.model.ServerOrganization;
 import net.geoprism.registry.query.graph.BusinessObjectPageQuery;
 import net.geoprism.registry.service.permission.PermissionServiceIF;
 import net.geoprism.registry.view.BusinessTypeDTO;
 import net.geoprism.registry.view.JsonSerializable;
-import net.geoprism.registry.view.OrganizationGroup;
 import net.geoprism.registry.view.Page;
 
 @Service
-public class BusinessTypeBusinessService extends ObjectClassBusinessService<BusinessType> implements BusinessTypeBusinessServiceIF
+public class BusinessTypeBusinessService extends ObjectClassBusinessService<BusinessType, BusinessTypeDTO> implements BusinessTypeBusinessServiceIF
 {
   @Autowired
   private ClassificationTypeBusinessServiceIF             cTypeService;
-
-  @Autowired
-  private PermissionServiceIF                             permissions;
 
   private final TransactionLRUCache<String, BusinessType> cache;
 
   public BusinessTypeBusinessService()
   {
+    super(BusinessType.CLASS);
+
     this.cache = new TransactionLRUCache<String, BusinessType>("t-b-type-cache", (v) -> {
 
       return new String[] { v.getCode(), v.getMdVertexOid() };
@@ -89,6 +83,12 @@ public class BusinessTypeBusinessService extends ObjectClassBusinessService<Busi
   protected void put(BusinessType type)
   {
     this.cache.put(type);
+  }
+
+  @Override
+  protected Optional<BusinessType> get(String code, Supplier<Optional<BusinessType>> supplier)
+  {
+    return this.cache.get(code, supplier);
   }
 
   @Override
@@ -106,6 +106,12 @@ public class BusinessTypeBusinessService extends ObjectClassBusinessService<Busi
     mdVertex.delete();
 
     this.cache.remove(type);
+  }
+
+  @Override
+  public BusinessType get(String oid)
+  {
+    return BusinessType.get(oid);
   }
 
   @Override
@@ -338,145 +344,4 @@ public class BusinessTypeBusinessService extends ObjectClassBusinessService<Busi
         .sorted((a, b) -> a.getLabel().getLocalizedValue().compareTo(b.getLabel().getLocalizedValue())) //
         .toList();
   }
-
-  @Override
-  public Optional<BusinessType> getByCode(String code)
-  {
-    return this.cache.get(code, () -> {
-
-      MdVertexDAOIF mdVertex = MdVertexDAO.getMdVertexDAO(BusinessType.CLASS);
-
-      StringBuilder statement = new StringBuilder();
-      statement.append("SELECT FROM " + mdVertex.getDBClassName());
-      statement.append(" WHERE code = :code");
-
-      GraphQuery<BusinessType> query = new GraphQuery<BusinessType>(statement.toString());
-      query.setParameter("code", code);
-
-      return Optional.ofNullable(query.getSingleResult());
-    });
-  }
-
-  @Override
-  public BusinessType getByCodeOrThrow(String code)
-  {
-    return this.getByCode(code).orElseThrow(() -> {
-      MdVertexDAOIF mdVertex = MdVertexDAO.getMdVertexDAO(BusinessType.CLASS);
-
-      net.geoprism.registry.DataNotFoundException ex = new net.geoprism.registry.DataNotFoundException();
-      ex.setTypeLabel(mdVertex.getDisplayLabel(Session.getCurrentLocale()));
-      ex.setDataIdentifier(code);
-      ex.setAttributeLabel(GeoObjectMetadata.get().getAttributeDisplayLabel(DefaultAttribute.CODE.getName()));
-
-      return ex;
-    });
-  }
-
-  @Override
-  public List<OrganizationGroup<BusinessTypeDTO>> listByOrg()
-  {
-    List<OrganizationGroup<BusinessTypeDTO>> response = new LinkedList<>();
-
-    List<ServerOrganization> organizations = ServerOrganization.getSortedOrganizations().stream() //
-        .filter(org -> org.getEnabled()) //
-        .collect(Collectors.toList());
-
-    for (ServerOrganization org : organizations)
-    {
-      MdVertexDAOIF mdVertex = MdVertexDAO.getMdVertexDAO(BusinessType.CLASS);
-
-      StringBuilder statement = new StringBuilder();
-      statement.append("SELECT FROM " + mdVertex.getDBClassName());
-      statement.append(" WHERE organization = :organization");
-      statement.append(" ORDER BY code DESC");
-
-      GraphQuery<BusinessType> query = new GraphQuery<BusinessType>(statement.toString());
-      query.setParameter("organization", org.getGraphOrganization().getRID());
-
-      List<BusinessTypeDTO> types = query.getResults().stream() //
-          .filter(type -> this.permissions.canRead(type)) //
-          .sorted((a, b) -> a.getLabel().getValue().compareTo(b.getLabel().getValue())) //
-          .map(type -> this.toDTO(type)) //
-          .toList();
-
-      OrganizationGroup<BusinessTypeDTO> group = new OrganizationGroup<BusinessTypeDTO>();
-      group.setOid(org.getOid());
-      group.setCode(org.getCode());
-      group.setLabel(org.getDisplayLabel().getValue());
-      group.setWrite(this.permissions.isAdmin(org));
-      group.setTypes(types);
-
-      response.add(group);
-    }
-
-    return response;
-  }
-
-  @Override
-  public List<BusinessType> getAll()
-  {
-    List<BusinessType> response = new LinkedList<>();
-
-    ServerOrganization.getSortedOrganizations().stream().filter(o -> this.permissions.isMember(o)).forEach(org -> {
-
-      MdVertexDAOIF mdVertex = MdVertexDAO.getMdVertexDAO(BusinessType.CLASS);
-
-      StringBuilder statement = new StringBuilder();
-      statement.append("SELECT FROM " + mdVertex.getDBClassName());
-      statement.append(" WHERE organization = :organization");
-      statement.append(" ORDER BY code DESC");
-
-      GraphQuery<BusinessType> query = new GraphQuery<BusinessType>(statement.toString());
-      query.setParameter("organization", org.getGraphOrganization().getRID());
-
-      query.getResults().stream() //
-          .sorted((a, b) -> a.getLabel().getValue().compareTo(b.getLabel().getValue())) //
-          .forEach(type -> response.add(type)); //
-    });
-
-    return response;
-  }
-
-  @Override
-  public List<BusinessType> getForOrganization(ServerOrganization organization)
-  {
-    return this.getForOrganization(organization.getOrganization());
-  }
-
-  @Override
-  public List<BusinessType> getForOrganization(Organization organization)
-  {
-    ServerOrganization org = ServerOrganization.get(organization);
-
-    MdVertexDAOIF mdVertex = MdVertexDAO.getMdVertexDAO(BusinessType.CLASS);
-
-    StringBuilder statement = new StringBuilder();
-    statement.append("SELECT FROM " + mdVertex.getDBClassName());
-    statement.append(" WHERE organization = :organization");
-    statement.append(" ORDER BY code DESC");
-
-    GraphQuery<BusinessType> query = new GraphQuery<BusinessType>(statement.toString());
-    query.setParameter("organization", org.getGraphOrganization().getRID());
-
-    return query.getResults();
-  }
-
-  @Override
-  public BusinessType getByMdVertex(MdVertexDAOIF mdVertex)
-  {
-    return this.cache.get(mdVertex.getOid(), () -> {
-      MdVertexDAOIF table = MdVertexDAO.getMdVertexDAO(BusinessType.CLASS);
-
-      StringBuilder statement = new StringBuilder();
-      statement.append("SELECT FROM " + table.getDBClassName());
-      statement.append(" WHERE mdVertex = :mdVertex");
-      statement.append(" ORDER BY code DESC");
-
-      GraphQuery<BusinessType> query = new GraphQuery<BusinessType>(statement.toString());
-      query.setParameter("mdVertex", mdVertex.getOid());
-
-      return Optional.ofNullable(query.getSingleResult());
-    }).orElse(null);
-  }
-
 }

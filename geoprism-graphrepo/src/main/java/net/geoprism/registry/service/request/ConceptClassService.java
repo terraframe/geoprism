@@ -16,38 +16,23 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with Geoprism(tm). If not, see <http://www.gnu.org/licenses/>.
  */
-package net.geoprism.registry.service.permission;
+package net.geoprism.registry.service.request;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import net.geoprism.registry.model.ServerOrganization;
-import net.geoprism.registry.model.graph.ObjectClassIF;
+import net.geoprism.registry.graph.ConceptClass;
+import net.geoprism.registry.service.business.ConceptClassBusinessServiceIF;
+import net.geoprism.registry.view.ConceptClassDTO;
 
 @Service
-public class PermissionService implements PermissionServiceIF
+public class ConceptClassService extends ObjectClassService<ConceptClass, ConceptClassDTO> implements ConceptClassServiceIF
 {
-  @Override
-  public boolean canRead(ObjectClassIF type)
-  {
-    return false;
-  }
+  @Autowired
+  private ConceptClassBusinessServiceIF typeService;
 
-  @Override
-  public boolean canWrite(ObjectClassIF type)
+  protected ConceptClassBusinessServiceIF getTypeService()
   {
-    return false;
+    return typeService;
   }
-
-  @Override
-  public boolean isAdmin(ServerOrganization org)
-  {
-    return false;
-  }
-
-  @Override
-  public boolean isMember(ServerOrganization org)
-  {
-    return false;
-  }
-
 }

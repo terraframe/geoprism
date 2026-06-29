@@ -22,7 +22,6 @@ import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.TreeMap;
 import java.util.stream.Collectors;
 
@@ -31,7 +30,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.google.gson.JsonObject;
-import com.runwaysdk.business.graph.EdgeObject;
 import com.runwaysdk.business.graph.GraphQuery;
 import com.runwaysdk.business.graph.VertexObject;
 import com.runwaysdk.dataaccess.MdAttributeBooleanDAOIF;
@@ -59,22 +57,18 @@ import net.geoprism.registry.OriginException;
 import net.geoprism.registry.graph.AttributeClassificationType;
 import net.geoprism.registry.graph.AttributeDataSourceType;
 import net.geoprism.registry.graph.AttributeValue;
-import net.geoprism.registry.graph.BusinessEdgeType;
-import net.geoprism.registry.graph.BusinessType;
-import net.geoprism.registry.graph.BusinessVertex;
+import net.geoprism.registry.graph.ConceptClass;
+import net.geoprism.registry.graph.ConceptVertex;
 import net.geoprism.registry.graph.DataSource;
-import net.geoprism.registry.model.BusinessObject;
 import net.geoprism.registry.model.ClassificationType;
+import net.geoprism.registry.model.ConceptObject;
 import net.geoprism.registry.model.EdgeConstant;
-import net.geoprism.registry.model.EdgeType;
-import net.geoprism.registry.model.graph.VertexComponent;
-import net.geoprism.registry.model.graph.VertexServerGeoObject;
 
 @Service
-public class BusinessObjectBusinessService implements BusinessObjectBusinessServiceIF
+public class ConceptObjectBusinessService implements ConceptObjectBusinessServiceIF
 {
   @Autowired
-  private BusinessTypeBusinessServiceIF       typeService;
+  private ConceptClassBusinessServiceIF       typeService;
 
   @Autowired
   private ClassificationBusinessServiceIF     classificationService;
@@ -86,15 +80,14 @@ public class BusinessObjectBusinessService implements BusinessObjectBusinessServ
   private DataSourceBusinessServiceIF         sourceService;
 
   @Override
-  public JsonObject toJSON(BusinessObject object)
+  public JsonObject toJSON(ConceptObject object)
   {
     JsonObject data = new JsonObject();
 
-    BusinessType type = object.getType();
+    ConceptClass type = object.getType();
 
     type.getAttributeMap().values().stream() //
-        .filter(attribute -> !attribute.getCode().equals(BusinessObject.CODE)) //
-//        .filter(attribute -> !attribute.getIsChangeOverTime()) //
+        .filter(attribute -> !attribute.getCode().equals(ConceptObject.CODE)) //
         .forEach(attribute -> {
 
           String attributeName = attribute.getCode();
@@ -149,16 +142,15 @@ public class BusinessObjectBusinessService implements BusinessObjectBusinessServ
 
     JsonObject json = new JsonObject();
     json.addProperty("code", object.getCode());
-    json.addProperty("label", object.getLabel());
     json.add("data", data);
 
     return json;
   }
 
   @Override
-  public BusinessObject newInstance(BusinessType type, JsonObject json)
+  public ConceptObject newInstance(ConceptClass type, JsonObject json)
   {
-    BusinessObject object = this.newInstance(type);
+    ConceptObject object = this.newInstance(type);
 
     populate(object, json);
 
@@ -166,7 +158,7 @@ public class BusinessObjectBusinessService implements BusinessObjectBusinessServ
   }
 
   @Override
-  public void populate(BusinessObject object, JsonObject json)
+  public void populate(ConceptObject object, JsonObject json)
   {
     object.setCode(json.get("code").getAsString());
 
@@ -175,7 +167,7 @@ public class BusinessObjectBusinessService implements BusinessObjectBusinessServ
     object.getType().getMdVertexDAO().definesAttributes().stream().filter(mdAttribute -> {
       String attributeName = mdAttribute.definesAttribute();
 
-      return !attributeName.equals(BusinessObject.CODE) && !mdAttribute.isSystem();
+      return !attributeName.equals(ConceptObject.CODE) && !mdAttribute.isSystem();
     }).forEach(mdAttribute -> {
       String attributeName = mdAttribute.definesAttribute();
 
@@ -252,18 +244,18 @@ public class BusinessObjectBusinessService implements BusinessObjectBusinessServ
 
   @Override
   @Transaction
-  public void apply(BusinessObject object)
+  public void apply(ConceptObject object)
   {
     apply(object, true);
   }
 
   @Override
   @Transaction
-  public void apply(BusinessObject object, boolean validateOrigin)
+  public void apply(ConceptObject object, boolean validateOrigin)
   {
     if (validateOrigin)
     {
-      BusinessType type = object.getType();
+      ConceptClass type = object.getType();
 
       if (!type.getOrigin().equals(GeoprismProperties.getOrigin()))
       {
@@ -276,13 +268,13 @@ public class BusinessObjectBusinessService implements BusinessObjectBusinessServ
 
   @Override
   @Transaction
-  public void delete(BusinessObject object)
+  public void delete(ConceptObject object)
   {
     this.delete(object, true);
   }
 
   @Override
-  public void delete(BusinessObject object, boolean validateOrigin)
+  public void delete(ConceptObject object, boolean validateOrigin)
   {
     if (validateOrigin)
     {
@@ -296,235 +288,15 @@ public class BusinessObjectBusinessService implements BusinessObjectBusinessServ
   }
 
   @Override
-  public boolean exists(VertexComponent object, BusinessEdgeType edgeType, VertexComponent parent)
-  {
-    return getEdge(object, edgeType, parent) != null;
-  }
-
-  protected EdgeObject getEdge(VertexComponent object, BusinessEdgeType edgeType, VertexComponent parent)
-  {
-    String statement = "SELECT FROM " + edgeType.getMdEdgeDAO().getDBClassName();
-    statement += " WHERE out = :parent";
-    statement += " AND in = :child";
-
-    GraphQuery<EdgeObject> query = new GraphQuery<EdgeObject>(statement);
-    query.setParameter("parent", parent.getVertex().getRID());
-    query.setParameter("child", object.getVertex().getRID());
-
-    return query.getSingleResult();
-  }
-
-  @Override
-  public boolean exists(BusinessEdgeType type, VertexComponent parent, VertexComponent child, Date startDate, Date endDate)
-  {
-    return getEdge(type, parent, child, startDate, endDate) != null;
-  }
-
-  protected EdgeObject getEdge(BusinessEdgeType type, VertexComponent parent, VertexComponent child, Date startDate, Date endDate)
-  {
-    String statement = "SELECT FROM " + type.getMdEdgeDAO().getDBClassName();
-    statement += " WHERE out = :parent";
-    statement += " AND in = :child";
-    statement += " AND startDate = :startDate";
-    statement += " AND endDate = :endDate";
-
-    GraphQuery<EdgeObject> query = new GraphQuery<EdgeObject>(statement);
-    query.setParameter("parent", parent.getVertex().getRID());
-    query.setParameter("child", child.getVertex().getRID());
-    query.setParameter("startDate", startDate);
-    query.setParameter("endDate", endDate);
-
-    return query.getSingleResult();
-  }
-
-  @Override
-  public boolean exists(BusinessEdgeType type, String uid)
-  {
-    String statement = "SELECT FROM " + type.getMdEdgeDAO().getDBClassName();
-    statement += " WHERE uid = :uid";
-
-    GraphQuery<EdgeObject> query = new GraphQuery<EdgeObject>(statement);
-    query.setParameter("uid", uid);
-
-    return ( query.getSingleResult() != null );
-  }
-
-  @Override
-  public Optional<EdgeObject> addParent(VertexComponent object, BusinessEdgeType type, VertexComponent parent, String uid, Date startDate, Date endDate, DataSource source)
-  {
-    return this.addParent(object, type, parent, uid, startDate, endDate, source, true);
-  }
-
-  @Override
-  public Optional<EdgeObject> addParent(VertexComponent object, BusinessEdgeType type, VertexComponent parent, String uid, Date startDate, Date endDate, DataSource source, boolean validateOrigin)
-  {
-    if (validateOrigin)
-    {
-      if (!type.getOrigin().equals(GeoprismProperties.getOrigin()))
-      {
-        throw new OriginException();
-      }
-    }
-
-    if (parent != null && !this.exists(object, type, parent))
-    {
-      EdgeObject newEdge = object.getVertex().addParent(parent.getVertex(), type.getMdEdgeDAO());
-      newEdge.setValue(DefaultAttribute.UID.getName(), uid);
-      newEdge.setValue(DefaultAttribute.DATA_SOURCE.getName(), source);
-      newEdge.setValue(EdgeType.START_DATE, startDate);
-      newEdge.setValue(EdgeType.END_DATE, endDate);
-      newEdge.apply();
-
-      return Optional.of(newEdge);
-    }
-
-    return Optional.empty();
-  }
-
-  @Override
-  public void removeParent(VertexComponent object, BusinessEdgeType type, VertexComponent parent, Date startDate, Date endDate)
-  {
-    this.removeParent(object, type, parent, startDate, endDate, true);
-  }
-
-  @Override
-  public void removeParent(VertexComponent object, BusinessEdgeType type, VertexComponent parent, Date startDate, Date endDate, boolean validateOrigin)
-  {
-    if (validateOrigin)
-    {
-      if (!type.getOrigin().equals(GeoprismProperties.getOrigin()))
-      {
-        throw new OriginException();
-      }
-    }
-
-    if (parent != null)
-    {
-      EdgeObject edge = this.getEdge(type, parent, object, startDate, endDate);
-
-      if (edge != null)
-      {
-        edge.delete();
-      }
-    }
-  }
-
-  @Override
-  public List<VertexComponent> getParents(BusinessObject object, BusinessEdgeType type, Date date)
-  {
-    StringBuilder statement = new StringBuilder();
-    statement.append("TRAVERSE out('" + EdgeConstant.HAS_VALUE.getDBClassName() + "', '" + EdgeConstant.HAS_GEOMETRY.getDBClassName() + "') FROM (");
-    statement.append("  SELECT EXPAND(inE('" + type.getMdEdge().getDbClassName() + "')[:date BETWEEN startDate AND endDate].out)");
-    statement.append("  FROM :rid " + "\n");
-    statement.append(")");
-
-    GraphQuery<VertexObject> query = new GraphQuery<VertexObject>(statement.toString());
-    query.setParameter("rid", object.getVertex().getRID());
-    query.setParameter("date", date);
-
-    if (type.getIsParentGeoObject())
-    {
-      return VertexServerGeoObject.processTraverseResults(query.getResults(), date).stream().map(s -> (VertexComponent) s).toList();
-    }
-
-    return this.processTraverseResults(query.getResults(), date).stream().sorted((a, b) -> {
-      return a.getLabel().compareTo(b.getLabel());
-    }).collect(Collectors.toList());
-  }
-
-  @Override
-  public Optional<EdgeObject> addChild(VertexComponent object, BusinessEdgeType type, VertexComponent child, String uid, Date startDate, Date endDate, DataSource source)
-  {
-    return this.addChild(object, type, child, uid, startDate, endDate, source, true);
-  }
-
-  @Override
-  public Optional<EdgeObject> addChild(VertexComponent object, BusinessEdgeType type, VertexComponent child, String uid, Date startDate, Date endDate, DataSource source, boolean validateOrigin)
-  {
-    if (validateOrigin)
-    {
-      if (!type.getOrigin().equals(GeoprismProperties.getOrigin()))
-      {
-        throw new OriginException();
-      }
-    }
-
-    if (child != null && !this.exists(child, type, object))
-    {
-      EdgeObject newEdge = object.getVertex().addChild(child.getVertex(), type.getMdEdgeDAO());
-      newEdge.setValue(DefaultAttribute.UID.getName(), uid);
-      newEdge.setValue(DefaultAttribute.DATA_SOURCE.getName(), source);
-      newEdge.setValue(EdgeType.START_DATE, startDate);
-      newEdge.setValue(EdgeType.END_DATE, endDate);
-      newEdge.apply();
-
-      return Optional.of(newEdge);
-    }
-
-    return Optional.empty();
-  }
-
-  @Override
-  public void removeChild(VertexComponent object, BusinessEdgeType type, VertexComponent child, Date startDate, Date endDate)
-  {
-    this.removeChild(object, type, child, startDate, endDate, true);
-  }
-
-  @Override
-  public void removeChild(VertexComponent object, BusinessEdgeType type, VertexComponent child, Date startDate, Date endDate, boolean validateOrigin)
-  {
-    if (validateOrigin)
-    {
-      if (!type.getOrigin().equals(GeoprismProperties.getOrigin()))
-      {
-        throw new OriginException();
-      }
-    }
-
-    if (child != null)
-    {
-      EdgeObject edge = this.getEdge(type, object, child, startDate, endDate);
-
-      if (edge != null)
-      {
-        edge.delete();
-      }
-    }
-  }
-
-  @Override
-  public List<VertexComponent> getChildren(BusinessObject object, BusinessEdgeType type, Date date)
-  {
-    StringBuilder statement = new StringBuilder();
-    statement.append("TRAVERSE out('" + EdgeConstant.HAS_VALUE.getDBClassName() + "', '" + EdgeConstant.HAS_GEOMETRY.getDBClassName() + "') FROM (");
-    statement.append("  SELECT EXPAND(outE('" + type.getMdEdge().getDbClassName() + "')[:date BETWEEN startDate AND endDate].in)");
-    statement.append("  FROM :rid " + "\n");
-    statement.append(")");
-
-    GraphQuery<VertexObject> query = new GraphQuery<VertexObject>(statement.toString());
-    query.setParameter("rid", object.getVertex().getRID());
-    query.setParameter("date", date);
-
-    if (type.getIsChildGeoObject())
-    {
-      return VertexServerGeoObject.processTraverseResults(query.getResults(), date).stream().map(s -> (VertexComponent) s).toList();
-    }
-
-    return this.processTraverseResults(query.getResults(), date).stream().sorted((a, b) -> {
-      return a.getLabel().compareTo(b.getLabel());
-    }).collect(Collectors.toList());
-  }
-
-  @Override
-  public BusinessObject newInstance(BusinessType type)
+  public ConceptObject newInstance(ConceptClass type)
   {
     VertexObject vertex = VertexObject.instantiate(VertexObjectDAO.newInstance(type.getMdVertexDAO()));
 
-    return new BusinessObject(type, vertex, new TreeMap<>());
+    return new ConceptObject(type, vertex, new TreeMap<>());
   }
 
   @Override
-  public BusinessObject get(BusinessType type, String attributeName, Object value)
+  public ConceptObject get(ConceptClass type, String attributeName, Object value)
   {
     MdVertexDAOIF mdVertex = type.getMdVertexDAO();
     MdAttributeDAOIF mdAttribute = mdVertex.definesAttribute(attributeName);
@@ -542,15 +314,15 @@ public class BusinessObjectBusinessService implements BusinessObjectBusinessServ
   }
 
   @Override
-  public BusinessObject getByCode(BusinessType type, Object value)
+  public ConceptObject getByCode(ConceptClass type, Object value)
   {
     return this.get(type, DefaultAttribute.CODE.getName(), value);
   }
 
-  public List<BusinessObject> processTraverseResults(List<VertexObject> results, Date date)
+  public List<ConceptObject> processTraverseResults(List<VertexObject> results, Date date)
   {
-    MdVertexDAOIF mdBusinessVertex = MdVertexDAO.getMdVertexDAO(BusinessVertex.CLASS);
-    List<BusinessObject> list = new LinkedList<BusinessObject>();
+    MdVertexDAOIF superVertex = MdVertexDAO.getMdVertexDAO(ConceptVertex.CLASS);
+    List<ConceptObject> list = new LinkedList<ConceptObject>();
     
     VertexObject current = null;
     List<VertexObject> currentAttributes = new LinkedList<>();
@@ -559,17 +331,17 @@ public class BusinessObjectBusinessService implements BusinessObjectBusinessServ
     {
       MdVertexDAOIF mdClass = (MdVertexDAOIF) result.getMdClass();
       List<? extends MdVertexDAOIF> superClasses = mdClass.getSuperClasses();
-      if (superClasses.contains(mdBusinessVertex))
+      if (superClasses.contains(superVertex))
       {
         if (current != null)
         {
-          BusinessType type = this.typeService.getByMdVertex((MdVertexDAOIF) current.getMdClass());
+          ConceptClass type = this.typeService.getByMdVertex((MdVertexDAOIF) current.getMdClass());
 
           Map<String, List<VertexObject>> nodeMap = currentAttributes.stream().collect(Collectors.groupingBy(v -> {
             return (String) v.getObjectValue(AttributeValue.ATTRIBUTENAME);
           }));
 
-          BusinessObject bObject = new BusinessObject(type, current, nodeMap, date);
+          ConceptObject bObject = new ConceptObject(type, current, nodeMap, date);
           list.add(bObject);
         }
 
@@ -584,22 +356,22 @@ public class BusinessObjectBusinessService implements BusinessObjectBusinessServ
 
     if (current != null)
     {
-      BusinessType type = this.typeService.getByMdVertex((MdVertexDAOIF) current.getMdClass());
+      ConceptClass type = this.typeService.getByMdVertex((MdVertexDAOIF) current.getMdClass());
 
       Map<String, List<VertexObject>> nodeMap = currentAttributes.stream().collect(Collectors.groupingBy(v -> {
         return (String) v.getObjectValue(AttributeValue.ATTRIBUTENAME);
       }));
 
-      BusinessObject vsgo = new BusinessObject(type, current, nodeMap, date);
+      ConceptObject vsgo = new ConceptObject(type, current, nodeMap, date);
       list.add(vsgo);
     }
 
     return list;
   }
 
-  public BusinessObject processSingleResult(List<VertexObject> list, Date date)
+  public ConceptObject processSingleResult(List<VertexObject> list, Date date)
   {
-    List<BusinessObject> results = this.processTraverseResults(list, date);
+    List<ConceptObject> results = this.processTraverseResults(list, date);
 
     if (results.size() == 0)
     {

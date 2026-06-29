@@ -20,15 +20,15 @@ package net.geoprism.registry.service.permission;
 
 import org.springframework.stereotype.Component;
 
-import net.geoprism.registry.graph.BusinessType;
 import net.geoprism.registry.model.ServerOrganization;
+import net.geoprism.registry.model.graph.ObjectClassIF;
 
 @Component
 public interface PermissionServiceIF
 {
-  boolean canWrite(BusinessType type);
+  boolean canWrite(ObjectClassIF type);
 
-  boolean canRead(BusinessType type);
+  boolean canRead(ObjectClassIF type);
 
   boolean isAdmin(ServerOrganization org);
 

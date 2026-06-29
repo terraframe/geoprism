@@ -8,8 +8,11 @@ import org.commongeoregistry.adapter.metadata.AttributeType;
 import org.commongeoregistry.adapter.serialization.LocalizedValueDeserializer;
 import org.commongeoregistry.adapter.serialization.LocalizedValueSerializer;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.runwaysdk.dataaccess.ProgrammingErrorException;
 
 public class ConceptClassDTO
 {
@@ -124,5 +127,57 @@ public class ConceptClassDTO
   public boolean hasSequence()
   {
     return this.sequence != null;
+  }
+
+  public static String toJson(ConceptClassDTO dto)
+  {
+    try
+    {
+      ObjectMapper mapper = new ObjectMapper();
+      return mapper.writeValueAsString(dto);
+    }
+    catch (JsonProcessingException e)
+    {
+      throw new ProgrammingErrorException(e);
+    }
+  }
+
+  public static String toJson(List<ConceptClassDTO> dtos)
+  {
+    try
+    {
+      ObjectMapper mapper = new ObjectMapper();
+      return mapper.writeValueAsString(dtos);
+    }
+    catch (JsonProcessingException e)
+    {
+      throw new ProgrammingErrorException(e);
+    }
+  }
+
+  public static ConceptClassDTO parseJson(String json)
+  {
+    try
+    {
+      ObjectMapper mapper = new ObjectMapper();
+      return mapper.readValue(json, ConceptClassDTO.class);
+    }
+    catch (JsonProcessingException e)
+    {
+      throw new ProgrammingErrorException(e);
+    }
+  }
+
+  public static List<ConceptClassDTO> parseList(String json)
+  {
+    try
+    {
+      ObjectMapper mapper = new ObjectMapper();
+      return mapper.readerForListOf(ConceptClassDTO.class).readValue(json);
+    }
+    catch (JsonProcessingException e)
+    {
+      throw new ProgrammingErrorException(e);
+    }
   }
 }
