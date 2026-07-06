@@ -355,7 +355,7 @@ public abstract class ObjectBusinessService<V extends ServerObjectVertex, T exte
       }
     }
 
-    object.getVertex().apply();
+    object.apply();
   }
 
   @Override
@@ -376,7 +376,7 @@ public abstract class ObjectBusinessService<V extends ServerObjectVertex, T exte
       }
     }
 
-    object.getVertex().delete();
+    object.delete();
   }
 
   @Override

@@ -27,6 +27,7 @@ import org.commongeoregistry.adapter.serialization.LocalizedValueDeserializer;
 import org.commongeoregistry.adapter.serialization.LocalizedValueSerializer;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
@@ -168,11 +169,13 @@ public abstract class AttributeType implements Serializable
     this.description = description;
   }
 
+  @JsonProperty("isDefault")
   public boolean isDefault()
   {
     return isDefault;
   }
 
+  @JsonProperty("isDefault")
   public void setDefault(boolean isDefault)
   {
     this.isDefault = isDefault;
@@ -198,11 +201,13 @@ public abstract class AttributeType implements Serializable
     this.unique = unique;
   }
 
+  @JsonProperty("isChangeOverTime")
   public boolean isChangeOverTime()
   {
     return isChangeOverTime;
   }
 
+  @JsonProperty("isChangeOverTime")
   public void setChangeOverTime(boolean isChangeOverTime)
   {
     this.isChangeOverTime = isChangeOverTime;

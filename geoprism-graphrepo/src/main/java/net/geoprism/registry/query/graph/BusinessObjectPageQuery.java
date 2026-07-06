@@ -134,18 +134,20 @@ public class BusinessObjectPageQuery extends AbstractGraphPageQuery<HashMap<Stri
 
   public void addSelectAttributes(final MdVertexDAOIF mdVertex, StringBuilder statement)
   {
-    List<String> columnNames = this.attributes.stream().map(attribute -> {
-      if (attribute instanceof AttributeClassificationType || attribute instanceof AttributeLocalType)
-      {
-        return this.getColumnName(mdVertex, attribute) + ".displayLabel AS " + attribute.getCode();
-      }
-      else if (attribute instanceof AttributeDataSourceType)
-      {
-        return this.getColumnName(mdVertex, attribute) + ".code AS " + attribute.getCode();
-      }
+    List<String> columnNames = this.attributes.stream() //
+        .filter(a -> !a.getIsChangeOverTime()) //
+        .map(attribute -> {
+          if (attribute instanceof AttributeClassificationType || attribute instanceof AttributeLocalType)
+          {
+            return this.getColumnName(mdVertex, attribute) + ".displayLabel AS " + attribute.getCode();
+          }
+          else if (attribute instanceof AttributeDataSourceType)
+          {
+            return this.getColumnName(mdVertex, attribute) + ".code AS " + attribute.getCode();
+          }
 
-      return this.getColumnName(mdVertex, attribute) + " AS " + attribute.getCode();
-    }).collect(Collectors.toList());
+          return this.getColumnName(mdVertex, attribute) + " AS " + attribute.getCode();
+        }).collect(Collectors.toList());
 
     statement.append(String.join(", ", columnNames));
   }
