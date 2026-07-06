@@ -3,18 +3,18 @@
  *
  * This file is part of Geoprism(tm).
  *
- * Geoprism(tm) is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
+ * Geoprism(tm) is free software: you can redistribute it and/or modify it under
+ * the terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation, either version 3 of the License, or (at your option) any
+ * later version.
  *
- * Geoprism(tm) is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
+ * Geoprism(tm) is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with Geoprism(tm).  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with Geoprism(tm). If not, see <http://www.gnu.org/licenses/>.
  */
 package net.geoprism.registry.service.business;
 
@@ -31,12 +31,8 @@ import org.commongeoregistry.adapter.metadata.GeoObjectType;
 import org.locationtech.jts.geom.Geometry;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import com.google.gson.JsonObject;
 import com.runwaysdk.business.graph.VertexObject;
-import com.runwaysdk.dataaccess.MdAttributeBooleanDAOIF;
-import com.runwaysdk.dataaccess.MdAttributeDecDAOIF;
 import com.runwaysdk.dataaccess.MdAttributeGraphReferenceDAOIF;
-import com.runwaysdk.dataaccess.MdAttributeNumberDAOIF;
 import com.runwaysdk.dataaccess.MdVertexDAOIF;
 import com.runwaysdk.dataaccess.transaction.Transaction;
 import com.runwaysdk.system.metadata.MdVertex;
@@ -46,6 +42,7 @@ import net.geoprism.graph.LabeledPropertyGraphTypeVersion;
 import net.geoprism.registry.conversion.LocalizedValueConverter;
 import net.geoprism.registry.graph.DataSource;
 import net.geoprism.registry.lpg.LPGPublishProgressMonitorIF;
+import net.geoprism.registry.view.ObjectAtTimeDTO;
 
 public abstract class AbstractGraphVersionPublisherService
 {
@@ -105,11 +102,6 @@ public abstract class AbstractGraphVersionPublisherService
 
     VertexObject node = new VertexObject(mdVertex.definesType());
 
-    node.setValue(DefaultAttribute.CODE.getName(), geoObject.getCode());
-    node.setValue(DefaultAttribute.UID.getName(), geoObject.getUid());
-
-    this.setGeometryValue(geoObject, type, node);
-
     Map<String, AttributeType> attributes = type.getAttributeMap();
 
     attributes.forEach((attributeName, attribute) -> {
@@ -122,8 +114,6 @@ public abstract class AbstractGraphVersionPublisherService
 
           if (value != null)
           {
-            String classificationTypeCode = ( (AttributeClassificationType) attribute ).getClassificationType();
-
             this.classificationService.get((AttributeClassificationType) attribute, value).ifPresent(classification -> {
               node.setValue(attributeName, classification.getVertex());
             });
@@ -173,6 +163,9 @@ public abstract class AbstractGraphVersionPublisherService
 
     });
 
+    this.setGeometryValue(geoObject, type, node);
+    node.setValue(DefaultAttribute.CODE.getName(), geoObject.getCode());
+    node.setValue(DefaultAttribute.UID.getName(), geoObject.getUid());
     node.apply();
 
     return node;
@@ -227,53 +220,53 @@ public abstract class AbstractGraphVersionPublisherService
   }
 
   @Transaction
-  protected VertexObject publishBusiness(State state, MdVertexDAOIF mdVertex, JsonObject dto)
+  protected VertexObject publishObject(State state, MdVertexDAOIF mdVertex, ObjectAtTimeDTO dto)
   {
     VertexObject node = new VertexObject(mdVertex.definesType());
-
-    node.setValue(DefaultAttribute.CODE.getName(), dto.get(DefaultAttribute.CODE.getName()).getAsString());
-
-    JsonObject data = dto.get("data").getAsJsonObject();
 
     mdVertex.definesAttributes().stream().filter(attribute -> !attribute.isSystem()).forEach(attribute -> {
 
       String attributeName = attribute.definesAttribute();
 
-      if (node.hasAttribute(attributeName) && data.has(attributeName))
+      if (node.hasAttribute(attributeName))
       {
-        if (data.get(attributeName).isJsonNull())
+        if (!dto.has(attributeName))
         {
           node.setValue(attributeName, (String) null);
         }
+        else if (attribute instanceof AttributeClassificationType)
+        {
+          String value = dto.getValue(attributeName);
+
+          if (value != null)
+          {
+            this.classificationService.get((AttributeClassificationType) attribute, value).ifPresent(classification -> {
+              node.setValue(attributeName, classification.getVertex());
+            });
+
+          }
+          else
+          {
+            node.setValue(attributeName, (String) null);
+          }
+        }
         else if (attribute instanceof MdAttributeGraphReferenceDAOIF)
         {
-          String value = data.get(attributeName).getAsString();
+          String value = dto.getValue(attributeName);
 
           this.classificationService.get((AttributeClassificationType) attribute, value).ifPresent(classification -> {
             node.setValue(attributeName, classification.getVertex());
           });
 
         }
-        else if (attribute instanceof MdAttributeNumberDAOIF)
-        {
-          node.setValue(attributeName, data.get(attributeName).getAsNumber());
-        }
-        else if (attribute instanceof MdAttributeDecDAOIF)
-        {
-          node.setValue(attributeName, data.get(attributeName).getAsBigDecimal());
-        }
-        else if (attribute instanceof MdAttributeBooleanDAOIF)
-        {
-          node.setValue(attributeName, data.get(attributeName).getAsBoolean());
-        }
         else
         {
-          node.setValue(attributeName, data.get(attributeName).getAsString());
+          node.setValue(attributeName, dto.getValue(attributeName));
         }
       }
-
     });
 
+    node.setValue(DefaultAttribute.CODE.getName(), dto.getCode());
     node.apply();
 
     return node;

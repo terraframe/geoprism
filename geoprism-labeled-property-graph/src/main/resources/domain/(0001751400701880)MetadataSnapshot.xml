@@ -22,17 +22,17 @@
   <doIt>
     <create>
       
-      <mdBusiness name="net.geoprism.graph.MetadataSnapshot" table="metadata_snapshot" isAbstract="true" label="Metadata Snapshot" generateController="false" publish="true">
+      <mdBusiness name="net.geoprism.graph.SchemaElementSnapshot" table="schema_element_snapshot" isAbstract="true" label="Schema Element Snapshot" generateController="false" publish="true">
         <attributes>
           <text name="origin" label="Origin"  />                  
           <long name="sequence" label="Sequence"  />                  
         </attributes>
       </mdBusiness>      
       
-      <mdBusiness name="net.geoprism.graph.RelationshipTypeSnapshot" extends="net.geoprism.graph.MetadataSnapshot" table="relationship_type_snapshot" isAbstract="true" label="Object Type Snapshot" generateController="false">
+      <mdBusiness name="net.geoprism.graph.RelationshipTypeSnapshot" extends="net.geoprism.graph.SchemaElementSnapshot" table="relationship_type_snapshot" isAbstract="true" label="Object Type Snapshot" generateController="false">
       </mdBusiness>      
       
-      <mdBusiness name="net.geoprism.graph.ObjectTypeSnapshot" extends="net.geoprism.graph.MetadataSnapshot" table="object_type_snapshot" isAbstract="true" label="Object Type Snapshot" generateController="false">
+      <mdBusiness name="net.geoprism.graph.ObjectTypeSnapshot" extends="net.geoprism.graph.SchemaElementSnapshot" table="object_type_snapshot" isAbstract="true" label="Object Type Snapshot" generateController="false">
       </mdBusiness>      
       
       <mdBusiness name="net.geoprism.graph.GeoObjectTypeSnapshot" extends="net.geoprism.graph.ObjectTypeSnapshot" table="geo_object_type_snapshot" label="Geo-Object Type Snapshot" generateController="false">
@@ -92,6 +92,36 @@
             required="true" />
         </attributes>
       </mdBusiness>
+
+      <mdBusiness
+        name="net.geoprism.graph.ConceptClassSnapshot"
+        extends="net.geoprism.graph.ObjectTypeSnapshot" 
+        table="concept_class_snapshot"
+        label="Concept Class Snapshot"
+        generateController="false">
+        <attributes>
+          <char
+            name="code"
+            size="32"
+            required="true"
+            label="Code" />
+          <char
+            name="orgCode"
+            size="32"
+            required="true"
+            label="Organization Code" />
+          <reference
+            name="graphMdVertex"
+            type="com.runwaysdk.system.metadata.MdVertex"
+            required="false"
+            label="MdVertex" />
+          <localChar
+            name="displayLabel"
+            label="Label"
+            required="true" />
+        </attributes>
+      </mdBusiness>
+
       
       <mdBusiness name="net.geoprism.graph.HierarchyTypeSnapshot" extends="net.geoprism.graph.RelationshipTypeSnapshot" table="hierarchy_type_snapshot" label="Hierarchy Type Snapshot" generateController="false">
         <attributes>
@@ -143,7 +173,7 @@
       
       <mdRelationship name="net.geoprism.graph.LabeledPropertyGraphTypeSnapshot" label="Labeled Property Graph Type Snapshot" table="lpg_type_snapshot" generateController="false" exported="false" publish="true">
         <parent cardinality="*" name="net.geoprism.graph.LabeledPropertyGraphTypeVersion" method="Version" />
-        <child cardinality="*" name="net.geoprism.graph.MetadataSnapshot"  method="Snapshot" />
+        <child cardinality="*" name="net.geoprism.graph.SchemaElementSnapshot"  method="Snapshot" />
       </mdRelationship>
       
       <mdBusiness name="net.geoprism.graph.AttributeTypeSnapshot" isAbstract="true" label="AttributeTypeSnapshot">
@@ -230,6 +260,9 @@
           <mdBusinessPermission type="net.geoprism.graph.BusinessTypeSnapshot">
             <operation name="ALL" />
           </mdBusinessPermission>          
+          <mdBusinessPermission type="net.geoprism.graph.ConceptClassSnapshot">
+            <operation name="ALL" />
+          </mdBusinessPermission>          
           <mdRelationshipPermission type="net.geoprism.graph.LabeledPropertyGraphTypeSnapshot">
             <operation name="ALL" />
           </mdRelationshipPermission>     
@@ -261,8 +294,9 @@
       <object key="net.geoprism.graph.GeoObjectTypeSnapshot" type="com.runwaysdk.system.metadata.MdBusiness"></object>    
       <object key="net.geoprism.graph.BusinessEdgeTypeSnapshot" type="com.runwaysdk.system.metadata.MdBusiness"></object>
       <object key="net.geoprism.graph.BusinessTypeSnapshot" type="com.runwaysdk.system.metadata.MdBusiness"></object>      
+      <object key="net.geoprism.graph.ConceptClassSnapshot" type="com.runwaysdk.system.metadata.MdBusiness"></object>      
       <object key="net.geoprism.graph.ObjectTypeSnapshot" type="com.runwaysdk.system.metadata.MdBusiness"></object>
-      <object key="net.geoprism.graph.MetadataSnapshot" type="com.runwaysdk.system.metadata.MdBusiness"></object>
+      <object key="net.geoprism.graph.SchemaElementSnapshot" type="com.runwaysdk.system.metadata.MdBusiness"></object>
     </delete>
   </undoIt>
 </version>

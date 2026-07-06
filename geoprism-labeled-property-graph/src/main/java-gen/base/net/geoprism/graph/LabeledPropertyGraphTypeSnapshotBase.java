@@ -378,9 +378,9 @@ public abstract class LabeledPropertyGraphTypeSnapshotBase extends com.runwaysdk
     return (net.geoprism.graph.LabeledPropertyGraphTypeVersion) super.getParent();
   }
   
-  public net.geoprism.graph.MetadataSnapshot getChild()
+  public net.geoprism.graph.SchemaElementSnapshot getChild()
   {
-    return (net.geoprism.graph.MetadataSnapshot) super.getChild();
+    return (net.geoprism.graph.SchemaElementSnapshot) super.getChild();
   }
   
   public static LabeledPropertyGraphTypeSnapshot get(String oid)

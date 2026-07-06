@@ -7,6 +7,8 @@ import com.runwaysdk.dataaccess.metadata.graph.MdVertexDAO;
 
 import net.geoprism.registry.conversion.LocalizedValueConverter;
 import net.geoprism.registry.model.ServerOrganization;
+import net.geoprism.registry.view.TypeClass;
+import net.geoprism.registry.view.TypeInfo;
 
 public class ConceptClass extends ConceptClassBase
 {
@@ -28,6 +30,12 @@ public class ConceptClass extends ConceptClassBase
   public void delete()
   {
     super.delete();
+  }
+
+  @Override
+  public TypeInfo getTypeInfo()
+  {
+    return new TypeInfo(TypeClass.CONCEPT_CLASS, this.getCode());
   }
 
   @Override

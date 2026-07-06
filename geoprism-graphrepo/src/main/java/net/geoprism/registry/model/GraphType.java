@@ -22,6 +22,7 @@ import org.commongeoregistry.adapter.dataaccess.LocalizedValue;
 import org.commongeoregistry.adapter.metadata.GraphTypeDTO;
 
 import net.geoprism.registry.model.graph.GraphStrategy;
+import net.geoprism.registry.view.TypeClass;
 
 public interface GraphType extends EdgeType
 {
@@ -34,14 +35,14 @@ public interface GraphType extends EdgeType
   public GraphTypeDTO toDTO();
 
   @Override
-  default VertexComponentType getSourceType()
+  default TypeClass getSourceType()
   {
-    return VertexComponentType.GEO_OBJECT;
+    return TypeClass.GEO_OBJECT_TYPE;
   }
 
   @Override
-  default VertexComponentType getTargetType()
+  default TypeClass getTargetType()
   {
-    return VertexComponentType.GEO_OBJECT;
+    return TypeClass.GEO_OBJECT_TYPE;
   }
 }

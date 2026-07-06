@@ -131,7 +131,7 @@ public class VertexGeoObjectQuery implements ServerGeoObjectQuery
     }
     else
     {
-      statement.append(this.type.getMdVertex().getDBClassName());
+      statement.append(this.type.getMdVertexDAO().getDBClassName());
     }
 
     statement.append(" ORDER BY code ASC");
@@ -156,7 +156,7 @@ public class VertexGeoObjectQuery implements ServerGeoObjectQuery
     HashMap<String, Object> parameters = new HashMap<String, Object>();
 
     StringBuilder statement = new StringBuilder();
-    statement.append(" SELECT COUNT(*) FROM " + this.type.getMdVertex().getDBClassName());
+    statement.append(" SELECT COUNT(*) FROM " + this.type.getMdVertexDAO().getDBClassName());
 
     if (this.restriction != null)
     {

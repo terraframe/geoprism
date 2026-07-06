@@ -643,14 +643,14 @@ public class VertexServerGeoObject extends ServerObjectVertex implements ServerG
 
   public static VertexObject newInstance(ServerGeoObjectType type)
   {
-    VertexObjectDAO dao = VertexObjectDAO.newInstance(type.getMdVertex());
+    VertexObjectDAO dao = VertexObjectDAO.newInstance(type.getMdVertexDAO());
 
     return VertexObject.instantiate(dao);
   }
 
   public static Pair<Date, Date> getDataRange(ServerGeoObjectType type)
   {
-    final String dbClassName = type.getMdVertex().getDBClassName();
+    final String dbClassName = type.getMdVertexDAO().getDBClassName();
 
     final Date startDate = new GraphQuery<Date>("SELECT MIN(exists_cot.startDate) FROM " + dbClassName).getSingleResult();
     final Date endDate = new GraphQuery<Date>("SELECT MAX(exists_cot.startDate) FROM " + dbClassName).getSingleResult();
@@ -678,7 +678,7 @@ public class VertexServerGeoObject extends ServerObjectVertex implements ServerG
     statement.append(" OR out.@class = :class");
 
     GraphQuery<Long> query = new GraphQuery<Long>(statement.toString());
-    query.setParameter("class", childType.getMdVertex().getDBClassName());
+    query.setParameter("class", childType.getMdVertexDAO().getDBClassName());
 
     Long result = query.getSingleResult();
 
@@ -693,7 +693,7 @@ public class VertexServerGeoObject extends ServerObjectVertex implements ServerG
     statement.append(" OR out.@class = :class");
 
     Map<String, Object> parameters = new HashMap<String, Object>();
-    parameters.put("class", childType.getMdVertex().getDBClassName());
+    parameters.put("class", childType.getMdVertexDAO().getDBClassName());
 
     GraphDBService service = GraphDBService.getInstance();
     service.command(service.getGraphDBRequest(), statement.toString(), parameters);
@@ -846,7 +846,7 @@ public class VertexServerGeoObject extends ServerObjectVertex implements ServerG
       statement.append(", last(out('has_value')[attributeName = 'exists'][startDate = max($current.out('has_value')[attributeName = 'displayLabel'].startDate)].value) AS existValue");
     }
 
-    statement.append(" FROM " + type.getMdVertex().getDBClassName() + " WHERE ");
+    statement.append(" FROM " + type.getMdVertexDAO().getDBClassName() + " WHERE ");
 
     statement.append("invalid=false");
 
@@ -862,7 +862,7 @@ public class VertexServerGeoObject extends ServerObjectVertex implements ServerG
         parentCondition.append("[(:startDate BETWEEN startDate AND endDate) AND (:endDate BETWEEN startDate AND endDate)]");
       }
 
-      parentCondition.append(".inV() FROM (select from " + parentType.getMdVertex().getDBClassName() + " where code='" + parentCode + "') )) ");
+      parentCondition.append(".inV() FROM (select from " + parentType.getMdVertexDAO().getDBClassName() + " where code='" + parentCode + "') )) ");
 
       statement.append(" AND " + parentCondition.toString());
     }
@@ -935,7 +935,7 @@ public class VertexServerGeoObject extends ServerObjectVertex implements ServerG
     LocalizedValue localizedValue = LocalizedValue.fromJSON(JsonParser.parseString(label).getAsJsonObject());
 
     ServerGeoObjectType type = ServerGeoObjectType.get(typeCode);
-    MdVertexDAOIF mdVertex = type.getMdVertex();
+    MdVertexDAOIF mdVertex = type.getMdVertexDAO();
 
     String dbClassName = mdVertex.getDBClassName();
 

@@ -57,6 +57,7 @@ import net.geoprism.graph.SnapshotHierarchyQuery;
 import net.geoprism.registry.RegistryConstants;
 import net.geoprism.registry.conversion.LocalizedValueConverter;
 import net.geoprism.registry.model.SnapshotContainer;
+import net.geoprism.registry.view.TypeClass;
 
 @Service
 public class HierarchyTypeSnapshotBusinessService implements HierarchyTypeSnapshotBusinessServiceIF
@@ -270,7 +271,7 @@ public class HierarchyTypeSnapshotBusinessService implements HierarchyTypeSnapsh
     hierarchyObject.addProperty(HierarchyTypeSnapshotBase.ORGCODE, hierarchy.getOrgCode());
     hierarchyObject.addProperty(HierarchyTypeSnapshotBase.ORIGIN, hierarchy.getOrigin());
     hierarchyObject.addProperty(HierarchyTypeSnapshotBase.SEQUENCE, hierarchy.getSequence());
-    hierarchyObject.addProperty(GraphTypeSnapshot.TYPE_CODE, GraphTypeSnapshot.HIERARCHY_TYPE);
+    hierarchyObject.addProperty(GraphTypeSnapshot.TYPE_CODE, TypeClass.HIERARCHY.getCode());
     hierarchyObject.add(HierarchyTypeSnapshotBase.DISPLAYLABEL, LocalizedValueConverter.convertNoAutoCoalesce(hierarchy.getDisplayLabel()).toJSON());
     hierarchyObject.add(HierarchyTypeSnapshotBase.DESCRIPTION, LocalizedValueConverter.convertNoAutoCoalesce(hierarchy.getDescription()).toJSON());
     hierarchyObject.add("nodes", nodes);

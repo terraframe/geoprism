@@ -1,7 +1,5 @@
 package net.geoprism.registry.graph;
 
-import java.util.Map;
-
 import org.commongeoregistry.adapter.dataaccess.LocalizedValue;
 
 import com.runwaysdk.dataaccess.MdAttributeConcreteDAOIF;
@@ -11,7 +9,8 @@ import com.runwaysdk.dataaccess.metadata.graph.MdVertexDAO;
 import net.geoprism.registry.conversion.LocalizedValueConverter;
 import net.geoprism.registry.model.ServerElement;
 import net.geoprism.registry.model.ServerOrganization;
-import net.geoprism.registry.view.BusinessTypeDTO;
+import net.geoprism.registry.view.TypeClass;
+import net.geoprism.registry.view.TypeInfo;
 
 public class BusinessType extends BusinessTypeBase implements ServerElement
 {
@@ -36,6 +35,12 @@ public class BusinessType extends BusinessTypeBase implements ServerElement
   public void delete()
   {
     super.delete();
+  }
+  
+  @Override
+  public TypeInfo getTypeInfo()
+  {
+    return new TypeInfo(TypeClass.BUSINESS_TYPE, this.getCode());
   }
 
   @Override

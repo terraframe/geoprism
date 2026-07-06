@@ -45,6 +45,8 @@ import com.runwaysdk.dataaccess.MdVertexDAOIF;
 import com.runwaysdk.dataaccess.metadata.graph.MdVertexDAO;
 import com.runwaysdk.dataaccess.transaction.Transaction;
 import com.runwaysdk.session.Session;
+import com.runwaysdk.system.metadata.MdAttributeConcrete;
+import com.runwaysdk.system.metadata.MdBusiness;
 import com.runwaysdk.system.metadata.MdClass;
 
 import net.geoprism.configuration.GeoprismProperties;
@@ -53,10 +55,11 @@ import net.geoprism.registry.graph.ObjectClass;
 import net.geoprism.registry.model.GeoObjectMetadata;
 import net.geoprism.registry.model.ServerOrganization;
 import net.geoprism.registry.service.permission.PermissionServiceIF;
+import net.geoprism.registry.view.ObjectClassDTO;
 import net.geoprism.registry.view.OrganizationGroup;
 
 @Service
-public abstract class ObjectClassBusinessService<T extends ObjectClass, D> implements ObjectClassBusinessServiceIF<T, D>
+public abstract class ObjectClassBusinessService<T extends ObjectClass, D extends ObjectClassDTO> implements ObjectClassBusinessServiceIF<T, D>
 {
   @Autowired
   protected PermissionServiceIF permissions;

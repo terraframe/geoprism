@@ -24,8 +24,9 @@
       <mdBusiness name="net.geoprism.graph.LabeledPropertyGraphType">
         <create>
           <attributes>
-            <text name="businessEdgeCodes" label="GraphTypes" description="An array of typeCode:code pairings for business edge types" />
-            <text name="businessTypeCodes" label="GeoObjectTypeCodes" description="An array of business type codes which are allowed to participate in the graph. Is allowed to be null" />
+            <text name="businessEdgeCodes" label="Business Edge Types" description="An array of typeCode:code pairings for business edge types" />
+            <text name="businessTypeCodes" label="Business Type Codes" description="An array of business type codes which are allowed to participate in the graph. Is allowed to be null" />
+            <text name="conceptClassCodes" label="Concept Class Codes" description="An array of concept class codes which are allowed to participate in the graph. Is allowed to be null" />            
           </attributes>
         </create>
       </mdBusiness>    

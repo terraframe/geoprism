@@ -121,10 +121,10 @@ public class ServerGeoObjectType extends CachableObjectWrapper<BaseGeoObjectType
 
   public String getDBClassName()
   {
-    return getMdVertex().getDBClassName();
+    return getMdVertexDAO().getDBClassName();
   }
 
-  public MdVertexDAOIF getMdVertex()
+  public MdVertexDAOIF getMdVertexDAO()
   {
     return MdVertexDAO.get(this.getObject().getObjectValue(GeoObjectType.MDVERTEX));
   }
@@ -214,7 +214,7 @@ public class ServerGeoObjectType extends CachableObjectWrapper<BaseGeoObjectType
   {
     return ServiceFactory.getMetadataCache().getOrganization(this.getOrganizationCode()).orElseThrow();
   }
-  
+
   public String getOrganizationCode()
   {
     // Use the DTO to avoid a call to the database to get the organization

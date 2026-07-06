@@ -21,6 +21,7 @@ package net.geoprism.graph;
 import com.google.gson.JsonObject;
 
 import net.geoprism.registry.conversion.LocalizedValueConverter;
+import net.geoprism.registry.view.TypeClass;
 
 public class UndirectedGraphTypeSnapshot extends UndirectedGraphTypeSnapshotBase implements GraphTypeSnapshot
 {
@@ -44,7 +45,7 @@ public class UndirectedGraphTypeSnapshot extends UndirectedGraphTypeSnapshotBase
     hierarchyObject.addProperty(UndirectedGraphTypeSnapshot.CODE, this.getCode());
     hierarchyObject.addProperty(ORIGIN, this.getOrigin());
     hierarchyObject.addProperty(UndirectedGraphTypeSnapshot.SEQUENCE, this.getSequence());
-    hierarchyObject.addProperty(GraphTypeSnapshot.TYPE_CODE, GraphTypeSnapshot.UNDIRECTED_GRAPH_TYPE);
+    hierarchyObject.addProperty(GraphTypeSnapshot.TYPE_CODE, TypeClass.UNDIRECTED_GRAPH.getCode());
     hierarchyObject.add(UndirectedGraphTypeSnapshot.DISPLAYLABEL, LocalizedValueConverter.convertNoAutoCoalesce(this.getDisplayLabel()).toJSON());
     hierarchyObject.add(UndirectedGraphTypeSnapshot.DESCRIPTION, LocalizedValueConverter.convertNoAutoCoalesce(this.getDescription()).toJSON());
 

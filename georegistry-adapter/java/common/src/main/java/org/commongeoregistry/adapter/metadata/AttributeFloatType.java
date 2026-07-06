@@ -22,8 +22,10 @@ package org.commongeoregistry.adapter.metadata;
 import org.commongeoregistry.adapter.dataaccess.LocalizedValue;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonTypeName;
 import com.google.gson.JsonObject;
 
+@JsonTypeName(AttributeFloatType.TYPE)
 public class AttributeFloatType extends AttributeNumericType
 {
 

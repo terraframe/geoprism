@@ -10,12 +10,12 @@ import com.runwaysdk.session.Session;
 
 import net.geoprism.configuration.GeoprismProperties;
 import net.geoprism.registry.OriginException;
-import net.geoprism.registry.graph.BusinessType;
 import net.geoprism.registry.graph.ObjectClass;
 import net.geoprism.registry.service.business.ObjectClassBusinessServiceIF;
+import net.geoprism.registry.view.ObjectClassDTO;
 import net.geoprism.registry.view.OrganizationGroup;
 
-public abstract class ObjectClassService<T extends ObjectClass, D> implements ObjectClassServiceIF<T, D>
+public abstract class ObjectClassService<T extends ObjectClass, D extends ObjectClassDTO> implements ObjectClassServiceIF<T, D>
 {
   protected abstract ObjectClassBusinessServiceIF<T, D> getTypeService();
 

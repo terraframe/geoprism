@@ -26,6 +26,7 @@ import com.runwaysdk.dataaccess.metadata.graph.MdVertexDAO;
 import com.runwaysdk.system.metadata.MdVertex;
 
 import net.geoprism.registry.model.ServerOrganization;
+import net.geoprism.registry.view.TypeInfo;
 
 public class BaseGeoObjectType extends BaseGeoObjectTypeBase
 {
@@ -49,6 +50,12 @@ public class BaseGeoObjectType extends BaseGeoObjectTypeBase
     query.setParameter("code", code);
 
     return query.getSingleResult();
+  }
+  
+  @Override
+  public TypeInfo getTypeInfo()
+  {
+    return null;
   }
 
   @Override
@@ -90,6 +97,12 @@ public class BaseGeoObjectType extends BaseGeoObjectTypeBase
   public String getMdVertexOid()
   {
     // TODO Auto-generated method stub
+    return null;
+  }
+  
+  @Override
+  public MdVertexDAOIF getMdVertexDAO()
+  {
     return null;
   }
   

@@ -24,30 +24,18 @@ import java.util.Optional;
 
 import org.springframework.stereotype.Component;
 
-import com.google.gson.JsonObject;
 import com.runwaysdk.business.graph.EdgeObject;
-import com.runwaysdk.business.graph.VertexObject;
 
 import net.geoprism.registry.graph.BusinessEdgeType;
 import net.geoprism.registry.graph.BusinessType;
 import net.geoprism.registry.graph.DataSource;
 import net.geoprism.registry.model.BusinessObject;
 import net.geoprism.registry.model.graph.VertexComponent;
+import net.geoprism.registry.view.BusinessTypeDTO;
 
 @Component
-public interface BusinessObjectBusinessServiceIF
+public interface BusinessObjectBusinessServiceIF extends ObjectBusinessServiceIF<BusinessObject, BusinessType, BusinessTypeDTO>
 {
-
-  public JsonObject toJSON(BusinessObject object);
-
-  public void apply(BusinessObject object);
-
-  public void apply(BusinessObject object, boolean validateOrigin);
-
-  public void delete(BusinessObject object);
-
-  public void delete(BusinessObject object, boolean validateOrigin);
-
   public boolean exists(VertexComponent object, BusinessEdgeType edgeType, VertexComponent parent);
 
   public boolean exists(BusinessEdgeType type, String uid);
@@ -73,19 +61,4 @@ public interface BusinessObjectBusinessServiceIF
   public void removeChild(VertexComponent object, BusinessEdgeType type, VertexComponent child, Date startDate, Date endDate, boolean validateOrigin);
 
   public List<VertexComponent> getChildren(BusinessObject object, BusinessEdgeType type, Date date);
-
-  public BusinessObject newInstance(BusinessType type);
-
-  public BusinessObject get(BusinessType type, String attributeName, Object value);
-
-  public BusinessObject getByCode(BusinessType type, Object value);
-
-  public BusinessObject newInstance(BusinessType type, JsonObject json);
-
-  public void populate(BusinessObject object, JsonObject json);
-
-  public List<BusinessObject> processTraverseResults(List<VertexObject> results, Date date);
-
-  public BusinessObject processSingleResult(List<VertexObject> list, Date date);
-
 }

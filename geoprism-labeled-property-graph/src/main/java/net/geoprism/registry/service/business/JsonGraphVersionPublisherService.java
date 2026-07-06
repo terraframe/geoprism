@@ -3,20 +3,22 @@
  *
  * This file is part of Geoprism(tm).
  *
- * Geoprism(tm) is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
+ * Geoprism(tm) is free software: you can redistribute it and/or modify it under
+ * the terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation, either version 3 of the License, or (at your option) any
+ * later version.
  *
- * Geoprism(tm) is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
+ * Geoprism(tm) is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with Geoprism(tm).  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with Geoprism(tm). If not, see <http://www.gnu.org/licenses/>.
  */
 package net.geoprism.registry.service.business;
+
+import java.util.List;
 
 import org.commongeoregistry.adapter.dataaccess.GeoObject;
 import org.commongeoregistry.adapter.dataaccess.GeoObjectJsonAdapters;
@@ -35,22 +37,25 @@ import com.runwaysdk.system.metadata.MdEdge;
 import com.runwaysdk.system.metadata.MdVertex;
 
 import net.geoprism.graph.BusinessEdgeTypeSnapshot;
-import net.geoprism.graph.BusinessTypeSnapshot;
 import net.geoprism.graph.GeoObjectTypeSnapshot;
 import net.geoprism.graph.HierarchyTypeSnapshot;
 import net.geoprism.graph.LabeledPropertyGraphSynchronization;
 import net.geoprism.graph.LabeledPropertyGraphTypeVersion;
+import net.geoprism.graph.ObjectTypeSnapshot;
+import net.geoprism.registry.view.ObjectAtTimeDTO;
+import net.geoprism.registry.view.TypeClass;
+import net.geoprism.registry.view.TypeInfo;
 
 @Service
 public class JsonGraphVersionPublisherService extends AbstractGraphVersionPublisherService implements JsonGraphVersionPublisherServiceIF
 {
-  private static class BusinessTypeSnapshotCacheObject
+  private static class ObjectTypeSnapshotCacheObject
   {
-    private BusinessTypeSnapshot snapshot;
+    private ObjectTypeSnapshot snapshot;
 
-    private MdVertexDAOIF        mdVertex;
+    private MdVertexDAOIF      mdVertex;
 
-    public BusinessTypeSnapshotCacheObject(BusinessTypeSnapshot snapshot)
+    public ObjectTypeSnapshotCacheObject(ObjectTypeSnapshot snapshot)
     {
       this.snapshot = snapshot;
       this.mdVertex = MdVertexDAO.get(snapshot.getGraphMdVertexOid());
@@ -112,14 +117,18 @@ public class JsonGraphVersionPublisherService extends AbstractGraphVersionPublis
   private BusinessTypeSnapshotBusinessServiceIF     businessService;
 
   @Autowired
+  private ConceptClassSnapshotBusinessServiceIF     conceptService;
+
+  @Autowired
   private BusinessEdgeTypeSnapshotBusinessServiceIF bEdgeService;
 
   public void publish(LabeledPropertyGraphSynchronization synchronization, LabeledPropertyGraphTypeVersion version, JsonObject graph)
   {
     State state = new State(synchronization, version);
 
+    this.publishObjects(state, ObjectAtTimeDTO.parseList(graph.get("conceptObjects").toString()));
+    this.publishObjects(state, ObjectAtTimeDTO.parseList(graph.get("businessObjects").toString()));
     this.publishGeoObjects(state, graph.get("geoObjects").getAsJsonArray());
-    this.publishBusinessObjects(state, graph.get("businessObjects").getAsJsonArray());
     this.publishEdges(state, graph.get("edges").getAsJsonArray());
     this.publishBusinessEdges(state, graph.get("businessEdges").getAsJsonArray());
   }
@@ -133,7 +142,7 @@ public class JsonGraphVersionPublisherService extends AbstractGraphVersionPublis
   {
     parent.addChild(child, mdEdge.definesType()).apply();
   }
-  
+
   @Override
   public void publishEdges(State state, JsonArray edges)
   {
@@ -193,41 +202,43 @@ public class JsonGraphVersionPublisherService extends AbstractGraphVersionPublis
     }
   }
 
-  public void publishBusinessObjects(State state, JsonArray array)
+  public void publishObjects(State state, List<ObjectAtTimeDTO> objects)
   {
-    for (int i = 0; i < array.size(); i++)
+    for (ObjectAtTimeDTO object : objects)
     {
-      JsonObject object = array.get(i).getAsJsonObject();
+      TypeInfo type = object.getType();
 
-      String typeCode = object.get("code").getAsString();
+      String typeCode = type.getTypeCode();
 
       String key = "b-snapshot-" + typeCode;
 
       if (!state.cache.containsKey(key))
       {
-        BusinessTypeSnapshot snapshot = this.businessService.get(state.version, typeCode);
+        ObjectTypeSnapshot snapshot = type.getTypeClass().equals(TypeClass.BUSINESS_TYPE) ? //
+            this.businessService.get(state.version, typeCode) : //
+            this.conceptService.get(state.version, typeCode);
 
-        state.cache.put(key, new BusinessTypeSnapshotCacheObject(snapshot));
+        state.cache.put(key, new ObjectTypeSnapshotCacheObject(snapshot));
       }
 
-      BusinessTypeSnapshotCacheObject cachedObject = (BusinessTypeSnapshotCacheObject) state.cache.get(key);
+      ObjectTypeSnapshotCacheObject cachedObject = (ObjectTypeSnapshotCacheObject) state.cache.get(key);
 
-      this.publishBusiness(state, cachedObject.mdVertex, object);
+      this.publishObject(state, cachedObject.mdVertex, object);
     }
   }
 
-  public void publishBusinessEdges(State state,  JsonArray edges)
+  public void publishBusinessEdges(State state, JsonArray edges)
   {
     for (int i = 0; i < edges.size(); i++)
     {
       JsonObject object = edges.get(i).getAsJsonObject();
-      
+
       String parentUid = object.get("startNode").getAsString();
       String parentType = object.get("startType").getAsString();
 
       String childUid = object.get("endNode").getAsString();
       String childType = object.get("endType").getAsString();
-      
+
       String typeCode = object.get("type").getAsString();
 
       String key = "be-" + typeCode;
@@ -248,6 +259,5 @@ public class JsonGraphVersionPublisherService extends AbstractGraphVersionPublis
       publish(state, parent, child, cachedObject.mdEdge);
     }
   }
-
 
 }

@@ -19,6 +19,7 @@
 package net.geoprism.registry.service.request;
 
 import java.util.Date;
+import java.util.List;
 
 import org.commongeoregistry.adapter.dataaccess.ChildTreeNode;
 import org.commongeoregistry.adapter.dataaccess.GeoObject;
@@ -26,8 +27,9 @@ import org.commongeoregistry.adapter.dataaccess.GeoObjectOverTime;
 import org.commongeoregistry.adapter.dataaccess.ParentTreeNode;
 import org.springframework.stereotype.Component;
 
-import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+
+import net.geoprism.registry.view.ObjectAtTimeDTO;
 
 @Component
 public interface GeoObjectServiceIF
@@ -72,6 +74,6 @@ public interface GeoObjectServiceIF
 
   public void removeChild(String sessionId, String parentCode, String parentTypeCode, String childCode, String childTypeCode, String hierarchyCode, Date startDate, Date endDate);
 
-  public JsonArray getBusinessObjects(String sessionId, String typeCode, String code, String edgeTypeCode, String direction);
+  public List<ObjectAtTimeDTO> getBusinessObjects(String sessionId, String typeCode, String code, String edgeTypeCode, String direction, Date date);
 
 }

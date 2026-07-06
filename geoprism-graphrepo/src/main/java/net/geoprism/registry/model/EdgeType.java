@@ -22,24 +22,16 @@ import org.commongeoregistry.adapter.metadata.GraphTypeDTO;
 
 import com.runwaysdk.dataaccess.MdEdgeDAOIF;
 
-import net.geoprism.graph.GraphTypeSnapshot;
 import net.geoprism.registry.graph.BusinessEdgeType;
 import net.geoprism.registry.graph.DirectedAcyclicGraphType;
 import net.geoprism.registry.graph.UndirectedGraphType;
+import net.geoprism.registry.view.TypeClass;
 
 public interface EdgeType
 {
-  public static final String UNDIRECTED_GRAPH_TYPE       = GraphTypeSnapshot.UNDIRECTED_GRAPH_TYPE;
+  public static final String START_DATE = "startDate";
 
-  public static final String DIRECTED_ACYCLIC_GRAPH_TYPE = GraphTypeSnapshot.DIRECTED_ACYCLIC_GRAPH_TYPE;
-
-  public static final String HIERARCHY_TYPE              = GraphTypeSnapshot.HIERARCHY_TYPE;
-
-  public static final String BUSINESS_EDGE_TYPE          = "BusinessEdgeType";
-
-  public static final String START_DATE                  = "startDate";
-
-  public static final String END_DATE                    = "endDate";
+  public static final String END_DATE   = "endDate";
 
   public MdEdgeDAOIF getMdEdgeDAO();
 
@@ -51,27 +43,27 @@ public interface EdgeType
 
   public Long getSequence();
 
-  public VertexComponentType getSourceType();
+  public TypeClass getSourceType();
 
-  public VertexComponentType getTargetType();
+  public TypeClass getTargetType();
 
   public static String getTypeCode(EdgeType graphType)
   {
     if (graphType instanceof DirectedAcyclicGraphType)
     {
-      return DIRECTED_ACYCLIC_GRAPH_TYPE;
+      return TypeClass.DAG.getCode();
     }
     else if (graphType instanceof UndirectedGraphType)
     {
-      return UNDIRECTED_GRAPH_TYPE;
+      return TypeClass.UNDIRECTED_GRAPH.getCode();
     }
     else if (graphType instanceof ServerHierarchyType)
     {
-      return HIERARCHY_TYPE;
+      return TypeClass.HIERARCHY.getCode();
     }
     else if (graphType instanceof BusinessEdgeType)
     {
-      return BUSINESS_EDGE_TYPE;
+      return TypeClass.BUSINESS_EDGE.getCode();
     }
     else
     {

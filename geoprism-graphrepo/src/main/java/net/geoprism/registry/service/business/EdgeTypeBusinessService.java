@@ -35,6 +35,7 @@ import net.geoprism.registry.graph.UndirectedGraphType;
 import net.geoprism.registry.model.EdgeType;
 import net.geoprism.registry.model.GraphType;
 import net.geoprism.registry.model.ServerHierarchyType;
+import net.geoprism.registry.view.TypeClass;
 
 @Service
 public class EdgeTypeBusinessService implements EdgeTypeBusinessServiceIF
@@ -75,23 +76,23 @@ public class EdgeTypeBusinessService implements EdgeTypeBusinessServiceIF
   {
     if (relationshipType != null)
     {
-      if (relationshipType.equals(GraphType.UNDIRECTED_GRAPH_TYPE) || relationshipType.equals(UndirectedGraphType.CLASS))
+      if (relationshipType.equals(TypeClass.UNDIRECTED_GRAPH.getCode()) || relationshipType.equals(UndirectedGraphType.CLASS))
       {
         return (T) this.undirectedService.getByCode(code).orElseThrow(() -> {
           throw new ProgrammingErrorException("Unable to find undirected graph with the code [" + code + "]");
         });
       }
-      else if (relationshipType.equals(GraphType.DIRECTED_ACYCLIC_GRAPH_TYPE) || relationshipType.equals(DirectedAcyclicGraphType.CLASS))
+      else if (relationshipType.equals(TypeClass.DAG.getCode()) || relationshipType.equals(DirectedAcyclicGraphType.CLASS))
       {
         return (T) this.dagService.getByCode(code).orElseThrow(() -> {
           throw new ProgrammingErrorException("Unable to find undirected graph with the code [" + code + "]");
         });
       }
-      else if (relationshipType.equals(GraphType.HIERARCHY_TYPE))
+      else if (relationshipType.equals(TypeClass.HIERARCHY.getCode()))
       {
         return (T) ServerHierarchyType.get(code);
       }
-      else if (relationshipType.equals(GraphType.BUSINESS_EDGE_TYPE))
+      else if (relationshipType.equals(TypeClass.BUSINESS_EDGE.getCode()))
       {
         return (T) this.bEdgeService.getByCodeOrThrow(code);
       }

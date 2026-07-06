@@ -60,7 +60,7 @@ public class GeoVertexType extends GeoVertexTypeBase
     }
     else
     {
-      parentVertexDAO = parentType.getMdVertex();
+      parentVertexDAO = parentType.getMdVertexDAO();
     }
 
     MdVertexDAO child = MdVertexDAO.newInstance();

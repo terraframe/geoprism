@@ -18,12 +18,12 @@
  */
 package net.geoprism.graph;
 
-public abstract class MetadataSnapshot extends MetadataSnapshotBase
+public abstract class SchemaElementSnapshot extends SchemaElementSnapshotBase
 {
   @SuppressWarnings("unused")
   private static final long serialVersionUID = 1306153338;
   
-  public MetadataSnapshot()
+  public SchemaElementSnapshot()
   {
     super();
   }

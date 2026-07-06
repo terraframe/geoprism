@@ -30,10 +30,11 @@ import com.runwaysdk.dataaccess.MdVertexDAOIF;
 import net.geoprism.registry.Organization;
 import net.geoprism.registry.graph.ObjectClass;
 import net.geoprism.registry.model.ServerOrganization;
+import net.geoprism.registry.view.ObjectClassDTO;
 import net.geoprism.registry.view.OrganizationGroup;
 
 @Component
-public interface ObjectClassBusinessServiceIF<T extends ObjectClass, D>
+public interface ObjectClassBusinessServiceIF<T extends ObjectClass, D extends ObjectClassDTO>
 {
   public void delete(T type);
 

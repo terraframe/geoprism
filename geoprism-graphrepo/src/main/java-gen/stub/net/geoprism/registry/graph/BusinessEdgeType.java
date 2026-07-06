@@ -7,11 +7,10 @@ import com.runwaysdk.dataaccess.MdEdgeDAOIF;
 import com.runwaysdk.dataaccess.metadata.graph.MdEdgeDAO;
 
 import net.geoprism.registry.conversion.LocalizedValueConverter;
-import net.geoprism.registry.conversion.RegistryLocalizedValueConverter;
 import net.geoprism.registry.model.EdgeType;
 import net.geoprism.registry.model.ServerElement;
-import net.geoprism.registry.model.VertexComponentType;
 import net.geoprism.registry.view.BusinessEdgeTypeView;
+import net.geoprism.registry.view.TypeClass;
 
 public class BusinessEdgeType extends BusinessEdgeTypeBase implements ServerElement, EdgeType
 {
@@ -46,13 +45,12 @@ public class BusinessEdgeType extends BusinessEdgeTypeBase implements ServerElem
   public LocalizedValue getLabel()
   {
     return LocalizedValueConverter.convert(this.getEmbeddedComponent(BusinessEdgeType.DISPLAYLABEL));
-  }  
+  }
 
   public LocalizedValue getDescriptionLV()
   {
     return LocalizedValueConverter.convert(this.getEmbeddedComponent(BusinessEdgeType.DESCRIPTION));
   }
-
 
   public MdEdgeDAOIF getMdEdgeDAO()
   {
@@ -68,7 +66,7 @@ public class BusinessEdgeType extends BusinessEdgeTypeBase implements ServerElem
   @Override
   public GraphTypeDTO toDTO()
   {
-    final GraphTypeDTO dto = new GraphTypeDTO(EdgeType.BUSINESS_EDGE_TYPE, this.getCode(), this.getLabel(), getDescriptionLV());
+    final GraphTypeDTO dto = new GraphTypeDTO(TypeClass.BUSINESS_EDGE.getCode(), this.getCode(), this.getLabel(), getDescriptionLV());
     dto.setChildType(this.getIsChildGeoObject() ? BusinessEdgeTypeView.GEO_OBJECT_TYPE : this.getChildType().getTypeName());
     dto.setParentType(this.getIsParentGeoObject() ? BusinessEdgeTypeView.GEO_OBJECT_TYPE : this.getParentType().getTypeName());
 
@@ -76,15 +74,15 @@ public class BusinessEdgeType extends BusinessEdgeTypeBase implements ServerElem
   }
 
   @Override
-  public VertexComponentType getSourceType()
+  public TypeClass getSourceType()
   {
-    return this.getIsParentGeoObject() ? VertexComponentType.GEO_OBJECT : VertexComponentType.BUSINESS;
+    return this.getIsParentGeoObject() ? TypeClass.GEO_OBJECT_TYPE : TypeClass.BUSINESS_TYPE;
   }
 
   @Override
-  public VertexComponentType getTargetType()
+  public TypeClass getTargetType()
   {
-    return this.getIsChildGeoObject() ? VertexComponentType.GEO_OBJECT : VertexComponentType.BUSINESS;
+    return this.getIsChildGeoObject() ? TypeClass.GEO_OBJECT_TYPE : TypeClass.BUSINESS_TYPE;
   }
 
 }

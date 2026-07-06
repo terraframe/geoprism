@@ -218,7 +218,7 @@ public class EdgeAndVerticiesResultSetConverter extends PrefixedResultSetConvert
 
     for (ServerGeoObjectType type : ServerGeoObjectType.getAll())
     {
-      List<? extends MdAttributeConcreteDAOIF> mdAttrs = type.getMdVertex().getMdClassDAO().definesAttributes();
+      List<? extends MdAttributeConcreteDAOIF> mdAttrs = type.getMdVertexDAO().getMdClassDAO().definesAttributes();
       for (MdAttributeConcreteDAOIF mdAttr : mdAttrs)
       {
         columns.add(prefix + "." + mdAttr.getColumnName());

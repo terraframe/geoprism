@@ -18,7 +18,6 @@
  */
 package net.geoprism.registry.service.business;
 
-import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -35,14 +34,10 @@ import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import com.google.gson.JsonSyntaxException;
-import com.runwaysdk.business.BusinessDTO;
 import com.runwaysdk.business.BusinessFacade;
 import com.runwaysdk.business.graph.GraphQuery;
 import com.runwaysdk.business.graph.VertexObject;
@@ -58,6 +53,8 @@ import net.geoprism.graph.BusinessEdgeTypeSnapshot;
 import net.geoprism.graph.BusinessEdgeTypeSnapshotQuery;
 import net.geoprism.graph.BusinessTypeSnapshot;
 import net.geoprism.graph.BusinessTypeSnapshotQuery;
+import net.geoprism.graph.ConceptClassSnapshot;
+import net.geoprism.graph.ConceptClassSnapshotQuery;
 import net.geoprism.graph.DirectedAcyclicGraphTypeSnapshot;
 import net.geoprism.graph.DirectedAcyclicGraphTypeSnapshotQuery;
 import net.geoprism.graph.GeoObjectTypeSnapshot;
@@ -79,12 +76,16 @@ import net.geoprism.registry.LPGTileCache;
 import net.geoprism.registry.lpg.LPGPublishProgressMonitorIF;
 import net.geoprism.registry.model.ClassificationType;
 import net.geoprism.registry.view.BusinessTypeDTO;
+import net.geoprism.registry.view.ConceptClassDTO;
 
 @Service
 public class LabeledPropertyGraphTypeVersionBusinessService implements LabeledPropertyGraphTypeVersionBusinessServiceIF
 {
   @Autowired
   private GeoObjectTypeSnapshotBusinessServiceIF    objectService;
+
+  @Autowired
+  private ConceptClassSnapshotBusinessServiceIF     conceptService;
 
   @Autowired
   private BusinessTypeSnapshotBusinessServiceIF     businessService;
@@ -128,6 +129,9 @@ public class LabeledPropertyGraphTypeVersionBusinessService implements LabeledPr
     // Delete the root snapshots after all the sub snapshots have been deleted
     this.getTypes(version).stream().filter(v -> v.isRoot()).forEach(v -> this.objectService.delete(v));
 
+    // Delete all concept classes
+    this.getConceptClasses(version).stream().forEach(v -> this.conceptService.delete(v));
+
     version.delete();
   }
 
@@ -159,6 +163,24 @@ public class LabeledPropertyGraphTypeVersionBusinessService implements LabeledPr
   public VertexObject getBusinessVertex(LabeledPropertyGraphTypeVersion version, String code, String typeCode)
   {
     BusinessTypeSnapshot type = this.businessService.get(version, typeCode);
+
+    MdVertexDAOIF mdVertex = (MdVertexDAOIF) BusinessFacade.getEntityDAO(type.getGraphMdVertex());
+    MdAttributeDAOIF mdAttribute = mdVertex.getAllDefinedMdAttributeMap().get(DefaultAttribute.CODE.getName());
+
+    StringBuilder statement = new StringBuilder();
+    statement.append("SELECT FROM " + mdVertex.getDBClassName());
+    statement.append(" WHERE " + mdAttribute.getColumnName() + " = :uid");
+
+    GraphQuery<VertexObject> query = new GraphQuery<VertexObject>(statement.toString());
+    query.setParameter("code", code);
+
+    return query.getSingleResult();
+  }
+
+  @Override
+  public VertexObject getConceptVertex(LabeledPropertyGraphTypeVersion version, String code, String typeCode)
+  {
+    ConceptClassSnapshot type = this.conceptService.get(version, typeCode);
 
     MdVertexDAOIF mdVertex = (MdVertexDAOIF) BusinessFacade.getEntityDAO(type.getGraphMdVertex());
     MdAttributeDAOIF mdAttribute = mdVertex.getAllDefinedMdAttributeMap().get(DefaultAttribute.CODE.getName());
@@ -212,6 +234,23 @@ public class LabeledPropertyGraphTypeVersionBusinessService implements LabeledPr
     try (OIterator<? extends BusinessTypeSnapshot> it = query.getIterator())
     {
       return it.getAll().stream().map(b -> (BusinessTypeSnapshot) b).collect(Collectors.toList());
+    }
+  }
+
+  @Override
+  public List<ConceptClassSnapshot> getConceptClasses(LabeledPropertyGraphTypeVersion version)
+  {
+    QueryFactory factory = new QueryFactory();
+
+    LabeledPropertyGraphTypeSnapshotQuery vQuery = new LabeledPropertyGraphTypeSnapshotQuery(factory);
+    vQuery.WHERE(vQuery.getParent().EQ(version));
+
+    ConceptClassSnapshotQuery query = new ConceptClassSnapshotQuery(factory);
+    query.WHERE(query.EQ(vQuery.getChild()));
+
+    try (OIterator<? extends ConceptClassSnapshot> it = query.getIterator())
+    {
+      return it.getAll().stream().map(b -> (ConceptClassSnapshot) b).collect(Collectors.toList());
     }
   }
 
@@ -387,6 +426,7 @@ public class LabeledPropertyGraphTypeVersionBusinessService implements LabeledPr
 
     this.objectService.truncate(this.getRootType(version));
 
+    this.getConceptClasses(version).forEach(type -> this.conceptService.truncate(type));
   }
 
   @Override
@@ -443,6 +483,14 @@ public class LabeledPropertyGraphTypeVersionBusinessService implements LabeledPr
 
     if (includeTableDefinitions)
     {
+      List<ConceptClassDTO> conceptClasses = new LinkedList<>();
+
+      this.getConceptClasses(version).forEach(type -> {
+        conceptClasses.add(type.toDTO());
+      });
+
+      object.add("conceptClasses", JsonParser.parseString(ConceptClassDTO.toJson(conceptClasses)));
+
       JsonArray types = new JsonArray();
 
       List<GeoObjectTypeSnapshot> vertices = this.getTypes(version);
@@ -582,6 +630,15 @@ public class LabeledPropertyGraphTypeVersionBusinessService implements LabeledPr
     version.setForDate(entry.getForDate());
     version.setVersionNumber(json.get(LabeledPropertyGraphTypeVersion.VERSIONNUMBER).getAsInt());
     version.apply();
+
+    List<ConceptClassDTO> conceptClasses = json.has("conceptClasses") ? //
+        ConceptClassDTO.parseList(json.get("conceptClasses").toString()) : //
+        new LinkedList<>();
+
+    for (ConceptClassDTO conceptClass : conceptClasses)
+    {
+      this.conceptService.create(version, conceptClass);
+    }
 
     GeoObjectTypeSnapshot root = this.objectService.createRoot(version);
 

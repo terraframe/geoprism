@@ -21,6 +21,7 @@ package net.geoprism.graph;
 import com.google.gson.JsonObject;
 
 import net.geoprism.registry.conversion.LocalizedValueConverter;
+import net.geoprism.registry.view.TypeClass;
 
 public class DirectedAcyclicGraphTypeSnapshot extends DirectedAcyclicGraphTypeSnapshotBase implements GraphTypeSnapshot
 {
@@ -44,7 +45,7 @@ public class DirectedAcyclicGraphTypeSnapshot extends DirectedAcyclicGraphTypeSn
     hierarchyObject.addProperty(DirectedAcyclicGraphTypeSnapshot.CODE, this.getCode());
     hierarchyObject.addProperty(DirectedAcyclicGraphTypeSnapshot.ORIGIN, this.getOrigin());
     hierarchyObject.addProperty(DirectedAcyclicGraphTypeSnapshot.SEQUENCE, this.getSequence());
-    hierarchyObject.addProperty(GraphTypeSnapshot.TYPE_CODE, GraphTypeSnapshot.DIRECTED_ACYCLIC_GRAPH_TYPE);
+    hierarchyObject.addProperty(GraphTypeSnapshot.TYPE_CODE, TypeClass.DAG.getCode());
     hierarchyObject.add(DirectedAcyclicGraphTypeSnapshot.DISPLAYLABEL, LocalizedValueConverter.convertNoAutoCoalesce(this.getDisplayLabel()).toJSON());
     hierarchyObject.add(DirectedAcyclicGraphTypeSnapshot.DESCRIPTION, LocalizedValueConverter.convertNoAutoCoalesce(this.getDescription()).toJSON());
 

@@ -94,7 +94,7 @@ public class TransitionBusinessService implements TransitionBusinessServiceIF
     statement.append(" OR " + targetAttribute.getColumnName() + ".@class = :vertexClass");
 
     GraphQuery<Transition> query = new GraphQuery<Transition>(statement.toString());
-    query.setParameter("vertexClass", type.getMdVertex().getDBClassName());
+    query.setParameter("vertexClass", type.getMdVertexDAO().getDBClassName());
 
     List<Transition> results = query.getResults();
     results.forEach(event -> event.delete());

@@ -32,6 +32,7 @@ import com.runwaysdk.system.metadata.MdVertex;
 import net.geoprism.registry.model.ServerElement;
 import net.geoprism.registry.model.ServerOrganization;
 import net.geoprism.registry.model.graph.ObjectClassIF;
+import net.geoprism.registry.view.TypeInfo;
 
 public abstract class ObjectClass extends ObjectClassBase implements ServerElement, ObjectClassIF
 {
@@ -58,6 +59,8 @@ public abstract class ObjectClass extends ObjectClassBase implements ServerEleme
   public abstract String getMdVertexOid();
 
   public abstract ServerOrganization getServerOrganization();
+
+  public abstract TypeInfo getTypeInfo();
 
   public Optional<AttributeType> getAttribute(String attributeName)
   {

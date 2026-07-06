@@ -61,9 +61,10 @@ public class ServerObjectVertex
     this.date = date;
   }
 
-  public ObjectClassIF getType()
+  @SuppressWarnings("unchecked")
+  public <T extends ObjectClassIF> T getType()
   {
-    return type;
+    return (T) type;
   }
 
   public void setType(ObjectClassIF type)
@@ -244,6 +245,16 @@ public class ServerObjectVertex
       attr.getStrategy().setValuesOverTime(this.vertex, this.valueNodeMap, collection);
     } ));
 
+  }
+
+  public String getCode()
+  {
+    return this.getValue(DefaultAttribute.CODE.getName());
+  }
+
+  public void setCode(String code)
+  {
+    this.setValue(DefaultAttribute.CODE.getName(), code);
   }
 
 }

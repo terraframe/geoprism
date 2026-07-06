@@ -6,12 +6,12 @@ import org.commongeoregistry.adapter.metadata.GraphTypeDTO;
 import com.runwaysdk.dataaccess.MdEdgeDAOIF;
 import com.runwaysdk.dataaccess.metadata.graph.MdEdgeDAO;
 
-import net.geoprism.graph.GraphTypeSnapshot;
 import net.geoprism.registry.conversion.LocalizedValueConverter;
 import net.geoprism.registry.model.GraphType;
 import net.geoprism.registry.model.ServerElement;
 import net.geoprism.registry.model.graph.DirectedAcyclicGraphStrategy;
 import net.geoprism.registry.model.graph.GraphStrategy;
+import net.geoprism.registry.view.TypeClass;
 
 public class DirectedAcyclicGraphType extends DirectedAcyclicGraphTypeBase implements GraphType, ServerElement
 {
@@ -47,7 +47,7 @@ public class DirectedAcyclicGraphType extends DirectedAcyclicGraphTypeBase imple
   {
     return LocalizedValueConverter.convert(this.getEmbeddedComponent(DISPLAYLABEL));
   }
-  
+
   @Override
   public LocalizedValue getDescriptionLV()
   {
@@ -62,7 +62,7 @@ public class DirectedAcyclicGraphType extends DirectedAcyclicGraphTypeBase imple
   @Override
   public GraphTypeDTO toDTO()
   {
-    final GraphTypeDTO dto = new GraphTypeDTO(GraphTypeSnapshot.DIRECTED_ACYCLIC_GRAPH_TYPE, this.getCode(), this.getLabel(), this.getDescriptionLV());
+    final GraphTypeDTO dto = new GraphTypeDTO(TypeClass.DAG.getCode(), this.getCode(), this.getLabel(), this.getDescriptionLV());
 
     return dto;
   }
@@ -71,5 +71,5 @@ public class DirectedAcyclicGraphType extends DirectedAcyclicGraphTypeBase imple
   {
     return new DirectedAcyclicGraphStrategy(this);
   }
-  
+
 }

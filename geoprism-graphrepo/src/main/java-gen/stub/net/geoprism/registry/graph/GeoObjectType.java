@@ -43,6 +43,8 @@ import net.geoprism.registry.conversion.LocalizedValueConverter;
 import net.geoprism.registry.conversion.RegistryLocalizedValueConverter;
 import net.geoprism.registry.model.ServerElement;
 import net.geoprism.registry.service.business.ServiceFactory;
+import net.geoprism.registry.view.TypeClass;
+import net.geoprism.registry.view.TypeInfo;
 
 public class GeoObjectType extends GeoObjectTypeBase implements ServerElement
 {
@@ -59,6 +61,12 @@ public class GeoObjectType extends GeoObjectTypeBase implements ServerElement
   public LocalizedValue getLabel()
   {
     return LocalizedValueConverter.convert(this.getEmbeddedComponent(GeoObjectType.DISPLAYLABEL));
+  }
+
+  @Override
+  public TypeInfo getTypeInfo()
+  {
+    return new TypeInfo(TypeClass.GEO_OBJECT_TYPE, this.getCode());
   }
 
   @Override

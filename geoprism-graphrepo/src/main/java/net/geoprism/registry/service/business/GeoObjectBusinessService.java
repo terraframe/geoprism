@@ -117,6 +117,7 @@ import net.geoprism.registry.service.business.VertexAndEdgeResultSetConverter.Ve
 import net.geoprism.registry.service.permission.AllowAllGeoObjectPermissionService;
 import net.geoprism.registry.service.permission.GeoObjectPermissionServiceIF;
 import net.geoprism.registry.view.GeoObjectSplitView;
+import net.geoprism.registry.view.ObjectAtTimeDTO;
 import net.geoprism.registry.view.ServerParentTreeNodeOverTime;
 
 @Service
@@ -1428,7 +1429,7 @@ public class GeoObjectBusinessService extends RegistryLocalizedValueConverter im
 
         statement.append("in.@class = :" + paramName);
 
-        parameters.put(paramName, type.getMdVertex().getDBClassName());
+        parameters.put(paramName, type.getMdVertexDAO().getDBClassName());
       }
 
       statement.append("]");
@@ -1533,7 +1534,7 @@ public class GeoObjectBusinessService extends RegistryLocalizedValueConverter im
 
           statement.append("out.@class = :" + paramName);
 
-          parameters.put(paramName, type.getMdVertex().getDBClassName());
+          parameters.put(paramName, type.getMdVertexDAO().getDBClassName());
         }
         statement.append(" )");
       }
@@ -1629,7 +1630,7 @@ public class GeoObjectBusinessService extends RegistryLocalizedValueConverter im
 
         statement.append("out.@class = :a" + i);
 
-        parameters.put("a" + Integer.toString(i), type.getMdVertex().getDBClassName());
+        parameters.put("a" + Integer.toString(i), type.getMdVertexDAO().getDBClassName());
       }
 
       statement.append("]");
@@ -1953,7 +1954,7 @@ public class GeoObjectBusinessService extends RegistryLocalizedValueConverter im
 
       for (ServerGeoObjectType parent : parents)
       {
-        if (parent.getMdVertex().getDBClassName().equals(result.getType().getDBClassName()))
+        if (parent.getMdVertexDAO().getDBClassName().equals(result.getType().getDBClassName()))
         {
           type = parent;
         }
@@ -1986,7 +1987,7 @@ public class GeoObjectBusinessService extends RegistryLocalizedValueConverter im
   }
 
   @Override
-  public JsonArray getBusinessObjects(String typeCode, String code, String edgeTypeCode, String direction)
+  public List<ObjectAtTimeDTO> getBusinessObjects(String typeCode, String code, String edgeTypeCode, String direction, Date date)
   {
     VertexServerGeoObject vsgo = (VertexServerGeoObject) this.getGeoObjectByCode(code, typeCode);
 
@@ -1997,9 +1998,8 @@ public class GeoObjectBusinessService extends RegistryLocalizedValueConverter im
     objects = this.getBusinessObjects(vsgo, edgeType, EdgeDirection.valueOf(direction));
 
     return objects.stream().map(object -> {
-      return this.businessObjectService.toJSON(object);
-    }).collect(() -> new JsonArray(), (array, element) -> array.add(element), (listA, listB) -> {
-    });
+      return this.businessObjectService.toDTO(object, date);
+    }).toList();
   }
 
   @Override

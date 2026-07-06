@@ -28,7 +28,7 @@ public class LabeledPropertyGraphTypeSnapshot extends LabeledPropertyGraphTypeSn
     super(parentOid, childOid);
   }
   
-  public LabeledPropertyGraphTypeSnapshot(net.geoprism.graph.LabeledPropertyGraphTypeVersion parent, net.geoprism.graph.MetadataSnapshot child)
+  public LabeledPropertyGraphTypeSnapshot(net.geoprism.graph.LabeledPropertyGraphTypeVersion parent, net.geoprism.graph.SchemaElementSnapshot child)
   {
     this(parent.getOid(), child.getOid());
   }

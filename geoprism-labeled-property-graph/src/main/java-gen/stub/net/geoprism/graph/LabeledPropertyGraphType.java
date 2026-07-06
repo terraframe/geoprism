@@ -3,18 +3,18 @@
  *
  * This file is part of Geoprism(tm).
  *
- * Geoprism(tm) is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
+ * Geoprism(tm) is free software: you can redistribute it and/or modify it under
+ * the terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation, either version 3 of the License, or (at your option) any
+ * later version.
  *
- * Geoprism(tm) is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
+ * Geoprism(tm) is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with Geoprism(tm).  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with Geoprism(tm). If not, see <http://www.gnu.org/licenses/>.
  */
 package net.geoprism.graph;
 
@@ -42,6 +42,7 @@ import net.geoprism.registry.lpg.LabeledVersion;
 import net.geoprism.registry.lpg.LocaleSerializer;
 import net.geoprism.registry.lpg.StrategyConfiguration;
 import net.geoprism.registry.lpg.TreeStrategyConfiguration;
+import net.geoprism.registry.view.TypeClass;
 
 public abstract class LabeledPropertyGraphType extends LabeledPropertyGraphTypeBase
 {
@@ -156,6 +157,34 @@ public abstract class LabeledPropertyGraphType extends LabeledPropertyGraphTypeB
     return result;
   }
 
+  public void setConceptClassCodesList(String... codes)
+  {
+    JsonArray jaCodes = new JsonArray();
+
+    if (codes != null)
+    {
+      Arrays.asList(codes).forEach(s -> jaCodes.add(s));
+    }
+
+    this.setConceptClassCodes(jaCodes.toString());
+  }
+
+  public List<String> getConceptClassCodesList()
+  {
+    List<String> result = new ArrayList<String>();
+
+    String typeCodes = this.getConceptClassCodes();
+
+    if (!StringUtils.isEmpty(typeCodes))
+    {
+      JsonArray jaCodes = JsonParser.parseString(typeCodes).getAsJsonArray();
+
+      jaCodes.forEach(je -> result.add(je.getAsString()));
+    }
+
+    return result;
+  }
+
   public void setBusinessTypeCodesList(String... codes)
   {
     JsonArray jaCodes = new JsonArray();
@@ -171,37 +200,37 @@ public abstract class LabeledPropertyGraphType extends LabeledPropertyGraphTypeB
   public List<String> getBusinessEdgeCodesList()
   {
     List<String> result = new ArrayList<String>();
-    
+
     String edgeCodes = this.getBusinessEdgeCodes();
-    
+
     if (!StringUtils.isEmpty(edgeCodes))
     {
       JsonArray jaCodes = JsonParser.parseString(edgeCodes).getAsJsonArray();
-      
+
       jaCodes.forEach(je -> result.add(je.getAsString()));
     }
-    
+
     return result;
   }
-  
+
   public void setBusinessEdgeCodesList(String... codes)
   {
     JsonArray jaCodes = new JsonArray();
-    
+
     if (codes != null)
     {
       Arrays.asList(codes).forEach(s -> jaCodes.add(s));
     }
-    
+
     this.setBusinessEdgeCodes(jaCodes.toString());
   }
-  
+
   public List<GraphTypeReference> getGraphTypeReferences()
   {
     if (TREE.equals(getStrategyType()))
     {
       List<GraphTypeReference> result = new ArrayList<GraphTypeReference>();
-      result.add(new GraphTypeReference(GraphTypeSnapshot.HIERARCHY_TYPE, this.getHierarchy()));
+      result.add(new GraphTypeReference(TypeClass.HIERARCHY.getCode(), this.getHierarchy()));
       return result;
     }
     else
@@ -269,6 +298,7 @@ public abstract class LabeledPropertyGraphType extends LabeledPropertyGraphTypeB
 
     this.setBusinessTypeCodes(jsonRead(object, BUSINESSTYPECODES));
     this.setBusinessEdgeCodes(jsonRead(object, BUSINESSEDGECODES));
+    this.setConceptClassCodes(jsonRead(object, CONCEPTCLASSCODES));
   }
 
   private String jsonRead(JsonObject ele, String property)
@@ -301,6 +331,7 @@ public abstract class LabeledPropertyGraphType extends LabeledPropertyGraphTypeB
     object.addProperty(LabeledPropertyGraphType.GEOOBJECTTYPECODES, this.getGeoObjectTypeCodes());
     object.addProperty(LabeledPropertyGraphType.GRAPHTYPES, this.getGraphTypes());
 
+    object.addProperty(LabeledPropertyGraphType.CONCEPTCLASSCODES, this.getConceptClassCodes());
     object.addProperty(LabeledPropertyGraphType.BUSINESSTYPECODES, this.getBusinessTypeCodes());
     object.addProperty(LabeledPropertyGraphType.BUSINESSEDGECODES, this.getBusinessEdgeCodes());
 

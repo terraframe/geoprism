@@ -78,7 +78,7 @@ public class ServerMetadataCache extends ServerOrganizationCache
   {
     String code = geoObjectType.getCode();
     String oid = geoObjectType.getOid();
-    String mdVertexOid = geoObjectType.getMdVertex().getOid();
+    String mdVertexOid = geoObjectType.getMdVertexDAO().getOid();
     
     this.geoGeoObjectTypeCodeMap.put(code, geoObjectType);
     this.geoGeoObjectTypeOidMap.put(oid, geoObjectType);

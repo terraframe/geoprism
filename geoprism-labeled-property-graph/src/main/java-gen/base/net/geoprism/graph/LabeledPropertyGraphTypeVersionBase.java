@@ -566,20 +566,20 @@ public abstract class LabeledPropertyGraphTypeVersionBase extends com.runwaysdk.
     return query;
   }
   
-  public net.geoprism.graph.LabeledPropertyGraphTypeSnapshot addSnapshot(net.geoprism.graph.MetadataSnapshot metadataSnapshot)
+  public net.geoprism.graph.LabeledPropertyGraphTypeSnapshot addSnapshot(net.geoprism.graph.SchemaElementSnapshot SchemaElementSnapshot)
   {
-    return (net.geoprism.graph.LabeledPropertyGraphTypeSnapshot) addChild(metadataSnapshot, net.geoprism.graph.LabeledPropertyGraphTypeSnapshot.CLASS);
+    return (net.geoprism.graph.LabeledPropertyGraphTypeSnapshot) addChild(SchemaElementSnapshot, net.geoprism.graph.LabeledPropertyGraphTypeSnapshot.CLASS);
   }
   
-  public void removeSnapshot(net.geoprism.graph.MetadataSnapshot metadataSnapshot)
+  public void removeSnapshot(net.geoprism.graph.SchemaElementSnapshot SchemaElementSnapshot)
   {
-    removeAllChildren(metadataSnapshot, net.geoprism.graph.LabeledPropertyGraphTypeSnapshot.CLASS);
+    removeAllChildren(SchemaElementSnapshot, net.geoprism.graph.LabeledPropertyGraphTypeSnapshot.CLASS);
   }
   
   @SuppressWarnings("unchecked")
-  public com.runwaysdk.query.OIterator<? extends net.geoprism.graph.MetadataSnapshot> getAllSnapshot()
+  public com.runwaysdk.query.OIterator<? extends net.geoprism.graph.SchemaElementSnapshot> getAllSnapshot()
   {
-    return (com.runwaysdk.query.OIterator<? extends net.geoprism.graph.MetadataSnapshot>) getChildren(net.geoprism.graph.LabeledPropertyGraphTypeSnapshot.CLASS);
+    return (com.runwaysdk.query.OIterator<? extends net.geoprism.graph.SchemaElementSnapshot>) getChildren(net.geoprism.graph.LabeledPropertyGraphTypeSnapshot.CLASS);
   }
   
   @SuppressWarnings("unchecked")
@@ -589,9 +589,9 @@ public abstract class LabeledPropertyGraphTypeVersionBase extends com.runwaysdk.
   }
   
   @SuppressWarnings("unchecked")
-  public com.runwaysdk.query.OIterator<? extends net.geoprism.graph.LabeledPropertyGraphTypeSnapshot> getSnapshotRel(net.geoprism.graph.MetadataSnapshot metadataSnapshot)
+  public com.runwaysdk.query.OIterator<? extends net.geoprism.graph.LabeledPropertyGraphTypeSnapshot> getSnapshotRel(net.geoprism.graph.SchemaElementSnapshot SchemaElementSnapshot)
   {
-    return (com.runwaysdk.query.OIterator<? extends net.geoprism.graph.LabeledPropertyGraphTypeSnapshot>) getRelationshipsWithChild(metadataSnapshot, net.geoprism.graph.LabeledPropertyGraphTypeSnapshot.CLASS);
+    return (com.runwaysdk.query.OIterator<? extends net.geoprism.graph.LabeledPropertyGraphTypeSnapshot>) getRelationshipsWithChild(SchemaElementSnapshot, net.geoprism.graph.LabeledPropertyGraphTypeSnapshot.CLASS);
   }
   
   public static LabeledPropertyGraphTypeVersion get(String oid)

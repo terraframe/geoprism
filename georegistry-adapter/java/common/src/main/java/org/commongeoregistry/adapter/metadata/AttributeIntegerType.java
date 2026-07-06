@@ -22,7 +22,9 @@ package org.commongeoregistry.adapter.metadata;
 import org.commongeoregistry.adapter.dataaccess.LocalizedValue;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonTypeName;
 
+@JsonTypeName(AttributeIntegerType.TYPE)
 public class AttributeIntegerType extends AttributeNumericType
 {
   /**

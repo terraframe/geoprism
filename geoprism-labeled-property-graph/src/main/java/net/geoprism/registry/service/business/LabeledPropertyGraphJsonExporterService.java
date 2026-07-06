@@ -40,6 +40,7 @@ import com.runwaysdk.system.metadata.MdVertex;
 
 import net.geoprism.graph.BusinessEdgeTypeSnapshot;
 import net.geoprism.graph.BusinessTypeSnapshot;
+import net.geoprism.graph.ConceptClassSnapshot;
 import net.geoprism.graph.GeoObjectTypeSnapshot;
 import net.geoprism.graph.GraphTypeSnapshot;
 import net.geoprism.graph.LabeledPropertyGraphTypeVersion;
@@ -110,6 +111,9 @@ public class LabeledPropertyGraphJsonExporterService
   @Autowired
   private BusinessTypeSnapshotBusinessServiceIF            bTypeService;
 
+  @Autowired
+  private ConceptClassSnapshotBusinessServiceIF            cClassService;
+
   public JsonArray getGeoObjects(LabeledPropertyGraphTypeVersion version, Long skip, Integer blockSize)
   {
     return this.getGeoObjects(new HashMap<>(), version, skip, blockSize);
@@ -176,6 +180,38 @@ public class LabeledPropertyGraphJsonExporterService
     return businessObjects;
   }
 
+  public JsonArray getConceptObjects(LabeledPropertyGraphTypeVersion version, ConceptClassSnapshot type, Long skip, Integer blockSize)
+  {
+    return this.getConceptObjects(new HashMap<>(), version, type, skip, blockSize);
+  }
+
+  private JsonArray getConceptObjects(Map<String, CacheObject> cache, LabeledPropertyGraphTypeVersion version, ConceptClassSnapshot type, Long skip, Integer blockSize)
+  {
+
+    JsonArray businessObjects = new JsonArray();
+
+    MdVertex mdVertex = type.getGraphMdVertex();
+
+    StringBuilder statement = new StringBuilder();
+    statement.append("SELECT FROM " + mdVertex.getDbClassName());
+    statement.append(" ORDER BY oid");
+    statement.append(" SKIP " + skip);
+    statement.append(" LIMIT " + blockSize);
+
+    GraphQuery<VertexObject> query = new GraphQuery<VertexObject>(statement.toString());
+    List<VertexObject> objects = query.getResults();
+
+    for (VertexObject object : objects)
+    {
+      // Get the type of the geo object
+      JsonObject dto = this.cClassService.toDTO(type, object);
+
+      businessObjects.add(dto);
+    }
+
+    return businessObjects;
+  }
+
   private GeoObjectType getType(Map<String, CacheObject> cache, LabeledPropertyGraphTypeVersion version, MdClassDAOIF mdClass)
   {
 
@@ -199,7 +235,7 @@ public class LabeledPropertyGraphJsonExporterService
       cache.put(mdClass.getOid(), new BusinessTypeSnapshotCacheObject(snapshot));
     }
 
-    return cache.get(mdClass.getOid()).toBusiness().type; 
+    return cache.get(mdClass.getOid()).toBusiness().type;
   }
 
   public JsonArray getEdges(LabeledPropertyGraphTypeVersion version, Long skip, Integer blockSize)
@@ -319,6 +355,7 @@ public class LabeledPropertyGraphJsonExporterService
   {
     Map<String, CacheObject> cache = new HashMap<>();
 
+    JsonArray conceptObjects = new JsonArray();
     JsonArray geoObjects = new JsonArray();
     JsonArray businessObjects = new JsonArray();
     JsonArray edges = new JsonArray();
@@ -327,6 +364,26 @@ public class LabeledPropertyGraphJsonExporterService
     JsonArray results = new JsonArray();
     final int BLOCK_SIZE = 2000;
     long skip = 0;
+    
+    // Export all of the concept objects
+    List<ConceptClassSnapshot> conceptClasses = this.versionService.getConceptClasses(version);
+
+    for (ConceptClassSnapshot conceptClass : conceptClasses)
+    {
+
+      skip = 0;
+
+      // Get all of the business objects
+      do
+      {
+        results = this.getConceptObjects(cache, version, conceptClass, skip, BLOCK_SIZE);
+
+        conceptObjects.addAll(results);
+
+        skip += BLOCK_SIZE;
+      } while (results.size() > 0);
+    }
+
 
     // Get all of the geoObjects
     do
@@ -387,6 +444,7 @@ public class LabeledPropertyGraphJsonExporterService
     }
 
     JsonObject graph = new JsonObject();
+    graph.add("conceptObjects", conceptObjects);
     graph.add("geoObjects", geoObjects);
     graph.add("businessObjects", businessObjects);
     graph.add("edges", edges);

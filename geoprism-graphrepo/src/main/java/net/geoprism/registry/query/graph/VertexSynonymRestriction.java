@@ -80,7 +80,7 @@ public class VertexSynonymRestriction extends AbstractVertexRestriction implemen
     }
     else
     {
-      statement.append(this.type.getMdVertex().getDBClassName());
+      statement.append(this.type.getMdVertexDAO().getDBClassName());
     }
 
     statement.append(" WHERE (code = :label");

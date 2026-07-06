@@ -3,18 +3,18 @@
  *
  * This file is part of Geoprism(tm).
  *
- * Geoprism(tm) is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
+ * Geoprism(tm) is free software: you can redistribute it and/or modify it under
+ * the terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation, either version 3 of the License, or (at your option) any
+ * later version.
  *
- * Geoprism(tm) is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
+ * Geoprism(tm) is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with Geoprism(tm).  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with Geoprism(tm). If not, see <http://www.gnu.org/licenses/>.
  */
 package net.geoprism.registry.service.business;
 
@@ -27,6 +27,7 @@ import com.runwaysdk.business.graph.VertexObject;
 
 import net.geoprism.graph.BusinessEdgeTypeSnapshot;
 import net.geoprism.graph.BusinessTypeSnapshot;
+import net.geoprism.graph.ConceptClassSnapshot;
 import net.geoprism.graph.GeoObjectTypeSnapshot;
 import net.geoprism.graph.GraphTypeSnapshot;
 import net.geoprism.graph.LabeledPropertyGraphTypeEntry;
@@ -47,6 +48,8 @@ public interface LabeledPropertyGraphTypeVersionBusinessServiceIF
 
   public void remove(LabeledPropertyGraphTypeVersion version);
 
+  List<ConceptClassSnapshot> getConceptClasses(LabeledPropertyGraphTypeVersion version);
+
   List<BusinessTypeSnapshot> getBusinessTypes(LabeledPropertyGraphTypeVersion version);
 
   List<GeoObjectTypeSnapshot> getTypes(LabeledPropertyGraphTypeVersion version);
@@ -57,11 +60,7 @@ public interface LabeledPropertyGraphTypeVersionBusinessServiceIF
 
   GraphTypeSnapshot getGraphTypeSnapshot(LabeledPropertyGraphTypeVersion version, String typeCode);
 
-  VertexObject getVertex(LabeledPropertyGraphTypeVersion version, String uid, String typeCode);
-
   void truncate(LabeledPropertyGraphTypeVersion version);
-
-  VertexObject getObject(LabeledPropertyGraphTypeVersion version, String uid);
 
   JsonObject toJSON(LabeledPropertyGraphTypeVersion version);
 
@@ -83,8 +82,6 @@ public interface LabeledPropertyGraphTypeVersionBusinessServiceIF
 
   void createTiles(LabeledPropertyGraphTypeVersion version);
 
-  VertexObject getBusinessVertex(LabeledPropertyGraphTypeVersion version, String code, String typeCode);
-
   GeoObjectTypeSnapshot getRootType(LabeledPropertyGraphTypeVersion version);
 
   GeoObjectTypeSnapshot getSnapshot(LabeledPropertyGraphTypeVersion version, String typeCode);
@@ -94,4 +91,13 @@ public interface LabeledPropertyGraphTypeVersionBusinessServiceIF
   <T extends GraphTypeSnapshot> List<T> getDirectedAcyclicGraphTypes(LabeledPropertyGraphTypeVersion version);
 
   <T extends GraphTypeSnapshot> List<T> getUndirectedGraphTypes(LabeledPropertyGraphTypeVersion version);
+
+  VertexObject getVertex(LabeledPropertyGraphTypeVersion version, String uid, String typeCode);
+
+  VertexObject getObject(LabeledPropertyGraphTypeVersion version, String uid);
+
+  VertexObject getBusinessVertex(LabeledPropertyGraphTypeVersion version, String code, String typeCode);
+
+  VertexObject getConceptVertex(LabeledPropertyGraphTypeVersion version, String code, String typeCode);
+
 }

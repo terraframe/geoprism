@@ -85,7 +85,7 @@ public class VertexSelectGeoObjectQuery
 
     StringBuilder statement = new StringBuilder();
     statement.append("TRAVERSE out('" + EdgeConstant.HAS_VALUE.getDBClassName() + "', '" + EdgeConstant.HAS_GEOMETRY.getDBClassName() + "') FROM (");
-    statement.append("SELECT FROM " + this.type.getMdVertex().getDBClassName());
+    statement.append("SELECT FROM " + this.type.getMdVertexDAO().getDBClassName());
 
     if (this.prev != null)
     {

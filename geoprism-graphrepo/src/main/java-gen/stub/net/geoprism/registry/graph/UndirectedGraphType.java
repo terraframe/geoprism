@@ -6,12 +6,12 @@ import org.commongeoregistry.adapter.metadata.GraphTypeDTO;
 import com.runwaysdk.dataaccess.MdEdgeDAOIF;
 import com.runwaysdk.dataaccess.metadata.graph.MdEdgeDAO;
 
-import net.geoprism.graph.GraphTypeSnapshot;
 import net.geoprism.registry.conversion.LocalizedValueConverter;
 import net.geoprism.registry.model.GraphType;
 import net.geoprism.registry.model.ServerElement;
 import net.geoprism.registry.model.graph.GraphStrategy;
 import net.geoprism.registry.model.graph.UndirectedGraphStrategy;
+import net.geoprism.registry.view.TypeClass;
 
 public class UndirectedGraphType extends UndirectedGraphTypeBase implements GraphType, ServerElement
 {
@@ -62,7 +62,7 @@ public class UndirectedGraphType extends UndirectedGraphTypeBase implements Grap
   @Override
   public GraphTypeDTO toDTO()
   {
-    final GraphTypeDTO dto = new GraphTypeDTO(GraphTypeSnapshot.UNDIRECTED_GRAPH_TYPE, this.getCode(), this.getLabel(), this.getDescriptionLV());
+    final GraphTypeDTO dto = new GraphTypeDTO(TypeClass.UNDIRECTED_GRAPH.getCode(), this.getCode(), this.getLabel(), this.getDescriptionLV());
 
     return dto;
   }

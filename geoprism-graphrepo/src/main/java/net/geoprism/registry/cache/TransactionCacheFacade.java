@@ -41,7 +41,7 @@ public class TransactionCacheFacade
       
       if (type instanceof ServerGeoObjectType)
       {
-        cache.put(((ServerGeoObjectType)type).getMdVertex().getOid(), type);
+        cache.put(((ServerGeoObjectType)type).getMdVertexDAO().getOid(), type);
       }
     }
   }

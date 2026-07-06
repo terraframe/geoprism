@@ -27,7 +27,6 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 import net.geoprism.configuration.GeoprismProperties;
-import net.geoprism.registry.model.GraphType;
 
 public class BusinessEdgeTypeView
 {
@@ -153,7 +152,7 @@ public class BusinessEdgeTypeView
 
   public String getType()
   {
-    return GraphType.BUSINESS_EDGE_TYPE;
+    return TypeClass.BUSINESS_EDGE.getCode();
   }
 
   @JsonIgnore

@@ -19,7 +19,6 @@
 package net.geoprism.registry.service.business;
 
 import java.util.Date;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -27,272 +26,68 @@ import java.util.TreeMap;
 import java.util.stream.Collectors;
 
 import org.commongeoregistry.adapter.constants.DefaultAttribute;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.google.gson.JsonObject;
 import com.runwaysdk.business.graph.EdgeObject;
 import com.runwaysdk.business.graph.GraphQuery;
 import com.runwaysdk.business.graph.VertexObject;
-import com.runwaysdk.dataaccess.MdAttributeBooleanDAOIF;
-import com.runwaysdk.dataaccess.MdAttributeClassificationDAOIF;
-import com.runwaysdk.dataaccess.MdAttributeDAOIF;
-import com.runwaysdk.dataaccess.MdAttributeDateDAOIF;
-import com.runwaysdk.dataaccess.MdAttributeDecimalDAOIF;
-import com.runwaysdk.dataaccess.MdAttributeDoubleDAOIF;
-import com.runwaysdk.dataaccess.MdAttributeGraphReferenceDAOIF;
-import com.runwaysdk.dataaccess.MdAttributeLongDAOIF;
-import com.runwaysdk.dataaccess.MdAttributeNumberDAOIF;
-import com.runwaysdk.dataaccess.MdAttributeTermDAOIF;
-import com.runwaysdk.dataaccess.MdClassDAOIF;
-import com.runwaysdk.dataaccess.MdClassificationDAOIF;
-import com.runwaysdk.dataaccess.MdVertexDAOIF;
-import com.runwaysdk.dataaccess.ProgrammingErrorException;
 import com.runwaysdk.dataaccess.graph.VertexObjectDAO;
-import com.runwaysdk.dataaccess.metadata.graph.MdVertexDAO;
-import com.runwaysdk.dataaccess.transaction.Transaction;
 
 import net.geoprism.configuration.GeoprismProperties;
-import net.geoprism.ontology.Classifier;
-import net.geoprism.registry.DateFormatter;
 import net.geoprism.registry.OriginException;
-import net.geoprism.registry.graph.AttributeClassificationType;
-import net.geoprism.registry.graph.AttributeDataSourceType;
-import net.geoprism.registry.graph.AttributeValue;
 import net.geoprism.registry.graph.BusinessEdgeType;
 import net.geoprism.registry.graph.BusinessType;
 import net.geoprism.registry.graph.BusinessVertex;
 import net.geoprism.registry.graph.DataSource;
 import net.geoprism.registry.model.BusinessObject;
-import net.geoprism.registry.model.ClassificationType;
 import net.geoprism.registry.model.EdgeConstant;
 import net.geoprism.registry.model.EdgeType;
 import net.geoprism.registry.model.graph.VertexComponent;
 import net.geoprism.registry.model.graph.VertexServerGeoObject;
+import net.geoprism.registry.view.BusinessTypeDTO;
+import net.geoprism.registry.view.ObjectAtTimeDTO;
+import net.geoprism.registry.view.ObjectOverTimeDTO;
 
 @Service
-public class BusinessObjectBusinessService implements BusinessObjectBusinessServiceIF
+public class BusinessObjectBusinessService extends ObjectBusinessService<BusinessObject, BusinessType, BusinessTypeDTO> implements BusinessObjectBusinessServiceIF
 {
-  @Autowired
-  private BusinessTypeBusinessServiceIF       typeService;
 
-  @Autowired
-  private ClassificationBusinessServiceIF     classificationService;
-
-  @Autowired
-  private ClassificationTypeBusinessServiceIF classificationTypeService;
-
-  @Autowired
-  private DataSourceBusinessServiceIF         sourceService;
-
-  @Override
-  public JsonObject toJSON(BusinessObject object)
+  public BusinessObjectBusinessService(BusinessTypeBusinessServiceIF typeService)
   {
-    JsonObject data = new JsonObject();
-
-    BusinessType type = object.getType();
-
-    type.getAttributeMap().values().stream() //
-        .filter(attribute -> !attribute.getCode().equals(BusinessObject.CODE)) //
-//        .filter(attribute -> !attribute.getIsChangeOverTime()) //
-        .forEach(attribute -> {
-
-          String attributeName = attribute.getCode();
-
-          Object value = object.getValue(attributeName);
-
-          if (value != null)
-          {
-            if (attribute instanceof AttributeClassificationType)
-            {
-              ClassificationType classificationType = this.classificationTypeService.getByCode( ( (AttributeClassificationType) attribute ).getClassificationType().getCode(), true);
-
-              this.classificationService.getByOid(classificationType, (String) value).ifPresent(classification -> {
-                data.addProperty(attributeName, classification.getCode());
-              });
-            }
-            else if (attribute instanceof AttributeDataSourceType)
-            {
-              DataSource dataSource = this.sourceService.get((String) value);
-
-              if (dataSource != null)
-              {
-                data.addProperty(attributeName, dataSource.getCode());
-              }
-            }
-            else if (value instanceof Number)
-            {
-              data.addProperty(attributeName, (Number) value);
-            }
-            else if (value instanceof Boolean)
-            {
-              data.addProperty(attributeName, (Boolean) value);
-            }
-            else if (value instanceof String)
-            {
-              data.addProperty(attributeName, (String) value);
-            }
-            else if (value instanceof Character)
-            {
-              data.addProperty(attributeName, (Character) value);
-            }
-            else if (value instanceof Date)
-            {
-              data.addProperty(attributeName, DateFormatter.formatDate((Date) value, false));
-            }
-            else
-            {
-              throw new UnsupportedOperationException();
-            }
-          }
-        });
-
-    JsonObject json = new JsonObject();
-    json.addProperty("code", object.getCode());
-    json.addProperty("label", object.getLabel());
-    json.add("data", data);
-
-    return json;
+    super(typeService, BusinessVertex.CLASS);
   }
 
   @Override
-  public BusinessObject newInstance(BusinessType type, JsonObject json)
+  public BusinessObject newInstance(BusinessType type)
+  {
+    VertexObject vertex = VertexObject.instantiate(VertexObjectDAO.newInstance(type.getMdVertexDAO()));
+
+    return new BusinessObject(type, vertex, new TreeMap<>());
+  }
+
+  @Override
+  protected BusinessObject build(BusinessType type, VertexObject current, Map<String, List<VertexObject>> nodeMap, Date date)
+  {
+    return new BusinessObject(type, current, nodeMap, date);
+  }
+
+  @Override
+  public ObjectAtTimeDTO toDTO(BusinessObject object, Date date)
+  {
+    ObjectAtTimeDTO dto = super.toDTO(object, date);
+    dto.setLabel(object.getLabel());
+
+    return dto;
+  }
+
+  @Override
+  public BusinessObject newInstance(BusinessType type, ObjectOverTimeDTO dto)
   {
     BusinessObject object = this.newInstance(type);
 
-    populate(object, json);
+    populate(object, dto);
 
     return object;
-  }
-
-  @Override
-  public void populate(BusinessObject object, JsonObject json)
-  {
-    object.setCode(json.get("code").getAsString());
-
-    JsonObject data = json.get("data").getAsJsonObject();
-
-    object.getType().getMdVertexDAO().definesAttributes().stream().filter(mdAttribute -> {
-      String attributeName = mdAttribute.definesAttribute();
-
-      return !attributeName.equals(BusinessObject.CODE) && !mdAttribute.isSystem();
-    }).forEach(mdAttribute -> {
-      String attributeName = mdAttribute.definesAttribute();
-
-      if (data.has(attributeName) && !data.get(attributeName).isJsonNull())
-      {
-        if (mdAttribute instanceof MdAttributeTermDAOIF)
-        {
-          String value = data.get(attributeName).getAsString();
-
-          Classifier classifier = Classifier.get((String) value);
-
-          object.setValue(attributeName, classifier);
-        }
-        else if (mdAttribute instanceof MdAttributeLongDAOIF)
-        {
-          object.setValue(attributeName, data.get(attributeName).getAsLong());
-        }
-        else if (mdAttribute instanceof MdAttributeDoubleDAOIF)
-        {
-          object.setValue(attributeName, data.get(attributeName).getAsDouble());
-        }
-        else if (mdAttribute instanceof MdAttributeDecimalDAOIF)
-        {
-          object.setValue(attributeName, data.get(attributeName).getAsBigDecimal());
-        }
-        else if (mdAttribute instanceof MdAttributeNumberDAOIF)
-        {
-          object.setValue(attributeName, data.get(attributeName).getAsNumber());
-        }
-        else if (mdAttribute instanceof MdAttributeBooleanDAOIF)
-        {
-          object.setValue(attributeName, data.get(attributeName).getAsBoolean());
-        }
-        else if (mdAttribute instanceof MdAttributeDateDAOIF)
-        {
-          object.setValue(attributeName, DateFormatter.parseDate(data.get(attributeName).getAsString()));
-        }
-        else if (mdAttribute instanceof MdAttributeClassificationDAOIF)
-        {
-          String code = data.get(attributeName).getAsString();
-
-          MdClassificationDAOIF mdClassification = ( (MdAttributeClassificationDAOIF) mdAttribute ).getMdClassificationDAOIF();
-
-          ClassificationType type = new ClassificationType(mdClassification);
-
-          this.classificationService.getByCode(type, code).ifPresent(classification -> {
-            object.setValue(attributeName, classification.getVertex());
-          });
-        }
-        else if (mdAttribute instanceof MdAttributeGraphReferenceDAOIF)
-        {
-          MdClassDAOIF mdVertex = ( (MdAttributeGraphReferenceDAOIF) mdAttribute ).getReferenceMdVertexDAOIF();
-
-          if (mdVertex.definesType().equals(DataSource.CLASS))
-          {
-            String code = data.get(attributeName).getAsString();
-
-            this.sourceService.getByCode(code).ifPresent(dataSource -> {
-              object.setValue(attributeName, dataSource);
-            });
-          }
-          else
-          {
-            throw new UnsupportedOperationException();
-          }
-        }
-        else
-        {
-          object.setValue(attributeName, data.get(attributeName).getAsString());
-        }
-      }
-    });
-  }
-
-  @Override
-  @Transaction
-  public void apply(BusinessObject object)
-  {
-    apply(object, true);
-  }
-
-  @Override
-  @Transaction
-  public void apply(BusinessObject object, boolean validateOrigin)
-  {
-    if (validateOrigin)
-    {
-      BusinessType type = object.getType();
-
-      if (!type.getOrigin().equals(GeoprismProperties.getOrigin()))
-      {
-        throw new OriginException();
-      }
-    }
-
-    object.getVertex().apply();
-  }
-
-  @Override
-  @Transaction
-  public void delete(BusinessObject object)
-  {
-    this.delete(object, true);
-  }
-
-  @Override
-  public void delete(BusinessObject object, boolean validateOrigin)
-  {
-    if (validateOrigin)
-    {
-      if (!object.getType().getOrigin().equals(GeoprismProperties.getOrigin()))
-      {
-        throw new OriginException();
-      }
-    }
-
-    object.getVertex().delete();
   }
 
   @Override
@@ -513,106 +308,6 @@ public class BusinessObjectBusinessService implements BusinessObjectBusinessServ
     return this.processTraverseResults(query.getResults(), date).stream().sorted((a, b) -> {
       return a.getLabel().compareTo(b.getLabel());
     }).collect(Collectors.toList());
-  }
-
-  @Override
-  public BusinessObject newInstance(BusinessType type)
-  {
-    VertexObject vertex = VertexObject.instantiate(VertexObjectDAO.newInstance(type.getMdVertexDAO()));
-
-    return new BusinessObject(type, vertex, new TreeMap<>());
-  }
-
-  @Override
-  public BusinessObject get(BusinessType type, String attributeName, Object value)
-  {
-    MdVertexDAOIF mdVertex = type.getMdVertexDAO();
-    MdAttributeDAOIF mdAttribute = mdVertex.definesAttribute(attributeName);
-
-    StringBuilder statement = new StringBuilder();
-    statement.append("TRAVERSE out('" + EdgeConstant.HAS_VALUE.getDBClassName() + "', '" + EdgeConstant.HAS_GEOMETRY.getDBClassName() + "') FROM (");
-    statement.append("  SELECT FROM " + mdVertex.getDBClassName());
-    statement.append("  WHERE " + mdAttribute.getColumnName() + " = :" + attributeName);
-    statement.append(")");
-
-    GraphQuery<VertexObject> query = new GraphQuery<VertexObject>(statement.toString());
-    query.setParameter(attributeName, value);
-
-    return this.processSingleResult(query.getResults(), null);
-  }
-
-  @Override
-  public BusinessObject getByCode(BusinessType type, Object value)
-  {
-    return this.get(type, DefaultAttribute.CODE.getName(), value);
-  }
-
-  public List<BusinessObject> processTraverseResults(List<VertexObject> results, Date date)
-  {
-    MdVertexDAOIF mdBusinessVertex = MdVertexDAO.getMdVertexDAO(BusinessVertex.CLASS);
-    List<BusinessObject> list = new LinkedList<BusinessObject>();
-    
-    VertexObject current = null;
-    List<VertexObject> currentAttributes = new LinkedList<>();
-
-    for (VertexObject result : results)
-    {
-      MdVertexDAOIF mdClass = (MdVertexDAOIF) result.getMdClass();
-      List<? extends MdVertexDAOIF> superClasses = mdClass.getSuperClasses();
-      if (superClasses.contains(mdBusinessVertex))
-      {
-        if (current != null)
-        {
-          BusinessType type = this.typeService.getByMdVertex((MdVertexDAOIF) current.getMdClass());
-
-          Map<String, List<VertexObject>> nodeMap = currentAttributes.stream().collect(Collectors.groupingBy(v -> {
-            return (String) v.getObjectValue(AttributeValue.ATTRIBUTENAME);
-          }));
-
-          BusinessObject bObject = new BusinessObject(type, current, nodeMap, date);
-          list.add(bObject);
-        }
-
-        current = result;
-        currentAttributes = new LinkedList<>();
-      }
-      else
-      {
-        currentAttributes.add(result);
-      }
-    }
-
-    if (current != null)
-    {
-      BusinessType type = this.typeService.getByMdVertex((MdVertexDAOIF) current.getMdClass());
-
-      Map<String, List<VertexObject>> nodeMap = currentAttributes.stream().collect(Collectors.groupingBy(v -> {
-        return (String) v.getObjectValue(AttributeValue.ATTRIBUTENAME);
-      }));
-
-      BusinessObject vsgo = new BusinessObject(type, current, nodeMap, date);
-      list.add(vsgo);
-    }
-
-    return list;
-  }
-
-  public BusinessObject processSingleResult(List<VertexObject> list, Date date)
-  {
-    List<BusinessObject> results = this.processTraverseResults(list, date);
-
-    if (results.size() == 0)
-    {
-      return null;
-    }
-    else if (results.size() == 1)
-    {
-      return results.get(0);
-    }
-    else
-    {
-      throw new ProgrammingErrorException("Multiple results were returned when only one is allowed");
-    }
   }
 
 }

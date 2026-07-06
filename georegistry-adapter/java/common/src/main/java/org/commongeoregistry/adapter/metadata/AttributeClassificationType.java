@@ -23,9 +23,11 @@ import org.commongeoregistry.adapter.Term;
 import org.commongeoregistry.adapter.dataaccess.LocalizedValue;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonTypeName;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
+@JsonTypeName(AttributeClassificationType.TYPE)
 public class AttributeClassificationType extends AttributeType
 {
   /**

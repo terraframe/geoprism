@@ -22,16 +22,10 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
-import org.commongeoregistry.adapter.constants.DefaultAttribute;
-import org.commongeoregistry.adapter.dataaccess.LocalizedValue;
-
-import com.runwaysdk.business.graph.GraphObject;
 import com.runwaysdk.business.graph.VertexObject;
 import com.runwaysdk.system.metadata.MdAttribute;
 
 import net.geoprism.registry.DateFormatter;
-import net.geoprism.registry.conversion.RegistryLocalizedValueConverter;
-import net.geoprism.registry.graph.AttributeLocalType;
 import net.geoprism.registry.graph.BusinessType;
 import net.geoprism.registry.model.graph.ServerObjectVertex;
 import net.geoprism.registry.model.graph.VertexComponent;
@@ -50,6 +44,7 @@ public class BusinessObject extends ServerObjectVertex implements VertexComponen
     super(type, vertex, valueNodeMap, date);
   }
 
+  @SuppressWarnings("unchecked")
   public BusinessType getType()
   {
     return (BusinessType) super.getType();
@@ -82,16 +77,6 @@ public class BusinessObject extends ServerObjectVertex implements VertexComponen
     }
 
     return this.getCode();
-  }
-
-  public String getCode()
-  {
-    return this.getValue(DefaultAttribute.CODE.getName());
-  }
-
-  public void setCode(String code)
-  {
-    this.setValue(DefaultAttribute.CODE.getName(), code);
   }
 
 }

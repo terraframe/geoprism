@@ -100,7 +100,7 @@ public class BasicVertexQuery
 
     StringBuilder statement = new StringBuilder();
     statement.append("TRAVERSE out('" + EdgeConstant.HAS_VALUE.getDBClassName() + "', '" + EdgeConstant.HAS_GEOMETRY.getDBClassName() + "') FROM (");
-    statement.append("SELECT FROM " + this.type.getMdVertex().getDBClassName());
+    statement.append("SELECT FROM " + this.type.getMdVertexDAO().getDBClassName());
 
     if (this.restriction != null)
     {
@@ -129,7 +129,7 @@ public class BasicVertexQuery
     HashMap<String, Object> parameters = new HashMap<String, Object>();
 
     StringBuilder statement = new StringBuilder();
-    statement.append("SELECT COUNT(*) FROM " + this.type.getMdVertex().getDBClassName());
+    statement.append("SELECT COUNT(*) FROM " + this.type.getMdVertexDAO().getDBClassName());
 
     if (this.restriction != null)
     {

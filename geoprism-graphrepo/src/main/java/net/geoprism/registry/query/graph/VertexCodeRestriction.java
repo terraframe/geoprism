@@ -37,7 +37,7 @@ public class VertexCodeRestriction implements VertexGeoObjectRestriction
   @Override
   public void restrict(StringBuilder statement, Map<String, Object> parameters)
   {
-    statement.append(this.type.getMdVertex().getDBClassName());
+    statement.append(this.type.getMdVertexDAO().getDBClassName());
     statement.append(" WHERE code = :code");
 
     parameters.put("code", this.code);

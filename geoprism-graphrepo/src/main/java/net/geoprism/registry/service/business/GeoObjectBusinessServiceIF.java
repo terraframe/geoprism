@@ -3,18 +3,18 @@
  *
  * This file is part of Geoprism(tm).
  *
- * Geoprism(tm) is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
+ * Geoprism(tm) is free software: you can redistribute it and/or modify it under
+ * the terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation, either version 3 of the License, or (at your option) any
+ * later version.
  *
- * Geoprism(tm) is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
+ * Geoprism(tm) is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with Geoprism(tm).  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with Geoprism(tm). If not, see <http://www.gnu.org/licenses/>.
  */
 package net.geoprism.registry.service.business;
 
@@ -52,6 +52,7 @@ import net.geoprism.registry.model.ServerParentTreeNode;
 import net.geoprism.registry.model.graph.VertexServerGeoObject;
 import net.geoprism.registry.query.ServerGeoObjectQuery;
 import net.geoprism.registry.view.GeoObjectSplitView;
+import net.geoprism.registry.view.ObjectAtTimeDTO;
 import net.geoprism.registry.view.ServerParentTreeNodeOverTime;
 
 @Component
@@ -129,12 +130,14 @@ public interface GeoObjectBusinessServiceIF
 
   public GeoObjectOverTime toGeoObjectOverTime(ServerGeoObjectIF sgo, boolean generateUid, ClassifierVertexCache classifierCache);
 
-//  public ServerParentTreeNode addChild(ServerGeoObjectIF sgo, ServerGeoObjectIF child, ServerHierarchyType hierarchy);
-  
-//  public ServerParentTreeNode addParent(ServerGeoObjectIF sgo, ServerGeoObjectIF parent, ServerHierarchyType hierarchyType, String uid);
+  // public ServerParentTreeNode addChild(ServerGeoObjectIF sgo,
+  // ServerGeoObjectIF child, ServerHierarchyType hierarchy);
+
+  // public ServerParentTreeNode addParent(ServerGeoObjectIF sgo,
+  // ServerGeoObjectIF parent, ServerHierarchyType hierarchyType, String uid);
 
   public ServerParentTreeNode addParent(ServerGeoObjectIF sgo, ServerGeoObjectIF parent, ServerHierarchyType hierarchyType, Date startDate, Date endDate, String uid, DataSource source, boolean validateOrigin);
-  
+
   public ServerParentTreeNode addChild(ServerGeoObjectIF sgo, ServerGeoObjectIF child, ServerHierarchyType hierarchy, Date startDate, Date endDate, String uid, DataSource source, boolean validateOrigin);
 
   public ServerChildTreeNode getChildGeoObjects(ServerGeoObjectIF sgo, ServerHierarchyType hierarchy, String[] childrenTypes, Boolean recursive, Date date);
@@ -149,11 +152,9 @@ public interface GeoObjectBusinessServiceIF
 
   public void removeAllEdges(ServerGeoObjectIF sgo, ServerHierarchyType hierarchyType, boolean validateOrigin);
 
-
   public ValueOverTimeCollection getParentCollection(ServerGeoObjectIF sgo, ServerHierarchyType hierarchyType);
 
   public SortedSet<EdgeObject> setParentCollection(ServerGeoObjectIF sgo, ServerHierarchyType hierarchyType, ValueOverTimeCollection votc, DataSource source, boolean validateOrigin);
-
 
   public ServerParentTreeNode getGraphParentGeoObjects(ServerGeoObjectIF sgo, GraphType graphType, Boolean recursive, Boolean includeInherited, Date date);
 
@@ -163,9 +164,13 @@ public interface GeoObjectBusinessServiceIF
    * Adds an edge, bypassing all validation (for performance reasons). Be
    * careful with this method!! You probably want to call addChild or addParent
    * instead.
-   * @param uid TODO
-   * @param source TODO
-   * @param validateOrigin TODO
+   * 
+   * @param uid
+   *          TODO
+   * @param source
+   *          TODO
+   * @param validateOrigin
+   *          TODO
    */
   public EdgeObject addParentRaw(ServerGeoObjectIF sgo, VertexObject parent, MdEdgeDAOIF mdEdge, Date startDate, Date endDate, String uid, DataSource source, boolean validateOrigin);
 
@@ -173,7 +178,7 @@ public interface GeoObjectBusinessServiceIF
 
   public JsonObject hasDuplicateLabel(Date date, String typeCode, String code, String label);
 
-  public JsonArray getBusinessObjects(String typeCode, String code, String edgeTypeCode, String direction);
+  public List<ObjectAtTimeDTO> getBusinessObjects(String typeCode, String code, String edgeTypeCode, String direction, Date date);
 
   public List<BusinessObject> getBusinessObjects(VertexServerGeoObject object, BusinessEdgeType edgeType, EdgeDirection direction);
 

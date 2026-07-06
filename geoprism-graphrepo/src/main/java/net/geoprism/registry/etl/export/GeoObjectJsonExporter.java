@@ -120,7 +120,7 @@ public class GeoObjectJsonExporter
 
   public List<VertexServerGeoObject> query()
   {
-    MdVertexDAOIF mdVertex = got.getMdVertex();
+    MdVertexDAOIF mdVertex = got.getMdVertexDAO();
     MdAttributeDAOIF mdAttribute = MdAttributeDAO.getByKey(GeoVertex.CLASS + "." + GeoVertex.LASTUPDATEDATE);
 
     StringBuilder statement = new StringBuilder();
@@ -163,7 +163,7 @@ public class GeoObjectJsonExporter
 
   public Long count()
   {
-    MdVertexDAOIF mdVertex = got.getMdVertex();
+    MdVertexDAOIF mdVertex = got.getMdVertexDAO();
     MdAttributeDAOIF mdAttribute = MdAttributeDAO.getByKey(GeoVertex.CLASS + "." + GeoVertex.LASTUPDATEDATE);
 
     StringBuilder statement = new StringBuilder();

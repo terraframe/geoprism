@@ -3,18 +3,18 @@
  *
  * This file is part of Geoprism(tm).
  *
- * Geoprism(tm) is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
+ * Geoprism(tm) is free software: you can redistribute it and/or modify it under
+ * the terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation, either version 3 of the License, or (at your option) any
+ * later version.
  *
- * Geoprism(tm) is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
+ * Geoprism(tm) is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with Geoprism(tm).  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with Geoprism(tm). If not, see <http://www.gnu.org/licenses/>.
  */
 package net.geoprism.registry.service.business;
 
@@ -40,7 +40,6 @@ import com.runwaysdk.system.metadata.MdEdge;
 import com.runwaysdk.system.metadata.MdGraphClassQuery;
 
 import net.geoprism.configuration.GeoprismProperties;
-import net.geoprism.graph.BusinessEdgeTypeSnapshot;
 import net.geoprism.graph.DirectedAcyclicGraphTypeSnapshot;
 import net.geoprism.graph.DirectedAcyclicGraphTypeSnapshotQuery;
 import net.geoprism.graph.GeoObjectTypeSnapshot;
@@ -53,6 +52,7 @@ import net.geoprism.graph.UndirectedGraphTypeSnapshotQuery;
 import net.geoprism.registry.RegistryConstants;
 import net.geoprism.registry.conversion.LocalizedValueConverter;
 import net.geoprism.registry.model.SnapshotContainer;
+import net.geoprism.registry.view.TypeClass;
 
 @Service
 public class GraphTypeSnapshotBusinessService implements GraphTypeSnapshotBusinessServiceIF
@@ -128,10 +128,10 @@ public class GraphTypeSnapshotBusinessService implements GraphTypeSnapshotBusine
 
     GraphTypeSnapshot snapshot;
 
-    if (typeCode.equals(GraphTypeSnapshot.DIRECTED_ACYCLIC_GRAPH_TYPE))
+    if (typeCode.equals(TypeClass.DAG.getCode()))
     {
       MdEdge mdEdge = createMdEdge(version, root, code, label, description);
-      
+
       DirectedAcyclicGraphTypeSnapshot htsnapshot = new DirectedAcyclicGraphTypeSnapshot();
       htsnapshot.setGraphMdEdge(mdEdge);
       htsnapshot.setOrigin(origin);
@@ -145,15 +145,15 @@ public class GraphTypeSnapshotBusinessService implements GraphTypeSnapshotBusine
 
       snapshot = htsnapshot;
     }
-    else if (typeCode.equals(GraphTypeSnapshot.UNDIRECTED_GRAPH_TYPE))
+    else if (typeCode.equals(TypeClass.UNDIRECTED_GRAPH.getCode()))
     {
       MdEdge mdEdge = createMdEdge(version, root, code, label, description);
-      
+
       UndirectedGraphTypeSnapshot htsnapshot = new UndirectedGraphTypeSnapshot();
       htsnapshot.setGraphMdEdge(mdEdge);
       htsnapshot.setCode(code);
       htsnapshot.setOrigin(origin);
-      htsnapshot.setSequence(sequence);      
+      htsnapshot.setSequence(sequence);
       LocalizedValueConverter.populate(htsnapshot.getDisplayLabel(), label);
       LocalizedValueConverter.populate(htsnapshot.getDescription(), description);
       htsnapshot.apply();
@@ -162,7 +162,7 @@ public class GraphTypeSnapshotBusinessService implements GraphTypeSnapshotBusine
 
       snapshot = htsnapshot;
     }
-    else if (typeCode.equals(GraphTypeSnapshot.HIERARCHY_TYPE))
+    else if (typeCode.equals(TypeClass.HIERARCHY.getCode()))
     {
       snapshot = this.hService.create(version, type, root);
     }
@@ -211,7 +211,7 @@ public class GraphTypeSnapshotBusinessService implements GraphTypeSnapshotBusine
   @Override
   public GraphTypeSnapshot get(SnapshotContainer<?> version, String typeCode, String code)
   {
-    if (GraphTypeSnapshot.DIRECTED_ACYCLIC_GRAPH_TYPE.equals(typeCode))
+    if (TypeClass.DAG.getCode().equals(typeCode))
     {
       QueryFactory factory = new QueryFactory();
 
@@ -219,7 +219,8 @@ public class GraphTypeSnapshotBusinessService implements GraphTypeSnapshotBusine
       vQuery.WHERE(vQuery.getParent().EQ((LabeledPropertyGraphTypeVersion) version));
 
       DirectedAcyclicGraphTypeSnapshotQuery query = new DirectedAcyclicGraphTypeSnapshotQuery(factory);
-      query.WHERE(query.EQ(vQuery.getChild()));;
+      query.WHERE(query.EQ(vQuery.getChild()));
+      ;
       query.AND(query.getCode().EQ(code));
 
       try (OIterator<? extends GraphTypeSnapshot> it = query.getIterator())
@@ -230,11 +231,11 @@ public class GraphTypeSnapshotBusinessService implements GraphTypeSnapshotBusine
         }
       }
     }
-    else if (GraphTypeSnapshot.HIERARCHY_TYPE.equals(typeCode))
+    else if (TypeClass.HIERARCHY.getCode().equals(typeCode))
     {
       return this.hService.get(version, code);
     }
-    else if (GraphTypeSnapshot.UNDIRECTED_GRAPH_TYPE.equals(typeCode))
+    else if (TypeClass.UNDIRECTED_GRAPH.getCode().equals(typeCode))
     {
       QueryFactory factory = new QueryFactory();
 
@@ -242,7 +243,8 @@ public class GraphTypeSnapshotBusinessService implements GraphTypeSnapshotBusine
       vQuery.WHERE(vQuery.getParent().EQ((LabeledPropertyGraphTypeVersion) version));
 
       UndirectedGraphTypeSnapshotQuery query = new UndirectedGraphTypeSnapshotQuery(factory);
-      query.WHERE(query.EQ(vQuery.getChild()));;
+      query.WHERE(query.EQ(vQuery.getChild()));
+      ;
       query.AND(query.getCode().EQ(code));
 
       try (OIterator<? extends GraphTypeSnapshot> it = query.getIterator())

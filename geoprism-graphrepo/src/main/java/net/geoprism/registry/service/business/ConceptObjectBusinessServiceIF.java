@@ -18,43 +18,14 @@
  */
 package net.geoprism.registry.service.business;
 
-import java.util.Date;
-import java.util.List;
-
 import org.springframework.stereotype.Component;
-
-import com.google.gson.JsonObject;
-import com.runwaysdk.business.graph.VertexObject;
 
 import net.geoprism.registry.graph.ConceptClass;
 import net.geoprism.registry.model.ConceptObject;
+import net.geoprism.registry.view.ConceptClassDTO;
 
 @Component
-public interface ConceptObjectBusinessServiceIF
+public interface ConceptObjectBusinessServiceIF extends ObjectBusinessServiceIF<ConceptObject, ConceptClass, ConceptClassDTO>
 {
-
-  public void apply(ConceptObject object);
-
-  public void apply(ConceptObject object, boolean validateOrigin);
-
-  public void delete(ConceptObject object);
-
-  public void delete(ConceptObject object, boolean validateOrigin);
-
-  public ConceptObject newInstance(ConceptClass type);
-
-  public ConceptObject newInstance(ConceptClass type, JsonObject json);
-
-  public ConceptObject get(ConceptClass type, String attributeName, Object value);
-
-  public ConceptObject getByCode(ConceptClass type, Object value);
-
-  public void populate(ConceptObject object, JsonObject json);
-
-  public JsonObject toJSON(ConceptObject object);
-
-  public List<ConceptObject> processTraverseResults(List<VertexObject> results, Date date);
-
-  public ConceptObject processSingleResult(List<VertexObject> list, Date date);
 
 }

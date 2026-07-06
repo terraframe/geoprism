@@ -20,15 +20,11 @@ package net.geoprism.graph;
 
 import com.runwaysdk.system.metadata.MdEdge;
 
+import net.geoprism.registry.view.TypeClass;
+
 public interface GraphTypeSnapshot
 {
   public final static java.lang.String TYPE_CODE                   = "typeCode";
-
-  public static final String           DIRECTED_ACYCLIC_GRAPH_TYPE = "DirectedAcyclicGraphType";
-
-  public static final String           UNDIRECTED_GRAPH_TYPE       = "UndirectedGraphType";
-
-  public static final String           HIERARCHY_TYPE              = "HierarchyType";
 
   public String getGraphMdEdgeOid();
 
@@ -46,15 +42,15 @@ public interface GraphTypeSnapshot
   {
     if (graphType instanceof DirectedAcyclicGraphTypeSnapshot)
     {
-      return GraphTypeSnapshot.DIRECTED_ACYCLIC_GRAPH_TYPE;
+      return TypeClass.DAG.getCode();
     }
     else if (graphType instanceof DirectedAcyclicGraphTypeSnapshot)
     {
-      return GraphTypeSnapshot.UNDIRECTED_GRAPH_TYPE;
+      return TypeClass.UNDIRECTED_GRAPH.getCode();
     }
     else if (graphType instanceof HierarchyTypeSnapshot)
     {
-      return GraphTypeSnapshot.HIERARCHY_TYPE;
+      return TypeClass.HIERARCHY.getCode();
     }
     else
     {

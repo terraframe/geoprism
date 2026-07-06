@@ -41,6 +41,7 @@ import com.google.gson.JsonObject;
  */
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, // use logical type name
     include = JsonTypeInfo.As.PROPERTY, property = "type")
+
 @JsonSubTypes({ //
     @JsonSubTypes.Type(value = AttributeBooleanType.class, name = AttributeBooleanType.TYPE), //
     @JsonSubTypes.Type(value = AttributeClassificationType.class, name = AttributeClassificationType.TYPE), //

@@ -25,13 +25,8 @@ import org.commongeoregistry.adapter.dataaccess.GeoObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import com.google.gson.JsonSyntaxException;
-import com.runwaysdk.dataaccess.ProgrammingErrorException;
 import com.runwaysdk.session.Request;
 import com.runwaysdk.session.RequestType;
 
@@ -46,55 +41,41 @@ import net.geoprism.registry.service.business.BusinessObjectBusinessServiceIF;
 import net.geoprism.registry.service.business.BusinessTypeBusinessServiceIF;
 import net.geoprism.registry.service.business.GeoObjectBusinessServiceIF;
 import net.geoprism.registry.view.BusinessTypeDTO;
+import net.geoprism.registry.view.ObjectAtTimeDTO;
 
 @Service
-public class BusinessObjectService
+public class BusinessObjectService extends ObjectService<BusinessObject, BusinessType, BusinessTypeDTO>
 {
-  @Autowired
-  private BusinessTypeBusinessServiceIF     typeService;
-
   @Autowired
   private BusinessEdgeTypeBusinessServiceIF edgeService;
 
   @Autowired
-  private BusinessObjectBusinessServiceIF   objectService;
-
-  @Autowired
   private GeoObjectBusinessServiceIF        geoObjectService;
 
-  @Request(RequestType.SESSION)
-  public JsonObject get(String sessionId, String businessTypeCode, String code)
+  public BusinessObjectService(BusinessTypeBusinessServiceIF typeService, BusinessObjectBusinessServiceIF objectService)
   {
-    BusinessType type = this.typeService.getByCodeOrThrow(businessTypeCode);
-    BusinessObject object = this.objectService.getByCode(type, code);
-
-    return this.objectService.toJSON(object);
+    super(typeService, objectService);
   }
 
-  @Request(RequestType.SESSION)
-  public JsonObject getTypeAndObject(String sessionId, String businessTypeCode, String code)
+  protected BusinessObjectBusinessServiceIF getObjectService()
   {
-    BusinessType type = this.typeService.getByCodeOrThrow(businessTypeCode);
-    BusinessObject object = this.objectService.getByCode(type, code);
+    return (BusinessObjectBusinessServiceIF) super.getObjectService();
+  }
 
-    BusinessTypeDTO dto = this.typeService.toDTO(type, true, false);
-
-    JsonObject response = new JsonObject();
-    response.add("type", JsonParser.parseString(BusinessTypeDTO.toJson(dto)));
-    response.add("object", this.objectService.toJSON(object));
-
-    return response;
+  protected BusinessTypeBusinessServiceIF getTypeService()
+  {
+    return (BusinessTypeBusinessServiceIF) super.getTypeService();
   }
 
   @Request(RequestType.SESSION)
   public JsonArray getParents(String sessionId, String businessTypeCode, String code, String businessEdgeTypeCode, Date date)
   {
-    BusinessType type = this.typeService.getByCodeOrThrow(businessTypeCode);
+    BusinessType type = this.getTypeService().getByCodeOrThrow(businessTypeCode);
     BusinessEdgeType relationshipType = this.edgeService.getByCodeOrThrow(businessEdgeTypeCode);
 
-    BusinessObject object = this.objectService.getByCode(type, code);
+    BusinessObject object = this.getObjectService().getByCode(type, code);
 
-    List<VertexComponent> parents = this.objectService.getParents(object, relationshipType, date);
+    List<VertexComponent> parents = this.getObjectService().getParents(object, relationshipType, date);
 
     return serialize(date, parents, relationshipType.getIsParentGeoObject());
   }
@@ -102,12 +83,12 @@ public class BusinessObjectService
   @Request(RequestType.SESSION)
   public JsonArray getChildren(String sessionId, String businessTypeCode, String code, String businessEdgeTypeCode, Date date)
   {
-    BusinessType type = this.typeService.getByCodeOrThrow(businessTypeCode);
+    BusinessType type = this.getTypeService().getByCodeOrThrow(businessTypeCode);
     BusinessEdgeType relationshipType = this.edgeService.getByCodeOrThrow(businessEdgeTypeCode);
 
-    BusinessObject object = this.objectService.getByCode(type, code);
+    BusinessObject object = this.getObjectService().getByCode(type, code);
 
-    List<VertexComponent> children = this.objectService.getChildren(object, relationshipType, date);
+    List<VertexComponent> children = this.getObjectService().getChildren(object, relationshipType, date);
 
     return serialize(date, children, relationshipType.getIsChildGeoObject());
   }
@@ -121,7 +102,9 @@ public class BusinessObjectService
         return geoObject.toJSON();
       }
 
-      return this.objectService.toJSON((BusinessObject) parent);
+      ObjectAtTimeDTO dto = this.getObjectService().toDTO((BusinessObject) parent, date);
+
+      return JsonParser.parseString(ObjectAtTimeDTO.toJson(dto));
     }).collect(JsonCollectors.toJsonArray());
   }
 
