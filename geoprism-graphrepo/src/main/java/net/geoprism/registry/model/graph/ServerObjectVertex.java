@@ -244,7 +244,6 @@ public class ServerObjectVertex
     this.type.getAttribute(attributeName).ifPresent( ( attr -> {
       attr.getStrategy().setValuesOverTime(this.vertex, this.valueNodeMap, collection);
     } ));
-
   }
 
   public String getCode()

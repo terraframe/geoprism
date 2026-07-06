@@ -24,6 +24,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import org.apache.commons.lang3.StringUtils;
 import org.commongeoregistry.adapter.constants.DefaultAttribute;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -33,6 +34,7 @@ import com.runwaysdk.business.graph.VertexObject;
 import com.runwaysdk.dataaccess.MdAttributeDAOIF;
 import com.runwaysdk.dataaccess.MdVertexDAOIF;
 import com.runwaysdk.dataaccess.ProgrammingErrorException;
+import com.runwaysdk.dataaccess.graph.attributes.ValueOverTime;
 import com.runwaysdk.dataaccess.graph.attributes.ValueOverTimeCollection;
 import com.runwaysdk.dataaccess.metadata.graph.MdVertexDAO;
 import com.runwaysdk.dataaccess.transaction.Transaction;
@@ -52,7 +54,6 @@ import net.geoprism.registry.view.MultiValueDTO;
 import net.geoprism.registry.view.ObjectAtTimeDTO;
 import net.geoprism.registry.view.ObjectClassDTO;
 import net.geoprism.registry.view.ObjectOverTimeDTO;
-import net.geoprism.registry.view.TypeInfo;
 import net.geoprism.registry.view.ValueOverTimeEntryDTO;
 
 @Service
@@ -216,8 +217,6 @@ public abstract class ObjectBusinessService<V extends ServerObjectVertex, T exte
   @Override
   public void populate(V object, ObjectOverTimeDTO dto)
   {
-    object.setCode(dto.getCode());
-
     T type = object.getType();
     List<AttributeType> attributes = type.getAttributes();
 
@@ -228,60 +227,78 @@ public abstract class ObjectBusinessService<V extends ServerObjectVertex, T exte
     }).forEach(attribute -> {
       String attributeName = attribute.getCode();
 
-      if (dto.has(attributeName))
+      if (attribute.getIsChangeOverTime())
       {
-        if (attribute.getIsChangeOverTime())
-        {
-          List<ValueOverTimeEntryDTO> vots = dto.getValuesOverTime(attributeName);
+        List<ValueOverTimeEntryDTO> collection = dto.has(attributeName) ? dto.getValuesOverTime(attributeName) : new LinkedList<>();
 
-          vots.forEach(vot -> {
-            if (attribute instanceof AttributeDateType)
-            {
-              object.setValue(attributeName, DateFormatter.parseDate((String) vot.getValue()), vot.getStartDate(), vot.getEndDate());
-            }
-            else if (attribute instanceof AttributeDataSourceType)
-            {
-              String code = dto.getValue(attributeName);
+        ValueOverTimeCollection c = new ValueOverTimeCollection();
 
-              this.sourceService.getByCode(code).ifPresent(dataSource -> {
-                object.setValue(attributeName, dataSource, vot.getStartDate(), vot.getEndDate());
-              });
-            }
-            else
-            {
-              object.setValue(attributeName, vot.getValue(), vot.getStartDate(), vot.getEndDate());
-            }
-          });
-
-        }
-        else
+        for (ValueOverTimeEntryDTO votDTO : collection)
         {
           if (attribute instanceof AttributeDateType)
           {
-            object.setValue(attributeName, DateFormatter.parseDate(dto.getValue(attributeName)));
+            object.setValue(attributeName, DateFormatter.parseDate((String) votDTO.getValue()), votDTO.getStartDate(), votDTO.getEndDate());
           }
           else if (attribute instanceof AttributeDataSourceType)
           {
-            String code = dto.getValue(attributeName);
+            String value = (String) votDTO.getValue();
 
-            this.sourceService.getByCode(code).ifPresent(dataSource -> {
-              object.setValue(attributeName, dataSource);
-            });
+            if (!StringUtils.isBlank(value))
+            {
+              DataSource source = this.sourceService.getByCode(value).orElseThrow(() -> {
+                throw new ProgrammingErrorException("Unable to find source with code [" + value + "]");
+              });
+
+              c.add(new ValueOverTime(votDTO.getStartDate(), votDTO.getEndDate(), source.getOid()));
+
+            }
+            else
+            {
+              c.add(new ValueOverTime(votDTO.getStartDate(), votDTO.getEndDate(), (String) null));
+            }
           }
           else
           {
-            object.setValue(attributeName, dto.getValue(attributeName));
+            c.add(new ValueOverTime(votDTO.getOid(), votDTO.getStartDate(), votDTO.getEndDate(), votDTO.getValue()));
           }
+        }
+
+        object.setValuesOverTime(attributeName, c);
+      }
+      else
+      {
+        Object value = dto.has(attributeName) ? dto.getValue(attributeName) : null;
+
+        if (value == null)
+        {
+          object.setValue(attributeName, null);
+        }
+        else if (attribute instanceof AttributeDateType)
+        {
+          object.setValue(attributeName, DateFormatter.parseDate((String) value));
+        }
+        else if (attribute instanceof AttributeDataSourceType)
+        {
+          DataSource dataSource = this.sourceService.getByCode((String) value).orElseThrow(() -> {
+            throw new ProgrammingErrorException("Unable to find source with code [" + value + "]");
+          });
+
+          object.setValue(attributeName, dataSource);
+        }
+        else
+        {
+          object.setValue(attributeName, dto.getValue(attributeName));
         }
       }
     });
+
+    object.setCode(dto.getCode());
+
   }
 
   @Override
   public void populate(V object, ObjectAtTimeDTO dto, Date startDate, Date endDate)
   {
-    object.setCode(dto.getCode());
-
     T type = object.getType();
 
     List<AttributeType> attributes = type.getAttributes();
@@ -293,29 +310,28 @@ public abstract class ObjectBusinessService<V extends ServerObjectVertex, T exte
     }).forEach(attribute -> {
       String attributeName = attribute.getCode();
 
-      if (dto.has(attributeName))
+      Object value = dto.getValue(attributeName);
+
+      if (value != null && attribute instanceof AttributeDateType)
       {
-        Object value = dto.getValue(attributeName);
+        value = DateFormatter.parseDate((String) value);
+      }
+      else if (value != null && attribute instanceof AttributeDataSourceType)
+      {
+        value = this.sourceService.getByCode((String) value).orElse(null);
+      }
 
-        if (attribute instanceof AttributeDateType)
-        {
-          value = DateFormatter.parseDate((String) value);
-        }
-        else if (attribute instanceof AttributeDataSourceType)
-        {
-          value = this.sourceService.getByCode((String) value).orElse(null);
-        }
-
-        if (attribute.getIsChangeOverTime())
-        {
-          object.setValue(attributeName, value, startDate, endDate);
-        }
-        else
-        {
-          object.setValue(attributeName, value);
-        }
+      if (attribute.getIsChangeOverTime())
+      {
+        object.setValue(attributeName, value, startDate, endDate);
+      }
+      else
+      {
+        object.setValue(attributeName, value);
       }
     });
+
+    object.setCode(dto.getCode());
   }
 
   @Override
