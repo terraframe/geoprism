@@ -201,14 +201,14 @@ public class DirectedAcyclicGraphTypeBusinessService implements DirectedAcyclicG
     StringBuilder statement = new StringBuilder();
     statement.append("SELECT FROM " + mdVertex.getDBClassName());
 
-    if (typeCodes.length > 0)
+    if (typeCodes != null && typeCodes.length > 0)
     {
       statement.append(" WHERE code IN (:codes)");
     }
 
     GraphQuery<DirectedAcyclicGraphType> query = new GraphQuery<DirectedAcyclicGraphType>(statement.toString());
 
-    if (typeCodes.length > 0)
+    if (typeCodes != null && typeCodes.length > 0)
     {
       query.setParameter("codes", typeCodes);
     }

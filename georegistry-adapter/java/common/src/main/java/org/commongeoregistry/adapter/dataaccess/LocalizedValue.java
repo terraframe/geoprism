@@ -3,18 +3,19 @@
  *
  * This file is part of Common Geo Registry Adapter(tm).
  *
- * Common Geo Registry Adapter(tm) is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
+ * Common Geo Registry Adapter(tm) is free software: you can redistribute it
+ * and/or modify it under the terms of the GNU Lesser General Public License as
+ * published by the Free Software Foundation, either version 3 of the License,
+ * or (at your option) any later version.
  *
- * Common Geo Registry Adapter(tm) is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
+ * Common Geo Registry Adapter(tm) is distributed in the hope that it will be
+ * useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser
+ * General Public License for more details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with Common Geo Registry Adapter(tm).  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with Common Geo Registry Adapter(tm). If not, see
+ * <http://www.gnu.org/licenses/>.
  */
 package org.commongeoregistry.adapter.dataaccess;
 
@@ -69,9 +70,25 @@ public class LocalizedValue
     return localizedValue;
   }
 
-  public void setLocalizedValue(String localizedValue)
+  public LocalizedValue setLocalizedValue(String localizedValue)
   {
     this.localizedValue = localizedValue;
+    
+    return this;
+  }
+
+  public LocalizedValue appendLocalizedValue(String suffix)
+  {
+    if (this.localizedValue != null)
+    {
+      this.localizedValue += suffix;
+    }
+    else
+    {
+      this.localizedValue = suffix;
+    }
+    
+    return this;
   }
 
   public Map<String, String> getLocaleValues()
@@ -79,9 +96,11 @@ public class LocalizedValue
     return localeValues;
   }
 
-  public void setLocaleValues(Map<String, String> localeValues)
+  public LocalizedValue setLocaleValues(Map<String, String> localeValues)
   {
     this.localeValues = localeValues;
+    
+    return this;
   }
 
   public String getValue()
@@ -89,9 +108,11 @@ public class LocalizedValue
     return localizedValue;
   }
 
-  public void setValue(String value)
+  public LocalizedValue setValue(String value)
   {
     this.localizedValue = value;
+    
+    return this;
   }
 
   public String getValue(Locale locale)
@@ -109,16 +130,20 @@ public class LocalizedValue
     return localizedValue;
   }
 
-  public void setValue(Locale locale, String value)
+  public LocalizedValue setValue(Locale locale, String value)
   {
     String key = locale.toString();
 
     this.localeValues.put(key, value);
+    
+    return this;
   }
 
-  public void setValue(String key, String value)
+  public LocalizedValue setValue(String key, String value)
   {
     this.localeValues.put(key, value);
+    
+    return this;
   }
 
   public boolean contains(Locale locale)
@@ -143,9 +168,11 @@ public class LocalizedValue
    * 
    * @param localeMap
    */
-  public void setLocaleMap(Map<String, String> localeMap)
+  public LocalizedValue setLocaleMap(Map<String, String> localeMap)
   {
     this.localeValues = localeMap;
+    
+    return this;
   }
 
   public JsonObject toJSON()

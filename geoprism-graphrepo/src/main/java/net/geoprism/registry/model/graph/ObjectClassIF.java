@@ -4,10 +4,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import org.commongeoregistry.adapter.dataaccess.LocalizedValue;
+
 import com.runwaysdk.dataaccess.MdVertexDAOIF;
 
 import net.geoprism.registry.graph.AttributeType;
 import net.geoprism.registry.model.ServerOrganization;
+import net.geoprism.registry.view.TypeInfo;
 
 public interface ObjectClassIF
 {
@@ -24,4 +27,7 @@ public interface ObjectClassIF
 
   public String getOrigin();
 
+  public TypeInfo getTypeInfo();
+
+  public LocalizedValue getLabel();
 }

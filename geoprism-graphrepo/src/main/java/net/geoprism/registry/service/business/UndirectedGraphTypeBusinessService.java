@@ -201,14 +201,14 @@ public class UndirectedGraphTypeBusinessService implements UndirectedGraphTypeBu
     StringBuilder statement = new StringBuilder();
     statement.append("SELECT FROM " + mdVertex.getDBClassName());
 
-    if (typeCodes.length > 0)
+    if (typeCodes != null && typeCodes.length > 0)
     {
       statement.append(" WHERE code IN (:codes)");
     }
 
     GraphQuery<UndirectedGraphType> query = new GraphQuery<UndirectedGraphType>(statement.toString());
 
-    if (typeCodes.length > 0)
+    if (typeCodes != null && typeCodes.length > 0)
     {
       query.setParameter("codes", typeCodes);
     }

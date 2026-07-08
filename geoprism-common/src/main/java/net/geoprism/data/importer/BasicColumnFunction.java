@@ -27,6 +27,11 @@ public class BasicColumnFunction implements ShapefileFunction
   {
     this.attributeName = attributeName;
   }
+  
+  public String getAttributeName()
+  {
+    return attributeName;
+  }
 
   @Override
   public Object getValue(FeatureRow feature)

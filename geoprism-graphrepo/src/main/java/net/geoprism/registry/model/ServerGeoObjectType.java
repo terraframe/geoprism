@@ -45,6 +45,8 @@ import net.geoprism.registry.graph.BaseGeoObjectType;
 import net.geoprism.registry.graph.GeoObjectType;
 import net.geoprism.registry.model.graph.ObjectClassIF;
 import net.geoprism.registry.service.business.ServiceFactory;
+import net.geoprism.registry.view.TypeClass;
+import net.geoprism.registry.view.TypeInfo;
 
 public class ServerGeoObjectType extends CachableObjectWrapper<BaseGeoObjectType> implements ServerElement, ObjectClassIF
 {
@@ -92,6 +94,12 @@ public class ServerGeoObjectType extends CachableObjectWrapper<BaseGeoObjectType
     this.setObject(type);
     this.attributes = type.getAttributeMap();
     this.dto = null;
+  }
+  
+  @Override
+  public TypeInfo getTypeInfo()
+  {
+    return new TypeInfo(TypeClass.GEO_OBJECT_TYPE, this.getCode());
   }
 
   public void refreshDTO()
