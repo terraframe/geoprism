@@ -43,13 +43,26 @@ public abstract class AttributeDTO<T>
   @JsonInclude(JsonInclude.Include.NON_NULL)
   private T                              value;
 
+  private Boolean                        changeOverTime;
+
   public AttributeDTO()
   {
     this.values = new LinkedList<>();
+    this.changeOverTime = false;
   }
 
   @JsonProperty("type")
   public abstract String getType();
+
+  public Boolean getChangeOverTime()
+  {
+    return changeOverTime;
+  }
+
+  public void setChangeOverTime(Boolean changeOverTime)
+  {
+    this.changeOverTime = changeOverTime;
+  }
 
   public List<ValueOverTimeEntryDTO<T>> getValues()
   {
