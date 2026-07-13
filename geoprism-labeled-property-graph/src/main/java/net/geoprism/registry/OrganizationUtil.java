@@ -93,7 +93,7 @@ public class OrganizationUtil
 
   private static void sort(Map<String, List<ServerOrganization>> map, List<ServerOrganization> results, String code)
   {
-    List<ServerOrganization> orgs = map.get(code);
+    List<ServerOrganization> orgs = map.getOrDefault(code, new LinkedList<>());
 
     orgs.sort((a, b) -> {
       return a.getDisplayLabel().getValue().compareTo(b.getDisplayLabel().getValue());

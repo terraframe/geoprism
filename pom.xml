@@ -137,10 +137,41 @@
     <url>scm:git:ssh://git@github.com/terraframe/geoprism</url>
     <tag>1.0.2</tag>
   </scm>
+  
 
   <build>
     <plugins>
-	  <plugin>
+    
+      <plugin>
+        <groupId>com.github.spotbugs</groupId>
+        <artifactId>spotbugs-maven-plugin</artifactId>
+        <version>4.9.8.4</version>
+            <configuration>
+                <htmlOutput>true</htmlOutput>        
+                <outputDirectory>${project.build.directory}/spotbugs</outputDirectory>
+                <effort>Max</effort> <!-- Min | Default | Max -->
+                <threshold>Default</threshold> <!-- High | Default | Low -->
+                <plugins>
+                    <!-- Optional: Find Security Bugs plugin -->
+                    <plugin>
+                        <groupId>com.h3xstream.findsecbugs</groupId>
+                        <artifactId>findsecbugs-plugin</artifactId>
+                        <version>1.12.0</version>
+                    </plugin>
+                </plugins>
+            </configuration>
+            <dependencies>
+                <!-- Required for HTML output -->
+                <dependency>
+                    <groupId>com.github.spotbugs</groupId>
+                    <artifactId>spotbugs</artifactId>
+                    <version>4.9.8</version>
+                </dependency>
+            </dependencies>            
+      </plugin>
+    
+    
+  	  <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
         <version>3.13.0</version>
@@ -151,38 +182,6 @@
         </configuration>
       </plugin>
 		
-      <plugin>
-        <groupId>com.github.spotbugs</groupId>
-        <artifactId>spotbugs-maven-plugin</artifactId>
-        <version>4.0.0</version>
-        <dependencies>
-          <!-- overwrite dependency on spotbugs if you want to specify the 
-            version of spotbugs -->
-          <dependency>
-            <groupId>com.github.spotbugs</groupId>
-            <artifactId>spotbugs</artifactId>
-            <version>4.0.3</version>
-          </dependency>
-        </dependencies>
-        <configuration>
-          <maxHeap>4000</maxHeap>
-        </configuration>
-      </plugin>
-      <!-- 
-      <plugin>
-        <groupId>org.owasp</groupId>
-        <artifactId>dependency-check-maven</artifactId>
-        <version>5.3.2</version>
-        <executions>
-          <execution>
-            <goals>
-              <goal>check</goal>
-            </goals>
-          </execution>
-        </executions>
-      </plugin>
- -->      
-
       <plugin>
         <artifactId>maven-release-plugin</artifactId>
         <version>2.4.2</version>

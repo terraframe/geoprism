@@ -233,7 +233,7 @@ public class ConceptClassBusinessService extends ObjectClassBusinessService<Conc
       sourceAttr.setValue(AttributeBooleanType.OBJECTTYPE, businessType.getOid());
       sourceAttr.setRequired(false);
       sourceAttr.setUnique(false);
-      sourceAttr.setIsChangeOverTime(false);
+      sourceAttr.setIsChangeOverTime(true);
       sourceAttr.setIsDefault(true);
       sourceAttr.apply();
     }

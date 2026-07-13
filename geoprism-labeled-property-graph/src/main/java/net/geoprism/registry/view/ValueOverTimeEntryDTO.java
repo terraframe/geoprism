@@ -1,31 +1,28 @@
 package net.geoprism.registry.view;
 
+import java.util.Calendar;
 import java.util.Date;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
-public class ValueOverTimeEntryDTO
+import net.geoprism.registry.view.serialization.DateDeserializer;
+import net.geoprism.registry.view.serialization.DateSerializer;
+
+public class ValueOverTimeEntryDTO<T>
 {
+  @JsonSerialize(using = DateSerializer.class)
+  @JsonDeserialize(using = DateDeserializer.class)
   private Date   startDate;
 
+  @JsonSerialize(using = DateSerializer.class)
+  @JsonDeserialize(using = DateDeserializer.class)
   private Date   endDate;
 
   private String oid;
 
-  private Object value;
-
-  public ValueOverTimeEntryDTO()
-  {
-  }
-
-  public ValueOverTimeEntryDTO(String oid, Date startDate, Date endDate, Object value)
-  {
-    super();
-    this.oid = oid;
-    this.startDate = startDate;
-    this.endDate = endDate;
-    this.value = value;
-  }
+  private T      value;
 
   public Date getStartDate()
   {
@@ -57,12 +54,12 @@ public class ValueOverTimeEntryDTO
     this.oid = oid;
   }
 
-  public Object getValue()
+  public T getValue()
   {
     return value;
   }
 
-  public void setValue(Object value)
+  public void setValue(T value)
   {
     this.value = value;
   }
@@ -73,4 +70,25 @@ public class ValueOverTimeEntryDTO
     return ( this.startDate.before(date) || this.startDate.equals(date) ) && ( this.endDate.after(date) || this.endDate.equals(date) );
   }
 
+  public static <T> ValueOverTimeEntryDTO<T> of(String oid, Date startDate, Date endDate, T value)
+  {
+    ValueOverTimeEntryDTO<T> entry = new ValueOverTimeEntryDTO<T>();
+    entry.setOid(oid);
+    entry.setStartDate(startDate);
+    entry.setEndDate(endDate);
+    entry.setValue(value);
+
+    return entry;
+  }
+
+  public static <T> ValueOverTimeEntryDTO<T> of(String oid, Calendar startDate, Calendar endDate, T value)
+  {
+    ValueOverTimeEntryDTO<T> entry = new ValueOverTimeEntryDTO<T>();
+    entry.setOid(oid);
+    entry.setStartDate(startDate.getTime());
+    entry.setEndDate(endDate.getTime());
+    entry.setValue(value);
+
+    return entry;
+  }
 }

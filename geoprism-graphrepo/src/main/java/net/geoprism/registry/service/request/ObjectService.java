@@ -20,9 +20,12 @@ package net.geoprism.registry.service.request;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import com.runwaysdk.session.Request;
 import com.runwaysdk.session.RequestType;
 
+import net.geoprism.registry.graph.BusinessType;
 import net.geoprism.registry.graph.ObjectClass;
 import net.geoprism.registry.model.graph.ServerObjectVertex;
 import net.geoprism.registry.service.business.ObjectBusinessServiceIF;
@@ -57,18 +60,18 @@ public abstract class ObjectService<V extends ServerObjectVertex, T extends Obje
   }
 
   @Request(RequestType.SESSION)
-  public ObjectOverTimeDTO get(String sessionId, String businessTypeCode, String code)
+  public ObjectOverTimeDTO get(String sessionId, String typeCode, String code)
   {
-    T type = this.typeService.getByCodeOrThrow(businessTypeCode);
+    T type = this.typeService.getByCodeOrThrow(typeCode);
     V object = this.objectService.getByCode(type, code);
 
     return this.objectService.toDTO(object);
   }
 
   @Request(RequestType.SESSION)
-  public ObjectAndTypeDTO getTypeAndObject(String sessionId, String businessTypeCode, String code)
+  public ObjectAndTypeDTO getTypeAndObject(String sessionId, String typeCode, String code)
   {
-    T type = this.typeService.getByCodeOrThrow(businessTypeCode);
+    T type = this.typeService.getByCodeOrThrow(typeCode);
     V object = this.objectService.getByCode(type, code);
 
     D dto = this.typeService.toDTO(type, true, false);
@@ -79,4 +82,13 @@ public abstract class ObjectService<V extends ServerObjectVertex, T extends Obje
 
     return response;
   }
+
+  @Request(RequestType.SESSION)
+  public JsonObject data(String sessionId, String typeCode, String json)
+  {
+    T type = this.typeService.getByCodeOrThrow(typeCode);
+
+    return this.objectService.data(type, JsonParser.parseString(json).getAsJsonObject()).toJSON();
+  }
+
 }

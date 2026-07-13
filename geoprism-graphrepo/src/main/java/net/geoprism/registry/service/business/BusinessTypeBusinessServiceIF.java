@@ -22,21 +22,15 @@ import java.util.List;
 
 import org.springframework.stereotype.Component;
 
-import com.google.gson.JsonObject;
-
 import net.geoprism.registry.graph.BusinessEdgeType;
 import net.geoprism.registry.graph.BusinessType;
 import net.geoprism.registry.view.BusinessTypeDTO;
-import net.geoprism.registry.view.JsonSerializable;
-import net.geoprism.registry.view.Page;
 
 @Component
 public interface BusinessTypeBusinessServiceIF extends ObjectClassBusinessServiceIF<BusinessType, BusinessTypeDTO>
 {
 
   void setLabelAttribute(BusinessType type, String attributeName);
-
-  Page<JsonSerializable> data(BusinessType type, JsonObject criteria);
 
   List<BusinessEdgeType> getParentEdgeTypes(BusinessType type);
 

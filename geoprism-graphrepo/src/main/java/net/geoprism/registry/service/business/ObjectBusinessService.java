@@ -24,11 +24,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import org.apache.commons.lang3.StringUtils;
 import org.commongeoregistry.adapter.constants.DefaultAttribute;
+import org.commongeoregistry.adapter.dataaccess.LocalizedValue;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.google.gson.JsonObject;
 import com.runwaysdk.business.graph.GraphQuery;
 import com.runwaysdk.business.graph.VertexObject;
 import com.runwaysdk.dataaccess.MdAttributeDAOIF;
@@ -42,18 +43,32 @@ import com.runwaysdk.dataaccess.transaction.Transaction;
 import net.geoprism.configuration.GeoprismProperties;
 import net.geoprism.registry.DateFormatter;
 import net.geoprism.registry.OriginException;
+import net.geoprism.registry.graph.AttributeBooleanType;
+import net.geoprism.registry.graph.AttributeCharacterType;
 import net.geoprism.registry.graph.AttributeDataSourceType;
 import net.geoprism.registry.graph.AttributeDateType;
+import net.geoprism.registry.graph.AttributeDoubleType;
+import net.geoprism.registry.graph.AttributeLocalType;
+import net.geoprism.registry.graph.AttributeLongType;
 import net.geoprism.registry.graph.AttributeType;
 import net.geoprism.registry.graph.AttributeValue;
 import net.geoprism.registry.graph.DataSource;
 import net.geoprism.registry.graph.ObjectClass;
 import net.geoprism.registry.model.EdgeConstant;
 import net.geoprism.registry.model.graph.ServerObjectVertex;
-import net.geoprism.registry.view.MultiValueDTO;
+import net.geoprism.registry.query.graph.ObjectPageQuery;
+import net.geoprism.registry.view.AttributeBooleanDTO;
+import net.geoprism.registry.view.AttributeCharacterDTO;
+import net.geoprism.registry.view.AttributeDataSourceDTO;
+import net.geoprism.registry.view.AttributeDateDTO;
+import net.geoprism.registry.view.AttributeFloatDTO;
+import net.geoprism.registry.view.AttributeIntegerDTO;
+import net.geoprism.registry.view.AttributeLocalDTO;
+import net.geoprism.registry.view.JsonSerializable;
 import net.geoprism.registry.view.ObjectAtTimeDTO;
 import net.geoprism.registry.view.ObjectClassDTO;
 import net.geoprism.registry.view.ObjectOverTimeDTO;
+import net.geoprism.registry.view.Page;
 import net.geoprism.registry.view.ValueOverTimeEntryDTO;
 
 @Service
@@ -89,7 +104,6 @@ public abstract class ObjectBusinessService<V extends ServerObjectVertex, T exte
     dto.setType(type.getTypeInfo());
 
     type.getAttributeMap().values().stream() //
-        .filter(attribute -> !attribute.getCode().equals(DefaultAttribute.CODE.getName())) //
         .forEach(attribute -> {
 
           String attributeName = attribute.getCode();
@@ -97,37 +111,70 @@ public abstract class ObjectBusinessService<V extends ServerObjectVertex, T exte
           if (attribute.getIsChangeOverTime())
           {
             ValueOverTimeCollection collection = object.getValuesOverTime(attributeName);
-            List<ValueOverTimeEntryDTO> values = collection.stream().map(vot -> {
 
-              ValueOverTimeEntryDTO vDTO = new ValueOverTimeEntryDTO();
-              vDTO.setStartDate(vot.getStartDate());
-              vDTO.setEndDate(vot.getEndDate());
-              vDTO.setOid(vot.getOid());
+            if (attribute instanceof AttributeBooleanType)
+            {
+              List<ValueOverTimeEntryDTO<Boolean>> entries = collection.stream() //
+                  .map(vot -> ValueOverTimeEntryDTO.of(vot.getOid(), vot.getStartDate(), vot.getEndDate(), (Boolean) vot.getValue())).toList();
 
-              Object value = vot.getValue();
+              dto.put(attributeName, AttributeBooleanDTO.of(entries));
+            }
+            else if (attribute instanceof AttributeCharacterType)
+            {
+              List<ValueOverTimeEntryDTO<String>> entries = collection.stream() //
+                  .map(vot -> ValueOverTimeEntryDTO.of(vot.getOid(), vot.getStartDate(), vot.getEndDate(), (String) vot.getValue())).toList();
 
-              if (attribute instanceof AttributeDataSourceType)
-              {
-                DataSource dataSource = this.sourceService.get((String) value);
+              dto.put(attributeName, AttributeCharacterDTO.of(entries));
+            }
+            else if (attribute instanceof AttributeDataSourceType)
+            {
+              List<ValueOverTimeEntryDTO<String>> entries = collection.stream().map(vot -> {
+                DataSource dataSource = this.sourceService.get((String) vot.getValue());
 
-                if (dataSource != null)
+                if (dataSource == null)
                 {
-                  vDTO.setValue(dataSource.getCode());
+                  // TODO throw better exception
+                  throw new UnsupportedOperationException();
                 }
-              }
-              else if (value instanceof Date)
-              {
-                vDTO.setValue(DateFormatter.formatDate((Date) value, false));
-              }
-              else
-              {
-                vDTO.setValue(value);
-              }
 
-              return vDTO;
-            }).toList();
+                return ValueOverTimeEntryDTO.of(vot.getOid(), vot.getStartDate(), vot.getEndDate(), dataSource.getCode());
 
-            dto.put(attributeName, new MultiValueDTO(values));
+              }).toList();
+
+              dto.put(attributeName, AttributeDataSourceDTO.of(entries));
+            }
+            else if (attribute instanceof AttributeDateType)
+            {
+              List<ValueOverTimeEntryDTO<Date>> entries = collection.stream() //
+                  .map(vot -> ValueOverTimeEntryDTO.of(vot.getOid(), vot.getStartDate(), vot.getEndDate(), (Date) vot.getValue())).toList();
+
+              dto.put(attributeName, AttributeDateDTO.of(entries));
+            }
+            else if (attribute instanceof AttributeDoubleType)
+            {
+              List<ValueOverTimeEntryDTO<Double>> entries = collection.stream() //
+                  .map(vot -> ValueOverTimeEntryDTO.of(vot.getOid(), vot.getStartDate(), vot.getEndDate(), (Double) vot.getValue())).toList();
+
+              dto.put(attributeName, AttributeFloatDTO.of(entries));
+            }
+            else if (attribute instanceof AttributeLongType)
+            {
+              List<ValueOverTimeEntryDTO<Long>> entries = collection.stream() //
+                  .map(vot -> ValueOverTimeEntryDTO.of(vot.getOid(), vot.getStartDate(), vot.getEndDate(), (Long) vot.getValue())).toList();
+
+              dto.put(attributeName, AttributeIntegerDTO.of(entries));
+            }
+            else if (attribute instanceof AttributeLocalType)
+            {
+              List<ValueOverTimeEntryDTO<LocalizedValue>> entries = collection.stream() //
+                  .map(vot -> ValueOverTimeEntryDTO.of(vot.getOid(), vot.getStartDate(), vot.getEndDate(), (LocalizedValue) vot.getValue())).toList();
+
+              dto.put(attributeName, AttributeLocalDTO.of(entries));
+            }
+            else
+            {
+              throw new UnsupportedOperationException();
+            }
           }
           else
           {
@@ -135,22 +182,45 @@ public abstract class ObjectBusinessService<V extends ServerObjectVertex, T exte
 
             if (value != null)
             {
-              if (attribute instanceof AttributeDataSourceType)
+              if (attribute instanceof AttributeBooleanType)
+              {
+                dto.put(attributeName, AttributeBooleanDTO.of((Boolean) value));
+              }
+              else if (attribute instanceof AttributeCharacterType)
+              {
+                dto.put(attributeName, AttributeCharacterDTO.of((String) value));
+              }
+              else if (attribute instanceof AttributeDataSourceType)
               {
                 DataSource dataSource = this.sourceService.get((String) value);
 
-                if (dataSource != null)
+                if (dataSource == null)
                 {
-                  dto.setValue(attributeName, dataSource.getCode());
+                  // TODO throw better exception
+                  throw new UnsupportedOperationException();
                 }
+
+                dto.put(attributeName, AttributeDataSourceDTO.of(dataSource.getCode()));
               }
-              else if (value instanceof Date)
+              else if (attribute instanceof AttributeDateType)
               {
-                dto.setValue(attributeName, DateFormatter.formatDate((Date) value, false));
+                dto.put(attributeName, AttributeDateDTO.of((Date) value));
+              }
+              else if (attribute instanceof AttributeDoubleType)
+              {
+                dto.put(attributeName, AttributeFloatDTO.of((Double) value));
+              }
+              else if (attribute instanceof AttributeLongType)
+              {
+                dto.put(attributeName, AttributeIntegerDTO.of((Long) value));
+              }
+              else if (attribute instanceof AttributeLocalType)
+              {
+                dto.put(attributeName, AttributeLocalDTO.of((LocalizedValue) value));
               }
               else
               {
-                dto.setValue(attributeName, value);
+                throw new UnsupportedOperationException();
               }
             }
 
@@ -172,7 +242,6 @@ public abstract class ObjectBusinessService<V extends ServerObjectVertex, T exte
     dto.setType(type.getTypeInfo());
 
     type.getAttributeMap().values().stream() //
-        .filter(attribute -> !attribute.getCode().equals(DefaultAttribute.CODE.getName())) //
         .forEach(attribute -> {
 
           String attributeName = attribute.getCode();
@@ -189,10 +258,6 @@ public abstract class ObjectBusinessService<V extends ServerObjectVertex, T exte
               {
                 dto.setValue(attributeName, dataSource.getCode());
               }
-            }
-            else if (value instanceof Date)
-            {
-              dto.setValue(attributeName, DateFormatter.formatDate((Date) value, false));
             }
             else
             {
@@ -229,41 +294,42 @@ public abstract class ObjectBusinessService<V extends ServerObjectVertex, T exte
 
       if (attribute.getIsChangeOverTime())
       {
-        List<ValueOverTimeEntryDTO> collection = dto.has(attributeName) ? dto.getValuesOverTime(attributeName) : new LinkedList<>();
-
         ValueOverTimeCollection c = new ValueOverTimeCollection();
 
-        for (ValueOverTimeEntryDTO votDTO : collection)
+        if (attribute instanceof AttributeDataSourceType)
         {
-          if (attribute instanceof AttributeDateType)
+          List<ValueOverTimeEntryDTO<String>> entries = dto.has(attributeName) ? dto.getValuesOverTime(attributeName) : new LinkedList<>();
+
+          for (ValueOverTimeEntryDTO<String> votDTO : entries)
           {
-            object.setValue(attributeName, DateFormatter.parseDate((String) votDTO.getValue()), votDTO.getStartDate(), votDTO.getEndDate());
+            DataSource dataSource = this.sourceService.getByCode((String) votDTO.getValue()).orElseThrow(() -> {
+              throw new ProgrammingErrorException("Unable to find source with code [" + votDTO.getValue() + "]");
+            });
+
+            c.add(new ValueOverTime(votDTO.getOid(), votDTO.getStartDate(), votDTO.getEndDate(), dataSource));
           }
-          else if (attribute instanceof AttributeDataSourceType)
-          {
-            String value = (String) votDTO.getValue();
+        }
+        else if (attribute instanceof AttributeBooleanType //
+            || attribute instanceof AttributeCharacterType //
+            || attribute instanceof AttributeDateType //
+            || attribute instanceof AttributeDoubleType //
+            || attribute instanceof AttributeLongType //
+            || attribute instanceof AttributeLocalType)
+        {
+          List<ValueOverTimeEntryDTO<Object>> entries = dto.has(attributeName) ? dto.getValuesOverTime(attributeName) : new LinkedList<>();
 
-            if (!StringUtils.isBlank(value))
-            {
-              DataSource source = this.sourceService.getByCode(value).orElseThrow(() -> {
-                throw new ProgrammingErrorException("Unable to find source with code [" + value + "]");
-              });
-
-              c.add(new ValueOverTime(votDTO.getStartDate(), votDTO.getEndDate(), source.getOid()));
-
-            }
-            else
-            {
-              c.add(new ValueOverTime(votDTO.getStartDate(), votDTO.getEndDate(), (String) null));
-            }
-          }
-          else
+          for (ValueOverTimeEntryDTO<Object> votDTO : entries)
           {
             c.add(new ValueOverTime(votDTO.getOid(), votDTO.getStartDate(), votDTO.getEndDate(), votDTO.getValue()));
           }
         }
+        else
+        {
+          throw new UnsupportedOperationException();
+        }
 
         object.setValuesOverTime(attributeName, c);
+
       }
       else
       {
@@ -273,10 +339,6 @@ public abstract class ObjectBusinessService<V extends ServerObjectVertex, T exte
         {
           object.setValue(attributeName, null);
         }
-        else if (attribute instanceof AttributeDateType)
-        {
-          object.setValue(attributeName, DateFormatter.parseDate((String) value));
-        }
         else if (attribute instanceof AttributeDataSourceType)
         {
           DataSource dataSource = this.sourceService.getByCode((String) value).orElseThrow(() -> {
@@ -285,10 +347,20 @@ public abstract class ObjectBusinessService<V extends ServerObjectVertex, T exte
 
           object.setValue(attributeName, dataSource);
         }
-        else
+        else if (attribute instanceof AttributeBooleanType //
+            || attribute instanceof AttributeCharacterType //
+            || attribute instanceof AttributeDateType //
+            || attribute instanceof AttributeDoubleType //
+            || attribute instanceof AttributeLongType //
+            || attribute instanceof AttributeLocalType)
         {
           object.setValue(attributeName, dto.getValue(attributeName));
         }
+        else
+        {
+          throw new UnsupportedOperationException();
+        }
+
       }
     });
 
@@ -433,6 +505,12 @@ public abstract class ObjectBusinessService<V extends ServerObjectVertex, T exte
     GraphQuery<Long> query = new GraphQuery<Long>(statement.toString());
 
     return query.getSingleResult();
+  }
+
+  @Override
+  public Page<JsonSerializable> data(T type, JsonObject criteria)
+  {
+    return new ObjectPageQuery(type, criteria).getPage();
   }
 
   public List<V> processTraverseResults(List<VertexObject> results, Date date)

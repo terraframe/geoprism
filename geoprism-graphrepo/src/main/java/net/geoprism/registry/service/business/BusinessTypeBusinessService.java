@@ -28,7 +28,6 @@ import org.commongeoregistry.adapter.dataaccess.LocalizedValue;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.google.gson.JsonObject;
 import com.runwaysdk.business.graph.GraphQuery;
 import com.runwaysdk.constants.MdAttributeBooleanInfo;
 import com.runwaysdk.constants.graph.MdVertexInfo;
@@ -55,11 +54,7 @@ import net.geoprism.registry.graph.BusinessEdgeType;
 import net.geoprism.registry.graph.BusinessType;
 import net.geoprism.registry.graph.BusinessVertex;
 import net.geoprism.registry.model.ServerOrganization;
-import net.geoprism.registry.query.graph.BusinessObjectPageQuery;
-import net.geoprism.registry.service.permission.PermissionServiceIF;
 import net.geoprism.registry.view.BusinessTypeDTO;
-import net.geoprism.registry.view.JsonSerializable;
-import net.geoprism.registry.view.Page;
 
 @Service
 public class BusinessTypeBusinessService extends ObjectClassBusinessService<BusinessType, BusinessTypeDTO> implements BusinessTypeBusinessServiceIF
@@ -178,12 +173,6 @@ public class BusinessTypeBusinessService extends ObjectClassBusinessService<Busi
 
   }
 
-  @Override
-  public Page<JsonSerializable> data(BusinessType type, JsonObject criteria)
-  {
-    return new BusinessObjectPageQuery(type, criteria).getPage();
-  }
-
   @Transaction
   @Override
   public BusinessType apply(BusinessTypeDTO object)
@@ -272,7 +261,7 @@ public class BusinessTypeBusinessService extends ObjectClassBusinessService<Busi
       sourceAttr.setValue(AttributeBooleanType.OBJECTTYPE, businessType.getOid());
       sourceAttr.setRequired(false);
       sourceAttr.setUnique(false);
-      sourceAttr.setIsChangeOverTime(false);
+      sourceAttr.setIsChangeOverTime(true);
       sourceAttr.setIsDefault(true);
       sourceAttr.apply();
     }

@@ -95,7 +95,7 @@ public class ServerGeoObjectType extends CachableObjectWrapper<BaseGeoObjectType
     this.attributes = type.getAttributeMap();
     this.dto = null;
   }
-  
+
   @Override
   public TypeInfo getTypeInfo()
   {

@@ -24,6 +24,7 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import org.commongeoregistry.adapter.constants.DefaultAttribute;
@@ -41,11 +42,11 @@ import net.geoprism.registry.graph.AttributeClassificationType;
 import net.geoprism.registry.graph.AttributeDataSourceType;
 import net.geoprism.registry.graph.AttributeLocalType;
 import net.geoprism.registry.graph.AttributeType;
-import net.geoprism.registry.graph.BusinessType;
+import net.geoprism.registry.model.graph.ObjectClassIF;
 import net.geoprism.registry.view.JsonSerializable;
 import net.geoprism.registry.view.JsonWrapper;
 
-public class BusinessObjectPageQuery extends AbstractGraphPageQuery<HashMap<String, Object>, JsonSerializable>
+public class ObjectPageQuery extends AbstractGraphPageQuery<HashMap<String, Object>, JsonSerializable>
 {
   private SimpleDateFormat          format;
 
@@ -53,68 +54,73 @@ public class BusinessObjectPageQuery extends AbstractGraphPageQuery<HashMap<Stri
 
   private Collection<AttributeType> attributes;
 
-  public BusinessObjectPageQuery(BusinessType businessType, JsonObject criteria)
+  public ObjectPageQuery(ObjectClassIF objectClass, JsonObject criteria)
   {
-    super(businessType.getMdVertexDAO().definesType(), criteria);
+    super(objectClass.getMdVertexDAO().definesType(), criteria);
 
     this.format = new SimpleDateFormat("yyyy-MM-dd");
     this.format.setTimeZone(DateFormatter.SYSTEM_TIMEZONE);
 
     this.numberFormat = NumberFormat.getInstance(Session.getCurrentLocale());
 
-    this.attributes = businessType.getAttributeMap().values();
+    this.attributes = objectClass.getAttributeMap().values();
   }
 
   @SuppressWarnings("unchecked")
   protected List<JsonSerializable> getResults(final GraphQuery<HashMap<String, Object>> query)
   {
-    List<HashMap<String, Object>> results = query.getResults();
+    List<?> results = query.getResults();
 
-    return results.stream().map(row -> {
+    return results.stream().map(result -> {
       JsonObject object = new JsonObject();
+
+      Map<String, Object> row = ! ( result instanceof Map ) ? Map.of(DefaultAttribute.CODE.getName(), result) : (Map<String, Object>) result;
 
       object.addProperty(DefaultAttribute.CODE.getName(), (String) row.get(DefaultAttribute.CODE.getName()));
 
-      this.attributes.stream().filter(a -> !a.getCode().equals(DefaultAttribute.CODE.name())).forEach(attribute -> {
-        String attributeName = attribute.getCode();
+      this.attributes.stream() //
+          .filter(a -> !a.getIsChangeOverTime()) //
+          .filter(a -> !a.getCode().equals(DefaultAttribute.CODE.name())) //
+          .forEach(attribute -> {
+            String attributeName = attribute.getCode();
 
-        Object value = row.get(attributeName);
+            Object value = row.get(attributeName);
 
-        if (value != null)
-        {
-          if (attribute instanceof AttributeLocalType || attribute instanceof AttributeClassificationType)
-          {
-            LocalizedValue localizedValue = RegistryLocalizedValueConverter.convert((HashMap<String, ?>) value);
+            if (value != null)
+            {
+              if (attribute instanceof AttributeLocalType || attribute instanceof AttributeClassificationType)
+              {
+                LocalizedValue localizedValue = RegistryLocalizedValueConverter.convert((HashMap<String, ?>) value);
 
-            object.addProperty(attributeName, localizedValue.getValue());
-          }
-          else if (value instanceof Double)
-          {
-            object.addProperty(attributeName, numberFormat.format((Double) value));
-          }
-          else if (value instanceof Number)
-          {
-            object.addProperty(attributeName, (Number) value);
-          }
-          else if (value instanceof Boolean)
-          {
-            object.addProperty(attributeName, (Boolean) value);
-          }
-          else if (value instanceof String)
-          {
-            object.addProperty(attributeName, (String) value);
-          }
-          else if (value instanceof Character)
-          {
-            object.addProperty(attributeName, (Character) value);
-          }
-          else if (value instanceof Date)
-          {
-            object.addProperty(attributeName, format.format((Date) value));
-          }
-        }
+                object.addProperty(attributeName, localizedValue.getValue());
+              }
+              else if (value instanceof Double)
+              {
+                object.addProperty(attributeName, numberFormat.format((Double) value));
+              }
+              else if (value instanceof Number)
+              {
+                object.addProperty(attributeName, (Number) value);
+              }
+              else if (value instanceof Boolean)
+              {
+                object.addProperty(attributeName, (Boolean) value);
+              }
+              else if (value instanceof String)
+              {
+                object.addProperty(attributeName, (String) value);
+              }
+              else if (value instanceof Character)
+              {
+                object.addProperty(attributeName, (Character) value);
+              }
+              else if (value instanceof Date)
+              {
+                object.addProperty(attributeName, format.format((Date) value));
+              }
+            }
 
-      });
+          });
 
       return new JsonWrapper(object);
 

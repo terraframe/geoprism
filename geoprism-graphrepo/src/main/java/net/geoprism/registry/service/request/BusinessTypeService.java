@@ -23,8 +23,6 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
 import com.runwaysdk.session.Request;
 import com.runwaysdk.session.RequestType;
 
@@ -47,15 +45,6 @@ public class BusinessTypeService extends ObjectClassService<BusinessType, Busine
   protected BusinessTypeBusinessServiceIF getTypeService()
   {
     return typeService;
-  }
-
-  @Override
-  @Request(RequestType.SESSION)
-  public JsonObject data(String sessionId, String businessTypeCode, String json)
-  {
-    BusinessType type = this.typeService.getByCodeOrThrow(businessTypeCode);
-
-    return this.typeService.data(type, JsonParser.parseString(json).getAsJsonObject()).toJSON();
   }
 
   @Override

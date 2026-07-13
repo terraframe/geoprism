@@ -27,11 +27,17 @@ import java.util.Set;
 
 import org.commongeoregistry.adapter.metadata.CustomSerializer;
 import org.commongeoregistry.adapter.metadata.DefaultSerializer;
+import org.commongeoregistry.adapter.serialization.LocalizedValueDeserializer;
+import org.commongeoregistry.adapter.serialization.LocalizedValueSerializer;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
+@JsonSerialize(using = LocalizedValueSerializer.class)
+@JsonDeserialize(using = LocalizedValueDeserializer.class)
 public class LocalizedValue
 {
   public static final String  DEFAULT_LOCALE  = "defaultLocale";
@@ -73,7 +79,7 @@ public class LocalizedValue
   public LocalizedValue setLocalizedValue(String localizedValue)
   {
     this.localizedValue = localizedValue;
-    
+
     return this;
   }
 
@@ -87,7 +93,7 @@ public class LocalizedValue
     {
       this.localizedValue = suffix;
     }
-    
+
     return this;
   }
 
@@ -99,7 +105,7 @@ public class LocalizedValue
   public LocalizedValue setLocaleValues(Map<String, String> localeValues)
   {
     this.localeValues = localeValues;
-    
+
     return this;
   }
 
@@ -111,7 +117,7 @@ public class LocalizedValue
   public LocalizedValue setValue(String value)
   {
     this.localizedValue = value;
-    
+
     return this;
   }
 
@@ -135,14 +141,14 @@ public class LocalizedValue
     String key = locale.toString();
 
     this.localeValues.put(key, value);
-    
+
     return this;
   }
 
   public LocalizedValue setValue(String key, String value)
   {
     this.localeValues.put(key, value);
-    
+
     return this;
   }
 
@@ -171,7 +177,7 @@ public class LocalizedValue
   public LocalizedValue setLocaleMap(Map<String, String> localeMap)
   {
     this.localeValues = localeMap;
-    
+
     return this;
   }
 

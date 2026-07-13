@@ -4,6 +4,9 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
+
+import org.commongeoregistry.adapter.dataaccess.LocalizedValue;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -12,16 +15,16 @@ import com.runwaysdk.dataaccess.ProgrammingErrorException;
 
 public class ObjectOverTimeDTO
 {
-  private TypeInfo                       type;
+  private TypeInfo                     type;
 
-  private String                         code;
+  private String                       code;
 
-  private String                         label;
+  private String                       label;
 
   /**
    * For attributes that do change over time, they will be stored here.
    */
-  private Map<String, AttributeValueDTO> data = new HashMap<>();
+  private Map<String, AttributeDTO<?>> properties = new HashMap<>();
 
   public TypeInfo getType()
   {
@@ -53,49 +56,78 @@ public class ObjectOverTimeDTO
     this.label = label;
   }
 
-  public Map<String, AttributeValueDTO> getData()
+  public Map<String, AttributeDTO<?>> getProperties()
   {
-    return data;
+    return properties;
   }
 
-  public void setData(Map<String, AttributeValueDTO> data)
+  public void setProperties(Map<String, AttributeDTO<?>> properties)
   {
-    this.data = data;
+    this.properties = properties;
+  }
+
+  @JsonIgnore
+  public void put(String attributeName, AttributeDTO<?> attribute)
+  {
+    this.properties.put(attributeName, attribute);
   }
 
   @JsonIgnore
   public void setValue(String attributeName, Object value)
   {
-    this.data.put(attributeName, new SingleValueDTO(value));
+    if (!this.properties.containsKey(attributeName))
+    {
+      if (value instanceof LocalizedValue)
+      {
+        this.properties.put(attributeName, new AttributeLocalDTO());
+      }
+      else if (value instanceof String)
+      {
+        this.properties.put(attributeName, new AttributeCharacterDTO());
+      }
+    }
+
+    this.properties.get(attributeName).setObjectValue(value);
   }
 
+  @SuppressWarnings("unchecked")
   @JsonIgnore
-  public void put(String attributeName, AttributeValueDTO value)
+  public <T> AttributeDTO<T> get(String attributeName)
   {
-    this.data.put(attributeName, value);
+    return (AttributeDTO<T>) this.properties.get(attributeName);
   }
 
   @SuppressWarnings("unchecked")
   @JsonIgnore
   public <T> T getValue(String attributeName)
   {
-    SingleValueDTO attribute = (SingleValueDTO) this.data.get(attributeName);
+    AttributeDTO<T> attribute = (AttributeDTO<T>) this.properties.get(attributeName);
 
     return (T) attribute.getValue();
   }
 
+  @SuppressWarnings("unchecked")
   @JsonIgnore
-  public List<ValueOverTimeEntryDTO> getValuesOverTime(String attributeName)
+  public <T> List<ValueOverTimeEntryDTO<T>> getValuesOverTime(String attributeName)
   {
-    MultiValueDTO attribute = (MultiValueDTO) this.data.get(attributeName);
+    AttributeDTO<T> attribute = (AttributeDTO<T>) this.properties.get(attributeName);
 
     return attribute.getValues();
+  }
+
+  @SuppressWarnings("unchecked")
+  @JsonIgnore
+  public <T> Optional<T> getValue(String attributeName, Date date)
+  {
+    AttributeDTO<T> attribute = (AttributeDTO<T>) this.properties.get(attributeName);
+
+    return (Optional<T>) attribute.getValue(date);
   }
 
   @JsonIgnore
   public boolean has(String attributeName)
   {
-    return this.data.containsKey(attributeName);
+    return this.properties.containsKey(attributeName);
   }
 
   public ObjectAtTimeDTO toDate(Date date)
@@ -105,16 +137,16 @@ public class ObjectOverTimeDTO
     dto.setLabel(this.getLabel());
     dto.setType(this.getType());
 
-    this.getData().entrySet().stream().forEach(entry -> {
-      Object value = entry.getValue();
+    this.getProperties().entrySet().stream().forEach(entry -> {
+      AttributeDTO<?> attribute = entry.getValue();
 
-      if (value instanceof SingleValueDTO)
+      if (attribute.getValue() != null)
       {
-        dto.setValue(entry.getKey(), ( (SingleValueDTO) value ).getValue());
+        dto.setValue(entry.getKey(), attribute.getValue());
       }
-      else if (value instanceof MultiValueDTO)
+      else
       {
-        ( (MultiValueDTO) value ).getValue(date).ifPresent(v -> {
+        attribute.getValue(date).ifPresent(v -> {
           dto.setValue(entry.getKey(), v);
         });
       }
