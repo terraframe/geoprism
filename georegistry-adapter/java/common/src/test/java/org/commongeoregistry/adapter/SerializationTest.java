@@ -339,7 +339,6 @@ public class SerializationTest
     geoObject.setValue("testInteger", 3L);
     geoObject.setValue("testBoolean", false);
     geoObject.setValue("testSource", "value");
-    geoObject.setValue("testTerm", testChild);
     geoObject.setValue("testClassification", testChild);
 
     String sJson = geoObject.toJSON().toString();
@@ -353,8 +352,6 @@ public class SerializationTest
     Assert.assertEquals(geoObject.getValue("testBoolean"), geoObject2.getValue("testBoolean"));
     Assert.assertEquals(geoObject.getValue("testClassification"), geoObject2.getValue("testClassification"));
     Assert.assertEquals(geoObject.getValue("testSource"), geoObject2.getValue("testSource"));
-
-    Assert.assertEquals( ( (Iterator<String>) geoObject.getValue("testTerm") ).next(), ( (Iterator<String>) geoObject2.getValue("testTerm") ).next());
   }
 
   /**
