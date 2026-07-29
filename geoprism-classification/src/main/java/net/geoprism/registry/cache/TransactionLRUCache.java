@@ -3,18 +3,18 @@
  *
  * This file is part of Geoprism(tm).
  *
- * Geoprism(tm) is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
+ * Geoprism(tm) is free software: you can redistribute it and/or modify it under
+ * the terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation, either version 3 of the License, or (at your option) any
+ * later version.
  *
- * Geoprism(tm) is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
+ * Geoprism(tm) is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with Geoprism(tm).  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with Geoprism(tm). If not, see <http://www.gnu.org/licenses/>.
  */
 package net.geoprism.registry.cache;
 
@@ -33,6 +33,21 @@ import net.geoprism.registry.command.AbstractCommand;
 
 public class TransactionLRUCache<K, V>
 {
+  private static class CacheResult<V>
+  {
+    private V v;
+
+    public CacheResult(V v)
+    {
+      this.v = v;
+    }
+
+    public V get()
+    {
+      return v;
+    }
+  }
+
   private static class TransactionCache<K, V>
   {
     private final String           cacheKey;
@@ -48,22 +63,24 @@ public class TransactionLRUCache<K, V>
 
     public void put(V value)
     {
-      Map<K, V> cache = getTransactionCache();
+      Map<K, CacheResult<V>> cache = getTransactionCache();
 
       if (cache != null)
       {
+        CacheResult<V> result = new CacheResult<V>(value);
+
         K[] keys = this.mapper.apply(value);
 
         for (K key : keys)
         {
-          cache.put(key, value);
+          cache.put(key, result);
         }
       }
     }
 
-    public Optional<V> get(K key)
+    public Optional<CacheResult<V>> get(K key)
     {
-      Map<K, V> cache = getTransactionCache();
+      Map<K, CacheResult<V>> cache = getTransactionCache();
 
       if (cache != null)
       {
@@ -74,17 +91,17 @@ public class TransactionLRUCache<K, V>
     }
 
     @SuppressWarnings("unchecked")
-    private Map<K, V> getTransactionCache()
+    private Map<K, CacheResult<V>> getTransactionCache()
     {
       TransactionState state = TransactionState.getCurrentTransactionState();
 
       if (state != null)
       {
-        Map<K, V> cache = (Map<K, V>) state.getTransactionObject(cacheKey);
+        Map<K, CacheResult<V>> cache = (Map<K, CacheResult<V>>) state.getTransactionObject(cacheKey);
 
         if (cache == null)
         {
-          cache = new TreeMap<K, V>();
+          cache = new TreeMap<K, CacheResult<V>>();
 
           state.putTransactionObject(cacheKey, cache);
         }
@@ -100,7 +117,7 @@ public class TransactionLRUCache<K, V>
   private final TransactionCache<K, V> transactionCache;
 
   // Objects in the global cache
-  private final Map<K, V>              cache;
+  private final Map<K, CacheResult<V>> cache;
 
   private final Function<V, K[]>       mapper;
 
@@ -113,7 +130,7 @@ public class TransactionLRUCache<K, V>
   {
     this.mapper = mapper;
     this.transactionCache = new TransactionCache<>(cacheKey, mapper);
-    this.cache = Collections.synchronizedMap(new LRUMap<K, V>(20));
+    this.cache = Collections.synchronizedMap(new LRUMap<K, CacheResult<V>>(20));
   }
 
   public void put(V value)
@@ -121,8 +138,13 @@ public class TransactionLRUCache<K, V>
     this.transactionCache.put(value);
 
     // If an object has been updated then remove the current version from the
-    // cache so an updated version will be retrieved when its the getter next
+    // cache so an updated version will be retrieved when the getter is next
     // called
+    this.remove(value);
+  }
+
+  public void remove(V value)
+  {
     new AbstractCommand()
     {
       @Override
@@ -138,23 +160,6 @@ public class TransactionLRUCache<K, V>
     }.doIt();
   }
 
-  public void remove(V value)
-  {
-    new AbstractCommand()
-    {
-      @Override
-      public void doIt()
-      {
-        K[] keys = mapper.apply(value);
-
-        for (K key : keys)
-        {
-          cache.remove(key, value);
-        }
-      }
-    }.doIt();
-  }
-
   public Optional<V> get(K key, Supplier<Optional<V>> supplier)
   {
     return this.transactionCache.get(key) //
@@ -163,17 +168,27 @@ public class TransactionLRUCache<K, V>
         }).or(() -> {
           Optional<V> v = supplier.get();
 
-          v.ifPresent(value -> {
+          // Cache the empty response to prevent further look ups
+          // of the same key value. This assumes that when an object
+          // is created it is explicitly added to the cache.
+//          if (v.isEmpty())
+//          {
+//            cache.put(key, new CacheResult<V>(null));
+//          }
+
+          return v.map(value -> {
+            CacheResult<V> result = new CacheResult<V>(value);
+
             K[] keys = mapper.apply(value);
 
             for (K k : keys)
             {
-              cache.put(k, value);
+              cache.put(k, result);
             }
-          });
 
-          return v;
-        });
+            return result;
+          });
+        }).map(result -> result.get());
   }
 
   public void clear()

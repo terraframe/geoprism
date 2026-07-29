@@ -3,18 +3,18 @@
  *
  * This file is part of Geoprism(tm).
  *
- * Geoprism(tm) is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
+ * Geoprism(tm) is free software: you can redistribute it and/or modify it under
+ * the terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation, either version 3 of the License, or (at your option) any
+ * later version.
  *
- * Geoprism(tm) is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
+ * Geoprism(tm) is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with Geoprism(tm).  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with Geoprism(tm). If not, see <http://www.gnu.org/licenses/>.
  */
 package net.geoprism.registry.service.business;
 
@@ -39,7 +39,6 @@ import org.commongeoregistry.adapter.dataaccess.GeoObject;
 import org.commongeoregistry.adapter.dataaccess.GeoObjectOverTime;
 import org.commongeoregistry.adapter.dataaccess.LocalizedValue;
 import org.commongeoregistry.adapter.dataaccess.ParentTreeNode;
-import org.commongeoregistry.adapter.dataaccess.UnknownTermException;
 import org.commongeoregistry.adapter.dataaccess.ValueOverTimeCollectionDTO;
 import org.commongeoregistry.adapter.dataaccess.ValueOverTimeDTO;
 import org.commongeoregistry.adapter.metadata.AttributeClassificationType;
@@ -60,7 +59,6 @@ import com.runwaysdk.business.graph.GraphQuery;
 import com.runwaysdk.business.graph.VertexObject;
 import com.runwaysdk.dataaccess.DuplicateDataException;
 import com.runwaysdk.dataaccess.MdAttributeDAOIF;
-import com.runwaysdk.dataaccess.MdClassificationDAOIF;
 import com.runwaysdk.dataaccess.MdEdgeDAOIF;
 import com.runwaysdk.dataaccess.MdVertexDAOIF;
 import com.runwaysdk.dataaccess.ProgrammingErrorException;
@@ -68,7 +66,6 @@ import com.runwaysdk.dataaccess.graph.attributes.ValueOverTime;
 import com.runwaysdk.dataaccess.graph.attributes.ValueOverTimeCollection;
 import com.runwaysdk.dataaccess.metadata.graph.MdGraphClassDAO;
 import com.runwaysdk.dataaccess.transaction.Transaction;
-import com.runwaysdk.system.AbstractClassification;
 
 import net.geoprism.configuration.GeoprismProperties;
 import net.geoprism.dashboard.GeometryUpdateException;
@@ -83,7 +80,6 @@ import net.geoprism.registry.conversion.ServerGeoObjectStrategyIF;
 import net.geoprism.registry.conversion.VertexGeoObjectStrategy;
 import net.geoprism.registry.etl.export.GeoObjectExportFormat;
 import net.geoprism.registry.etl.export.GeoObjectJsonExporter;
-import net.geoprism.registry.etl.upload.ClassifierVertexCache;
 import net.geoprism.registry.graph.BusinessEdgeType;
 import net.geoprism.registry.graph.DataSource;
 import net.geoprism.registry.graph.GeoVertex;
@@ -235,6 +231,7 @@ public class GeoObjectBusinessService extends RegistryLocalizedValueConverter im
       // Return the refreshed copy of the geoObject
       ServerGeoObjectIF object = strategy.getGeoObjectByUid(geoObject.getUid());
       object.setDate(startDate);
+
       return object;
     }
     catch (DuplicateDataException e)
@@ -329,6 +326,11 @@ public class GeoObjectBusinessService extends RegistryLocalizedValueConverter im
     sgo.apply();
   }
 
+  public void delete(ServerGeoObjectIF sgo)
+  {
+    sgo.delete();
+  }
+
   protected void validate(ServerGeoObjectIF sgo)
   {
     // this.validateCOTAttr(DefaultAttribute.EXISTS.getName());
@@ -394,7 +396,9 @@ public class GeoObjectBusinessService extends RegistryLocalizedValueConverter im
       apply(goServer, isImport, validateOrigin);
 
       // Return the refreshed copy of the geoObject
-      return this.getStrategy(type).getGeoObjectByUid(goServer.getUid());
+      ServerGeoObjectIF ret = this.getStrategy(type).getGeoObjectByUid(goServer.getUid());
+
+      return ret;
     }
     catch (DuplicateDataException e)
     {
@@ -1089,17 +1093,11 @@ public class GeoObjectBusinessService extends RegistryLocalizedValueConverter im
   @Override
   public GeoObjectOverTime toGeoObjectOverTime(ServerGeoObjectIF sgo)
   {
-    return toGeoObjectOverTime(sgo, true);
+    return toGeoObjectOverTime(sgo, true, true);
   }
 
   @Override
-  public GeoObjectOverTime toGeoObjectOverTime(ServerGeoObjectIF sgo, boolean generateUid)
-  {
-    return toGeoObjectOverTime(sgo, generateUid, null);
-  }
-
-  @Override
-  public GeoObjectOverTime toGeoObjectOverTime(ServerGeoObjectIF sgo, boolean generateUid, ClassifierVertexCache classifierCache)
+  public GeoObjectOverTime toGeoObjectOverTime(ServerGeoObjectIF sgo, boolean generateUid, boolean includeExternalIds)
   {
     GeoObjectType typeDto = sgo.getType().toDTO();
     Map<String, ValueOverTimeCollectionDTO> votAttributeMap = GeoObjectOverTime.buildVotAttributeMap(typeDto);
@@ -1165,12 +1163,6 @@ public class GeoObjectBusinessService extends RegistryLocalizedValueConverter im
               }
               else if (attribute instanceof AttributeClassificationType)
               {
-                // ID id = (ID) value;
-                //
-                // Classification classification =
-                // this.cService.getByRid(id.getRid().toString()).orElseThrow(()
-                // -> {
-
                 String classificationTypeCode = ( (AttributeClassificationType) attribute ).getClassificationType();
                 ClassificationType classificationType = this.cTypeService.getByCode(classificationTypeCode);
 
@@ -1206,40 +1198,20 @@ public class GeoObjectBusinessService extends RegistryLocalizedValueConverter im
           {
             if (attribute instanceof AttributeClassificationType)
             {
+              String oid = value.toString().trim();
+
               String classificationTypeCode = ( (AttributeClassificationType) attribute ).getClassificationType();
               ClassificationType classificationType = this.cTypeService.getByCode(classificationTypeCode);
-              MdClassificationDAOIF mdClassificationDAO = classificationType.getMdClassification();
 
-              VertexObject classifier = null;
-              if (classifierCache != null)
-              {
-                classifier = classifierCache.getClassifier(classificationTypeCode, value.toString().trim());
-              }
-
-              if (classifier == null)
-              {
-                MdVertexDAOIF mdVertexDAO = mdClassificationDAO.getReferenceMdVertexDAO();
-
-                classifier = VertexObject.get(mdVertexDAO, (String) value);
-
-                if (classifier != null && classifierCache != null)
-                {
-                  classifierCache.putClassifier(classificationTypeCode, value.toString().trim(), classifier);
-                }
-              }
-
-              try
-              {
-                geoObj.setValue(attributeName, classifier.getObjectValue(AbstractClassification.CODE));
-              }
-              catch (UnknownTermException e)
-              {
+              Classification classification = this.cService.getByOid(classificationType, oid).orElseThrow(() -> {
                 TermValueException ex = new TermValueException();
-                ex.setAttributeLabel(e.getAttribute().getLabel().getValue());
-                ex.setCode(e.getCode());
+                ex.setAttributeLabel(attribute.getLabel().getValue());
+                ex.setCode(oid);
 
-                throw e;
-              }
+                throw ex;
+              });
+
+              geoObj.setValue(attributeName, classification.getCode());
             }
             else
             {
@@ -2021,5 +1993,4 @@ public class GeoObjectBusinessService extends RegistryLocalizedValueConverter im
 
     return this.businessObjectService.processTraverseResults(query.getResults(), object.getDate());
   }
-
 }

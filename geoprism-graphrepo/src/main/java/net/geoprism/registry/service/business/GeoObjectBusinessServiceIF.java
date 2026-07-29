@@ -37,7 +37,6 @@ import com.runwaysdk.dataaccess.MdEdgeDAOIF;
 import com.runwaysdk.dataaccess.graph.attributes.ValueOverTimeCollection;
 
 import net.geoprism.registry.conversion.ServerGeoObjectStrategyIF;
-import net.geoprism.registry.etl.upload.ClassifierVertexCache;
 import net.geoprism.registry.graph.BusinessEdgeType;
 import net.geoprism.registry.graph.DataSource;
 import net.geoprism.registry.model.BusinessObject;
@@ -70,6 +69,8 @@ public interface GeoObjectBusinessServiceIF
 
   public void removeChild(String parentCode, String parentGeoObjectTypeCode, String childCode, String childGeoObjectTypeCode, String hierarchyCode, Date startDate, Date endDate, boolean validateOrigin);
 
+  public void delete(ServerGeoObjectIF sgo);
+  
   public void apply(ServerGeoObjectIF sgo, boolean isImport, boolean validateOrigin);
 
   public ServerGeoObjectIF apply(GeoObject object, Date startDate, Date endDate, boolean isNew, boolean isImport, boolean validateOrigin);
@@ -126,9 +127,7 @@ public interface GeoObjectBusinessServiceIF
 
   public GeoObjectOverTime toGeoObjectOverTime(ServerGeoObjectIF sgo);
 
-  public GeoObjectOverTime toGeoObjectOverTime(ServerGeoObjectIF sgo, boolean generateUid);
-
-  public GeoObjectOverTime toGeoObjectOverTime(ServerGeoObjectIF sgo, boolean generateUid, ClassifierVertexCache classifierCache);
+  public GeoObjectOverTime toGeoObjectOverTime(ServerGeoObjectIF sgo, boolean generateUid, boolean includeExternalIds);
 
   // public ServerParentTreeNode addChild(ServerGeoObjectIF sgo,
   // ServerGeoObjectIF child, ServerHierarchyType hierarchy);
