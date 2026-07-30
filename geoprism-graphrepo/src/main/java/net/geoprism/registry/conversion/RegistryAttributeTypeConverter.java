@@ -131,7 +131,7 @@ public class RegistryAttributeTypeConverter extends RegistryLocalizedValueConver
           ex.setDataIdentifier(rootOid);
           ex.setAttributeLabel(GeoObjectMetadata.get().getAttributeDisplayLabel(DefaultAttribute.CODE.getName()));
 
-          throw ex;
+          return ex;
         });
 
         attributeType.setRootTerm(classification.toTerm());

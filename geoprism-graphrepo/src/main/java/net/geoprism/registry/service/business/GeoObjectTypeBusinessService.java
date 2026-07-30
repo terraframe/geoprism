@@ -45,7 +45,6 @@ import org.commongeoregistry.adapter.metadata.AttributeType;
 import org.commongeoregistry.adapter.metadata.GeoObjectType;
 import org.commongeoregistry.adapter.metadata.RegistryRole;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 
 import com.google.gson.JsonObject;
@@ -92,7 +91,6 @@ import net.geoprism.registry.GeoObjectTypeAssignmentException;
 import net.geoprism.registry.HierarchyRootException;
 import net.geoprism.registry.RegistryConstants;
 import net.geoprism.registry.TypeInUseException;
-import net.geoprism.registry.cache.RemoveGeoObjectTypeEvent;
 import net.geoprism.registry.command.CacheEventType;
 import net.geoprism.registry.command.GeoObjectTypeCacheEventCommand;
 import net.geoprism.registry.command.HierarchicalRelationshipTypeCacheEventCommand;
@@ -110,9 +108,6 @@ import net.geoprism.registry.permission.PermissionContext;
 public class GeoObjectTypeBusinessService implements GeoObjectTypeBusinessServiceIF
 {
   public static String                     GEOMETRY_TABLE = "net.geoprism.registry.geometry.GeometryTable";
-
-  @Autowired
-  private ApplicationEventPublisher        publisher;
 
   @Autowired
   private TransitionEventBusinessServiceIF tranEventServ;
@@ -745,8 +740,6 @@ public class GeoObjectTypeBusinessService implements GeoObjectTypeBusinessServic
       try
       {
         this.deleteInTransaction(type);
-
-        publisher.publishEvent(new RemoveGeoObjectTypeEvent(this));
 
         break;
       }

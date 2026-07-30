@@ -3,24 +3,25 @@
  *
  * This file is part of Geoprism(tm).
  *
- * Geoprism(tm) is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
+ * Geoprism(tm) is free software: you can redistribute it and/or modify it under
+ * the terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation, either version 3 of the License, or (at your option) any
+ * later version.
  *
- * Geoprism(tm) is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
+ * Geoprism(tm) is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with Geoprism(tm).  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with Geoprism(tm). If not, see <http://www.gnu.org/licenses/>.
  */
 package net.geoprism.registry.service.request;
 
 import java.util.Date;
 import java.util.List;
 
+import org.commongeoregistry.adapter.constants.DefaultAttribute;
 import org.commongeoregistry.adapter.dataaccess.GeoObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -34,6 +35,7 @@ import net.geoprism.registry.JsonCollectors;
 import net.geoprism.registry.graph.BusinessEdgeType;
 import net.geoprism.registry.graph.BusinessType;
 import net.geoprism.registry.model.BusinessObject;
+import net.geoprism.registry.model.GeoObjectMetadata;
 import net.geoprism.registry.model.ServerGeoObjectIF;
 import net.geoprism.registry.model.graph.VertexComponent;
 import net.geoprism.registry.service.business.BusinessEdgeTypeBusinessServiceIF;
@@ -73,7 +75,14 @@ public class BusinessObjectService extends ObjectService<BusinessObject, Busines
     BusinessType type = this.getTypeService().getByCodeOrThrow(businessTypeCode);
     BusinessEdgeType relationshipType = this.edgeService.getByCodeOrThrow(businessEdgeTypeCode);
 
-    BusinessObject object = this.getObjectService().getByCode(type, code);
+    BusinessObject object = this.getObjectService().getByCode(type, code).orElseThrow(() -> {
+      net.geoprism.registry.DataNotFoundException ex = new net.geoprism.registry.DataNotFoundException();
+      ex.setTypeLabel(type.getLabel().getValue());
+      ex.setDataIdentifier(code);
+      ex.setAttributeLabel(GeoObjectMetadata.get().getAttributeDisplayLabel(DefaultAttribute.CODE.getName()));
+
+      return ex;
+    });
 
     List<VertexComponent> parents = this.getObjectService().getParents(object, relationshipType, date);
 
@@ -86,7 +95,14 @@ public class BusinessObjectService extends ObjectService<BusinessObject, Busines
     BusinessType type = this.getTypeService().getByCodeOrThrow(businessTypeCode);
     BusinessEdgeType relationshipType = this.edgeService.getByCodeOrThrow(businessEdgeTypeCode);
 
-    BusinessObject object = this.getObjectService().getByCode(type, code);
+    BusinessObject object = this.getObjectService().getByCode(type, code).orElseThrow(() -> {
+      net.geoprism.registry.DataNotFoundException ex = new net.geoprism.registry.DataNotFoundException();
+      ex.setTypeLabel(type.getLabel().getValue());
+      ex.setDataIdentifier(code);
+      ex.setAttributeLabel(GeoObjectMetadata.get().getAttributeDisplayLabel(DefaultAttribute.CODE.getName()));
+
+      return ex;
+    });
 
     List<VertexComponent> children = this.getObjectService().getChildren(object, relationshipType, date);
 

@@ -3,18 +3,18 @@
  *
  * This file is part of Geoprism(tm).
  *
- * Geoprism(tm) is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
+ * Geoprism(tm) is free software: you can redistribute it and/or modify it under
+ * the terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation, either version 3 of the License, or (at your option) any
+ * later version.
  *
- * Geoprism(tm) is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
+ * Geoprism(tm) is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with Geoprism(tm).  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with Geoprism(tm). If not, see <http://www.gnu.org/licenses/>.
  */
 package net.geoprism.registry.service.business;
 
@@ -22,11 +22,13 @@ import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.commongeoregistry.adapter.constants.DefaultAttribute;
 import org.commongeoregistry.adapter.dataaccess.LocalizedValue;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Service;
 
 import com.google.gson.JsonObject;
@@ -43,6 +45,8 @@ import com.runwaysdk.dataaccess.transaction.Transaction;
 import net.geoprism.configuration.GeoprismProperties;
 import net.geoprism.registry.DateFormatter;
 import net.geoprism.registry.OriginException;
+import net.geoprism.registry.cache.ClearCacheEvent;
+import net.geoprism.registry.cache.TransactionLRUCache;
 import net.geoprism.registry.graph.AttributeBooleanType;
 import net.geoprism.registry.graph.AttributeCharacterType;
 import net.geoprism.registry.graph.AttributeDataSourceType;
@@ -74,17 +78,28 @@ import net.geoprism.registry.view.ValueOverTimeEntryDTO;
 @Service
 public abstract class ObjectBusinessService<V extends ServerObjectVertex, T extends ObjectClass, D extends ObjectClassDTO> implements ObjectBusinessServiceIF<V, T, D>
 {
-  private ObjectClassBusinessServiceIF<T, D> typeService;
+  private ObjectClassBusinessServiceIF<T, D>   typeService;
 
-  private String                             baseVertexClass;
+  private String                               baseVertexClass;
 
   @Autowired
-  private DataSourceBusinessServiceIF        sourceService;
+  private DataSourceBusinessServiceIF          sourceService;
 
-  public ObjectBusinessService(ObjectClassBusinessServiceIF<T, D> typeService, String baseVertexClass)
+  private final TransactionLRUCache<String, V> cache;
+
+  public ObjectBusinessService(ObjectClassBusinessServiceIF<T, D> typeService, String baseVertexClass, String cacheName)
   {
     this.typeService = typeService;
     this.baseVertexClass = baseVertexClass;
+
+    this.cache = new TransactionLRUCache<String, V>(cacheName, (v) -> {
+      if (v.getRID() != null)
+      {
+        return new String[] { v.getOid(), v.getType().getCode() + "#" + v.getCode(), v.getRID().toString() };
+      }
+
+      return new String[] { v.getOid(), v.getType().getCode() + "#" + v.getCode() };
+    }, 100);
   }
 
   protected abstract V build(T type, VertexObject current, Map<String, List<VertexObject>> nodeMap, Date date);
@@ -428,6 +443,8 @@ public abstract class ObjectBusinessService<V extends ServerObjectVertex, T exte
     }
 
     object.apply();
+
+    this.cache.put(object);
   }
 
   @Override
@@ -449,10 +466,12 @@ public abstract class ObjectBusinessService<V extends ServerObjectVertex, T exte
     }
 
     object.delete();
+
+    this.cache.remove(object);
   }
 
   @Override
-  public V get(T type, String attributeName, Object value)
+  public Optional<V> get(T type, String attributeName, Object value)
   {
     MdVertexDAOIF mdVertex = type.getMdVertexDAO();
     MdAttributeDAOIF mdAttribute = mdVertex.definesAttribute(attributeName);
@@ -466,13 +485,15 @@ public abstract class ObjectBusinessService<V extends ServerObjectVertex, T exte
     GraphQuery<VertexObject> query = new GraphQuery<VertexObject>(statement.toString());
     query.setParameter(attributeName, value);
 
-    return this.processSingleResult(query.getResults(), null);
+    return Optional.ofNullable(this.processSingleResult(query.getResults(), null));
   }
 
   @Override
-  public V getByCode(T type, Object value)
+  public Optional<V> getByCode(T type, String code)
   {
-    return this.get(type, DefaultAttribute.CODE.getName(), value);
+    return this.cache.get(type.getCode() + "#" + code, () -> {
+      return this.get(type, DefaultAttribute.CODE.getName(), code);
+    });
   }
 
   @Override
@@ -579,6 +600,12 @@ public abstract class ObjectBusinessService<V extends ServerObjectVertex, T exte
     {
       throw new ProgrammingErrorException("Multiple results were returned when only one is allowed");
     }
+  }
+
+  @EventListener
+  public void handleClearCacheEvent(ClearCacheEvent event)
+  {
+    this.cache.clear();
   }
 
 }

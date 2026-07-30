@@ -3,17 +3,17 @@ import java.time.Clock;
 
 import org.springframework.context.ApplicationEvent;
 
-public class RemoveGeoObjectTypeEvent extends ApplicationEvent
+public class ClearCacheEvent extends ApplicationEvent
 {
 
   private static final long serialVersionUID = 1L;
 
-  public RemoveGeoObjectTypeEvent(Object source, Clock clock)
+  public ClearCacheEvent(Object source, Clock clock)
   {
     super(source, clock);
   }
 
-  public RemoveGeoObjectTypeEvent(Object source)
+  public ClearCacheEvent(Object source)
   {
     super(source);
   }
