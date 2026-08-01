@@ -3,18 +3,18 @@
  *
  * This file is part of Geoprism(tm).
  *
- * Geoprism(tm) is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
+ * Geoprism(tm) is free software: you can redistribute it and/or modify it under
+ * the terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation, either version 3 of the License, or (at your option) any
+ * later version.
  *
- * Geoprism(tm) is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
+ * Geoprism(tm) is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with Geoprism(tm).  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with Geoprism(tm). If not, see <http://www.gnu.org/licenses/>.
  */
 package net.geoprism.registry.service.business;
 
@@ -22,6 +22,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.apache.commons.lang.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.runwaysdk.business.graph.GraphQuery;
@@ -31,12 +32,18 @@ import com.runwaysdk.dataaccess.metadata.graph.MdVertexDAO;
 import com.runwaysdk.dataaccess.transaction.Transaction;
 
 import net.geoprism.registry.cache.TransactionLRUCache;
+import net.geoprism.registry.conversion.LocalizedValueConverter;
 import net.geoprism.registry.graph.DataSource;
 import net.geoprism.registry.model.DataSourceDTO;
+import net.geoprism.registry.model.GovernanceLevel;
+import net.geoprism.registry.model.MetadataProfile;
 
 @Service
 public class DataSourceBusinessService implements DataSourceBusinessServiceIF
 {
+  @Autowired
+  private SourceAuthorityBusinessServiceIF              authorityService;
+
   private final TransactionLRUCache<String, DataSource> cache;
 
   public DataSourceBusinessService()
@@ -56,29 +63,44 @@ public class DataSourceBusinessService implements DataSourceBusinessServiceIF
   @Override
   public DataSourceDTO toDTO(DataSource source)
   {
-    DataSourceDTO object = new DataSourceDTO();
-    object.setOid(source.getOid());
-    object.setCode(source.getCode());
+    DataSourceDTO dto = new DataSourceDTO();
+    dto.setOid(source.getOid());
+    dto.setCode(source.getCode());
+    dto.setLabel(source.getLabel());
+    dto.setDescription(source.getDescriptionLV());
+    dto.setUri(source.getUri());
+    dto.setGovernanceLevel(GovernanceLevel.valueOf(source.getGovernanceLevel()));
+    dto.setMetadataProfile(MetadataProfile.valueOf(source.getMetadataProfile()));
 
-    return object;
+    this.authorityService.get(source.getObjectValue(DataSource.AUTHORITY)).ifPresent(authority -> {
+      dto.setAuthority(authority.getCode());
+    });
+
+    return dto;
   }
 
   @Override
   @Transaction
-  public DataSource apply(DataSourceDTO object)
+  public DataSource apply(DataSourceDTO dto)
   {
     DataSource source = null;
 
-    if (!StringUtils.isBlank(object.getOid()))
+    if (StringUtils.isNotBlank(dto.getOid()))
     {
-      source = DataSource.get(object.getOid());
+      source = DataSource.get(dto.getOid());
     }
     else
     {
       source = new DataSource();
     }
 
-    source.setCode(object.getCode());
+    source.setCode(dto.getCode());
+    LocalizedValueConverter.populate(source, DataSource.DISPLAYLABEL, dto.getLabel());
+    LocalizedValueConverter.populate(source, DataSource.DESCRIPTION, dto.getDescription());
+    source.setUri(dto.getUri());
+    source.setGovernanceLevel(dto.getGovernanceLevel().name());
+    source.setMetadataProfile(dto.getMetadataProfile().name());
+    source.setAuthority(this.authorityService.getByCode(dto.getAuthority()).orElseThrow());
 
     return apply(source);
   }
@@ -101,7 +123,7 @@ public class DataSourceBusinessService implements DataSourceBusinessServiceIF
     {
       return this.cache.get(code, () -> DataSource.getByCode(code));
     }
-    
+
     return Optional.empty();
   }
 
@@ -112,19 +134,19 @@ public class DataSourceBusinessService implements DataSourceBusinessServiceIF
     {
       return this.cache.get(rid, () -> DataSource.getByRid(rid));
     }
-    
+
     return Optional.empty();
   }
 
   @Override
-  public DataSource get(String sourceOid)
+  public Optional<DataSource> get(String sourceOid)
   {
     if (!StringUtils.isBlank(sourceOid))
     {
-      return this.cache.get(sourceOid, () -> Optional.ofNullable(DataSource.get(sourceOid))).get();
+      return this.cache.get(sourceOid, () -> Optional.ofNullable(DataSource.get(sourceOid)));
     }
-    
-    return null;
+
+    return Optional.empty();
   }
 
   @Override

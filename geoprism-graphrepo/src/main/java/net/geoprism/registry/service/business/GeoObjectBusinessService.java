@@ -967,8 +967,9 @@ public class GeoObjectBusinessService extends RegistryLocalizedValueConverter im
         {
           if (attribute instanceof AttributeDataSourceType)
           {
-            DataSource source = this.sourceService.get((String) value);
-            geoObj.setValue(attributeName, source.getCode());
+            this.sourceService.get((String) value).ifPresent(source -> {
+              geoObj.setValue(attributeName, source.getCode());
+            });
           }
           else if (attribute instanceof AttributeClassificationType)
           {
@@ -1152,10 +1153,8 @@ public class GeoObjectBusinessService extends RegistryLocalizedValueConverter im
               if (attribute instanceof AttributeDataSourceType)
               {
                 // ID id = (ID) value;
-                //
-                // DataSource source =
-                // this.sourceService.getByRid(id.getRid().toString()).orElseThrow();
-                DataSource source = this.sourceService.get((String) value);
+
+                DataSource source = this.sourceService.get((String) value).orElseThrow();
 
                 ValueOverTimeDTO votDTO = new ValueOverTimeDTO(vot.getOid(), vot.getStartDate(), vot.getEndDate(), votcDTO);
                 votDTO.setValue(source.getCode());
@@ -1633,7 +1632,7 @@ public class GeoObjectBusinessService extends RegistryLocalizedValueConverter im
         Date endDate = edge.getObjectValue(GeoVertex.END_DATE);
         String oid = edge.getObjectValue(GeoVertex.OID);
         String uid = edge.getObjectValue(DefaultAttribute.UID.getName());
-        DataSource source = this.sourceService.get(edge.getObjectValue(DefaultAttribute.DATA_SOURCE.getName()));
+        DataSource source = this.sourceService.get(edge.getObjectValue(DefaultAttribute.DATA_SOURCE.getName())).orElse(null);
 
         ServerParentTreeNode tnRoot = new ServerParentTreeNode(child, null, date, null, oid, uid, source);
         tnRoot.setEndDate(endDate);

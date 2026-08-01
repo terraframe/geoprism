@@ -290,7 +290,7 @@ public abstract class ObjectTypeSnapshotBusinessService<T extends ObjectTypeSnap
           ex.setDataIdentifier(root.getCode());
           ex.setAttributeLabel("geoObjectType.attr.code");
 
-          throw ex;
+          return ex;
         });
 
         mdAttributeTerm.setValue(MdAttributeClassification.ROOT, classification.getOid());

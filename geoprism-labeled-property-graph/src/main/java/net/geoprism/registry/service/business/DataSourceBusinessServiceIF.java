@@ -46,7 +46,7 @@ public interface DataSourceBusinessServiceIF
 
   public List<DataSource> search(String text);
 
-  public DataSource get(String sourceOid);
+  public Optional<DataSource> get(String sourceOid);
 
 
 }

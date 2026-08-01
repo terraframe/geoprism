@@ -21,16 +21,48 @@
 <version xsi:noNamespaceSchemaLocation="classpath:com/runwaysdk/resources/xsd/version.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <doIt>
     <create>
+<!--
+     <mdVertex name="net.geoprism.registry.graph.GovernanceLevel" label="Governance Level">
+        <attributes>
+          <char name="code" label="Code" required="true" size="255" indexType="unique"  />
+          <localCharEmbedded name="displayLabel" label="Label" required="true" />                            
+          <localCharEmbedded name="description" label="Description"  />                                                          
+        </attributes>
+      </mdVertex>          
+      <mdVertex name="net.geoprism.registry.graph.MetadataProfile" label="Metadata Profile">
+        <attributes>
+          <char name="code" label="Code" required="true" size="255" indexType="unique"  />
+          <localCharEmbedded name="displayLabel" label="Label" required="true" />                            
+          <localCharEmbedded name="description" label="Description"  />                                                          
+        </attributes>
+      </mdVertex>          
+ -->    
+      <mdVertex name="net.geoprism.registry.graph.SourceAuthority" label="Source Authority">
+        <attributes>
+          <char name="code" label="code" required="true" size="255" indexType="unique"  />          
+          <localCharEmbedded name="displayLabel" label="Display Label" />                  
+          <localCharEmbedded name="description" label="Description" />                  
+          <text name="authorityType" label="Authority Type"  />                    
+        </attributes>
+      </mdVertex>          
       <mdVertex name="net.geoprism.registry.graph.DataSource" label="Source">
         <attributes>
           <char name="code" label="Code" required="true" size="255" indexType="unique"  />          
+          <localCharEmbedded name="displayLabel" label="Display Label" />                  
+          <localCharEmbedded name="description" label="Description" />                            
+          <text name="uri" label="URI"  />                    
+          <text name="governanceLevel" label="Governance Level"  />                    
+          <text name="metadataProfile" label="Metadata Profile"  />   
+          <graphReference name="authority" label="Authority" type="net.geoprism.registry.graph.SourceAuthority" />                                      
         </attributes>
       </mdVertex>          
-    </create>
-    
+     </create>    
     <permissions>
       <role roleName="geoprism.admin.Administrator">
         <grant>
+          <mdBusinessPermission type="net.geoprism.registry.graph.SourceAuthority">
+            <operation name="ALL" />
+          </mdBusinessPermission>
           <mdBusinessPermission type="net.geoprism.registry.graph.DataSource">
             <operation name="ALL" />
           </mdBusinessPermission>
@@ -43,6 +75,7 @@
   <undoIt>
     <delete>
       <object type="com.runwaysdk.system.metadata.MdVertex" key="net.geoprism.registry.graph.DataSource" />
+      <object type="com.runwaysdk.system.metadata.MdVertex" key="net.geoprism.registry.graph.SourceAuthority" />
     </delete>
   </undoIt>
 </version>

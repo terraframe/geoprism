@@ -144,13 +144,8 @@ public abstract class ObjectBusinessService<V extends ServerObjectVertex, T exte
             else if (attribute instanceof AttributeDataSourceType)
             {
               List<ValueOverTimeEntryDTO<String>> entries = collection.stream().map(vot -> {
-                DataSource dataSource = this.sourceService.get((String) vot.getValue());
-
-                if (dataSource == null)
-                {
-                  // TODO throw better exception
-                  throw new UnsupportedOperationException();
-                }
+                // TODO throw better exception
+                DataSource dataSource = this.sourceService.get((String) vot.getValue()).orElseThrow();
 
                 return ValueOverTimeEntryDTO.of(vot.getOid(), vot.getStartDate(), vot.getEndDate(), dataSource.getCode());
 
@@ -207,13 +202,7 @@ public abstract class ObjectBusinessService<V extends ServerObjectVertex, T exte
               }
               else if (attribute instanceof AttributeDataSourceType)
               {
-                DataSource dataSource = this.sourceService.get((String) value);
-
-                if (dataSource == null)
-                {
-                  // TODO throw better exception
-                  throw new UnsupportedOperationException();
-                }
+                DataSource dataSource = this.sourceService.get((String) value).orElseThrow();
 
                 dto.put(attributeName, AttributeDataSourceDTO.of(dataSource.getCode()));
               }
@@ -267,12 +256,9 @@ public abstract class ObjectBusinessService<V extends ServerObjectVertex, T exte
           {
             if (attribute instanceof AttributeDataSourceType)
             {
-              DataSource dataSource = this.sourceService.get((String) value);
-
-              if (dataSource != null)
-              {
+              this.sourceService.get((String) value).ifPresent(dataSource -> {
                 dto.setValue(attributeName, dataSource.getCode());
-              }
+              });
             }
             else
             {
