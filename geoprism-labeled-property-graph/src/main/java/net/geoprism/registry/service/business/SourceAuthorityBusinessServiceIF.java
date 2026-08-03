@@ -48,4 +48,6 @@ public interface SourceAuthorityBusinessServiceIF
 
   List<SourceAuthority> search(String text);
 
+  Long getUseCount(SourceAuthority authority);
+
 }

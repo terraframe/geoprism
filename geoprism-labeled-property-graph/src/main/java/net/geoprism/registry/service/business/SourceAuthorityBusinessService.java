@@ -32,6 +32,8 @@ import com.runwaysdk.dataaccess.transaction.Transaction;
 
 import net.geoprism.registry.cache.TransactionLRUCache;
 import net.geoprism.registry.conversion.LocalizedValueConverter;
+import net.geoprism.registry.exception.RequiredSourceAuthorityException;
+import net.geoprism.registry.graph.DataSource;
 import net.geoprism.registry.graph.SourceAuthority;
 import net.geoprism.registry.model.SourceAuthorityDTO;
 
@@ -51,6 +53,14 @@ public class SourceAuthorityBusinessService implements SourceAuthorityBusinessSe
   @Transaction
   public void delete(SourceAuthority source)
   {
+    if (this.getUseCount(source) > 0)
+    {
+      RequiredSourceAuthorityException ex = new RequiredSourceAuthorityException();
+      ex.setCode(source.getCode());
+
+      throw ex;
+    }
+
     this.cache.remove(source);
 
     source.delete();
@@ -166,6 +176,23 @@ public class SourceAuthorityBusinessService implements SourceAuthorityBusinessSe
     query.setParameter("text", "%" + text + "%");
 
     return query.getResults();
+  }
+
+  @Override
+  public Long getUseCount(SourceAuthority authority)
+  {
+    MdVertexDAOIF mdVertex = MdVertexDAO.getMdVertexDAO(DataSource.CLASS);
+    MdAttributeDAOIF mdAttribute = mdVertex.definesAttribute(DataSource.AUTHORITY);
+
+    StringBuilder statement = new StringBuilder();
+    statement.append("SELECT COUNT(*) FROM " + mdVertex.getDBClassName());
+    statement.append(" WHERE " + mdAttribute.getColumnName() + " = :authority");
+    statement.append(" ORDER BY " + mdAttribute.getColumnName());
+
+    GraphQuery<Long> query = new GraphQuery<Long>(statement.toString());
+    query.setParameter("authority", authority.getRID());
+
+    return query.getSingleResult();
   }
 
 }

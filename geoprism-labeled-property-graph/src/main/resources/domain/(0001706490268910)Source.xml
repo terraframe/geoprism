@@ -55,7 +55,15 @@
           <text name="metadataProfile" label="Metadata Profile"  />   
           <graphReference name="authority" label="Authority" type="net.geoprism.registry.graph.SourceAuthority" />                                      
         </attributes>
-      </mdVertex>          
+      </mdVertex>    
+      <mdException name="net.geoprism.registry.exception.RequiredSourceAuthorityException" 
+                   label="Required source authority exception" 
+                   description="Thrown when trying to import location data without mapping the required attributes" 
+                   message="The source authority [{code}] cannot be deleted because it is used by a data source ">
+        <attributes>
+          <text name="code" label="Code" />
+        </attributes>
+      </mdException>            
      </create>    
     <permissions>
       <role roleName="geoprism.admin.Administrator">
@@ -74,6 +82,7 @@
   </doIt>
   <undoIt>
     <delete>
+      <object type="com.runwaysdk.system.metadata.MdException" key="net.geoprism.registry.graph.RequiredSourceAuthorityException" />    
       <object type="com.runwaysdk.system.metadata.MdVertex" key="net.geoprism.registry.graph.DataSource" />
       <object type="com.runwaysdk.system.metadata.MdVertex" key="net.geoprism.registry.graph.SourceAuthority" />
     </delete>
