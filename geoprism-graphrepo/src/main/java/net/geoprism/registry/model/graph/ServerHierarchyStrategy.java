@@ -60,15 +60,22 @@ public class ServerHierarchyStrategy extends AbstractGraphStrategy implements Gr
     parameters.put("rid", parent.getVertex().getRID());
 
     StringBuilder statement = new StringBuilder();
-    statement.append("TRAVERSE out('" + EdgeConstant.HAS_VALUE.getDBClassName() + "', '" + EdgeConstant.HAS_GEOMETRY.getDBClassName() + "') FROM (");
-    statement.append("SELECT EXPAND( out(");
-    statement.append("'" + this.hierarchy.getObjectEdge().getDBClassName() + "'");
-    statement.append(")");    
+    statement.append("TRAVERSE out('" + EdgeConstant.HAS_VALUE.getDBClassName() + "', '" + EdgeConstant.HAS_GEOMETRY.getDBClassName() + "') FROM (");    
 
     if (date != null)
     {
-      statement.append("[:date BETWEEN startDate AND endDate]");
+      statement.append("SELECT EXPAND( outE(");
+      statement.append("'" + this.hierarchy.getObjectEdge().getDBClassName() + "'");
+      statement.append(")");
+      
+      statement.append("[:date BETWEEN startDate AND endDate].inV()");
       parameters.put("date", date);
+    }
+    else
+    {
+      statement.append("SELECT EXPAND( out(");
+      statement.append("'" + this.hierarchy.getObjectEdge().getDBClassName() + "'");
+      statement.append(")");
     }
 
     statement.append(") FROM :rid");
@@ -141,14 +148,21 @@ public class ServerHierarchyStrategy extends AbstractGraphStrategy implements Gr
 
     StringBuilder statement = new StringBuilder();
     statement.append("TRAVERSE out('" + EdgeConstant.HAS_VALUE.getDBClassName() + "', '" + EdgeConstant.HAS_GEOMETRY.getDBClassName() + "') FROM (");    
-    statement.append("SELECT EXPAND( in(");
-    statement.append("'" + this.hierarchy.getObjectEdge().getDBClassName() + "'");
-    statement.append(")");
 
     if (date != null)
     {
-      statement.append("[:date BETWEEN startDate AND endDate]");
+      statement.append("SELECT EXPAND( inE(");
+      statement.append("'" + this.hierarchy.getObjectEdge().getDBClassName() + "'");
+      statement.append(")");
+      
+      statement.append("[:date BETWEEN startDate AND endDate].outV()");
       parameters.put("date", date);
+    }
+    else
+    {
+      statement.append("SELECT EXPAND( in(");
+      statement.append("'" + this.hierarchy.getObjectEdge().getDBClassName() + "'");
+      statement.append(")");
     }
 
     statement.append(") FROM :rid");
