@@ -72,18 +72,7 @@ public class SourceAuthorityService implements SourceAuthorityServiceIF
   @Request(RequestType.SESSION)
   public SourceAuthorityDTO getByCode(String sessionId, String code)
   {
-    SourceAuthority source = this.service.getByCode(code).orElseThrow(() -> {
-      MdVertexDAOIF mdVertex = MdVertexDAO.getMdVertexDAO(SourceAuthority.CLASS);
-      Locale locale = Session.getCurrentLocale();
-
-      net.geoprism.registry.DataNotFoundException ex = new net.geoprism.registry.DataNotFoundException();
-      ex.setTypeLabel(mdVertex.getDisplayLabel(locale));
-      ex.setDataIdentifier(code);
-      ex.setAttributeLabel(mdVertex.definesAttribute(SourceAuthority.CODE).getDisplayLabel(locale));
-
-      return ex;
-    });
-
+    SourceAuthority source = this.service.getByCodeOrThrow(code);
     return this.service.toDTO(source);
   }
 

@@ -19,6 +19,7 @@
 package net.geoprism.registry.service.business;
 
 import java.util.List;
+import java.util.Locale;
 import java.util.Optional;
 
 import org.apache.commons.lang.StringUtils;
@@ -29,6 +30,7 @@ import com.runwaysdk.dataaccess.MdAttributeDAOIF;
 import com.runwaysdk.dataaccess.MdVertexDAOIF;
 import com.runwaysdk.dataaccess.metadata.graph.MdVertexDAO;
 import com.runwaysdk.dataaccess.transaction.Transaction;
+import com.runwaysdk.session.Session;
 
 import net.geoprism.registry.cache.TransactionLRUCache;
 import net.geoprism.registry.conversion.LocalizedValueConverter;
@@ -122,6 +124,22 @@ public class SourceAuthorityBusinessService implements SourceAuthorityBusinessSe
     }
 
     return Optional.empty();
+  }
+
+  @Override
+  public SourceAuthority getByCodeOrThrow(String code)
+  {
+    return this.getByCode(code).orElseThrow(() -> {
+      MdVertexDAOIF mdVertex = MdVertexDAO.getMdVertexDAO(SourceAuthority.CLASS);
+      Locale locale = Session.getCurrentLocale();
+
+      net.geoprism.registry.DataNotFoundException ex = new net.geoprism.registry.DataNotFoundException();
+      ex.setTypeLabel(mdVertex.getDisplayLabel(locale));
+      ex.setDataIdentifier(code);
+      ex.setAttributeLabel(mdVertex.definesAttribute(SourceAuthority.CODE).getDisplayLabel(locale));
+
+      return ex;
+    });
   }
 
   @Override

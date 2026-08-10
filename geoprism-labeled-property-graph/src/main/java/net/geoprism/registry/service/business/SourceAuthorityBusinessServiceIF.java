@@ -40,6 +40,8 @@ public interface SourceAuthorityBusinessServiceIF
 
   Optional<SourceAuthority> getByCode(String code);
 
+  SourceAuthority getByCodeOrThrow(String code);
+
   Optional<SourceAuthority> getByRid(String rid);
 
   Optional<SourceAuthority> get(String sourceOid);

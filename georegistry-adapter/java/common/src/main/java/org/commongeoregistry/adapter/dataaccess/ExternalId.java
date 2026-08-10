@@ -3,18 +3,19 @@
  *
  * This file is part of Common Geo Registry Adapter(tm).
  *
- * Common Geo Registry Adapter(tm) is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
+ * Common Geo Registry Adapter(tm) is free software: you can redistribute it
+ * and/or modify it under the terms of the GNU Lesser General Public License as
+ * published by the Free Software Foundation, either version 3 of the License,
+ * or (at your option) any later version.
  *
- * Common Geo Registry Adapter(tm) is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
+ * Common Geo Registry Adapter(tm) is distributed in the hope that it will be
+ * useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser
+ * General Public License for more details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with Common Geo Registry Adapter(tm).  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with Common Geo Registry Adapter(tm). If not, see
+ * <http://www.gnu.org/licenses/>.
  */
 package org.commongeoregistry.adapter.dataaccess;
 
@@ -25,62 +26,62 @@ public class ExternalId extends AlternateId
 {
   public static final String TYPE = "EXTERNAL_ID";
 
-  private String externalSystemId;
-  
-  private String  externalSystemLabel;
-  
+  private String             authority;
+
+  private String             authorityLabel;
+
   public ExternalId()
   {
-    
+
   }
-  
-  public ExternalId(String id, String externalSystemId, String externalSystemLabel)
+
+  public ExternalId(String id, String authority, String authorityLabel)
   {
     super(id);
-    
-    this.externalSystemId = externalSystemId;
-    this.externalSystemLabel = externalSystemLabel;
+
+    this.authority = authority;
+    this.authorityLabel = authorityLabel;
   }
 
-  public String getExternalSystemId()
+  public String getAuthority()
   {
-    return externalSystemId;
+    return authority;
   }
 
-  public void setExternalSystemId(String externalSystemId)
+  public void setAuthority(String authority)
   {
-    this.externalSystemId = externalSystemId;
+    this.authority = authority;
   }
 
-  public String getExternalSystemLabel()
+  public String getAuthorityLabel()
   {
-    return externalSystemLabel;
+    return authorityLabel;
   }
 
-  public void setExternalSystemLabel(String externalSystemLabel)
+  public void setAuthorityLabel(String authorityLabel)
   {
-    this.externalSystemLabel = externalSystemLabel;
+    this.authorityLabel = authorityLabel;
   }
-  
+
   @Override
   public void populate(JsonObject jo)
   {
     super.populate(jo);
-    this.setExternalSystemId(jo.get("externalSystemId").getAsString());
-    
-    if (jo.has("externalSystemLabel"))
+    this.setAuthority(jo.get("authority").getAsString());
+
+    if (jo.has("authorityLabel"))
     {
-      this.setExternalSystemLabel(jo.get("externalSystemLabel").getAsString());
+      this.setAuthorityLabel(jo.get("authorityLabel").getAsString());
     }
   }
-  
+
   @Override
   public JsonElement toJSON()
   {
     JsonObject jo = super.toJSON().getAsJsonObject();
     jo.addProperty(AlternateId.TYPE, TYPE);
-    jo.addProperty("externalSystemId", this.getExternalSystemId());
-    jo.addProperty("externalSystemLabel", this.getExternalSystemLabel());
+    jo.addProperty("authority", this.getAuthority());
+    jo.addProperty("authorityLabel", this.getAuthorityLabel());
     return jo;
   }
 }

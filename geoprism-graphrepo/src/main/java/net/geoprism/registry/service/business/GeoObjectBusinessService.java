@@ -1707,6 +1707,14 @@ public class GeoObjectBusinessService extends RegistryLocalizedValueConverter im
   @Override
   public SortedSet<EdgeObject> setParentCollection(ServerGeoObjectIF sgo, ServerHierarchyType hierarchyType, ValueOverTimeCollection votc, DataSource source, boolean validateOrigin)
   {
+    if (validateOrigin)
+    {
+      if (!hierarchyType.getOrigin().equals(GeoprismProperties.getOrigin()))
+      {
+        throw new OriginException();
+      }
+    }
+
     SortedSet<EdgeObject> resultEdges = new TreeSet<EdgeObject>(new EdgeComparator());
     SortedSet<EdgeObject> existingEdges = sgo.getEdges(hierarchyType);
 

@@ -469,8 +469,8 @@ public class GeoObject implements Serializable
     ids.add(id);
   }
   
-  public java.util.Optional<ExternalId> getExternalId(String externalSystemId)
+  public java.util.Optional<ExternalId> getExternalId(String authority)
   {
-    return this.getAlternateIds().stream().filter(id -> id instanceof ExternalId).map(ExternalId.class::cast).filter(id -> id.getExternalSystemId().equals(externalSystemId)).findAny();
+    return this.getAlternateIds().stream().filter(id -> id instanceof ExternalId).map(ExternalId.class::cast).filter(id -> id.getAuthority().equals(authority)).findAny();
   }
 }

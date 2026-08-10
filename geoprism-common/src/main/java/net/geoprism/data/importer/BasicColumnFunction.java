@@ -45,10 +45,4 @@ public class BasicColumnFunction implements ShapefileFunction
 
     return null;
   }
-
-  @Override
-  public String toJson()
-  {
-    return this.attributeName;
-  }
 }

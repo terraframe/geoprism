@@ -23,6 +23,4 @@ public interface ShapefileFunction
 
   public Object getValue(FeatureRow feature);
 
-  public String toJson();
-
 }
