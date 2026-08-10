@@ -21,7 +21,7 @@ public class SourceAuthorityDTO
   @JsonDeserialize(using = LocalizedValueDeserializer.class)
   private LocalizedValue description;
 
-  private String         authorityType;
+  private AuthorityType  authorityType;
 
   public String getOid()
   {
@@ -63,14 +63,13 @@ public class SourceAuthorityDTO
     this.description = description;
   }
 
-  public String getAuthorityType()
+  public AuthorityType getAuthorityType()
   {
     return authorityType;
   }
 
-  public void setAuthorityType(String authorityType)
+  public void setAuthorityType(AuthorityType authorityType)
   {
     this.authorityType = authorityType;
   }
-
 }

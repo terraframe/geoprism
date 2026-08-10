@@ -37,6 +37,7 @@ import net.geoprism.registry.conversion.LocalizedValueConverter;
 import net.geoprism.registry.exception.RequiredSourceAuthorityException;
 import net.geoprism.registry.graph.DataSource;
 import net.geoprism.registry.graph.SourceAuthority;
+import net.geoprism.registry.model.AuthorityType;
 import net.geoprism.registry.model.SourceAuthorityDTO;
 
 @Service
@@ -76,7 +77,7 @@ public class SourceAuthorityBusinessService implements SourceAuthorityBusinessSe
     object.setCode(source.getCode());
     object.setLabel(source.getLabel());
     object.setDescription(source.getDescriptionLV());
-    object.setAuthorityType(source.getAuthorityType());
+    object.setAuthorityType(AuthorityType.valueOf(source.getAuthorityType()));
 
     return object;
   }
@@ -99,7 +100,7 @@ public class SourceAuthorityBusinessService implements SourceAuthorityBusinessSe
     source.setCode(dto.getCode());
     LocalizedValueConverter.populate(source, SourceAuthority.DISPLAYLABEL, dto.getLabel());
     LocalizedValueConverter.populate(source, SourceAuthority.DESCRIPTION, dto.getDescription());
-    source.setAuthorityType(dto.getAuthorityType());
+    source.setAuthorityType(dto.getAuthorityType().name());
 
     return apply(source);
   }
