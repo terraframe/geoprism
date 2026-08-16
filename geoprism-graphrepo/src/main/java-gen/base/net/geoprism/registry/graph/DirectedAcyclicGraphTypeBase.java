@@ -29,8 +29,6 @@ package net.geoprism.registry.graph;
 public abstract class DirectedAcyclicGraphTypeBase extends net.geoprism.registry.graph.EdgeClass
 {
   public final static String CLASS = "net.geoprism.registry.graph.DirectedAcyclicGraphType";
-  public final static java.lang.String DESCRIPTION = "description";
-  public final static java.lang.String DISPLAYLABEL = "displayLabel";
   public final static java.lang.String MDEDGE = "mdEdge";
   public final static java.lang.String ORIGIN = "origin";
   public final static java.lang.String SEQUENCE = "sequence";
@@ -40,38 +38,6 @@ public abstract class DirectedAcyclicGraphTypeBase extends net.geoprism.registry
   public DirectedAcyclicGraphTypeBase()
   {
     super();
-  }
-  
-  public com.runwaysdk.ComponentIF getDescription()
-  {
-    return (com.runwaysdk.ComponentIF) this.getObjectValue(DESCRIPTION);
-  }
-  
-  public static com.runwaysdk.dataaccess.MdAttributeDAOIF getDescriptionMd()
-  {
-    com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(net.geoprism.registry.graph.DirectedAcyclicGraphType.CLASS);
-    return (com.runwaysdk.dataaccess.MdAttributeDAOIF)mdClassIF.definesAttribute(DESCRIPTION);
-  }
-  
-  public void setDescription(com.runwaysdk.ComponentIF value)
-  {
-    this.setValue(DESCRIPTION, value);
-  }
-  
-  public com.runwaysdk.ComponentIF getDisplayLabel()
-  {
-    return (com.runwaysdk.ComponentIF) this.getObjectValue(DISPLAYLABEL);
-  }
-  
-  public static com.runwaysdk.dataaccess.MdAttributeDAOIF getDisplayLabelMd()
-  {
-    com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(net.geoprism.registry.graph.DirectedAcyclicGraphType.CLASS);
-    return (com.runwaysdk.dataaccess.MdAttributeDAOIF)mdClassIF.definesAttribute(DISPLAYLABEL);
-  }
-  
-  public void setDisplayLabel(com.runwaysdk.ComponentIF value)
-  {
-    this.setValue(DISPLAYLABEL, value);
   }
   
   public com.runwaysdk.system.metadata.MdEdge getMdEdge()

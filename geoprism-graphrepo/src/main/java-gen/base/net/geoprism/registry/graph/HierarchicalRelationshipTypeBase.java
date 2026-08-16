@@ -35,9 +35,7 @@ public abstract class HierarchicalRelationshipTypeBase extends EdgeClass
   public final static java.lang.String CONTACT = "contact";
   public final static java.lang.String DBCLASSNAME = "dbClassName";
   public final static java.lang.String DEFINITIONEDGE = "definitionEdge";
-  public final static java.lang.String DESCRIPTION = "description";
   public final static java.lang.String DISCLAIMER = "disclaimer";
-  public final static java.lang.String DISPLAYLABEL = "displayLabel";
   public final static java.lang.String EMAIL = "email";
   public final static java.lang.String OBJECTEDGE = "objectEdge";
   public final static java.lang.String OID = "oid";
@@ -169,22 +167,6 @@ public abstract class HierarchicalRelationshipTypeBase extends EdgeClass
     this.setValue(DEFINITIONEDGE, oid);
   }
   
-  public com.runwaysdk.ComponentIF getDescription()
-  {
-    return (com.runwaysdk.ComponentIF) this.getObjectValue(DESCRIPTION);
-  }
-  
-  public static com.runwaysdk.dataaccess.MdAttributeDAOIF getDescriptionMd()
-  {
-    com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(net.geoprism.registry.graph.HierarchicalRelationshipType.CLASS);
-    return (com.runwaysdk.dataaccess.MdAttributeDAOIF)mdClassIF.definesAttribute(DESCRIPTION);
-  }
-  
-  public void setDescription(com.runwaysdk.ComponentIF value)
-  {
-    this.setValue(DESCRIPTION, value);
-  }
-  
   public String getDisclaimer()
   {
     return (String) this.getObjectValue(DISCLAIMER);
@@ -199,22 +181,6 @@ public abstract class HierarchicalRelationshipTypeBase extends EdgeClass
   public void setDisclaimer(String value)
   {
     this.setValue(DISCLAIMER, value);
-  }
-  
-  public com.runwaysdk.ComponentIF getDisplayLabel()
-  {
-    return (com.runwaysdk.ComponentIF) this.getObjectValue(DISPLAYLABEL);
-  }
-  
-  public static com.runwaysdk.dataaccess.MdAttributeDAOIF getDisplayLabelMd()
-  {
-    com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(net.geoprism.registry.graph.HierarchicalRelationshipType.CLASS);
-    return (com.runwaysdk.dataaccess.MdAttributeDAOIF)mdClassIF.definesAttribute(DISPLAYLABEL);
-  }
-  
-  public void setDisplayLabel(com.runwaysdk.ComponentIF value)
-  {
-    this.setValue(DISPLAYLABEL, value);
   }
   
   public String getEmail()

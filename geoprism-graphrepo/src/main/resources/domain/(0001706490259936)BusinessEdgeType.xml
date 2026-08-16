@@ -23,33 +23,37 @@
     <create>
       <mdVertex name="net.geoprism.registry.graph.BusinessEdgeType" extends="net.geoprism.registry.graph.EdgeClass"  label="Business Relationship" >
         <attributes>
-          <localCharEmbedded
-            name="displayLabel"
-            label="Label"
-            required="true" />
-          <localCharEmbedded
-            name="description"
-            label="Description"
-            required="false" />
-          
           <reference name="parentType" type="com.runwaysdk.system.metadata.MdVertex" required="true" label="Parent Vertex" />          
           <reference name="childType" type="com.runwaysdk.system.metadata.MdVertex" required="true" label="Child Vertex" />           
           <reference name="mdEdge" type="com.runwaysdk.system.metadata.MdEdge" required="true" label="MdEdge" />          
-          <graphReference name="organization" label="Organization" type="net.geoprism.registry.graph.GraphOrganization" />
-            
+          <graphReference name="organization" label="Organization" type="net.geoprism.registry.graph.GraphOrganization" />            
           <boolean name="isParentGeoObject" required="true" label="Is Parent a GeoObject" />          
           <boolean name="isChildGeoObject" required="true" label="Is Child a GeoObject" />          
           <text name="origin" label="Origin"  />                   
-          <long name="sequence" label="Sequence"  />                              
-            
+          <long name="sequence" label="Sequence"  />                                          
+        </attributes>
+      </mdVertex> 
+      
+      <mdVertex name="net.geoprism.registry.graph.ConceptEdgeType" extends="net.geoprism.registry.graph.EdgeClass"  label="Concept Edge" >
+        <attributes>
+          <reference name="parentType" type="com.runwaysdk.system.metadata.MdVertex" required="true" label="Parent Vertex" />          
+          <reference name="childType" type="com.runwaysdk.system.metadata.MdVertex" required="true" label="Child Vertex" />           
+          <reference name="mdEdge" type="com.runwaysdk.system.metadata.MdEdge" required="true" label="MdEdge" />          
+          <graphReference name="organization" label="Organization" type="net.geoprism.registry.graph.GraphOrganization" />            
+          <text name="origin" label="Origin"  />                   
+          <long name="sequence" label="Sequence"  />                                          
         </attributes>
       </mdVertex>    
+         
     </create>
     
     <permissions>
       <role roleName="geoprism.admin.Administrator">
         <grant>
           <mdBusinessPermission type="net.geoprism.registry.graph.BusinessEdgeType">
+            <operation name="ALL" />
+          </mdBusinessPermission>
+          <mdBusinessPermission type="net.geoprism.registry.graph.ConceptEdgeType">
             <operation name="ALL" />
           </mdBusinessPermission>
         </grant>

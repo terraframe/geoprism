@@ -18,24 +18,25 @@
  */
 package net.geoprism.registry.graph;
 
-import org.commongeoregistry.adapter.metadata.GraphTypeDTO;
+import org.commongeoregistry.adapter.dataaccess.LocalizedValue;
 
 import com.runwaysdk.dataaccess.MdEdgeDAOIF;
 import com.runwaysdk.dataaccess.metadata.graph.MdEdgeDAO;
 
-import net.geoprism.registry.model.GraphType;
+import net.geoprism.registry.conversion.LocalizedValueConverter;
+import net.geoprism.registry.model.EdgeType;
 import net.geoprism.registry.model.ServerElement;
-import net.geoprism.registry.model.graph.GraphStrategy;
-import net.geoprism.registry.model.graph.UndirectedGraphStrategy;
+import net.geoprism.registry.view.ConceptEdgeTypeDTO;
 import net.geoprism.registry.view.TypeClass;
 
-public class UndirectedGraphType extends UndirectedGraphTypeBase implements GraphType, ServerElement
+public class ConceptEdgeType extends ConceptEdgeTypeBase implements ServerElement, EdgeType
 {
-  private static final long  serialVersionUID = -1097845938;
+  @SuppressWarnings("unused")
+  private static final long  serialVersionUID = -1808640970;
 
   public static final String JSON_LABEL       = "label";
 
-  public UndirectedGraphType()
+  public ConceptEdgeType()
   {
     super();
   }
@@ -52,29 +53,43 @@ public class UndirectedGraphType extends UndirectedGraphTypeBase implements Grap
     super.delete();
   }
 
-  public MdEdgeDAOIF getMdEdgeDAO()
-  {
-    return MdEdgeDAO.get(this.getMdEdgeOid());
-  }
-
   @Override
   protected String buildKey()
   {
     return this.getCode();
   }
 
-  @Override
-  public GraphTypeDTO toDTO()
+  public MdEdgeDAOIF getMdEdgeDAO()
   {
-    final GraphTypeDTO dto = new GraphTypeDTO(TypeClass.UNDIRECTED_GRAPH.getCode(), this.getCode(), this.getLabel(), this.getDescriptionLV());
+    return MdEdgeDAO.get(this.getMdEdgeOid());
+  }
+
+  @Override
+  public GraphOrganization getOrganization()
+  {
+    return GraphOrganization.get((String) this.getObjectValue(ConceptEdgeType.ORGANIZATION));
+  }
+
+  @Override
+  public ConceptEdgeTypeDTO toDTO()
+  {
+    final ConceptEdgeTypeDTO dto = new ConceptEdgeTypeDTO(this.getCode(), this.getLabel(), getDescriptionLV());
+    dto.setChildType(this.getChildType().getTypeName());
+    dto.setParentType(this.getParentType().getTypeName());
 
     return dto;
   }
 
   @Override
-  public GraphStrategy getStrategy()
+  public TypeClass getSourceType()
   {
-    return new UndirectedGraphStrategy(this);
+    return TypeClass.CONCEPT_CLASS;
+  }
+
+  @Override
+  public TypeClass getTargetType()
+  {
+    return TypeClass.CONCEPT_CLASS;
   }
 
 }

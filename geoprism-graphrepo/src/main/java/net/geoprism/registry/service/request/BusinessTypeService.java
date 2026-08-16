@@ -30,7 +30,7 @@ import net.geoprism.registry.graph.BusinessEdgeType;
 import net.geoprism.registry.graph.BusinessType;
 import net.geoprism.registry.service.business.BusinessEdgeTypeBusinessServiceIF;
 import net.geoprism.registry.service.business.BusinessTypeBusinessServiceIF;
-import net.geoprism.registry.view.BusinessEdgeTypeView;
+import net.geoprism.registry.view.BusinessEdgeTypeDTO;
 import net.geoprism.registry.view.BusinessTypeDTO;
 
 @Service
@@ -49,7 +49,7 @@ public class BusinessTypeService extends ObjectClassService<BusinessType, Busine
 
   @Override
   @Request(RequestType.SESSION)
-  public List<BusinessEdgeTypeView> getEdgeTypes(String sessionId, String businessTypeCode)
+  public List<BusinessEdgeTypeDTO> getEdgeTypes(String sessionId, String businessTypeCode)
   {
     BusinessType type = this.typeService.getByCodeOrThrow(businessTypeCode);
     List<BusinessEdgeType> edgeTypes = this.typeService.getEdgeTypes(type);

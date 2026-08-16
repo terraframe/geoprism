@@ -3,23 +3,20 @@
  *
  * This file is part of Geoprism(tm).
  *
- * Geoprism(tm) is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
+ * Geoprism(tm) is free software: you can redistribute it and/or modify it under
+ * the terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation, either version 3 of the License, or (at your option) any
+ * later version.
  *
- * Geoprism(tm) is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
+ * Geoprism(tm) is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with Geoprism(tm).  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with Geoprism(tm). If not, see <http://www.gnu.org/licenses/>.
  */
 package net.geoprism.registry.service.business;
-
-import java.util.List;
-import java.util.Optional;
 
 import org.commongeoregistry.adapter.constants.DefaultAttribute;
 import org.commongeoregistry.adapter.dataaccess.LocalizedValue;
@@ -27,7 +24,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.runwaysdk.business.BusinessFacade;
-import com.runwaysdk.business.graph.GraphQuery;
 import com.runwaysdk.constants.MdAttributeBooleanInfo;
 import com.runwaysdk.constants.MdAttributeConcreteInfo;
 import com.runwaysdk.constants.MdAttributeDateTimeInfo;
@@ -42,13 +38,10 @@ import com.runwaysdk.dataaccess.metadata.MdAttributeUUIDDAO;
 import com.runwaysdk.dataaccess.metadata.graph.MdEdgeDAO;
 import com.runwaysdk.dataaccess.metadata.graph.MdVertexDAO;
 import com.runwaysdk.dataaccess.transaction.Transaction;
-import com.runwaysdk.system.metadata.MdEdge;
 
 import net.geoprism.registry.BusinessEdgeTypeException;
-import net.geoprism.registry.DataNotFoundException;
 import net.geoprism.registry.DuplicateHierarchyTypeException;
 import net.geoprism.registry.RegistryConstants;
-import net.geoprism.registry.cache.TransactionLRUCache;
 import net.geoprism.registry.conversion.RegistryLocalizedValueConverter;
 import net.geoprism.registry.graph.BaseGeoObjectType;
 import net.geoprism.registry.graph.BusinessEdgeType;
@@ -59,34 +52,35 @@ import net.geoprism.registry.graph.GeoVertex;
 import net.geoprism.registry.graph.ObjectClass;
 import net.geoprism.registry.model.EdgeType;
 import net.geoprism.registry.model.ServerOrganization;
-import net.geoprism.registry.view.BusinessEdgeTypeView;
+import net.geoprism.registry.view.BusinessEdgeTypeDTO;
 
 @Service
-public class BusinessEdgeTypeBusinessService implements BusinessEdgeTypeBusinessServiceIF
+public class BusinessEdgeTypeBusinessService extends EdgeClassBusinessService<BusinessEdgeType, BusinessEdgeTypeDTO> implements BusinessEdgeTypeBusinessServiceIF
 {
   @Autowired
-  private BusinessTypeBusinessServiceIF                       typeService;
+  private BusinessTypeBusinessServiceIF  typeService;
 
   @Autowired
-  private HierarchyTypeBusinessServiceIF                      hierarchyService;
-
-  private final TransactionLRUCache<String, BusinessEdgeType> cache;
+  private HierarchyTypeBusinessServiceIF hierarchyService;
 
   public BusinessEdgeTypeBusinessService()
   {
-    this.cache = new TransactionLRUCache<String, BusinessEdgeType>("t-b-edge-cache", (v) -> {
-
-      return new String[] { v.getCode(), v.getMdEdgeOid() };
-    }, 20);
+    super(BusinessEdgeType.CLASS);
   }
 
   @Override
   public ObjectClass getParent(BusinessEdgeType edgeType)
   {
-    return getEdgeVertexType((MdVertexDAOIF) BusinessFacade.getEntityDAO(edgeType.getParentType()));
+    return getObjectClass((MdVertexDAOIF) BusinessFacade.getEntityDAO(edgeType.getParentType()));
   }
 
-  private ObjectClass getEdgeVertexType(MdVertexDAOIF mdVertex)
+  @Override
+  public ObjectClass getChild(BusinessEdgeType edgeType)
+  {
+    return getObjectClass((MdVertexDAOIF) BusinessFacade.getEntityDAO(edgeType.getChildType()));
+  }
+
+  protected ObjectClass getObjectClass(MdVertexDAOIF mdVertex)
   {
     MdVertexDAOIF mdBusGeoEntity = MdVertexDAO.getMdVertexDAO(GeoVertex.CLASS);
 
@@ -99,131 +93,27 @@ public class BusinessEdgeTypeBusinessService implements BusinessEdgeTypeBusiness
   }
 
   @Override
-  public ObjectClass getChild(BusinessEdgeType edgeType)
+  protected BusinessEdgeTypeDTO createDTO()
   {
-    return getEdgeVertexType((MdVertexDAOIF) BusinessFacade.getEntityDAO(edgeType.getChildType()));
+    return new BusinessEdgeTypeDTO();
+  }
+
+  @Override
+  protected void populate(BusinessEdgeType edgeType, BusinessEdgeTypeDTO dto)
+  {
+    String parentTypeCode = edgeType.getIsParentGeoObject() ? BusinessEdgeTypeDTO.GEO_OBJECT_TYPE : edgeType.getParentType().getTypeName();
+    String childTypeCode = edgeType.getIsChildGeoObject() ? BusinessEdgeTypeDTO.GEO_OBJECT_TYPE : edgeType.getChildType().getTypeName();
+
+    dto.setParentType(parentTypeCode);
+    dto.setChildType(childTypeCode);
+    dto.setOrganizationCode(edgeType.getOrganization().getCode());
+
+    super.populate(edgeType, dto);
   }
 
   @Override
   @Transaction
-  public void update(BusinessEdgeType edgeType, BusinessEdgeTypeView dto)
-  {
-    this.update(edgeType, dto.getLabel(), dto.getDescription());
-  }
-
-  @Override
-  @Transaction
-  public void update(BusinessEdgeType edgeType, LocalizedValue label, LocalizedValue description)
-  {
-    if (label != null)
-    {
-      RegistryLocalizedValueConverter.populate(edgeType, BusinessEdgeType.DISPLAYLABEL, label);
-    }
-
-    if (description != null)
-    {
-      RegistryLocalizedValueConverter.populate(edgeType, BusinessEdgeType.DESCRIPTION, description);
-    }
-
-    edgeType.setSequence(edgeType.getSequence() + 1);
-    edgeType.apply();
-
-    this.cache.put(edgeType);
-  }
-
-  @Override
-  @Transaction
-  public void delete(BusinessEdgeType edgeType)
-  {
-    MdEdge mdEdge = edgeType.getMdEdge();
-
-    edgeType.delete();
-
-    mdEdge.delete();
-
-    this.cache.remove(edgeType);
-  }
-
-  @Override
-  public BusinessEdgeTypeView toDTO(BusinessEdgeType edgeType)
-  {
-    String parentTypeCode = edgeType.getIsParentGeoObject() ? BusinessEdgeTypeView.GEO_OBJECT_TYPE : edgeType.getParentType().getTypeName();
-    String childTypeCode = edgeType.getIsChildGeoObject() ? BusinessEdgeTypeView.GEO_OBJECT_TYPE : edgeType.getChildType().getTypeName();
-
-    BusinessEdgeTypeView object = new BusinessEdgeTypeView();
-    object.setOid(edgeType.getOid());
-    object.setCode(edgeType.getCode());
-    object.setOrigin(edgeType.getOrigin());
-    object.setSeq(edgeType.getSequence());
-    object.setOrganizationCode(edgeType.getOrganization().getCode());
-    object.setParentTypeCode(parentTypeCode);
-    object.setChildTypeCode(childTypeCode);
-    object.setLabel(edgeType.getLabel());
-    object.setDescription(edgeType.getDescriptionLV());
-
-    return object;
-  }
-
-  @Override
-  public List<BusinessEdgeType> getAll()
-  {
-    MdVertexDAOIF mdVertex = MdVertexDAO.getMdVertexDAO(BusinessEdgeType.CLASS);
-
-    StringBuilder statement = new StringBuilder();
-    statement.append("SELECT FROM " + mdVertex.getDBClassName());
-
-    GraphQuery<BusinessEdgeType> query = new GraphQuery<BusinessEdgeType>(statement.toString());
-
-    return query.getResults();
-  }
-
-  @Override
-  public Optional<BusinessEdgeType> getByCode(String code)
-  {
-    return this.cache.get(code, () -> {
-      MdVertexDAOIF mdVertex = MdVertexDAO.getMdVertexDAO(BusinessEdgeType.CLASS);
-
-      StringBuilder statement = new StringBuilder();
-      statement.append("SELECT FROM " + mdVertex.getDBClassName());
-      statement.append(" WHERE code = :code");
-
-      GraphQuery<BusinessEdgeType> query = new GraphQuery<BusinessEdgeType>(statement.toString());
-      query.setParameter("code", code);
-
-      return Optional.ofNullable(query.getSingleResult());
-    });
-
-  }
-
-  @Override
-  public BusinessEdgeType getByCodeOrThrow(String code)
-  {
-    return this.getByCode(code).orElseThrow(() -> {
-      throw new DataNotFoundException("Unable to find business edge type with code [" + code + "]");
-    });
-  }
-
-  @Override
-  public BusinessEdgeType getByMdEdge(MdEdge mdEdge)
-  {
-    return this.cache.get(mdEdge.getOid(), () -> {
-      MdVertexDAOIF mdVertex = MdVertexDAO.getMdVertexDAO(BusinessEdgeType.CLASS);
-
-      StringBuilder statement = new StringBuilder();
-      statement.append("SELECT FROM " + mdVertex.getDBClassName());
-      statement.append(" WHERE mdEdge = :mdEdge");
-
-      GraphQuery<BusinessEdgeType> query = new GraphQuery<BusinessEdgeType>(statement.toString());
-      query.setParameter("mdEdge", mdEdge.getOid());
-
-      return Optional.ofNullable(query.getSingleResult());
-
-    }).orElse(null);
-  }
-
-  @Override
-  @Transaction
-  public BusinessEdgeType create(BusinessEdgeTypeView dto)
+  public BusinessEdgeType create(BusinessEdgeTypeDTO dto)
   {
     if (dto.isParentGeoObjectType() && dto.isChildGeObjectType())
     {
@@ -238,10 +128,10 @@ public class BusinessEdgeTypeBusinessService implements BusinessEdgeTypeBusiness
     return this.createGeoEdge(dto);
   }
 
-  private BusinessEdgeType createBasic(BusinessEdgeTypeView dto)
+  private BusinessEdgeType createBasic(BusinessEdgeTypeDTO dto)
   {
-    BusinessType parentType = this.typeService.getByCodeOrThrow(dto.getParentTypeCode());
-    BusinessType childType = this.typeService.getByCodeOrThrow(dto.getChildTypeCode());
+    BusinessType parentType = this.typeService.getByCodeOrThrow(dto.getParentType());
+    BusinessType childType = this.typeService.getByCodeOrThrow(dto.getChildType());
     ServerOrganization organization = ServerOrganization.getByCode(dto.getOrganizationCode());
 
     try
@@ -287,8 +177,6 @@ public class BusinessEdgeTypeBusinessService implements BusinessEdgeTypeBusiness
       endDate.setValue(MdAttributeDateTimeInfo.DEFINING_MD_CLASS, mdEdgeDAO.getOid());
       endDate.apply();
 
-      hierarchyService.grantWritePermissionsOnMdTermRel(mdEdgeDAO);
-
       BusinessEdgeType businessEdgeType = new BusinessEdgeType();
       businessEdgeType.setOrganization(organization.getGraphOrganization());
       businessEdgeType.setCode(dto.getCode());
@@ -303,7 +191,7 @@ public class BusinessEdgeTypeBusinessService implements BusinessEdgeTypeBusiness
       businessEdgeType.setSequence(dto.getSeq());
       businessEdgeType.apply();
 
-      this.cache.put(businessEdgeType);
+      this.getCache().put(businessEdgeType);
 
       return businessEdgeType;
     }
@@ -315,9 +203,9 @@ public class BusinessEdgeTypeBusinessService implements BusinessEdgeTypeBusiness
     }
   }
 
-  private BusinessEdgeType createGeoEdge(BusinessEdgeTypeView dto)
+  private BusinessEdgeType createGeoEdge(BusinessEdgeTypeDTO dto)
   {
-    String businessTypeCode = dto.isParentGeoObjectType() ? dto.getChildTypeCode() : dto.getParentTypeCode();
+    String businessTypeCode = dto.isParentGeoObjectType() ? dto.getChildType() : dto.getParentType();
 
     BusinessType buisnessType = this.typeService.getByCodeOrThrow(businessTypeCode);
     MdVertexDAO mdVertexDAO = MdVertexDAO.getMdVertexDAO(GeoVertex.CLASS).getBusinessDAO();
@@ -373,7 +261,7 @@ public class BusinessEdgeTypeBusinessService implements BusinessEdgeTypeBusiness
       sourceAttr.setValue(MdAttributeConcreteInfo.REQUIRED, false);
       sourceAttr.apply();
 
-      hierarchyService.grantWritePermissionsOnMdTermRel(mdEdgeDAO);
+      this.createPermissions(mdEdgeDAO);
 
       BusinessEdgeType businessEdgeType = new BusinessEdgeType();
       businessEdgeType.setOrganization(organization.getGraphOrganization());
@@ -397,6 +285,12 @@ public class BusinessEdgeTypeBusinessService implements BusinessEdgeTypeBusiness
       ex2.setDuplicateValue(code);
       throw ex2;
     }
+  }
+
+  @Override
+  protected void createPermissions(MdEdgeDAO mdEdgeDAO)
+  {
+    this.hierarchyService.grantWritePermissionsOnMdTermRel(mdEdgeDAO);
   }
 
 }

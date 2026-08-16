@@ -29,16 +29,17 @@ import com.runwaysdk.business.graph.VertexObject;
 import com.runwaysdk.dataaccess.graph.VertexObjectDAO;
 
 import net.geoprism.registry.graph.ConceptClass;
+import net.geoprism.registry.graph.ConceptEdgeType;
 import net.geoprism.registry.graph.ConceptVertex;
 import net.geoprism.registry.model.ConceptObject;
 import net.geoprism.registry.view.ConceptClassDTO;
 
 @Service
-public class ConceptObjectBusinessService extends ObjectBusinessService<ConceptObject, ConceptClass, ConceptClassDTO> implements ConceptObjectBusinessServiceIF
+public class ConceptObjectBusinessService extends ObjectEdgeBusinessService<ConceptObject, ConceptClass, ConceptClassDTO, ConceptEdgeType, ConceptObject> implements ConceptObjectBusinessServiceIF
 {
   public ConceptObjectBusinessService(ConceptClassBusinessServiceIF typeService)
   {
-    super(typeService, ConceptVertex.CLASS, "c-o-cache");
+    super(typeService, ConceptVertex.CLASS);
   }
 
   @Override
@@ -54,5 +55,4 @@ public class ConceptObjectBusinessService extends ObjectBusinessService<ConceptO
   {
     return new ConceptObject(type, current, nodeMap, date);
   }
-
 }

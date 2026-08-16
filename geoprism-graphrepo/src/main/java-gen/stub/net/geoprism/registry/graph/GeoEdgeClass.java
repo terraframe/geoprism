@@ -16,23 +16,16 @@
  * You should have received a copy of the GNU Lesser General Public
  * License along with Geoprism(tm).  If not, see <http://www.gnu.org/licenses/>.
  */
-package net.geoprism.registry.service.request;
+package net.geoprism.registry.graph;
 
-import java.util.List;
-
-import org.springframework.stereotype.Component;
-
-import net.geoprism.registry.view.BusinessEdgeTypeDTO;
-
-@Component
-public interface BusinessEdgeTypeServiceIF
+public abstract class GeoEdgeClass extends GeoEdgeClassBase
 {
-
-  void delete(String sessionId, String code);
-
-  List<BusinessEdgeTypeDTO> getAll(String sessionId);
-
-  BusinessEdgeTypeDTO getByCode(String sessionId, String code);
-
-  BusinessEdgeTypeDTO apply(String sessionId, BusinessEdgeTypeDTO object);
+  @SuppressWarnings("unused")
+  private static final long serialVersionUID = 497212104;
+  
+  public GeoEdgeClass()
+  {
+    super();
+  }
+  
 }

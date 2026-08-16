@@ -18,14 +18,35 @@
  */
 package net.geoprism.registry.service.business;
 
-import org.springframework.stereotype.Component;
+import java.util.List;
+import java.util.Optional;
 
-import net.geoprism.registry.graph.ConceptClass;
-import net.geoprism.registry.graph.ConceptEdgeType;
-import net.geoprism.registry.model.ConceptObject;
-import net.geoprism.registry.view.ConceptClassDTO;
+import org.commongeoregistry.adapter.dataaccess.LocalizedValue;
+import org.commongeoregistry.adapter.metadata.GraphTypeDTO;
 
-@Component
-public interface ConceptObjectBusinessServiceIF extends ObjectEdgeBusinessServiceIF<ConceptObject, ConceptClass, ConceptClassDTO, ConceptEdgeType, ConceptObject>
+import com.runwaysdk.system.metadata.MdEdge;
+
+import net.geoprism.registry.graph.EdgeClass;
+
+public interface EdgeClassBusinessServiceIF<T extends EdgeClass, D extends GraphTypeDTO>
 {
+
+  D toDTO(T edgeType);
+
+  List<T> getAll();
+
+  Optional<T> getByCode(String code);
+
+  T getByCodeOrThrow(String code);
+
+  Optional<T> getByMdEdge(MdEdge mdEdge);
+
+  T create(D dto);
+
+  void update(T edgeType, D dto);
+
+  void update(T edgeType, LocalizedValue label, LocalizedValue description);
+
+  void delete(T edgeType);
+
 }

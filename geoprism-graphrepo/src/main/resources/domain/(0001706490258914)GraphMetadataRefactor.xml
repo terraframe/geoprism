@@ -29,6 +29,13 @@
         </attributes>            
       </mdVertex>
       <mdVertex name="net.geoprism.registry.graph.EdgeClass" extends="net.geoprism.registry.graph.TableClass" isAbstract="true" label="Edge Class" >
+        <attributes>
+          <localCharEmbedded name="displayLabel" label="Label" required="true" />        
+          <localCharEmbedded name="description" label="Description" />              
+        </attributes> 
+      </mdVertex>
+      
+      <mdVertex name="net.geoprism.registry.graph.GeoEdgeClass" extends="net.geoprism.registry.graph.EdgeClass" isAbstract="true" label="Edge Class" >
       </mdVertex>
     
       <mdVertex name="net.geoprism.registry.graph.ObjectClass" extends="net.geoprism.registry.graph.TableClass" isAbstract="true" label="Object Class">
@@ -54,10 +61,8 @@
         </attributes>
       </mdVertex>    
       
-      <mdVertex name="net.geoprism.registry.graph.HierarchicalRelationshipType" extends="net.geoprism.registry.graph.EdgeClass" label="Hierarchical Relationship" generateController="false">
+      <mdVertex name="net.geoprism.registry.graph.HierarchicalRelationshipType" extends="net.geoprism.registry.graph.GeoEdgeClass" label="Hierarchical Relationship" generateController="false">
         <attributes>
-          <localCharEmbedded name="displayLabel" label="Label" required="true" />        
-          <localCharEmbedded name="description" label="Description" />        
           <graphReference name="organization" label="Organization" type="net.geoprism.registry.graph.GraphOrganization" />
           <reference name="definitionEdge" type="com.runwaysdk.system.metadata.MdEdge" required="true" label="DefinitionEdge" />          
           <reference name="objectEdge" type="com.runwaysdk.system.metadata.MdEdge" required="true" label="ObjectEdge" />          

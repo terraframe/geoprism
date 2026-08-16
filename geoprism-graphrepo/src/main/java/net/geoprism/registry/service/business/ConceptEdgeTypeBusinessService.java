@@ -18,14 +18,12 @@
  */
 package net.geoprism.registry.service.business;
 
-import java.util.List;
-
 import org.commongeoregistry.adapter.constants.DefaultAttribute;
 import org.commongeoregistry.adapter.dataaccess.LocalizedValue;
-import org.commongeoregistry.adapter.metadata.GraphTypeDTO;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.runwaysdk.business.graph.GraphQuery;
+import com.runwaysdk.business.BusinessFacade;
 import com.runwaysdk.constants.MdAttributeBooleanInfo;
 import com.runwaysdk.constants.MdAttributeConcreteInfo;
 import com.runwaysdk.constants.MdAttributeDateTimeInfo;
@@ -41,61 +39,90 @@ import com.runwaysdk.dataaccess.metadata.graph.MdEdgeDAO;
 import com.runwaysdk.dataaccess.metadata.graph.MdVertexDAO;
 import com.runwaysdk.dataaccess.transaction.Transaction;
 
-import net.geoprism.configuration.GeoprismProperties;
 import net.geoprism.registry.DuplicateHierarchyTypeException;
 import net.geoprism.registry.RegistryConstants;
 import net.geoprism.registry.conversion.RegistryLocalizedValueConverter;
+import net.geoprism.registry.graph.BaseGeoObjectType;
+import net.geoprism.registry.graph.ConceptClass;
+import net.geoprism.registry.graph.ConceptEdgeType;
 import net.geoprism.registry.graph.DataSource;
+import net.geoprism.registry.graph.GeoObjectType;
 import net.geoprism.registry.graph.GeoVertex;
-import net.geoprism.registry.graph.UndirectedGraphType;
+import net.geoprism.registry.graph.ObjectClass;
+import net.geoprism.registry.model.EdgeType;
+import net.geoprism.registry.model.ServerOrganization;
+import net.geoprism.registry.view.ConceptEdgeTypeDTO;
 
 @Service
-public class UndirectedGraphTypeBusinessService extends EdgeClassBusinessService<UndirectedGraphType, GraphTypeDTO> implements UndirectedGraphTypeBusinessServiceIF
+public class ConceptEdgeTypeBusinessService extends EdgeClassBusinessService<ConceptEdgeType, ConceptEdgeTypeDTO> implements ConceptEdgeTypeBusinessServiceIF
 {
-  public UndirectedGraphTypeBusinessService()
+  @Autowired
+  private ConceptClassBusinessServiceIF  typeService;
+
+  @Autowired
+  private HierarchyTypeBusinessServiceIF hierarchyService;
+
+  public ConceptEdgeTypeBusinessService()
   {
-    super(UndirectedGraphType.CLASS);
+    super(ConceptEdgeType.CLASS);
   }
 
   @Override
-  protected GraphTypeDTO createDTO()
+  public ObjectClass getParent(ConceptEdgeType edgeType)
   {
-    return new GraphTypeDTO();
+    return getObjectClass((MdVertexDAOIF) BusinessFacade.getEntityDAO(edgeType.getParentType()));
   }
 
   @Override
-  public UndirectedGraphType create(GraphTypeDTO object)
+  public ObjectClass getChild(ConceptEdgeType edgeType)
   {
-    String code = object.getCode();
-    LocalizedValue label = object.getLabel();
-    LocalizedValue description = object.getDescription();
-    Long seq = object.getSeq();
+    return getObjectClass((MdVertexDAOIF) BusinessFacade.getEntityDAO(edgeType.getChildType()));
+  }
 
-    return create(code, label, description, GeoprismProperties.getOrigin(), seq);
+  protected ObjectClass getObjectClass(MdVertexDAOIF mdVertex)
+  {
+    MdVertexDAOIF mdBusGeoEntity = MdVertexDAO.getMdVertexDAO(GeoVertex.CLASS);
+
+    if (mdVertex.equals(mdBusGeoEntity))
+    {
+      return BaseGeoObjectType.getByCode(GeoObjectType.ROOT);
+    }
+
+    return this.typeService.getByMdVertex(mdVertex);
+  }
+
+  @Override
+  protected ConceptEdgeTypeDTO createDTO()
+  {
+    return new ConceptEdgeTypeDTO();
+  }
+
+  @Override
+  protected void populate(ConceptEdgeType edgeType, ConceptEdgeTypeDTO dto)
+  {
+    dto.setParentType(edgeType.getParentType().getTypeName());
+    dto.setChildType(edgeType.getChildType().getTypeName());
+
+    super.populate(edgeType, dto);
   }
 
   @Override
   @Transaction
-  public UndirectedGraphType create(String code, LocalizedValue label, LocalizedValue description, Long seq)
+  public ConceptEdgeType create(ConceptEdgeTypeDTO dto)
   {
-    return create(code, label, description, GeoprismProperties.getOrigin(), seq);
-  }
+    ConceptClass parentType = this.typeService.getByCodeOrThrow(dto.getParentType());
+    ConceptClass childType = this.typeService.getByCodeOrThrow(dto.getChildType());
+    ServerOrganization organization = ServerOrganization.getByCode(dto.getOrganizationCode());
 
-  @Override
-  @Transaction
-  public UndirectedGraphType create(String code, LocalizedValue label, LocalizedValue description, String origin, Long seq)
-  {
     try
     {
-      MdVertexDAOIF mdBusGeoEntity = MdVertexDAO.getMdVertexDAO(GeoVertex.CLASS);
-
       MdEdgeDAO mdEdgeDAO = MdEdgeDAO.newInstance();
       mdEdgeDAO.setValue(MdEdgeInfo.PACKAGE, RegistryConstants.DAG_PACKAGE);
-      mdEdgeDAO.setValue(MdEdgeInfo.NAME, code);
-      mdEdgeDAO.setValue(MdEdgeInfo.PARENT_MD_VERTEX, mdBusGeoEntity.getOid());
-      mdEdgeDAO.setValue(MdEdgeInfo.CHILD_MD_VERTEX, mdBusGeoEntity.getOid());
-      RegistryLocalizedValueConverter.populate(mdEdgeDAO, MdEdgeInfo.DISPLAY_LABEL, label);
-      RegistryLocalizedValueConverter.populate(mdEdgeDAO, MdEdgeInfo.DESCRIPTION, description);
+      mdEdgeDAO.setValue(MdEdgeInfo.NAME, dto.getCode());
+      mdEdgeDAO.setValue(MdEdgeInfo.PARENT_MD_VERTEX, parentType.getMdVertexOid());
+      mdEdgeDAO.setValue(MdEdgeInfo.CHILD_MD_VERTEX, childType.getMdVertexOid());
+      RegistryLocalizedValueConverter.populate(mdEdgeDAO, MdEdgeInfo.DISPLAY_LABEL, dto.getLabel());
+      RegistryLocalizedValueConverter.populate(mdEdgeDAO, MdEdgeInfo.DESCRIPTION, dto.getDescription());
       mdEdgeDAO.setValue(MdEdgeInfo.ENABLE_CHANGE_OVER_TIME, MdAttributeBooleanInfo.FALSE);
       mdEdgeDAO.apply();
 
@@ -117,63 +144,48 @@ public class UndirectedGraphTypeBusinessService extends EdgeClassBusinessService
       sourceAttr.apply();
 
       MdAttributeDateTimeDAO startDate = MdAttributeDateTimeDAO.newInstance();
-      startDate.setValue(MdAttributeDateTimeInfo.NAME, GeoVertex.START_DATE);
+      startDate.setValue(MdAttributeDateTimeInfo.NAME, EdgeType.START_DATE);
       startDate.setStructValue(MdAttributeDateTimeInfo.DISPLAY_LABEL, MdAttributeLocalInfo.DEFAULT_LOCALE, "Start Date");
       startDate.setStructValue(MdAttributeDateTimeInfo.DESCRIPTION, MdAttributeLocalInfo.DEFAULT_LOCALE, "Start Date");
       startDate.setValue(MdAttributeDateTimeInfo.DEFINING_MD_CLASS, mdEdgeDAO.getOid());
       startDate.apply();
 
       MdAttributeDateTimeDAO endDate = MdAttributeDateTimeDAO.newInstance();
-      endDate.setValue(MdAttributeDateTimeInfo.NAME, GeoVertex.END_DATE);
+      endDate.setValue(MdAttributeDateTimeInfo.NAME, EdgeType.END_DATE);
       endDate.setStructValue(MdAttributeDateTimeInfo.DISPLAY_LABEL, MdAttributeLocalInfo.DEFAULT_LOCALE, "End Date");
       endDate.setStructValue(MdAttributeDateTimeInfo.DESCRIPTION, MdAttributeLocalInfo.DEFAULT_LOCALE, "End Date");
       endDate.setValue(MdAttributeDateTimeInfo.DEFINING_MD_CLASS, mdEdgeDAO.getOid());
       endDate.apply();
 
-      createPermissions(mdEdgeDAO);
+      this.createPermissions(mdEdgeDAO);
 
-      UndirectedGraphType graphType = new UndirectedGraphType();
-      graphType.setCode(code);
-      graphType.setMdEdgeId(mdEdgeDAO.getOid());
-      RegistryLocalizedValueConverter.populate(graphType, UndirectedGraphType.DISPLAYLABEL, label);
-      RegistryLocalizedValueConverter.populate(graphType, UndirectedGraphType.DESCRIPTION, description);
-      graphType.setOrigin(origin);
-      graphType.setSequence(seq);
-      graphType.apply();
+      ConceptEdgeType edgeType = new ConceptEdgeType();
+      edgeType.setOrganization(organization.getGraphOrganization());
+      edgeType.setCode(dto.getCode());
+      edgeType.setMdEdgeId(mdEdgeDAO.getOid());
+      edgeType.setParentTypeId(parentType.getMdVertexOid());
+      edgeType.setChildTypeId(childType.getMdVertexOid());
+      edgeType.setOrigin(dto.getOrigin());
+      RegistryLocalizedValueConverter.populate(edgeType, ConceptEdgeType.DISPLAYLABEL, dto.getLabel());
+      RegistryLocalizedValueConverter.populate(edgeType, ConceptEdgeType.DESCRIPTION, dto.getDescription());
+      edgeType.setSequence(dto.getSeq());
+      edgeType.apply();
 
-      this.getCache().put(graphType);
+      this.getCache().put(edgeType);
 
-      return graphType;
+      return edgeType;
     }
     catch (DuplicateDataException ex)
     {
       DuplicateHierarchyTypeException ex2 = new DuplicateHierarchyTypeException();
-      ex2.setDuplicateValue(code);
+      ex2.setDuplicateValue(dto.getCode());
       throw ex2;
     }
   }
 
   @Override
-  public List<UndirectedGraphType> getAll(String... typeCodes)
+  protected void createPermissions(MdEdgeDAO mdEdgeDAO)
   {
-    MdVertexDAOIF mdVertex = MdVertexDAO.getMdVertexDAO(UndirectedGraphType.CLASS);
-
-    StringBuilder statement = new StringBuilder();
-    statement.append("SELECT FROM " + mdVertex.getDBClassName());
-
-    if (typeCodes != null && typeCodes.length > 0)
-    {
-      statement.append(" WHERE code IN (:codes)");
-    }
-
-    GraphQuery<UndirectedGraphType> query = new GraphQuery<UndirectedGraphType>(statement.toString());
-
-    if (typeCodes != null && typeCodes.length > 0)
-    {
-      query.setParameter("codes", typeCodes);
-    }
-
-    return query.getResults();
+    hierarchyService.grantWritePermissionsOnMdTermRel(mdEdgeDAO);
   }
-
 }

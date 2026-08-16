@@ -21,36 +21,18 @@
 <version xsi:noNamespaceSchemaLocation="classpath:com/runwaysdk/resources/xsd/version.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <doIt>
     <create>
-      <mdVertex name="net.geoprism.registry.graph.DirectedAcyclicGraphType" extends="net.geoprism.registry.graph.EdgeClass" label="Directed Acyclic Graph">
+      <mdVertex name="net.geoprism.registry.graph.DirectedAcyclicGraphType" extends="net.geoprism.registry.graph.GeoEdgeClass" label="Directed Acyclic Graph">
         <attributes>
-          <localCharEmbedded
-            name="displayLabel"
-            label="Label"
-            required="true" />
-          <localCharEmbedded
-            name="description"
-            label="Description"
-            required="false" />
           <reference name="mdEdge" type="com.runwaysdk.system.metadata.MdEdge" required="true" label="MdEdge" />   
-            <text name="origin" label="Origin"  />                   
-            <long name="sequence" label="Sequence"  />                              
-                 
+          <text name="origin" label="Origin"  />                   
+          <long name="sequence" label="Sequence"  />                                               
         </attributes>
       </mdVertex>    
-      <mdVertex name="net.geoprism.registry.graph.UndirectedGraphType" extends="net.geoprism.registry.graph.EdgeClass" label="Directed Acyclic Graph">
+      <mdVertex name="net.geoprism.registry.graph.UndirectedGraphType" extends="net.geoprism.registry.graph.GeoEdgeClass" label="Directed Acyclic Graph">
         <attributes>
-          <localCharEmbedded
-            name="displayLabel"
-            label="Label"
-            required="true" />
-          <localCharEmbedded
-            name="description"
-            label="Description"
-            required="false" />
           <reference name="mdEdge" type="com.runwaysdk.system.metadata.MdEdge" required="true" label="MdEdge" />        
-            <text name="origin" label="Origin"  />                   
-            <long name="sequence" label="Sequence"  />                              
-            
+          <text name="origin" label="Origin"  />                   
+          <long name="sequence" label="Sequence"  />                                          
         </attributes>
       </mdVertex>    
     </create>

@@ -3,18 +3,18 @@
  *
  * This file is part of Geoprism(tm).
  *
- * Geoprism(tm) is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
+ * Geoprism(tm) is free software: you can redistribute it and/or modify it under
+ * the terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation, either version 3 of the License, or (at your option) any
+ * later version.
  *
- * Geoprism(tm) is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
+ * Geoprism(tm) is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with Geoprism(tm).  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with Geoprism(tm). If not, see <http://www.gnu.org/licenses/>.
  */
 package net.geoprism.registry.view;
 
@@ -25,10 +25,11 @@ public enum TypeClass implements Comparable<TypeClass> {
   GEO_OBJECT_TYPE("GEO_OBJECT_TYPE", TypeCategory.OBJECT_CLASS), //
   BUSINESS_TYPE("BUSINESS_TYPE", TypeCategory.OBJECT_CLASS), //
   CONCEPT_CLASS("CONCEPT_CLASS", TypeCategory.OBJECT_CLASS), //
-  BUSINESS_EDGE("BusinessEdgeType", TypeCategory.OBJECT_CLASS), //
-  DAG("DirectedAcyclicGraphType", TypeCategory.OBJECT_CLASS), //
-  UNDIRECTED_GRAPH("UndirectedGraphType", TypeCategory.OBJECT_CLASS), //
-  HIERARCHY("HierarchyType", TypeCategory.OBJECT_CLASS);
+  BUSINESS_EDGE("BusinessEdgeType", TypeCategory.EDGE_CLASS), //
+  CONCEPT_EDGE("ConceptEdgeType", TypeCategory.EDGE_CLASS), //
+  DAG("DirectedAcyclicGraphType", TypeCategory.EDGE_CLASS), //
+  UNDIRECTED_GRAPH("UndirectedGraphType", TypeCategory.EDGE_CLASS), //
+  HIERARCHY("HierarchyType", TypeCategory.EDGE_CLASS);
 
   private String       code;
 

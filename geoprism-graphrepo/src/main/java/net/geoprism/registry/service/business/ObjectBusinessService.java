@@ -23,13 +23,13 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 import org.commongeoregistry.adapter.constants.DefaultAttribute;
 import org.commongeoregistry.adapter.dataaccess.LocalizedValue;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.event.EventListener;
-import org.springframework.stereotype.Service;
 
 import com.google.gson.JsonObject;
 import com.runwaysdk.business.graph.GraphQuery;
@@ -75,7 +75,6 @@ import net.geoprism.registry.view.ObjectOverTimeDTO;
 import net.geoprism.registry.view.Page;
 import net.geoprism.registry.view.ValueOverTimeEntryDTO;
 
-@Service
 public abstract class ObjectBusinessService<V extends ServerObjectVertex, T extends ObjectClass, D extends ObjectClassDTO> implements ObjectBusinessServiceIF<V, T, D>
 {
   private ObjectClassBusinessServiceIF<T, D>   typeService;
@@ -86,6 +85,11 @@ public abstract class ObjectBusinessService<V extends ServerObjectVertex, T exte
   private DataSourceBusinessServiceIF          sourceService;
 
   private final TransactionLRUCache<String, V> cache;
+
+  public ObjectBusinessService(ObjectClassBusinessServiceIF<T, D> typeService, String baseVertexClass)
+  {
+    this(typeService, baseVertexClass, UUID.randomUUID().toString());
+  }
 
   public ObjectBusinessService(ObjectClassBusinessServiceIF<T, D> typeService, String baseVertexClass, String cacheName)
   {

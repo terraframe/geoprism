@@ -32,7 +32,7 @@ import net.geoprism.registry.DataNotFoundException;
 import net.geoprism.registry.OriginException;
 import net.geoprism.registry.graph.BusinessEdgeType;
 import net.geoprism.registry.service.business.BusinessEdgeTypeBusinessServiceIF;
-import net.geoprism.registry.view.BusinessEdgeTypeView;
+import net.geoprism.registry.view.BusinessEdgeTypeDTO;
 
 @Service
 public class BusinessEdgeTypeService implements BusinessEdgeTypeServiceIF
@@ -56,14 +56,14 @@ public class BusinessEdgeTypeService implements BusinessEdgeTypeServiceIF
 
   @Override
   @Request(RequestType.SESSION)
-  public List<BusinessEdgeTypeView> getAll(String sessionId)
+  public List<BusinessEdgeTypeDTO> getAll(String sessionId)
   {
     return this.service.getAll().stream().map(type -> this.service.toDTO(type)).toList();
   }
 
   @Override
   @Request(RequestType.SESSION)
-  public BusinessEdgeTypeView getByCode(String sessionId, String code)
+  public BusinessEdgeTypeDTO getByCode(String sessionId, String code)
   {
     return this.service.getByCode(code).map(type -> this.service.toDTO(type)).orElseThrow(() -> {
       throw new DataNotFoundException("Unable to find business edge type with code [" + code + "]");
@@ -72,7 +72,7 @@ public class BusinessEdgeTypeService implements BusinessEdgeTypeServiceIF
 
   @Override
   @Request(RequestType.SESSION)
-  public BusinessEdgeTypeView apply(String sessionId, BusinessEdgeTypeView object)
+  public BusinessEdgeTypeDTO apply(String sessionId, BusinessEdgeTypeDTO object)
   {
     if (StringUtils.isBlank(object.getOid()))
     {

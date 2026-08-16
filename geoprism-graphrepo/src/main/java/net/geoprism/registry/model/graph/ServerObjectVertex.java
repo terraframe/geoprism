@@ -37,7 +37,7 @@ import net.geoprism.registry.graph.AttributeLocalType;
 import net.geoprism.registry.graph.AttributeType;
 import net.geoprism.registry.model.AttributeState;
 
-public class ServerObjectVertex
+public abstract class ServerObjectVertex
 {
   protected ObjectClassIF               type;
 

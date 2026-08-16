@@ -313,7 +313,7 @@ public class HierarchyType extends GraphTypeDTO implements Serializable, Cloneab
     }
     catch (CloneNotSupportedException e)
     {
-      HierarchyType clone = new HierarchyType(this.code, this.label, this.description, this.organizationCode);
+      HierarchyType clone = new HierarchyType(this.getCode(), this.getLabel(), this.getDescription(), this.getOrganizationCode());
       clone.setAbstractDescription(abstractDescription);
       clone.setProgress(progress);
       clone.setAcknowledgement(acknowledgement);

@@ -20,12 +20,15 @@ package net.geoprism.registry.service.business;
 
 import org.springframework.stereotype.Component;
 
-import net.geoprism.registry.graph.ConceptClass;
 import net.geoprism.registry.graph.ConceptEdgeType;
-import net.geoprism.registry.model.ConceptObject;
-import net.geoprism.registry.view.ConceptClassDTO;
+import net.geoprism.registry.graph.ObjectClass;
+import net.geoprism.registry.view.ConceptEdgeTypeDTO;
 
 @Component
-public interface ConceptObjectBusinessServiceIF extends ObjectEdgeBusinessServiceIF<ConceptObject, ConceptClass, ConceptClassDTO, ConceptEdgeType, ConceptObject>
+public interface ConceptEdgeTypeBusinessServiceIF extends EdgeClassBusinessServiceIF<ConceptEdgeType, ConceptEdgeTypeDTO>
 {
+  ObjectClass getParent(ConceptEdgeType edgeType);
+
+  ObjectClass getChild(ConceptEdgeType edgeType);
+
 }

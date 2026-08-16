@@ -3,50 +3,37 @@
  *
  * This file is part of Geoprism(tm).
  *
- * Geoprism(tm) is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
+ * Geoprism(tm) is free software: you can redistribute it and/or modify it under
+ * the terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation, either version 3 of the License, or (at your option) any
+ * later version.
  *
- * Geoprism(tm) is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
+ * Geoprism(tm) is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with Geoprism(tm).  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with Geoprism(tm). If not, see <http://www.gnu.org/licenses/>.
  */
 package net.geoprism.registry.service.business;
 
 import java.util.List;
-import java.util.Optional;
 
 import org.commongeoregistry.adapter.dataaccess.LocalizedValue;
 import org.commongeoregistry.adapter.metadata.GraphTypeDTO;
 import org.springframework.stereotype.Component;
 
-import com.runwaysdk.system.metadata.MdEdge;
-
 import net.geoprism.registry.graph.UndirectedGraphType;
 
 @Component
-public interface UndirectedGraphTypeBusinessServiceIF
+public interface UndirectedGraphTypeBusinessServiceIF extends EdgeClassBusinessServiceIF<UndirectedGraphType, GraphTypeDTO>
 {
-
-  public UndirectedGraphType create(GraphTypeDTO object);
-
-  public UndirectedGraphType create(String code, LocalizedValue label, LocalizedValue description, Long seq);
 
   public UndirectedGraphType create(String code, LocalizedValue label, LocalizedValue description, String origin, Long seq);
 
-  public void update(UndirectedGraphType ugt, GraphTypeDTO object);
+  public UndirectedGraphType create(String code, LocalizedValue label, LocalizedValue description, Long seq);
 
-  public void delete(UndirectedGraphType ugt);
-
-  UndirectedGraphType getByMdEdge(MdEdge mdEdge);
-
-  Optional<UndirectedGraphType> getByCode(String code);
-
-  List<UndirectedGraphType> getAll(String... typeCodes);
+  public List<UndirectedGraphType> getAll(String... typeCodes);
 
 }

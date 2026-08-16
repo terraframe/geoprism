@@ -3,31 +3,27 @@
  *
  * This file is part of Geoprism(tm).
  *
- * Geoprism(tm) is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
+ * Geoprism(tm) is free software: you can redistribute it and/or modify it under
+ * the terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation, either version 3 of the License, or (at your option) any
+ * later version.
  *
- * Geoprism(tm) is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
+ * Geoprism(tm) is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with Geoprism(tm).  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with Geoprism(tm). If not, see <http://www.gnu.org/licenses/>.
  */
 package net.geoprism.registry.graph;
-
-import org.commongeoregistry.adapter.dataaccess.LocalizedValue;
-import org.commongeoregistry.adapter.metadata.GraphTypeDTO;
 
 import com.runwaysdk.dataaccess.MdEdgeDAOIF;
 import com.runwaysdk.dataaccess.metadata.graph.MdEdgeDAO;
 
-import net.geoprism.registry.conversion.LocalizedValueConverter;
 import net.geoprism.registry.model.EdgeType;
 import net.geoprism.registry.model.ServerElement;
-import net.geoprism.registry.view.BusinessEdgeTypeView;
+import net.geoprism.registry.view.BusinessEdgeTypeDTO;
 import net.geoprism.registry.view.TypeClass;
 
 public class BusinessEdgeType extends BusinessEdgeTypeBase implements ServerElement, EdgeType
@@ -60,16 +56,6 @@ public class BusinessEdgeType extends BusinessEdgeTypeBase implements ServerElem
     return this.getCode();
   }
 
-  public LocalizedValue getLabel()
-  {
-    return LocalizedValueConverter.convert(this.getEmbeddedComponent(BusinessEdgeType.DISPLAYLABEL));
-  }
-
-  public LocalizedValue getDescriptionLV()
-  {
-    return LocalizedValueConverter.convert(this.getEmbeddedComponent(BusinessEdgeType.DESCRIPTION));
-  }
-
   public MdEdgeDAOIF getMdEdgeDAO()
   {
     return MdEdgeDAO.get(this.getMdEdgeOid());
@@ -82,11 +68,11 @@ public class BusinessEdgeType extends BusinessEdgeTypeBase implements ServerElem
   }
 
   @Override
-  public GraphTypeDTO toDTO()
+  public BusinessEdgeTypeDTO toDTO()
   {
-    final GraphTypeDTO dto = new GraphTypeDTO(TypeClass.BUSINESS_EDGE.getCode(), this.getCode(), this.getLabel(), getDescriptionLV());
-    dto.setChildType(this.getIsChildGeoObject() ? BusinessEdgeTypeView.GEO_OBJECT_TYPE : this.getChildType().getTypeName());
-    dto.setParentType(this.getIsParentGeoObject() ? BusinessEdgeTypeView.GEO_OBJECT_TYPE : this.getParentType().getTypeName());
+    final BusinessEdgeTypeDTO dto = new BusinessEdgeTypeDTO(this.getCode(), this.getLabel(), getDescriptionLV());
+    dto.setChildType(this.getIsChildGeoObject() ? BusinessEdgeTypeDTO.GEO_OBJECT_TYPE : this.getChildType().getTypeName());
+    dto.setParentType(this.getIsParentGeoObject() ? BusinessEdgeTypeDTO.GEO_OBJECT_TYPE : this.getParentType().getTypeName());
 
     return dto;
   }
