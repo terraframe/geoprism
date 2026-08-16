@@ -87,9 +87,27 @@ public class BusinessObjectBusinessService extends ObjectEdgeBusinessService<Bus
   public List<VertexComponent> getParents(BusinessObject object, BusinessEdgeType type, Date date)
   {
     StringBuilder statement = new StringBuilder();
-    statement.append("TRAVERSE out('" + EdgeConstant.HAS_VALUE.getDBClassName() + "', '" + EdgeConstant.HAS_GEOMETRY.getDBClassName() + "') FROM (");
-    statement.append("  SELECT EXPAND(inE('" + type.getMdEdge().getDbClassName() + "')[:date BETWEEN startDate AND endDate].out)");
-    statement.append("  FROM :rid " + "\n");
+
+    statement.append("TRAVERSE out('");
+    statement.append(EdgeConstant.HAS_VALUE.getDBClassName());
+    statement.append("', '");
+    statement.append(EdgeConstant.HAS_GEOMETRY.getDBClassName());
+    statement.append("') FROM (");
+
+    if (date != null)
+    {
+      statement.append("SELECT EXPAND(inE('");
+      statement.append(type.getMdEdge().getDbClassName());
+      statement.append("')[:date BETWEEN startDate AND endDate].outV()) ");
+    }
+    else
+    {
+      statement.append("SELECT EXPAND(in('");
+      statement.append(type.getMdEdge().getDbClassName());
+      statement.append("')) ");
+    }
+
+    statement.append("FROM :rid");
     statement.append(")");
 
     GraphQuery<VertexObject> query = new GraphQuery<VertexObject>(statement.toString());
@@ -110,10 +128,29 @@ public class BusinessObjectBusinessService extends ObjectEdgeBusinessService<Bus
   public List<VertexComponent> getChildren(BusinessObject object, BusinessEdgeType type, Date date)
   {
     StringBuilder statement = new StringBuilder();
-    statement.append("TRAVERSE out('" + EdgeConstant.HAS_VALUE.getDBClassName() + "', '" + EdgeConstant.HAS_GEOMETRY.getDBClassName() + "') FROM (");
-    statement.append("  SELECT EXPAND(outE('" + type.getMdEdge().getDbClassName() + "')[:date BETWEEN startDate AND endDate].in)");
-    statement.append("  FROM :rid " + "\n");
+
+    statement.append("TRAVERSE out('");
+    statement.append(EdgeConstant.HAS_VALUE.getDBClassName());
+    statement.append("', '");
+    statement.append(EdgeConstant.HAS_GEOMETRY.getDBClassName());
+    statement.append("') FROM (");
+
+    if (date != null)
+    {
+      statement.append("SELECT EXPAND(outE('");
+      statement.append(type.getMdEdge().getDbClassName());
+      statement.append("')[:date BETWEEN startDate AND endDate].inV()) ");
+    }
+    else
+    {
+      statement.append("SELECT EXPAND(out('");
+      statement.append(type.getMdEdge().getDbClassName());
+      statement.append("')) ");
+    }
+
+    statement.append("FROM :rid");
     statement.append(")");
+
 
     GraphQuery<VertexObject> query = new GraphQuery<VertexObject>(statement.toString());
     query.setParameter("rid", object.getVertex().getRID());
