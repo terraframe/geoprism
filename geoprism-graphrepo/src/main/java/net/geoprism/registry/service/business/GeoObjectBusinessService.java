@@ -91,6 +91,7 @@ import net.geoprism.registry.model.Classification;
 import net.geoprism.registry.model.ClassificationType;
 import net.geoprism.registry.model.EdgeConstant;
 import net.geoprism.registry.model.EdgeDirection;
+import net.geoprism.registry.model.EdgeType;
 import net.geoprism.registry.model.EdgeValueOverTime;
 import net.geoprism.registry.model.GeoObjectMetadata;
 import net.geoprism.registry.model.GeoObjectTypeMetadata;
@@ -1324,8 +1325,8 @@ public class GeoObjectBusinessService extends RegistryLocalizedValueConverter im
         final ServerGeoObjectIF parent = entry.getGeoObject();
 
         EdgeObject newEdge = sgo.getVertex().addParent( ( (VertexComponent) parent ).getVertex(), hierarchyType.getObjectEdge());
-        newEdge.setValue(GeoVertex.START_DATE, entry.getStartDate());
-        newEdge.setValue(GeoVertex.END_DATE, entry.getEndDate());
+        newEdge.setValue(EdgeType.START_DATE, entry.getStartDate());
+        newEdge.setValue(EdgeType.END_DATE, entry.getEndDate());
         newEdge.setValue(DefaultAttribute.UID.getName(), entry.getUid());
         newEdge.setValue(DefaultAttribute.DATA_SOURCE.getName(), entry.getSource());
 
@@ -1628,8 +1629,8 @@ public class GeoObjectBusinessService extends RegistryLocalizedValueConverter im
 
         ServerGeoObjectType parentType = ServerGeoObjectType.get(mdVertex);
 
-        Date date = edge.getObjectValue(GeoVertex.START_DATE);
-        Date endDate = edge.getObjectValue(GeoVertex.END_DATE);
+        Date date = edge.getObjectValue(EdgeType.START_DATE);
+        Date endDate = edge.getObjectValue(EdgeType.END_DATE);
         String oid = edge.getObjectValue(GeoVertex.OID);
         String uid = edge.getObjectValue(DefaultAttribute.UID.getName());
         DataSource source = this.sourceService.get(edge.getObjectValue(DefaultAttribute.DATA_SOURCE.getName())).orElse(null);
@@ -1689,8 +1690,8 @@ public class GeoObjectBusinessService extends RegistryLocalizedValueConverter im
 
     for (EdgeObject edge : edges)
     {
-      final Date startDate = edge.getObjectValue(GeoVertex.START_DATE);
-      final Date endDate = edge.getObjectValue(GeoVertex.END_DATE);
+      final Date startDate = edge.getObjectValue(EdgeType.START_DATE);
+      final Date endDate = edge.getObjectValue(EdgeType.END_DATE);
       final String uid = edge.getObjectValue(DefaultAttribute.UID.getName());
 
       VertexObject parentVertex = edge.getParent();
@@ -1720,8 +1721,8 @@ public class GeoObjectBusinessService extends RegistryLocalizedValueConverter im
 
     for (EdgeObject edge : existingEdges)
     {
-      final Date startDate = edge.getObjectValue(GeoVertex.START_DATE);
-      final Date endDate = edge.getObjectValue(GeoVertex.END_DATE);
+      final Date startDate = edge.getObjectValue(EdgeType.START_DATE);
+      final Date endDate = edge.getObjectValue(EdgeType.END_DATE);
       final String uid = edge.getObjectValue(DefaultAttribute.UID.getName());
 
       VertexObject parentVertex = edge.getParent();
@@ -1763,13 +1764,13 @@ public class GeoObjectBusinessService extends RegistryLocalizedValueConverter im
           if (!startDate.equals(inStartDate))
           {
             hasChanges = true;
-            edge.setValue(GeoVertex.START_DATE, inStartDate);
+            edge.setValue(EdgeType.START_DATE, inStartDate);
           }
 
           if (!endDate.equals(inEndDate))
           {
             hasChanges = true;
-            edge.setValue(GeoVertex.END_DATE, inEndDate);
+            edge.setValue(EdgeType.END_DATE, inEndDate);
           }
 
           if (hasChanges)
@@ -1829,8 +1830,8 @@ public class GeoObjectBusinessService extends RegistryLocalizedValueConverter im
   public EdgeObject addParentRaw(ServerGeoObjectIF sgo, VertexObject parent, MdEdgeDAOIF mdEdge, Date startDate, Date endDate, String uid, DataSource source, boolean validateOrigin)
   {
     EdgeObject newEdge = sgo.getVertex().addParent(parent, mdEdge);
-    newEdge.setValue(GeoVertex.START_DATE, startDate);
-    newEdge.setValue(GeoVertex.END_DATE, endDate);
+    newEdge.setValue(EdgeType.START_DATE, startDate);
+    newEdge.setValue(EdgeType.END_DATE, endDate);
     newEdge.setValue(DefaultAttribute.UID.getName(), uid);
     newEdge.setValue(DefaultAttribute.DATA_SOURCE.getName(), source);
     newEdge.apply();

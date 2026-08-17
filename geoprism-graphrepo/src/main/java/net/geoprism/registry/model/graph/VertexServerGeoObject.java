@@ -77,15 +77,14 @@ import com.runwaysdk.system.gis.geo.GeoEntity;
 import net.geoprism.configuration.GeoprismProperties;
 import net.geoprism.registry.DateFormatter;
 import net.geoprism.registry.OriginException;
-import net.geoprism.registry.conversion.RegistryLocalizedValueConverter;
 import net.geoprism.registry.geoobject.ValueOutOfRangeException;
-import net.geoprism.registry.graph.AttributeLocalType;
 import net.geoprism.registry.graph.AttributeType;
 import net.geoprism.registry.graph.AttributeValue;
 import net.geoprism.registry.graph.DataSource;
 import net.geoprism.registry.graph.GeoVertex;
 import net.geoprism.registry.graph.GeoVertexSynonym;
 import net.geoprism.registry.model.EdgeConstant;
+import net.geoprism.registry.model.EdgeType;
 import net.geoprism.registry.model.GeoObjectMetadata;
 import net.geoprism.registry.model.GeometryStateValue;
 import net.geoprism.registry.model.GraphType;
@@ -109,8 +108,8 @@ public class VertexServerGeoObject extends ServerObjectVertex implements ServerG
     @Override
     public int compare(EdgeObject o1, EdgeObject o2)
     {
-      Date d1 = o1.getObjectValue(GeoVertex.START_DATE);
-      Date d2 = o2.getObjectValue(GeoVertex.START_DATE);
+      Date d1 = o1.getObjectValue(EdgeType.START_DATE);
+      Date d2 = o2.getObjectValue(EdgeType.START_DATE);
 
       return d1.compareTo(d2);
     }

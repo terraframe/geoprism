@@ -32,7 +32,7 @@ import org.apache.commons.lang.StringUtils;
 import com.runwaysdk.business.graph.EdgeObject;
 import com.runwaysdk.business.graph.GraphQuery;
 
-import net.geoprism.registry.graph.GeoVertex;
+import net.geoprism.registry.model.EdgeType;
 import net.geoprism.registry.model.GraphType;
 
 public class AbstractGraphStrategy
@@ -44,8 +44,8 @@ public class AbstractGraphStrategy
     @Override
     public int compare(EdgeObject o1, EdgeObject o2)
     {
-      Date d1 = o1.getObjectValue(GeoVertex.START_DATE);
-      Date d2 = o2.getObjectValue(GeoVertex.START_DATE);
+      Date d1 = o1.getObjectValue(EdgeType.START_DATE);
+      Date d2 = o2.getObjectValue(EdgeType.START_DATE);
 
       return d1.compareTo(d2);
     }

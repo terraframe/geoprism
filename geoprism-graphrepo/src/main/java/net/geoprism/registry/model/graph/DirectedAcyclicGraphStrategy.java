@@ -3,18 +3,18 @@
  *
  * This file is part of Geoprism(tm).
  *
- * Geoprism(tm) is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
+ * Geoprism(tm) is free software: you can redistribute it and/or modify it under
+ * the terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation, either version 3 of the License, or (at your option) any
+ * later version.
  *
- * Geoprism(tm) is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
+ * Geoprism(tm) is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with Geoprism(tm).  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with Geoprism(tm). If not, see <http://www.gnu.org/licenses/>.
  */
 package net.geoprism.registry.model.graph;
 
@@ -39,8 +39,8 @@ import com.runwaysdk.dataaccess.graph.attributes.ValueOverTime;
 
 import net.geoprism.registry.graph.DataSource;
 import net.geoprism.registry.graph.DirectedAcyclicGraphType;
-import net.geoprism.registry.graph.GeoVertex;
 import net.geoprism.registry.model.EdgeConstant;
+import net.geoprism.registry.model.EdgeType;
 import net.geoprism.registry.model.EdgeValueOverTime;
 import net.geoprism.registry.model.ServerChildGraphNode;
 import net.geoprism.registry.model.ServerGeoObjectType;
@@ -318,8 +318,8 @@ public class DirectedAcyclicGraphStrategy extends AbstractGraphStrategy implemen
 
     for (EdgeObject edge : edges)
     {
-      final Date startDate = edge.getObjectValue(GeoVertex.START_DATE);
-      final Date endDate = edge.getObjectValue(GeoVertex.END_DATE);
+      final Date startDate = edge.getObjectValue(EdgeType.START_DATE);
+      final Date endDate = edge.getObjectValue(EdgeType.END_DATE);
 
       VertexObject parentVertex = edge.getParent();
       MdVertexDAOIF mdVertex = (MdVertexDAOIF) parentVertex.getMdClass();
@@ -339,8 +339,8 @@ public class DirectedAcyclicGraphStrategy extends AbstractGraphStrategy implemen
 
     for (EdgeObject edge : existingEdges)
     {
-      final Date startDate = edge.getObjectValue(GeoVertex.START_DATE);
-      final Date endDate = edge.getObjectValue(GeoVertex.END_DATE);
+      final Date startDate = edge.getObjectValue(EdgeType.START_DATE);
+      final Date endDate = edge.getObjectValue(EdgeType.END_DATE);
 
       VertexObject parentVertex = edge.getParent();
       MdVertexDAOIF mdVertex = (MdVertexDAOIF) parentVertex.getMdClass();
@@ -387,8 +387,8 @@ public class DirectedAcyclicGraphStrategy extends AbstractGraphStrategy implemen
 
           EdgeObject newEdge = geoObject.getVertex().addParent(inGo.getVertex(), this.type.getMdEdgeDAO());
           newEdge.setValue(DefaultAttribute.UID.getName(), uid);
-          newEdge.setValue(GeoVertex.START_DATE, startDate);
-          newEdge.setValue(GeoVertex.END_DATE, endDate);
+          newEdge.setValue(EdgeType.START_DATE, startDate);
+          newEdge.setValue(EdgeType.END_DATE, endDate);
           newEdge.setValue(DefaultAttribute.DATA_SOURCE.getName(), source);
           newEdge.apply();
 
@@ -403,13 +403,13 @@ public class DirectedAcyclicGraphStrategy extends AbstractGraphStrategy implemen
           if (!startDate.equals(votStartDate))
           {
             hasChanges = true;
-            edge.setValue(GeoVertex.START_DATE, votStartDate);
+            edge.setValue(EdgeType.START_DATE, votStartDate);
           }
 
           if (endDate != votEndDate)
           {
             hasChanges = true;
-            edge.setValue(GeoVertex.END_DATE, endDate);
+            edge.setValue(EdgeType.END_DATE, endDate);
           }
 
           if (hasChanges)
@@ -440,8 +440,8 @@ public class DirectedAcyclicGraphStrategy extends AbstractGraphStrategy implemen
       if (isNew)
       {
         EdgeObject newEdge = geoObject.getVertex().addParent( ( (VertexServerGeoObject) vot.getValue() ).getVertex(), this.type.getMdEdgeDAO());
-        newEdge.setValue(GeoVertex.START_DATE, vot.getStartDate());
-        newEdge.setValue(GeoVertex.END_DATE, vot.getEndDate());
+        newEdge.setValue(EdgeType.START_DATE, vot.getStartDate());
+        newEdge.setValue(EdgeType.END_DATE, vot.getEndDate());
         newEdge.setValue(DefaultAttribute.UID.getName(), uid);
         newEdge.setValue(DefaultAttribute.DATA_SOURCE.getName(), source);
         newEdge.apply();

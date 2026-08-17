@@ -38,9 +38,9 @@ import com.runwaysdk.dataaccess.MdVertexDAOIF;
 import com.runwaysdk.dataaccess.graph.attributes.ValueOverTime;
 
 import net.geoprism.registry.graph.DataSource;
-import net.geoprism.registry.graph.GeoVertex;
 import net.geoprism.registry.graph.UndirectedGraphType;
 import net.geoprism.registry.model.EdgeConstant;
+import net.geoprism.registry.model.EdgeType;
 import net.geoprism.registry.model.EdgeValueOverTime;
 import net.geoprism.registry.model.ServerChildGraphNode;
 import net.geoprism.registry.model.ServerGeoObjectType;
@@ -222,8 +222,8 @@ public class UndirectedGraphStrategy extends AbstractGraphStrategy implements Gr
 
     for (EdgeObject edge : edges)
     {
-      final Date startDate = edge.getObjectValue(GeoVertex.START_DATE);
-      final Date endDate = edge.getObjectValue(GeoVertex.END_DATE);
+      final Date startDate = edge.getObjectValue(EdgeType.START_DATE);
+      final Date endDate = edge.getObjectValue(EdgeType.END_DATE);
 
       VertexObject parentVertex = edge.getParent();
       MdVertexDAOIF mdVertex = (MdVertexDAOIF) parentVertex.getMdClass();
@@ -243,8 +243,8 @@ public class UndirectedGraphStrategy extends AbstractGraphStrategy implements Gr
 
     for (EdgeObject edge : existingEdges)
     {
-      final Date startDate = edge.getObjectValue(GeoVertex.START_DATE);
-      final Date endDate = edge.getObjectValue(GeoVertex.END_DATE);
+      final Date startDate = edge.getObjectValue(EdgeType.START_DATE);
+      final Date endDate = edge.getObjectValue(EdgeType.END_DATE);
 
       VertexObject parentVertex = edge.getParent();
       MdVertexDAOIF mdVertex = (MdVertexDAOIF) parentVertex.getMdClass();
@@ -290,8 +290,8 @@ public class UndirectedGraphStrategy extends AbstractGraphStrategy implements Gr
           edge.delete();
 
           EdgeObject newEdge = geoObject.getVertex().addParent(inGo.getVertex(), this.type.getMdEdgeDAO());
-          newEdge.setValue(GeoVertex.START_DATE, startDate);
-          newEdge.setValue(GeoVertex.END_DATE, endDate);
+          newEdge.setValue(EdgeType.START_DATE, startDate);
+          newEdge.setValue(EdgeType.END_DATE, endDate);
           newEdge.setValue(DefaultAttribute.UID.getName(), uid);
           newEdge.setValue(DefaultAttribute.DATA_SOURCE.getName(), source);
           newEdge.apply();
@@ -307,13 +307,13 @@ public class UndirectedGraphStrategy extends AbstractGraphStrategy implements Gr
           if (!startDate.equals(votStartDate))
           {
             hasChanges = true;
-            edge.setValue(GeoVertex.START_DATE, votStartDate);
+            edge.setValue(EdgeType.START_DATE, votStartDate);
           }
 
           if (endDate != votEndDate)
           {
             hasChanges = true;
-            edge.setValue(GeoVertex.END_DATE, endDate);
+            edge.setValue(EdgeType.END_DATE, endDate);
           }
 
           if (hasChanges)
@@ -346,8 +346,8 @@ public class UndirectedGraphStrategy extends AbstractGraphStrategy implements Gr
       if (isNew)
       {
         EdgeObject newEdge = geoObject.getVertex().addParent( ( (VertexServerGeoObject) vot.getValue() ).getVertex(), this.type.getMdEdgeDAO());
-        newEdge.setValue(GeoVertex.START_DATE, vot.getStartDate());
-        newEdge.setValue(GeoVertex.END_DATE, vot.getEndDate());
+        newEdge.setValue(EdgeType.START_DATE, vot.getStartDate());
+        newEdge.setValue(EdgeType.END_DATE, vot.getEndDate());
         newEdge.setValue(DefaultAttribute.UID.getName(), uid);
         newEdge.setValue(DefaultAttribute.DATA_SOURCE.getName(), source);        
         newEdge.apply();

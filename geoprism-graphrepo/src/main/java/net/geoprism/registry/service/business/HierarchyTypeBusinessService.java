@@ -79,6 +79,7 @@ import net.geoprism.registry.graph.GeoObjectTypeAlreadyInHierarchyException;
 import net.geoprism.registry.graph.GeoVertex;
 import net.geoprism.registry.graph.HierarchicalRelationshipType;
 import net.geoprism.registry.graph.InheritedHierarchyAnnotation;
+import net.geoprism.registry.model.EdgeType;
 import net.geoprism.registry.model.RootGeoObjectType;
 import net.geoprism.registry.model.ServerGeoObjectIF;
 import net.geoprism.registry.model.ServerGeoObjectType;
@@ -511,14 +512,14 @@ public class HierarchyTypeBusinessService implements HierarchyTypeBusinessServic
     sourceAttr.apply();
     
     MdAttributeDateTimeDAO startDate = MdAttributeDateTimeDAO.newInstance();
-    startDate.setValue(MdAttributeDateTimeInfo.NAME, GeoVertex.START_DATE);
+    startDate.setValue(MdAttributeDateTimeInfo.NAME, EdgeType.START_DATE);
     startDate.setStructValue(MdAttributeDateTimeInfo.DISPLAY_LABEL, MdAttributeLocalInfo.DEFAULT_LOCALE, "Start Date");
     startDate.setStructValue(MdAttributeDateTimeInfo.DESCRIPTION, MdAttributeLocalInfo.DEFAULT_LOCALE, "Start Date");
     startDate.setValue(MdAttributeDateTimeInfo.DEFINING_MD_CLASS, mdEdgeDAO.getOid());
     startDate.apply();
 
     MdAttributeDateTimeDAO endDate = MdAttributeDateTimeDAO.newInstance();
-    endDate.setValue(MdAttributeDateTimeInfo.NAME, GeoVertex.END_DATE);
+    endDate.setValue(MdAttributeDateTimeInfo.NAME, EdgeType.END_DATE);
     endDate.setStructValue(MdAttributeDateTimeInfo.DISPLAY_LABEL, MdAttributeLocalInfo.DEFAULT_LOCALE, "End Date");
     endDate.setStructValue(MdAttributeDateTimeInfo.DESCRIPTION, MdAttributeLocalInfo.DEFAULT_LOCALE, "End Date");
     endDate.setValue(MdAttributeDateTimeInfo.DEFINING_MD_CLASS, mdEdgeDAO.getOid());

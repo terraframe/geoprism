@@ -52,6 +52,7 @@ import net.geoprism.registry.graph.transition.Transition;
 import net.geoprism.registry.graph.transition.Transition.TransitionImpact;
 import net.geoprism.registry.graph.transition.Transition.TransitionType;
 import net.geoprism.registry.graph.transition.TransitionEvent;
+import net.geoprism.registry.model.EdgeType;
 import net.geoprism.registry.model.ServerGeoObjectIF;
 import net.geoprism.registry.model.ServerGeoObjectType;
 import net.geoprism.registry.model.graph.VertexServerGeoObject;
@@ -279,15 +280,15 @@ public class TransitionEventBusinessService implements TransitionEventBusinessSe
 
           try
           {
-            if (attrCondition.has("startDate") && !attrCondition.get("startDate").isJsonNull() && attrCondition.get("startDate").getAsString().length() > 0)
+            if (attrCondition.has(EdgeType.START_DATE) && !attrCondition.get(EdgeType.START_DATE).isJsonNull() && attrCondition.get(EdgeType.START_DATE).getAsString().length() > 0)
             {
-              Date startDate = format.parse(attrCondition.get("startDate").getAsString());
+              Date startDate = format.parse(attrCondition.get(EdgeType.START_DATE).getAsString());
               dateConditions.add(mdAttr.getColumnName() + ">=:startDate" + i);
               parameters.put("startDate" + i, startDate);
             }
-            if (attrCondition.has("endDate") && !attrCondition.get("endDate").isJsonNull() && attrCondition.get("endDate").getAsString().length() > 0)
+            if (attrCondition.has(EdgeType.END_DATE) && !attrCondition.get(EdgeType.END_DATE).isJsonNull() && attrCondition.get(EdgeType.END_DATE).getAsString().length() > 0)
             {
-              Date endDate = format.parse(attrCondition.get("endDate").getAsString());
+              Date endDate = format.parse(attrCondition.get(EdgeType.END_DATE).getAsString());
               dateConditions.add(mdAttr.getColumnName() + "<=:endDate" + i);
               parameters.put("endDate" + i, endDate);
             }

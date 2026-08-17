@@ -25,6 +25,7 @@ import java.util.TreeMap;
 
 import org.springframework.stereotype.Service;
 
+import com.runwaysdk.business.graph.GraphQuery;
 import com.runwaysdk.business.graph.VertexObject;
 import com.runwaysdk.dataaccess.graph.VertexObjectDAO;
 
@@ -32,6 +33,7 @@ import net.geoprism.registry.graph.ConceptClass;
 import net.geoprism.registry.graph.ConceptEdgeType;
 import net.geoprism.registry.graph.ConceptVertex;
 import net.geoprism.registry.model.ConceptObject;
+import net.geoprism.registry.model.graph.VertexServerGeoObject;
 import net.geoprism.registry.view.ConceptClassDTO;
 
 @Service
@@ -55,4 +57,19 @@ public class ConceptObjectBusinessService extends ObjectEdgeBusinessService<Conc
   {
     return new ConceptObject(type, current, nodeMap, date);
   }
+
+  @Override
+  protected boolean isValidEdge(ConceptObject child, ConceptEdgeType type, ConceptObject parent, Date startDate, Date endDate)
+  {
+    boolean isValid = super.isValidEdge(child, type, parent, startDate, endDate);
+
+    if (isValid)
+    {
+      // Concept edges must be a DAG
+      return !this.isCycle(child, type, parent, startDate, endDate);
+    }
+
+    return true;
+  }
+
 }

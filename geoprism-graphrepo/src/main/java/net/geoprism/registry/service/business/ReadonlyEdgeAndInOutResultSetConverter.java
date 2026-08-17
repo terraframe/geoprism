@@ -42,6 +42,7 @@ import com.runwaysdk.dataaccess.metadata.graph.MdGraphClassDAO;
 import net.geoprism.registry.graph.AttributeValue;
 import net.geoprism.registry.io.TermValueException;
 import net.geoprism.registry.model.Classification;
+import net.geoprism.registry.model.EdgeType;
 import net.geoprism.registry.model.ServerGeoObjectType;
 
 public class ReadonlyEdgeAndInOutResultSetConverter extends ResultSetConverter
@@ -134,7 +135,7 @@ public class ReadonlyEdgeAndInOutResultSetConverter extends ResultSetConverter
     {
       ServerGeoObjectType type = ServerGeoObjectType.get(getMdClass());
       Map<String, ReadonlyPrefixedResultObject> nodeMap = new HashMap<String, ReadonlyPrefixedResultObject>();
-      attributeValues.stream().filter(at -> between(date, (Date) at.getObjectValue("startDate"), (Date) at.getObjectValue("endDate"))).forEach(v -> nodeMap.put((String) v.getObjectValue(AttributeValue.ATTRIBUTENAME), v));
+      attributeValues.stream().filter(at -> between(date, (Date) at.getObjectValue(EdgeType.START_DATE), (Date) at.getObjectValue(EdgeType.END_DATE))).forEach(v -> nodeMap.put((String) v.getObjectValue(AttributeValue.ATTRIBUTENAME), v));
 
       GeoObjectType typeDto = type.toDTO();
       Map<String, Attribute> attributeMap = GeoObject.buildAttributeMap(typeDto);

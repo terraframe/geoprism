@@ -28,12 +28,16 @@ import org.commongeoregistry.adapter.constants.DefaultAttribute;
 import com.runwaysdk.business.graph.EdgeObject;
 import com.runwaysdk.business.graph.GraphQuery;
 import com.runwaysdk.business.graph.VertexObject;
+import com.runwaysdk.dataaccess.MdClassDAOIF;
+import com.runwaysdk.dataaccess.MdGraphClassDAOIF;
 
 import net.geoprism.configuration.GeoprismProperties;
 import net.geoprism.registry.OriginException;
+import net.geoprism.registry.graph.ConceptEdgeType;
 import net.geoprism.registry.graph.DataSource;
 import net.geoprism.registry.graph.EdgeClass;
 import net.geoprism.registry.graph.ObjectClass;
+import net.geoprism.registry.model.ConceptObject;
 import net.geoprism.registry.model.EdgeConstant;
 import net.geoprism.registry.model.EdgeType;
 import net.geoprism.registry.model.graph.ServerObjectVertex;
@@ -124,6 +128,11 @@ public abstract class ObjectEdgeBusinessService<V extends ServerObjectVertex, T 
       }
     }
 
+    if (!this.isValidEdge(object, type, parent, startDate, endDate))
+    {
+      throw new UnsupportedOperationException();
+    }
+
     if (parent != null && !this.exists(object, type, parent))
     {
       EdgeObject newEdge = object.getVertex().addParent(parent.getVertex(), type.getMdEdgeDAO());
@@ -184,6 +193,11 @@ public abstract class ObjectEdgeBusinessService<V extends ServerObjectVertex, T 
       }
     }
 
+    if (!this.isValidEdge(child, type, object, startDate, endDate))
+    {
+      throw new UnsupportedOperationException();
+    }
+
     if (child != null && !this.exists(child, type, object))
     {
       EdgeObject newEdge = object.getVertex().addChild(child.getVertex(), type.getMdEdgeDAO());
@@ -197,6 +211,11 @@ public abstract class ObjectEdgeBusinessService<V extends ServerObjectVertex, T 
     }
 
     return Optional.empty();
+  }
+
+  protected boolean isValidEdge(N child, E type, N object, Date startDate, Date endDate)
+  {
+    return true;
   }
 
   @Override
@@ -265,4 +284,29 @@ public abstract class ObjectEdgeBusinessService<V extends ServerObjectVertex, T 
     }).map(v -> (N) v).collect(Collectors.toList());
   }
 
+  protected boolean isCycle(N child, E type, N parent, Date startDate, Date endDate)
+  {
+    VertexObject vertex = child.getVertex();
+    MdGraphClassDAOIF mdClass = (MdGraphClassDAOIF) vertex.getMdClass();
+
+    StringBuffer statement = new StringBuffer();
+    statement.append("SELECT count(*) FROM (");
+    statement.append("MATCH {class: " + mdClass.getDBClassName() + ", where: (@rid = :rid)}.(outE('" + type.getMdEdgeDAO().getDBClassName() + "')");
+    statement.append(" {where: (:startDate BETWEEN startDate AND endDate OR :endDate BETWEEN startDate AND endDate)}.inV())");
+    statement.append(" {as: friend, while: ($depth < 10000)} RETURN friend.code AS code");
+    statement.append(")");
+    statement.append(" WHERE code = :code");
+
+    GraphQuery<Long> query = new GraphQuery<Long>(statement.toString());
+    query.setParameter("rid", vertex.getRID());
+    query.setParameter("startDate", startDate);
+    query.setParameter("endDate", endDate);
+    query.setParameter("code", parent.getCode());
+
+    Long count = query.getSingleResult();
+
+    return ( count != null && count > 0 );
+  }
+
+  
 }
