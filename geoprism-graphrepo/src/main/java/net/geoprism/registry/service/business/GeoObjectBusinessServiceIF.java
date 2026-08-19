@@ -3,18 +3,18 @@
  *
  * This file is part of Geoprism(tm).
  *
- * Geoprism(tm) is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
+ * Geoprism(tm) is free software: you can redistribute it and/or modify it under
+ * the terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation, either version 3 of the License, or (at your option) any
+ * later version.
  *
- * Geoprism(tm) is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
+ * Geoprism(tm) is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with Geoprism(tm).  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with Geoprism(tm). If not, see <http://www.gnu.org/licenses/>.
  */
 package net.geoprism.registry.service.business;
 
@@ -46,6 +46,7 @@ import net.geoprism.registry.model.LocationInfo;
 import net.geoprism.registry.model.ServerChildTreeNode;
 import net.geoprism.registry.model.ServerGeoObjectIF;
 import net.geoprism.registry.model.ServerGeoObjectType;
+import net.geoprism.registry.model.ServerGraphNode;
 import net.geoprism.registry.model.ServerHierarchyType;
 import net.geoprism.registry.model.ServerParentTreeNode;
 import net.geoprism.registry.model.graph.VertexServerGeoObject;
@@ -70,7 +71,7 @@ public interface GeoObjectBusinessServiceIF
   public void removeChild(String parentCode, String parentGeoObjectTypeCode, String childCode, String childGeoObjectTypeCode, String hierarchyCode, Date startDate, Date endDate, boolean validateOrigin);
 
   public void delete(ServerGeoObjectIF sgo);
-  
+
   public void apply(ServerGeoObjectIF sgo, boolean isImport, boolean validateOrigin);
 
   public ServerGeoObjectIF apply(GeoObject object, Date startDate, Date endDate, boolean isNew, boolean isImport, boolean validateOrigin);
@@ -155,9 +156,9 @@ public interface GeoObjectBusinessServiceIF
 
   public SortedSet<EdgeObject> setParentCollection(ServerGeoObjectIF sgo, ServerHierarchyType hierarchyType, ValueOverTimeCollection votc, DataSource source, boolean validateOrigin);
 
-  public ServerParentTreeNode getGraphParentGeoObjects(ServerGeoObjectIF sgo, GraphType graphType, Boolean recursive, Boolean includeInherited, Date date);
+  public <T extends ServerGraphNode> T getGraphParentGeoObjects(ServerGeoObjectIF sgo, GraphType graphType, Boolean recursive, Boolean includeInherited, Date date);
 
-  public ServerChildTreeNode getGraphChildGeoObjects(ServerGeoObjectIF sgo, GraphType graphType, Boolean recursive, Date date);
+  public <T extends ServerGraphNode> T getGraphChildGeoObjects(ServerGeoObjectIF sgo, GraphType graphType, Boolean recursive, Date date);
 
   /**
    * Adds an edge, bypassing all validation (for performance reasons). Be
@@ -184,4 +185,5 @@ public interface GeoObjectBusinessServiceIF
   ServerGeoObjectIF fromDTO(ServerGeoObjectType type, GeoObjectOverTime goTime, boolean isNew);
 
   ServerGeoObjectIF fromDTO(GeoObjectOverTime goTime, boolean isNew);
+
 }

@@ -3,25 +3,23 @@
  *
  * This file is part of Geoprism(tm).
  *
- * Geoprism(tm) is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
+ * Geoprism(tm) is free software: you can redistribute it and/or modify it under
+ * the terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation, either version 3 of the License, or (at your option) any
+ * later version.
  *
- * Geoprism(tm) is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
+ * Geoprism(tm) is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with Geoprism(tm).  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with Geoprism(tm). If not, see <http://www.gnu.org/licenses/>.
  */
 package net.geoprism.registry.service.business;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.function.Predicate;
-import java.util.function.Supplier;
 
 import org.commongeoregistry.adapter.constants.DefaultAttribute;
 import org.commongeoregistry.adapter.dataaccess.LocalizedValue;
@@ -42,7 +40,6 @@ import net.geoprism.configuration.GeoprismProperties;
 import net.geoprism.ontology.Classifier;
 import net.geoprism.registry.CodeLengthException;
 import net.geoprism.registry.RegistryConstants;
-import net.geoprism.registry.cache.TransactionLRUCache;
 import net.geoprism.registry.conversion.RegistryLocalizedValueConverter;
 import net.geoprism.registry.conversion.TermConverter;
 import net.geoprism.registry.graph.AttributeBooleanType;
@@ -60,30 +57,11 @@ import net.geoprism.registry.view.BusinessTypeDTO;
 public class BusinessTypeBusinessService extends ObjectClassBusinessService<BusinessType, BusinessTypeDTO> implements BusinessTypeBusinessServiceIF
 {
   @Autowired
-  private ClassificationTypeBusinessServiceIF             cTypeService;
-
-  private final TransactionLRUCache<String, BusinessType> cache;
+  private ClassificationTypeBusinessServiceIF cTypeService;
 
   public BusinessTypeBusinessService()
   {
     super(BusinessType.CLASS);
-
-    this.cache = new TransactionLRUCache<String, BusinessType>("t-b-type-cache", (v) -> {
-
-      return new String[] { v.getCode(), v.getMdVertexOid() };
-    }, 20);
-  }
-
-  @Override
-  protected void put(BusinessType type)
-  {
-    this.cache.put(type);
-  }
-
-  @Override
-  protected Optional<BusinessType> get(String code, Supplier<Optional<BusinessType>> supplier)
-  {
-    return this.cache.get(code, supplier);
   }
 
   @Override
@@ -100,7 +78,7 @@ public class BusinessTypeBusinessService extends ObjectClassBusinessService<Busi
 
     mdVertex.delete();
 
-    this.cache.remove(type);
+    this.getCache().remove(type);
   }
 
   @Override
@@ -266,7 +244,7 @@ public class BusinessTypeBusinessService extends ObjectClassBusinessService<Busi
       sourceAttr.apply();
     }
 
-    this.cache.put(businessType);
+    this.getCache().put(businessType);
 
     return businessType;
   }
@@ -277,7 +255,7 @@ public class BusinessTypeBusinessService extends ObjectClassBusinessService<Busi
   {
     businessType.apply();
 
-    this.cache.put(businessType);
+    this.getCache().put(businessType);
 
     return businessType;
   }

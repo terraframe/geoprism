@@ -3,25 +3,25 @@
  *
  * This file is part of Geoprism(tm).
  *
- * Geoprism(tm) is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
+ * Geoprism(tm) is free software: you can redistribute it and/or modify it under
+ * the terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation, either version 3 of the License, or (at your option) any
+ * later version.
  *
- * Geoprism(tm) is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
+ * Geoprism(tm) is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with Geoprism(tm).  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with Geoprism(tm). If not, see <http://www.gnu.org/licenses/>.
  */
 package net.geoprism.registry.service.business;
 
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
-import java.util.function.Supplier;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 import org.commongeoregistry.adapter.constants.DefaultAttribute;
@@ -51,6 +51,7 @@ import com.runwaysdk.system.metadata.MdClass;
 
 import net.geoprism.configuration.GeoprismProperties;
 import net.geoprism.registry.Organization;
+import net.geoprism.registry.cache.TransactionLRUCache;
 import net.geoprism.registry.graph.ObjectClass;
 import net.geoprism.registry.model.GeoObjectMetadata;
 import net.geoprism.registry.model.ServerOrganization;
@@ -62,18 +63,32 @@ import net.geoprism.registry.view.OrganizationGroup;
 public abstract class ObjectClassBusinessService<T extends ObjectClass, D extends ObjectClassDTO> implements ObjectClassBusinessServiceIF<T, D>
 {
   @Autowired
-  protected PermissionServiceIF permissions;
-  
-  private String vertexClass;
-  
+  protected PermissionServiceIF                permissions;
+
+  private final String                         vertexClass;
+
+  private final TransactionLRUCache<String, T> cache;
+
   public ObjectClassBusinessService(String vertexClass)
   {
-    this.vertexClass = vertexClass;
+    this(vertexClass, UUID.randomUUID().toString());
   }
 
-  protected abstract void put(T type);
+  public ObjectClassBusinessService(String vertexClass, String cacheName)
+  {
+    this.vertexClass = vertexClass;
 
-  protected abstract Optional<T> get(String code, Supplier<Optional<T>> supplier);
+    this.cache = new TransactionLRUCache<String, T>(cacheName, (v) -> {
+
+      return new String[] { v.getCode(), v.getMdVertexOid() };
+    }, 20);
+
+  }
+
+  public TransactionLRUCache<String, T> getCache()
+  {
+    return cache;
+  }
 
   @Override
   public void removeAttributeType(T type, String attributeName)
@@ -87,7 +102,7 @@ public abstract class ObjectClassBusinessService<T extends ObjectClass, D extend
       type.apply();
     }
 
-    this.put(type);
+    this.cache.put(type);
 
     // If this did not error out then add to the cache
     // Refresh the users session
@@ -197,7 +212,7 @@ public abstract class ObjectClassBusinessService<T extends ObjectClass, D extend
 
     }
 
-    this.put(type);
+    this.cache.put(type);
 
     // mdAttribute.setAttributeName(dto.getName());
     // mdAttribute.setValue(MdAttributeConcreteInfo.REQUIRED,
@@ -243,7 +258,7 @@ public abstract class ObjectClassBusinessService<T extends ObjectClass, D extend
       attribute.fromDTO(dto);
       attribute.apply();
 
-      this.put(type);
+      this.cache.put(type);
 
       return attribute;
     }
@@ -254,7 +269,7 @@ public abstract class ObjectClassBusinessService<T extends ObjectClass, D extend
   @Override
   public Optional<T> getByCode(String code)
   {
-    return this.get(code, () -> {
+    return this.cache.get(code, () -> {
 
       MdVertexDAOIF mdVertex = MdVertexDAO.getMdVertexDAO(this.vertexClass);
 
@@ -376,7 +391,7 @@ public abstract class ObjectClassBusinessService<T extends ObjectClass, D extend
   @Override
   public T getByMdVertex(MdVertexDAOIF mdVertex)
   {
-    return this.get(mdVertex.getOid(), () -> {
+    return this.cache.get(mdVertex.getOid(), () -> {
       MdVertexDAOIF table = MdVertexDAO.getMdVertexDAO(this.vertexClass);
 
       StringBuilder statement = new StringBuilder();

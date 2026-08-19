@@ -39,6 +39,20 @@ public class ConceptEdgeTypeDTO extends EdgeClassDTO
     return TypeClass.CONCEPT_EDGE.getCode();
   }
 
+  public static ConceptEdgeTypeDTO build(String organizationCode, String code, String parentTypeCode, String childTypeCode)
+  {
+    ConceptEdgeTypeDTO dto = new ConceptEdgeTypeDTO();
+    dto.setCode(code);
+    dto.setParentType(parentTypeCode);
+    dto.setChildType(childTypeCode);
+    dto.setLabel(new LocalizedValue(code));
+    dto.setDescription(new LocalizedValue(code));
+    dto.setOrganizationCode(organizationCode);
+    dto.setSeq(0L);
+    
+    return dto;
+  }
+  
   public static ConceptEdgeTypeDTO build(String organizationCode, String code, LocalizedValue label, LocalizedValue description, String parentTypeCode, String childTypeCode)
   {
     ConceptEdgeTypeDTO dto = new ConceptEdgeTypeDTO();

@@ -19,9 +19,7 @@
 package net.geoprism.registry.service.business;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.function.Predicate;
-import java.util.function.Supplier;
 
 import org.commongeoregistry.adapter.constants.DefaultAttribute;
 import org.commongeoregistry.adapter.dataaccess.LocalizedValue;
@@ -42,7 +40,6 @@ import net.geoprism.ontology.Classifier;
 import net.geoprism.registry.CodeLengthException;
 import net.geoprism.registry.RegistryConstants;
 import net.geoprism.registry.cache.ClearCacheEvent;
-import net.geoprism.registry.cache.TransactionLRUCache;
 import net.geoprism.registry.conversion.RegistryLocalizedValueConverter;
 import net.geoprism.registry.conversion.TermConverter;
 import net.geoprism.registry.graph.AttributeBooleanType;
@@ -59,33 +56,14 @@ import net.geoprism.registry.view.ConceptClassDTO;
 public class ConceptClassBusinessService extends ObjectClassBusinessService<ConceptClass, ConceptClassDTO> implements ConceptClassBusinessServiceIF
 {
   @Autowired
-  private ClassificationTypeBusinessServiceIF             cTypeService;
+  private ClassificationTypeBusinessServiceIF cTypeService;
 
   @Autowired
-  private ApplicationEventPublisher                       publisher;
-
-  private final TransactionLRUCache<String, ConceptClass> cache;
+  private ApplicationEventPublisher           publisher;
 
   public ConceptClassBusinessService()
   {
     super(ConceptClass.CLASS);
-
-    this.cache = new TransactionLRUCache<String, ConceptClass>("t-b-type-cache", (v) -> {
-
-      return new String[] { v.getCode(), v.getMdVertexOid() };
-    }, 20);
-  }
-
-  @Override
-  protected void put(ConceptClass type)
-  {
-    this.cache.put(type);
-  }
-
-  @Override
-  protected Optional<ConceptClass> get(String code, Supplier<Optional<ConceptClass>> supplier)
-  {
-    return this.cache.get(code, supplier);
   }
 
   @Override
@@ -108,7 +86,7 @@ public class ConceptClassBusinessService extends ObjectClassBusinessService<Conc
 
     mdVertex.delete();
 
-    this.cache.remove(type);
+    this.getCache().remove(type);
 
     publisher.publishEvent(new ClearCacheEvent(this));
   }
@@ -182,12 +160,12 @@ public class ConceptClassBusinessService extends ObjectClassBusinessService<Conc
 
     LocalizedValue localizedValue = object.getDisplayLabel();
 
-    ConceptClass businessType = object.hasOid() ? ConceptClass.get(object.getOid()) : new ConceptClass();
-    businessType.setCode(code);
-    businessType.setOrganization(organization.getGraphOrganization());
-    RegistryLocalizedValueConverter.populate(businessType, ConceptClass.DISPLAYLABEL, localizedValue);
+    ConceptClass conceptClass = object.hasOid() ? ConceptClass.get(object.getOid()) : new ConceptClass();
+    conceptClass.setCode(code);
+    conceptClass.setOrganization(organization.getGraphOrganization());
+    RegistryLocalizedValueConverter.populate(conceptClass, ConceptClass.DISPLAYLABEL, localizedValue);
 
-    boolean isNew = businessType.isNew();
+    boolean isNew = conceptClass.isNew();
 
     if (isNew)
     {
@@ -202,23 +180,23 @@ public class ConceptClassBusinessService extends ObjectClassBusinessService<Conc
       RegistryLocalizedValueConverter.populate(mdVertex, MdVertexInfo.DISPLAY_LABEL, localizedValue);
       mdVertex.apply();
 
-      businessType.setMdVertexId(mdVertex.getOid());
-      businessType.setOrigin(origin);
-      businessType.setSequence(object.hasSequence() ? object.getSequence() : 0L);
+      conceptClass.setMdVertexId(mdVertex.getOid());
+      conceptClass.setOrigin(origin);
+      conceptClass.setSequence(object.hasSequence() ? object.getSequence() : 0L);
     }
     else
     {
-      if (businessType.getOrigin().equals(GeoprismProperties.getOrigin()))
+      if (conceptClass.getOrigin().equals(GeoprismProperties.getOrigin()))
       {
-        businessType.setSequence(businessType.getSequence() + 1);
+        conceptClass.setSequence(conceptClass.getSequence() + 1);
       }
       else if (object.hasSequence())
       {
-        businessType.setSequence(object.getSequence());
+        conceptClass.setSequence(object.getSequence());
       }
     }
 
-    businessType.apply();
+    conceptClass.apply();
 
     if (isNew)
     {
@@ -226,7 +204,7 @@ public class ConceptClassBusinessService extends ObjectClassBusinessService<Conc
       codeAttr.setCode(DefaultAttribute.CODE.getName());
       codeAttr.setEmbeddedValue(AttributeUUIDType.LABEL, LocalizedValue.DEFAULT_LOCALE, DefaultAttribute.CODE.getDefaultLocalizedName());
       codeAttr.setEmbeddedValue(AttributeUUIDType.DESCRIPTION, LocalizedValue.DEFAULT_LOCALE, DefaultAttribute.CODE.getDefaultDescription());
-      codeAttr.setValue(AttributeBooleanType.OBJECTTYPE, businessType.getOid());
+      codeAttr.setValue(AttributeBooleanType.OBJECTTYPE, conceptClass.getOid());
       codeAttr.setRequired(true);
       codeAttr.setUnique(true);
       codeAttr.setIsChangeOverTime(false);
@@ -237,7 +215,7 @@ public class ConceptClassBusinessService extends ObjectClassBusinessService<Conc
       sourceAttr.setCode(DefaultAttribute.DATA_SOURCE.getName());
       sourceAttr.setEmbeddedValue(AttributeUUIDType.LABEL, LocalizedValue.DEFAULT_LOCALE, DefaultAttribute.DATA_SOURCE.getDefaultLocalizedName());
       sourceAttr.setEmbeddedValue(AttributeUUIDType.DESCRIPTION, LocalizedValue.DEFAULT_LOCALE, DefaultAttribute.DATA_SOURCE.getDefaultDescription());
-      sourceAttr.setValue(AttributeBooleanType.OBJECTTYPE, businessType.getOid());
+      sourceAttr.setValue(AttributeBooleanType.OBJECTTYPE, conceptClass.getOid());
       sourceAttr.setRequired(false);
       sourceAttr.setUnique(false);
       sourceAttr.setIsChangeOverTime(true);
@@ -245,20 +223,20 @@ public class ConceptClassBusinessService extends ObjectClassBusinessService<Conc
       sourceAttr.apply();
     }
 
-    this.cache.put(businessType);
+    this.getCache().put(conceptClass);
 
-    return businessType;
+    return conceptClass;
   }
 
   @Transaction
   @Override
-  public ConceptClass apply(ConceptClass businessType)
+  public ConceptClass apply(ConceptClass conceptClass)
   {
-    businessType.apply();
+    conceptClass.apply();
 
-    this.cache.put(businessType);
+    this.getCache().put(conceptClass);
 
-    return businessType;
+    return conceptClass;
   }
 
 }
