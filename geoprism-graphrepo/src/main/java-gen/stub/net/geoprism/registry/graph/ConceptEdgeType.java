@@ -28,6 +28,7 @@ import net.geoprism.registry.model.EdgeType;
 import net.geoprism.registry.model.ServerElement;
 import net.geoprism.registry.view.ConceptEdgeTypeDTO;
 import net.geoprism.registry.view.TypeClass;
+import net.geoprism.registry.view.TypeInfo;
 
 public class ConceptEdgeType extends ConceptEdgeTypeBase implements ServerElement, EdgeType
 {
@@ -90,6 +91,12 @@ public class ConceptEdgeType extends ConceptEdgeTypeBase implements ServerElemen
   public TypeClass getTargetType()
   {
     return TypeClass.CONCEPT_CLASS;
+  }
+
+  @Override
+  public TypeInfo getTypeInfo()
+  {
+    return new TypeInfo(TypeClass.CONCEPT_EDGE, this.getCode());
   }
 
 }

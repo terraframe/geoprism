@@ -30,6 +30,7 @@ import net.geoprism.registry.model.ServerElement;
 import net.geoprism.registry.model.graph.DirectedAcyclicGraphStrategy;
 import net.geoprism.registry.model.graph.GraphStrategy;
 import net.geoprism.registry.view.TypeClass;
+import net.geoprism.registry.view.TypeInfo;
 
 public class DirectedAcyclicGraphType extends DirectedAcyclicGraphTypeBase implements GraphType, ServerElement
 {
@@ -76,6 +77,12 @@ public class DirectedAcyclicGraphType extends DirectedAcyclicGraphTypeBase imple
   public GraphStrategy getStrategy()
   {
     return new DirectedAcyclicGraphStrategy(this);
+  }
+
+  @Override
+  public TypeInfo getTypeInfo()
+  {
+    return new TypeInfo(TypeClass.DAG, this.getCode());
   }
 
 }

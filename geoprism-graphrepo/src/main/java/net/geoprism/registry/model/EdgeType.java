@@ -27,6 +27,7 @@ import net.geoprism.registry.graph.ConceptEdgeType;
 import net.geoprism.registry.graph.DirectedAcyclicGraphType;
 import net.geoprism.registry.graph.UndirectedGraphType;
 import net.geoprism.registry.view.TypeClass;
+import net.geoprism.registry.view.TypeInfo;
 
 public interface EdgeType
 {
@@ -39,6 +40,8 @@ public interface EdgeType
   public GraphTypeDTO toDTO();
 
   public String getCode();
+
+  public TypeInfo getTypeInfo();
 
   public String getOrigin();
 

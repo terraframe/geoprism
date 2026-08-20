@@ -25,6 +25,7 @@ import net.geoprism.registry.model.EdgeType;
 import net.geoprism.registry.model.ServerElement;
 import net.geoprism.registry.view.BusinessEdgeTypeDTO;
 import net.geoprism.registry.view.TypeClass;
+import net.geoprism.registry.view.TypeInfo;
 
 public class BusinessEdgeType extends BusinessEdgeTypeBase implements ServerElement, EdgeType
 {
@@ -87,6 +88,12 @@ public class BusinessEdgeType extends BusinessEdgeTypeBase implements ServerElem
   public TypeClass getTargetType()
   {
     return this.getIsChildGeoObject() ? TypeClass.GEO_OBJECT_TYPE : TypeClass.BUSINESS_TYPE;
+  }
+
+  @Override
+  public TypeInfo getTypeInfo()
+  {
+    return new TypeInfo(TypeClass.BUSINESS_EDGE, this.getCode());
   }
 
 }

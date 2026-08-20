@@ -28,6 +28,7 @@ import net.geoprism.registry.model.ServerElement;
 import net.geoprism.registry.model.graph.GraphStrategy;
 import net.geoprism.registry.model.graph.UndirectedGraphStrategy;
 import net.geoprism.registry.view.TypeClass;
+import net.geoprism.registry.view.TypeInfo;
 
 public class UndirectedGraphType extends UndirectedGraphTypeBase implements GraphType, ServerElement
 {
@@ -75,6 +76,12 @@ public class UndirectedGraphType extends UndirectedGraphTypeBase implements Grap
   public GraphStrategy getStrategy()
   {
     return new UndirectedGraphStrategy(this);
+  }
+
+  @Override
+  public TypeInfo getTypeInfo()
+  {
+    return new TypeInfo(TypeClass.UNDIRECTED_GRAPH, this.getCode());
   }
 
 }

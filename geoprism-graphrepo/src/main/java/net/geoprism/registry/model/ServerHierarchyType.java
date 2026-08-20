@@ -3,18 +3,18 @@
  *
  * This file is part of Geoprism(tm).
  *
- * Geoprism(tm) is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
+ * Geoprism(tm) is free software: you can redistribute it and/or modify it under
+ * the terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation, either version 3 of the License, or (at your option) any
+ * later version.
  *
- * Geoprism(tm) is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
+ * Geoprism(tm) is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with Geoprism(tm).  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with Geoprism(tm). If not, see <http://www.gnu.org/licenses/>.
  */
 package net.geoprism.registry.model;
 
@@ -52,6 +52,8 @@ import net.geoprism.registry.model.graph.ServerHierarchyStrategy;
 import net.geoprism.registry.service.business.HierarchyTypeBusinessServiceIF;
 import net.geoprism.registry.service.business.ServiceFactory;
 import net.geoprism.registry.service.permission.HierarchyTypePermissionServiceIF;
+import net.geoprism.registry.view.TypeClass;
+import net.geoprism.registry.view.TypeInfo;
 
 public class ServerHierarchyType extends CachableObjectWrapper<HierarchicalRelationshipType> implements ServerElement, GraphType
 {
@@ -60,6 +62,12 @@ public class ServerHierarchyType extends CachableObjectWrapper<HierarchicalRelat
   public ServerHierarchyType(HierarchicalRelationshipType hierarchicalRelationship)
   {
     super(hierarchicalRelationship);
+  }
+
+  @Override
+  public TypeInfo getTypeInfo()
+  {
+    return new TypeInfo(TypeClass.HIERARCHY, this.getCode());
   }
 
   @Override
@@ -80,7 +88,7 @@ public class ServerHierarchyType extends CachableObjectWrapper<HierarchicalRelat
   {
     return this.getObject().getOrigin();
   }
-  
+
   @Override
   public Long getSequence()
   {
@@ -91,7 +99,7 @@ public class ServerHierarchyType extends CachableObjectWrapper<HierarchicalRelat
   {
     this.getObject().setSequence(sequence);
   }
-  
+
   @Transaction
   public void update(HierarchyType dto)
   {

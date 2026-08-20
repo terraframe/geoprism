@@ -22,22 +22,25 @@ import org.apache.commons.lang3.stream.Streams;
 
 public enum TypeClass implements Comparable<TypeClass> {
 
-  GEO_OBJECT_TYPE("GEO_OBJECT_TYPE", TypeCategory.OBJECT_CLASS), //
-  BUSINESS_TYPE("BUSINESS_TYPE", TypeCategory.OBJECT_CLASS), //
-  CONCEPT_CLASS("CONCEPT_CLASS", TypeCategory.OBJECT_CLASS), //
-  BUSINESS_EDGE("BusinessEdgeType", TypeCategory.EDGE_CLASS), //
-  CONCEPT_EDGE("ConceptEdgeType", TypeCategory.EDGE_CLASS), //
-  DAG("DirectedAcyclicGraphType", TypeCategory.EDGE_CLASS), //
-  UNDIRECTED_GRAPH("UndirectedGraphType", TypeCategory.EDGE_CLASS), //
-  HIERARCHY("HierarchyType", TypeCategory.EDGE_CLASS);
+  GEO_OBJECT_TYPE("GEO_OBJECT_TYPE", "G", TypeCategory.OBJECT_CLASS), //
+  BUSINESS_TYPE("BUSINESS_TYPE", "B", TypeCategory.OBJECT_CLASS), //
+  CONCEPT_CLASS("CONCEPT_CLASS", "C", TypeCategory.OBJECT_CLASS), //
+  BUSINESS_EDGE("BusinessEdgeType", "BE", TypeCategory.EDGE_CLASS), //
+  CONCEPT_EDGE("ConceptEdgeType", "CE", TypeCategory.EDGE_CLASS), //
+  DAG("DirectedAcyclicGraphType", "DA", TypeCategory.EDGE_CLASS), //
+  UNDIRECTED_GRAPH("UndirectedGraphType", "UG", TypeCategory.EDGE_CLASS), //
+  HIERARCHY("HierarchyType", "H", TypeCategory.EDGE_CLASS);
 
   private String       code;
 
+  private String       shortCode;
+
   private TypeCategory typeCategory;
 
-  private TypeClass(String code, TypeCategory typeCategory)
+  private TypeClass(String code, String shortCode, TypeCategory typeCategory)
   {
     this.code = code;
+    this.shortCode = shortCode;
     this.typeCategory = typeCategory;
   }
 
@@ -49,6 +52,11 @@ public enum TypeClass implements Comparable<TypeClass> {
   public TypeCategory getTypeCategory()
   {
     return typeCategory;
+  }
+
+  public String getShortCode()
+  {
+    return shortCode;
   }
 
   public static TypeClass getByCode(String code)
