@@ -20,10 +20,10 @@ package net.geoprism.registry.service.request;
 
 import org.springframework.stereotype.Component;
 
-import net.geoprism.registry.graph.BusinessEdgeType;
-import net.geoprism.registry.view.BusinessEdgeTypeDTO;
+import net.geoprism.registry.graph.ConceptEdgeType;
+import net.geoprism.registry.view.ConceptEdgeTypeDTO;
 
 @Component
-public interface BusinessEdgeTypeServiceIF extends EdgeClassServiceIF<BusinessEdgeType, BusinessEdgeTypeDTO>
+public interface ConceptEdgeTypeServiceIF extends EdgeClassServiceIF<ConceptEdgeType, ConceptEdgeTypeDTO>
 {
 }

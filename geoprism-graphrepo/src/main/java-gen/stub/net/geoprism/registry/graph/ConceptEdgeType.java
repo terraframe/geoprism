@@ -18,12 +18,9 @@
  */
 package net.geoprism.registry.graph;
 
-import org.commongeoregistry.adapter.dataaccess.LocalizedValue;
-
 import com.runwaysdk.dataaccess.MdEdgeDAOIF;
 import com.runwaysdk.dataaccess.metadata.graph.MdEdgeDAO;
 
-import net.geoprism.registry.conversion.LocalizedValueConverter;
 import net.geoprism.registry.model.EdgeType;
 import net.geoprism.registry.model.ServerElement;
 import net.geoprism.registry.view.ConceptEdgeTypeDTO;

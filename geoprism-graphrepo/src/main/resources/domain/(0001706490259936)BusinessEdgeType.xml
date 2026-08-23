@@ -42,6 +42,7 @@
           <graphReference name="organization" label="Organization" type="net.geoprism.registry.graph.GraphOrganization" />            
           <text name="origin" label="Origin"  />                   
           <long name="sequence" label="Sequence"  />                                          
+          <text name="discreteType" label="Discrete type"  />                             
         </attributes>
       </mdVertex>    
          

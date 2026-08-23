@@ -3,88 +3,38 @@
  *
  * This file is part of Geoprism(tm).
  *
- * Geoprism(tm) is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
+ * Geoprism(tm) is free software: you can redistribute it and/or modify it under
+ * the terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation, either version 3 of the License, or (at your option) any
+ * later version.
  *
- * Geoprism(tm) is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
+ * Geoprism(tm) is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with Geoprism(tm).  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with Geoprism(tm). If not, see <http://www.gnu.org/licenses/>.
  */
 package net.geoprism.registry.service.request;
 
-import java.util.List;
-
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.runwaysdk.session.Request;
-import com.runwaysdk.session.RequestType;
-
-import net.geoprism.configuration.GeoprismProperties;
-import net.geoprism.registry.DataNotFoundException;
-import net.geoprism.registry.OriginException;
 import net.geoprism.registry.graph.BusinessEdgeType;
 import net.geoprism.registry.service.business.BusinessEdgeTypeBusinessServiceIF;
+import net.geoprism.registry.service.business.EdgeClassBusinessServiceIF;
 import net.geoprism.registry.view.BusinessEdgeTypeDTO;
 
 @Service
-public class BusinessEdgeTypeService implements BusinessEdgeTypeServiceIF
+public class BusinessEdgeTypeService extends EdgeClassService<BusinessEdgeType, BusinessEdgeTypeDTO> implements BusinessEdgeTypeServiceIF
 {
   @Autowired
   private BusinessEdgeTypeBusinessServiceIF service;
 
   @Override
-  @Request(RequestType.SESSION)
-  public void delete(String sessionId, String code)
+  protected EdgeClassBusinessServiceIF<BusinessEdgeType, BusinessEdgeTypeDTO> getService()
   {
-    BusinessEdgeType type = this.service.getByCodeOrThrow(code);
-
-    if (!type.getOrigin().equals(GeoprismProperties.getOrigin()))
-    {
-      throw new OriginException();
-    }
-
-    this.service.delete(type);
-  }
-
-  @Override
-  @Request(RequestType.SESSION)
-  public List<BusinessEdgeTypeDTO> getAll(String sessionId)
-  {
-    return this.service.getAll().stream().map(type -> this.service.toDTO(type)).toList();
-  }
-
-  @Override
-  @Request(RequestType.SESSION)
-  public BusinessEdgeTypeDTO getByCode(String sessionId, String code)
-  {
-    return this.service.getByCode(code).map(type -> this.service.toDTO(type)).orElseThrow(() -> {
-      throw new DataNotFoundException("Unable to find business edge type with code [" + code + "]");
-    });
-  }
-
-  @Override
-  @Request(RequestType.SESSION)
-  public BusinessEdgeTypeDTO apply(String sessionId, BusinessEdgeTypeDTO object)
-  {
-    if (StringUtils.isBlank(object.getOid()))
-    {
-      BusinessEdgeType type = this.service.create(object);
-
-      return this.service.toDTO(type);
-    }
-
-    BusinessEdgeType type = this.service.getByCodeOrThrow(object.getCode());
-
-    this.service.update(type, object);
-
-    return this.service.toDTO(type);
+    return this.service;
   }
 }

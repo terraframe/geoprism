@@ -18,12 +18,20 @@
  */
 package net.geoprism.registry.service.request;
 
-import org.springframework.stereotype.Component;
+import java.util.List;
 
-import net.geoprism.registry.graph.BusinessEdgeType;
-import net.geoprism.registry.view.BusinessEdgeTypeDTO;
+import org.commongeoregistry.adapter.metadata.GraphTypeDTO;
 
-@Component
-public interface BusinessEdgeTypeServiceIF extends EdgeClassServiceIF<BusinessEdgeType, BusinessEdgeTypeDTO>
+import net.geoprism.registry.graph.EdgeClass;
+
+public interface EdgeClassServiceIF<T extends EdgeClass, D extends GraphTypeDTO>
 {
+
+  void delete(String sessionId, String code);
+
+  List<D> getAll(String sessionId);
+
+  D getByCode(String sessionId, String code);
+
+  D apply(String sessionId, D object);
 }

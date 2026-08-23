@@ -18,12 +18,23 @@
  */
 package net.geoprism.registry.service.request;
 
-import org.springframework.stereotype.Component;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
-import net.geoprism.registry.graph.BusinessEdgeType;
-import net.geoprism.registry.view.BusinessEdgeTypeDTO;
+import net.geoprism.registry.graph.ConceptEdgeType;
+import net.geoprism.registry.service.business.ConceptEdgeTypeBusinessServiceIF;
+import net.geoprism.registry.service.business.EdgeClassBusinessServiceIF;
+import net.geoprism.registry.view.ConceptEdgeTypeDTO;
 
-@Component
-public interface BusinessEdgeTypeServiceIF extends EdgeClassServiceIF<BusinessEdgeType, BusinessEdgeTypeDTO>
+@Service
+public class ConceptEdgeTypeService extends EdgeClassService<ConceptEdgeType, ConceptEdgeTypeDTO> implements ConceptEdgeTypeServiceIF
 {
+  @Autowired
+  private ConceptEdgeTypeBusinessServiceIF service;
+
+  @Override
+  protected EdgeClassBusinessServiceIF<ConceptEdgeType, ConceptEdgeTypeDTO> getService()
+  {
+    return this.service;
+  }
 }

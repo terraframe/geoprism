@@ -36,6 +36,7 @@ import net.geoprism.registry.model.EdgeType;
 import net.geoprism.registry.model.GraphType;
 import net.geoprism.registry.model.ServerHierarchyType;
 import net.geoprism.registry.view.TypeClass;
+import net.geoprism.registry.view.TypeInfo;
 
 @Service
 public class EdgeTypeBusinessService implements EdgeTypeBusinessServiceIF
@@ -69,8 +70,15 @@ public class EdgeTypeBusinessService implements EdgeTypeBusinessServiceIF
 
     result.addAll(this.undirectedService.getAll(typeCodes));
     result.addAll(this.bEdgeService.getAll());
+    result.addAll(this.cEdgeService.getAll());
 
     return result;
+  }
+
+  @Override
+  public <T extends EdgeType> T getByCode(TypeInfo info)
+  {
+    return this.getByCode(info.getTypeClass().getCode(), info.getTypeCode());
   }
 
   @SuppressWarnings("unchecked")
