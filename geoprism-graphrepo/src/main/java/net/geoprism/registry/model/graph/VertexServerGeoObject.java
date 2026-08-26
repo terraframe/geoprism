@@ -89,10 +89,12 @@ import net.geoprism.registry.model.GeoObjectMetadata;
 import net.geoprism.registry.model.GeometryStateValue;
 import net.geoprism.registry.model.GraphType;
 import net.geoprism.registry.model.LocationInfo;
+import net.geoprism.registry.model.ServerChildGraphNode;
 import net.geoprism.registry.model.ServerGeoObjectIF;
 import net.geoprism.registry.model.ServerGeoObjectType;
 import net.geoprism.registry.model.ServerGraphNode;
 import net.geoprism.registry.model.ServerHierarchyType;
+import net.geoprism.registry.model.ServerParentGraphNode;
 import net.geoprism.registry.model.StateValue;
 import net.geoprism.registry.service.business.ServiceFactory;
 
@@ -800,13 +802,25 @@ public class VertexServerGeoObject extends ServerObjectVertex implements ServerG
   {
     return type.getStrategy().getChildren(this, recursive, date, boundsWKT, skip, limit);
   }
+  
+  @Override
+  public ServerParentGraphNode getGraphEdgeParents(GraphType type, Boolean recursive, Date date, String boundsWKT, Long skip, Long limit)
+  {
+    return type.getStrategy().getEdgeParents(this, recursive, date, boundsWKT, skip, limit);
+  }
+  
+  @Override
+  public ServerChildGraphNode getGraphEdgeChildren(GraphType type, Boolean recursive, Date date, String boundsWKT, Long skip, Long limit)
+  {
+    return type.getStrategy().getEdgeChildren(this, recursive, date, boundsWKT, skip, limit);
+  }
 
   @Override
   public <T extends ServerGraphNode> T getGraphParents(GraphType type, Boolean recursive, Date date, String boundsWKT, Long skip, Long limit)
   {
     return type.getStrategy().getParents(this, recursive, date, boundsWKT, skip, limit);
   }
-
+  
   @Override
   public <T extends ServerGraphNode> T getGraphChildren(GraphType type, Boolean recursive, Date date)
   {

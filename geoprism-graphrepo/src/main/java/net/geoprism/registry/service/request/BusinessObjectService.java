@@ -84,7 +84,8 @@ public class BusinessObjectService extends ObjectService<BusinessObject, Busines
       return ex;
     });
 
-    List<VertexComponent> parents = this.getObjectService().getParents(object, relationshipType, date);
+    List<VertexComponent> parents = this.getObjectService().getParents(object, relationshipType, date)
+        .stream().map(p -> (VertexComponent) p.getObject()).toList();
 
     return serialize(date, parents, relationshipType.getIsParentGeoObject());
   }
@@ -104,7 +105,8 @@ public class BusinessObjectService extends ObjectService<BusinessObject, Busines
       return ex;
     });
 
-    List<VertexComponent> children = this.getObjectService().getChildren(object, relationshipType, date);
+    List<VertexComponent> children = this.getObjectService().getChildren(object, relationshipType, date)
+        .stream().map(p -> (VertexComponent) p.getObject()).toList();
 
     return serialize(date, children, relationshipType.getIsChildGeoObject());
   }

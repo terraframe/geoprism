@@ -37,6 +37,8 @@ import net.geoprism.registry.model.BusinessObject;
 import net.geoprism.registry.model.EdgeConstant;
 import net.geoprism.registry.model.graph.VertexComponent;
 import net.geoprism.registry.model.graph.VertexServerGeoObject;
+import net.geoprism.registry.query.graph.VertexAndEdgeQuery;
+import net.geoprism.registry.query.graph.VertexAndEdgeQuery.EdgeQueryObject;
 import net.geoprism.registry.view.BusinessTypeDTO;
 import net.geoprism.registry.view.ObjectAtTimeDTO;
 import net.geoprism.registry.view.ObjectOverTimeDTO;
@@ -84,86 +86,102 @@ public class BusinessObjectBusinessService extends ObjectEdgeBusinessService<Bus
   }
 
   @Override
-  public List<VertexComponent> getParents(BusinessObject object, BusinessEdgeType type, Date date)
+  public List<EdgeQueryObject> getParents(BusinessObject source, BusinessEdgeType type, Date date)
   {
-    StringBuilder statement = new StringBuilder();
-
-    statement.append("TRAVERSE out('");
-    statement.append(EdgeConstant.HAS_VALUE.getDBClassName());
-    statement.append("', '");
-    statement.append(EdgeConstant.HAS_GEOMETRY.getDBClassName());
-    statement.append("') FROM (");
-
-    if (date != null)
-    {
-      statement.append("SELECT EXPAND(inE('");
-      statement.append(type.getMdEdge().getDbClassName());
-      statement.append("')[:date BETWEEN startDate AND endDate].outV()) ");
-    }
-    else
-    {
-      statement.append("SELECT EXPAND(in('");
-      statement.append(type.getMdEdge().getDbClassName());
-      statement.append("')) ");
-    }
-
-    statement.append("FROM :rid");
-    statement.append(")");
-
-    GraphQuery<VertexObject> query = new GraphQuery<VertexObject>(statement.toString());
-    query.setParameter("rid", object.getVertex().getRID());
-    query.setParameter("date", date);
-
-    if (type.getIsParentGeoObject())
-    {
-      return VertexServerGeoObject.processTraverseResults(query.getResults(), date).stream().map(s -> (VertexComponent) s).toList();
-    }
-
-    return this.processTraverseResults(query.getResults(), date).stream().sorted((a, b) -> {
-      return a.getLabel().compareTo(b.getLabel());
-    }).collect(Collectors.toList());
+//    StringBuilder statement = new StringBuilder();
+//
+//    statement.append("TRAVERSE out('");
+//    statement.append(EdgeConstant.HAS_VALUE.getDBClassName());
+//    statement.append("', '");
+//    statement.append(EdgeConstant.HAS_GEOMETRY.getDBClassName());
+//    statement.append("') FROM (");
+//
+//    if (date != null)
+//    {
+//      statement.append("SELECT EXPAND(inE('");
+//      statement.append(type.getMdEdge().getDbClassName());
+//      statement.append("')[:date BETWEEN startDate AND endDate].outV()) ");
+//    }
+//    else
+//    {
+//      statement.append("SELECT EXPAND(in('");
+//      statement.append(type.getMdEdge().getDbClassName());
+//      statement.append("')) ");
+//    }
+//
+//    statement.append("FROM :rid");
+//    statement.append(")");
+//
+//    GraphQuery<VertexObject> query = new GraphQuery<VertexObject>(statement.toString());
+//    query.setParameter("rid", object.getVertex().getRID());
+//    query.setParameter("date", date);
+//
+//    if (type.getIsParentGeoObject())
+//    {
+//      return VertexServerGeoObject.processTraverseResults(query.getResults(), date).stream().map(s -> (VertexComponent) s).toList();
+//    }
+//
+//    return this.processTraverseResults(query.getResults(), date).stream().sorted((a, b) -> {
+//      return a.getLabel().compareTo(b.getLabel());
+//    }).collect(Collectors.toList());
+    
+    return new VertexAndEdgeQuery(
+        source.getVertex(),
+        type.getMdEdgeDAO().getDBClassName(),
+        VertexAndEdgeQuery.Direction.PARENTS,
+        (type.getIsParentGeoObject() ? VertexServerGeoObject::processTraverseResults : this::processTraverseResults))
+            .setDate(date)
+            .getResults();
   }
 
   @Override
-  public List<VertexComponent> getChildren(BusinessObject object, BusinessEdgeType type, Date date)
+  public List<EdgeQueryObject> getChildren(BusinessObject source, BusinessEdgeType type, Date date)
   {
-    StringBuilder statement = new StringBuilder();
-
-    statement.append("TRAVERSE out('");
-    statement.append(EdgeConstant.HAS_VALUE.getDBClassName());
-    statement.append("', '");
-    statement.append(EdgeConstant.HAS_GEOMETRY.getDBClassName());
-    statement.append("') FROM (");
-
-    if (date != null)
-    {
-      statement.append("SELECT EXPAND(outE('");
-      statement.append(type.getMdEdge().getDbClassName());
-      statement.append("')[:date BETWEEN startDate AND endDate].inV()) ");
-    }
-    else
-    {
-      statement.append("SELECT EXPAND(out('");
-      statement.append(type.getMdEdge().getDbClassName());
-      statement.append("')) ");
-    }
-
-    statement.append("FROM :rid");
-    statement.append(")");
-
-
-    GraphQuery<VertexObject> query = new GraphQuery<VertexObject>(statement.toString());
-    query.setParameter("rid", object.getVertex().getRID());
-    query.setParameter("date", date);
-
-    if (type.getIsChildGeoObject())
-    {
-      return VertexServerGeoObject.processTraverseResults(query.getResults(), date).stream().map(s -> (VertexComponent) s).toList();
-    }
-
-    return this.processTraverseResults(query.getResults(), date).stream().sorted((a, b) -> {
-      return a.getLabel().compareTo(b.getLabel());
-    }).collect(Collectors.toList());
+//    StringBuilder statement = new StringBuilder();
+//
+//    statement.append("TRAVERSE out('");
+//    statement.append(EdgeConstant.HAS_VALUE.getDBClassName());
+//    statement.append("', '");
+//    statement.append(EdgeConstant.HAS_GEOMETRY.getDBClassName());
+//    statement.append("') FROM (");
+//
+//    if (date != null)
+//    {
+//      statement.append("SELECT EXPAND(outE('");
+//      statement.append(type.getMdEdge().getDbClassName());
+//      statement.append("')[:date BETWEEN startDate AND endDate].inV()) ");
+//    }
+//    else
+//    {
+//      statement.append("SELECT EXPAND(out('");
+//      statement.append(type.getMdEdge().getDbClassName());
+//      statement.append("')) ");
+//    }
+//
+//    statement.append("FROM :rid");
+//    statement.append(")");
+//
+//
+//    GraphQuery<VertexObject> query = new GraphQuery<VertexObject>(statement.toString());
+//    query.setParameter("rid", object.getVertex().getRID());
+//    query.setParameter("date", date);
+//
+//    if (type.getIsChildGeoObject())
+//    {
+//      return VertexServerGeoObject.processTraverseResults(query.getResults(), date).stream().map(s -> (VertexComponent) s).toList();
+//    }
+//
+//    return this.processTraverseResults(query.getResults(), date).stream().sorted((a, b) -> {
+//      return a.getLabel().compareTo(b.getLabel());
+//    }).collect(Collectors.toList());
+    
+    return new VertexAndEdgeQuery(
+        source.getVertex(),
+        type.getMdEdgeDAO().getDBClassName(),
+        VertexAndEdgeQuery.Direction.CHILDREN,
+        (type.getIsParentGeoObject() ? VertexServerGeoObject::processTraverseResults : this::processTraverseResults))
+            .setDate(date)
+            .getResults();
   }
 
 }

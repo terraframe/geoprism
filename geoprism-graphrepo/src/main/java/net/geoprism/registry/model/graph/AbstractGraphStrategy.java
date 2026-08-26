@@ -34,6 +34,9 @@ import com.runwaysdk.business.graph.GraphQuery;
 
 import net.geoprism.registry.model.EdgeType;
 import net.geoprism.registry.model.GraphType;
+import net.geoprism.registry.model.ServerChildGraphNode;
+import net.geoprism.registry.model.ServerParentGraphNode;
+import net.geoprism.registry.query.graph.VertexAndEdgeQuery.EdgeQueryObject;
 
 public class AbstractGraphStrategy
 {
@@ -51,11 +54,121 @@ public class AbstractGraphStrategy
     }
   }
 
-  private GraphType type;
+  protected GraphType type;
 
   public AbstractGraphStrategy(GraphType type)
   {
     this.type = type;
+  }
+  
+  protected ServerParentGraphNode buildParentGraphNode(
+      VertexServerGeoObject root,
+      GraphType graphType,
+      Date date,
+      List<EdgeQueryObject> results)
+  {
+    ServerParentGraphNode rootNode =
+        new ServerParentGraphNode(
+            root,
+            graphType,
+            date,
+            null,
+            null,
+            null,
+            null);
+
+    for (EdgeQueryObject result : results)
+    {
+      rootNode.addParent(
+          this.buildParentGraphNode(
+              result,
+              graphType));
+    }
+
+    return rootNode;
+  }
+  
+  private ServerParentGraphNode buildParentGraphNode(
+      EdgeQueryObject result,
+      GraphType graphType)
+  {
+    VertexServerGeoObject object =
+        (VertexServerGeoObject) result.getObject();
+
+    ServerParentGraphNode node =
+        new ServerParentGraphNode(
+            object,
+            graphType,
+            result.getStartDate(),
+            result.getEndDate(),
+            result.getOid(),
+            null,
+            null); // TODO : The source here can be retrieved as 'result.getSource()' (which is the source code), but it has to be looked up as DataSource.getByCode which performs a db query. For performance that would need to be cached.
+
+    for (EdgeQueryObject parent : result.getRelated())
+    {
+      node.addParent(
+          this.buildParentGraphNode(
+              parent,
+              graphType));
+    }
+
+    return node;
+  }
+  
+  protected ServerChildGraphNode buildChildGraphNode(
+      VertexServerGeoObject root,
+      GraphType graphType,
+      Date date,
+      List<EdgeQueryObject> results)
+  {
+    ServerChildGraphNode rootNode =
+        new ServerChildGraphNode(
+            root,
+            graphType,
+            date,
+            null,
+            null,
+            null,
+            null);
+
+    for (EdgeQueryObject result : results)
+    {
+      rootNode.addChild(
+          this.buildChildGraphNode(
+              result,
+              graphType));
+    }
+
+    return rootNode;
+  }
+
+  private ServerChildGraphNode buildChildGraphNode(
+      EdgeQueryObject result,
+      GraphType graphType)
+  {
+    VertexServerGeoObject object =
+        (VertexServerGeoObject) result.getObject();
+
+    ServerChildGraphNode node =
+        new ServerChildGraphNode(
+            object,
+            graphType,
+            result.getStartDate(),
+            result.getEndDate(),
+            result.getOid(),
+            null,
+            null);
+
+    for (EdgeQueryObject child : result.getRelated())
+    {
+      node.addChild(
+          this.buildChildGraphNode(
+              child,
+              graphType));
+    }
+
+    return node;
   }
 
   protected SortedSet<EdgeObject> getParentEdges(VertexServerGeoObject geoObject)

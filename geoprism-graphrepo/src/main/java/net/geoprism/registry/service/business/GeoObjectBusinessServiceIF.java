@@ -51,6 +51,7 @@ import net.geoprism.registry.model.ServerHierarchyType;
 import net.geoprism.registry.model.ServerParentTreeNode;
 import net.geoprism.registry.model.graph.VertexServerGeoObject;
 import net.geoprism.registry.query.ServerGeoObjectQuery;
+import net.geoprism.registry.query.graph.VertexAndEdgeQuery.EdgeQueryObject;
 import net.geoprism.registry.view.GeoObjectSplitView;
 import net.geoprism.registry.view.ObjectAtTimeDTO;
 import net.geoprism.registry.view.ServerParentTreeNodeOverTime;
@@ -178,9 +179,11 @@ public interface GeoObjectBusinessServiceIF
 
   public JsonObject hasDuplicateLabel(Date date, String typeCode, String code, String label);
 
-  public List<ObjectAtTimeDTO> getBusinessObjects(String typeCode, String code, String edgeTypeCode, String direction, Date date);
+  public List<ObjectAtTimeDTO> getBusinessDTOObjects(String typeCode, String code, String edgeTypeCode, String direction, Date date);
+  
+  public List<EdgeQueryObject> getBusinessObjects(String typeCode, String code, String edgeTypeCode, String direction, Date date);
 
-  public List<BusinessObject> getBusinessObjects(VertexServerGeoObject object, BusinessEdgeType edgeType, EdgeDirection direction);
+  public List<EdgeQueryObject> getBusinessObjects(VertexServerGeoObject object, BusinessEdgeType edgeType, EdgeDirection direction, Date date);
 
   ServerGeoObjectIF fromDTO(ServerGeoObjectType type, GeoObjectOverTime goTime, boolean isNew);
 

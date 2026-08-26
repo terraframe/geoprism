@@ -334,7 +334,7 @@ public class GeoObjectService implements GeoObjectServiceIF
   @Request(RequestType.SESSION)
   public List<ObjectAtTimeDTO> getBusinessObjects(String sessionId, String typeCode, String code, String edgeTypeCode, String direction, Date date)
   {
-    return this.service.getBusinessObjects(typeCode, code, edgeTypeCode, direction, date);
+    return this.service.getBusinessDTOObjects(typeCode, code, edgeTypeCode, direction, date);
   }
 
 }

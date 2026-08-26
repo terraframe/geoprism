@@ -29,6 +29,7 @@ import com.runwaysdk.business.graph.VertexObject;
 
 import net.geoprism.registry.graph.ObjectClass;
 import net.geoprism.registry.model.graph.ServerObjectVertex;
+import net.geoprism.registry.query.graph.VertexAndEdgeQuery.EdgeQueryObject;
 import net.geoprism.registry.view.JsonSerializable;
 import net.geoprism.registry.view.ObjectAtTimeDTO;
 import net.geoprism.registry.view.ObjectClassDTO;
@@ -64,7 +65,7 @@ public interface ObjectBusinessServiceIF<V extends ServerObjectVertex, T extends
   public List<V> getAll(T type, Long skip, Integer limit);
 
   public ObjectAtTimeDTO toDTO(V object, Date date);
-
+  
   public ObjectOverTimeDTO toDTO(V object);
 
   public void populate(V object, ObjectOverTimeDTO dto);
