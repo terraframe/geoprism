@@ -103,6 +103,7 @@ import net.geoprism.registry.model.ServerGeoObjectType;
 import net.geoprism.registry.model.ServerGraphNode;
 import net.geoprism.registry.model.ServerHierarchyType;
 import net.geoprism.registry.model.ServerParentTreeNode;
+import net.geoprism.registry.model.graph.DirectedAcyclicGraphStrategy.Edge;
 import net.geoprism.registry.model.graph.VertexComponent;
 import net.geoprism.registry.model.graph.VertexServerGeoObject;
 import net.geoprism.registry.model.graph.VertexServerGeoObject.EdgeComparator;
@@ -1961,40 +1962,45 @@ public class GeoObjectBusinessService extends RegistryLocalizedValueConverter im
 
     BusinessEdgeType edgeType = this.businessEdgeTypeService.getByCodeOrThrow(edgeTypeCode);
 
-    List<EdgeQueryObject> objects = this.getBusinessObjects(vsgo, edgeType, EdgeDirection.valueOf(direction), date);
+    List<BusinessObject> objects = this.getBusinessObjects(vsgo, edgeType, EdgeDirection.valueOf(direction), date);
 
     return objects.stream().map(object -> {
-      return this.businessObjectService.toDTO((BusinessObject)object.getObject(), date);
+      return this.businessObjectService.toDTO((BusinessObject)object, date);
     }).toList();
   }
   
   @Override
-  public List<EdgeQueryObject> getBusinessObjects(String typeCode, String code, String edgeTypeCode, String direction, Date date)
+  public List<EdgeQueryObject> getBusinessEdgeObjects(String typeCode, String code, String edgeTypeCode, String direction, Date date)
   {
     VertexServerGeoObject vsgo = (VertexServerGeoObject) this.getGeoObjectByCode(code, typeCode);
 
     BusinessEdgeType edgeType = this.businessEdgeTypeService.getByCodeOrThrow(edgeTypeCode);
     
-    return getBusinessObjects(vsgo, edgeType, EdgeDirection.valueOf(direction), date);
+    return getBusinessEdgeObjects(vsgo, edgeType, EdgeDirection.valueOf(direction), date);
   }
 
-  @Override
-  public List<EdgeQueryObject> getBusinessObjects(VertexServerGeoObject source, BusinessEdgeType edgeType, EdgeDirection direction, Date date)
+  public List<BusinessObject> getBusinessObjects(VertexServerGeoObject source, BusinessEdgeType edgeType, EdgeDirection direction, Date date)
   {
-//    Edge edge = direction.equals(EdgeDirection.PARENT) ? Edge.IN : Edge.OUT;
-//
-//    StringBuilder statement = new StringBuilder();
-//    statement.append("TRAVERSE out('" + EdgeConstant.HAS_VALUE.getDBClassName() + "', '" + EdgeConstant.HAS_GEOMETRY.getDBClassName() + "') FROM (");
-//    statement.append("  SELECT EXPAND( " + edge.getName() + "(");
-//    statement.append("'" + edgeType.getMdEdgeDAO().getDBClassName() + "'");
-//    statement.append(")");
-//
-//    statement.append("." + edge.getVertex() + ") FROM :rid");
-//    statement.append(")");
-//
-//    GraphQuery<VertexObject> query = new GraphQuery<VertexObject>(statement.toString());
-//    query.setParameter("rid", object.getVertex().getRID());
+    Edge edge = direction.equals(EdgeDirection.PARENT) ? Edge.IN : Edge.OUT;
+
+    StringBuilder statement = new StringBuilder();
+    statement.append("TRAVERSE out('" + EdgeConstant.HAS_VALUE.getDBClassName() + "', '" + EdgeConstant.HAS_GEOMETRY.getDBClassName() + "') FROM (");
+    statement.append("  SELECT EXPAND( " + edge.getName() + "(");
+    statement.append("'" + edgeType.getMdEdgeDAO().getDBClassName() + "'");
+    statement.append(")");
+
+    statement.append("." + edge.getVertex() + ") FROM :rid");
+    statement.append(")");
+
+    GraphQuery<VertexObject> query = new GraphQuery<VertexObject>(statement.toString());
+    query.setParameter("rid", source.getVertex().getRID());
     
+    return this.businessObjectService.processTraverseResults(query.getResults(), source.getDate());
+  }
+  
+  @Override
+  public List<EdgeQueryObject> getBusinessEdgeObjects(VertexServerGeoObject source, BusinessEdgeType edgeType, EdgeDirection direction, Date date)
+  {
     return new VertexAndEdgeQuery(
         source.getVertex(),
         edgeType.getMdEdgeDAO().getDBClassName(),

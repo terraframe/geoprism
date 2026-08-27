@@ -51,8 +51,6 @@ public interface ObjectEdgeBusinessServiceIF<V extends ServerObjectVertex, T ext
 
   public void removeParent(N object, E type, N parent, Date startDate, Date endDate, boolean validateOrigin);
 
-  public List<EdgeQueryObject> getParents(V object, E type, Date date);
-
   public Optional<EdgeObject> addChild(N object, E type, N child, String uid, Date startDate, Date endDate, DataSource source);
 
   public Optional<EdgeObject> addChild(N object, E type, N child, String uid, Date startDate, Date endDate, DataSource source, boolean validateOrigin);
@@ -61,5 +59,11 @@ public interface ObjectEdgeBusinessServiceIF<V extends ServerObjectVertex, T ext
 
   public void removeChild(N object, E type, N child, Date startDate, Date endDate, boolean validateOrigin);
 
-  public List<EdgeQueryObject> getChildren(V object, E type, Date date);
+  public List<N> getChildren(V object, E type, Date date);
+  
+  public List<N> getParents(V object, E type, Date date);
+  
+  public List<EdgeQueryObject> getEdgeChildren(V object, E type, Date date);
+  
+  public List<EdgeQueryObject> getEdgeParents(V object, E type, Date date);
 }
