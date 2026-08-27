@@ -74,6 +74,7 @@ public class ConceptObjectBusinessService extends ObjectEdgeBusinessService<Conc
   {
     boolean isValid = super.isValidEdge(child, type, parent, startDate, endDate);
 
+    // TODO: Validate different types
     if (isValid)
     {
       // Concept edges must be a DAG
@@ -124,25 +125,141 @@ public class ConceptObjectBusinessService extends ObjectEdgeBusinessService<Conc
   public Optional<ConceptObject> getByCode(AttributeClassificationType attribute, String code)
   {
     ConceptSet conceptSet = this.setService.getByCodeOrThrow(attribute.getConceptSet());
+    ConceptClass type = this.cClassService.getByCodeOrThrow(attribute.getRootTerm().getType());
+    ConceptObject root = this.getByCode(type, attribute.getRootTerm().getCode()).get();
 
-    return this.getByCode(this.cClassService.getByCodeOrThrow(attribute.getRootTerm().getType()), attribute.getRootTerm().getCode()).map(root -> {
-      List<ConceptEdgeType> edges = this.setService.getConceptEdgeTypes(conceptSet);
-      String edgeNames = String.join(", ", edges.stream().map(e -> "'" + e.getMdEdge().getDbClassName() + "'").toList());
+    List<ConceptEdgeType> edges = this.setService.getConceptEdgeTypes(conceptSet);
+    String edgeNames = String.join(", ", edges.stream().map(e -> "'" + e.getMdEdge().getDbClassName() + "'").toList());
 
-      StringBuilder statement = new StringBuilder();
-      statement.append("TRAVERSE out('" + EdgeConstant.HAS_VALUE.getDBClassName() + "', '" + EdgeConstant.HAS_GEOMETRY.getDBClassName() + "') FROM (");
-      statement.append("  SELECT FROM (");
-      statement.append("    TRAVERSE outE(" + edgeNames + ")[(:startDate BETWEEN startDate AND endDate)].in FROM " + root.getRID());
-      statement.append("  )");
-      statement.append("  WHERE code = :code");
-      statement.append(")");
+    StringBuilder statement = new StringBuilder();
+    statement.append("TRAVERSE out('" + EdgeConstant.HAS_VALUE.getDBClassName() + "', '" + EdgeConstant.HAS_GEOMETRY.getDBClassName() + "') FROM (");
+    statement.append("  SELECT FROM (");
+    statement.append("    TRAVERSE outE(" + edgeNames + ")[(:startDate BETWEEN startDate AND endDate)].in FROM " + root.getRID());
+    statement.append("  )");
+    statement.append("  WHERE code = :code");
+    statement.append(")");
 
-      GraphQuery<VertexObject> query = new GraphQuery<VertexObject>(statement.toString());
-      query.setParameter("code", code);
-      query.setParameter("startDate", attribute.getStartDate());
+    GraphQuery<VertexObject> query = new GraphQuery<VertexObject>(statement.toString());
+    query.setParameter("code", code);
+    query.setParameter("startDate", attribute.getStartDate());
 
-      return this.processSingleResult(query.getResults(), null);
-    });
+    return Optional.of(this.processSingleResult(query.getResults(), null));
+  }
+
+  @Override
+  public List<ConceptObject> search(AttributeClassificationType attribute, String text)
+  {
+    ConceptSet conceptSet = this.setService.getByCodeOrThrow(attribute.getConceptSet());
+    ConceptClass type = this.cClassService.getByCodeOrThrow(attribute.getRootTerm().getType());
+    ConceptObject root = this.getByCode(type, attribute.getRootTerm().getCode()).get();
+
+    List<ConceptEdgeType> edges = this.setService.getConceptEdgeTypes(conceptSet);
+    String edgeNames = String.join(", ", edges.stream().map(e -> "'" + e.getMdEdge().getDbClassName() + "'").toList());
+
+    StringBuilder statement = new StringBuilder();
+    statement.append("TRAVERSE out('" + EdgeConstant.HAS_VALUE.getDBClassName() + "', '" + EdgeConstant.HAS_GEOMETRY.getDBClassName() + "') FROM (");
+    statement.append("  SELECT FROM (");
+    statement.append("    TRAVERSE outE(" + edgeNames + ")[(:startDate BETWEEN startDate AND endDate)].in FROM " + root.getRID());
+    statement.append("  )");
+    statement.append("  WHERE (code.toUpperCase() LIKE :text");
+    statement.append("  ORDER BY code");
+    statement.append("  LIMIT 10");
+    statement.append(")");
+
+    GraphQuery<VertexObject> query = new GraphQuery<VertexObject>(statement.toString());
+    query.setParameter("text", text);
+    query.setParameter("startDate", attribute.getStartDate());
+
+    return this.processTraverseResults(query.getResults(), attribute.getStartDate());
 
   }
+
+  //
+  // @Override
+  // public List<ConceptObject>
+  // getAncestors(net.geoprism.registry.graph.AttributeClassificationType
+  // attributeType, ConceptObject object)
+  // {
+  // GraphQuery<VertexObject> query = null;
+  //
+  // if (rootCode != null && rootCode.length() > 0)
+  // {
+  // StringBuilder statement = new StringBuilder();
+  // statement.append("SELECT expand($res)");
+  // statement.append(" LET $a = (TRAVERSE in(\"" +
+  // classification.getType().getMdEdge().getDBClassName() + "\") FROM :rid
+  // WHILE (code != :code))");
+  // statement.append(", $b = (SELECT FROM " +
+  // classification.getType().getMdVertex().getDBClassName() + " WHERE code =
+  // :code)");
+  // statement.append(", $res = (UNIONALL($a,$b))");
+  //
+  // query = new GraphQuery<VertexObject>(statement.toString());
+  // query.setParameter("rid", object.getRID());
+  // query.setParameter("code", rootCode);
+  // }
+  // else
+  // {
+  // StringBuilder statement = new StringBuilder();
+  // statement.append("TRAVERSE in(\"" +
+  // classification.getType().getMdEdge().getDBClassName() + "\") FROM :rid");
+  //
+  // query = new GraphQuery<VertexObject>(statement.toString());
+  // query.setParameter("rid", object.getRID());
+  // }
+  //
+  //
+  // this.processTraverseResults(query.getResults(), date).stream().sorted((a,
+  // b) -> {
+  // return a.getCode().compareTo(b.getCode());
+  // }).map(v -> (N) v).collect(Collectors.toList());
+  //
+  // List<Classification> results = query.getResults().stream().map(vertex -> {
+  // return new Classification(classification.getType(), vertex);
+  // }).collect(Collectors.toList());
+  //
+  // return results;
+  // }
+  //
+  // @Override
+  // public ClassificationNode getAncestorTree(Classification classification,
+  // String rootCode, Integer pageSize)
+  // {
+  // List<Classification> ancestors = this.getAncestors(classification,
+  // rootCode);
+  //
+  // ClassificationNode prev = null;
+  //
+  // for (Classification ancestor : ancestors)
+  // {
+  // Page<Classification> page = this.getChildren(ancestor, pageSize, 1);
+  //
+  // List<ClassificationNode> transform = page.getResults().stream().map(r -> {
+  // return new ClassificationNode(r);
+  // }).collect(Collectors.toList());
+  //
+  // if (prev != null)
+  // {
+  // int index = transform.indexOf(prev);
+  //
+  // if (index != -1)
+  // {
+  // transform.set(index, prev);
+  // }
+  // else
+  // {
+  // transform.add(prev);
+  // }
+  // }
+  //
+  // ClassificationNode node = new ClassificationNode();
+  // node.setClassification(ancestor);
+  // node.setChildren(new Page<ClassificationNode>(page.getCount(),
+  // page.getPageNumber(), page.getPageSize(), transform));
+  //
+  // prev = node;
+  // }
+  //
+  // return prev;
+  // }
 }

@@ -13,7 +13,6 @@ import com.orientechnologies.orient.core.sql.executor.OResult;
 import com.orientechnologies.spatial.shape.OShapeFactory;
 import com.runwaysdk.business.graph.VertexObject;
 import com.runwaysdk.constants.MdAttributeLocalInfo;
-import com.runwaysdk.dataaccess.MdAttributeClassificationDAOIF;
 import com.runwaysdk.dataaccess.MdAttributeConcreteDAOIF;
 import com.runwaysdk.dataaccess.MdAttributeGraphRefDAOIF;
 import com.runwaysdk.dataaccess.MdAttributeLocalEmbeddedDAOIF;

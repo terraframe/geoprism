@@ -29,12 +29,11 @@ import com.runwaysdk.business.graph.VertexObject;
 
 import net.geoprism.registry.graph.ObjectClass;
 import net.geoprism.registry.model.graph.ServerObjectVertex;
-import net.geoprism.registry.query.graph.VertexAndEdgeQuery.EdgeQueryObject;
 import net.geoprism.registry.view.JsonSerializable;
+import net.geoprism.registry.view.JsonSerializablePage;
 import net.geoprism.registry.view.ObjectAtTimeDTO;
 import net.geoprism.registry.view.ObjectClassDTO;
 import net.geoprism.registry.view.ObjectOverTimeDTO;
-import net.geoprism.registry.view.Page;
 
 @Component
 public interface ObjectBusinessServiceIF<V extends ServerObjectVertex, T extends ObjectClass, D extends ObjectClassDTO>
@@ -69,13 +68,13 @@ public interface ObjectBusinessServiceIF<V extends ServerObjectVertex, T extends
   public List<V> getAll(T type, Long skip, Integer limit);
 
   public ObjectAtTimeDTO toDTO(V object, Date date);
-  
+
   public ObjectOverTimeDTO toDTO(V object);
 
   public void populate(V object, ObjectOverTimeDTO dto);
 
   public void populate(V object, ObjectAtTimeDTO dto, Date startDate, Date endDate);
 
-  public Page<JsonSerializable> data(T type, JsonObject criteria);
+  public JsonSerializablePage<JsonSerializable> data(T type, JsonObject criteria);
 
 }

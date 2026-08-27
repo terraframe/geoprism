@@ -3,18 +3,18 @@
  *
  * This file is part of Geoprism(tm).
  *
- * Geoprism(tm) is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
+ * Geoprism(tm) is free software: you can redistribute it and/or modify it under
+ * the terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation, either version 3 of the License, or (at your option) any
+ * later version.
  *
- * Geoprism(tm) is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
+ * Geoprism(tm) is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with Geoprism(tm).  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with Geoprism(tm). If not, see <http://www.gnu.org/licenses/>.
  */
 package net.geoprism.registry.query.graph;
 
@@ -33,7 +33,7 @@ import com.runwaysdk.query.OrderBy.SortOrder;
 
 import net.geoprism.registry.DateFormatter;
 import net.geoprism.registry.view.JsonSerializable;
-import net.geoprism.registry.view.Page;
+import net.geoprism.registry.view.JsonSerializablePage;
 
 public abstract class AbstractGraphPageQuery<K, T extends JsonSerializable>
 {
@@ -154,7 +154,7 @@ public abstract class AbstractGraphPageQuery<K, T extends JsonSerializable>
     }
   }
 
-  public Page<T> getPage()
+  public JsonSerializablePage<T> getPage()
   {
     int pageSize = 10;
     int pageNumber = 1;
@@ -220,6 +220,6 @@ public abstract class AbstractGraphPageQuery<K, T extends JsonSerializable>
 
     final GraphQuery<K> query = new GraphQuery<K>(statement.toString(), parameters);
 
-    return new Page<T>(count, pageNumber, pageSize, this.getResults(query));
+    return new JsonSerializablePage<T>(count, pageNumber, pageSize, this.getResults(query));
   }
 }

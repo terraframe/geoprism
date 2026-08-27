@@ -18,6 +18,7 @@
  */
 package net.geoprism.registry.service.business;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.commongeoregistry.adapter.metadata.AttributeClassificationType;
@@ -35,4 +36,6 @@ public interface ConceptObjectBusinessServiceIF extends ObjectEdgeBusinessServic
   Optional<ConceptObject> getByCode(ConceptSet conceptSet, String type, String code);
 
   Optional<ConceptObject> getByCode(AttributeClassificationType attribute, String code);
+
+  List<ConceptObject> search(AttributeClassificationType attribute, String text);
 }

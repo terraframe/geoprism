@@ -39,7 +39,7 @@ import com.runwaysdk.query.ValueQuery;
 
 import net.geoprism.registry.DateUtil;
 import net.geoprism.registry.view.JsonSerializable;
-import net.geoprism.registry.view.Page;
+import net.geoprism.registry.view.JsonSerializablePage;
 
 public abstract class AbstractBusinessPageQuery<T extends JsonSerializable>
 {
@@ -71,7 +71,7 @@ public abstract class AbstractBusinessPageQuery<T extends JsonSerializable>
 
   protected abstract List<T> getResults(final List<? extends Business> list);
 
-  public Page<T> getPage()
+  public JsonSerializablePage<T> getPage()
   {
     BusinessQuery query = this.getQuery();
 
@@ -89,7 +89,7 @@ public abstract class AbstractBusinessPageQuery<T extends JsonSerializable>
 
     try (OIterator<? extends Business> iterator = query.getIterator(pageSize, pageNumber))
     {
-      return new Page<T>(count, pageNumber, pageSize, this.getResults(iterator.getAll()));
+      return new JsonSerializablePage<T>(count, pageNumber, pageSize, this.getResults(iterator.getAll()));
     }
   }
 

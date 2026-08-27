@@ -3,18 +3,18 @@
  *
  * This file is part of Geoprism(tm).
  *
- * Geoprism(tm) is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
+ * Geoprism(tm) is free software: you can redistribute it and/or modify it under
+ * the terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation, either version 3 of the License, or (at your option) any
+ * later version.
  *
- * Geoprism(tm) is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
+ * Geoprism(tm) is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with Geoprism(tm).  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with Geoprism(tm). If not, see <http://www.gnu.org/licenses/>.
  */
 package net.geoprism.registry.service.business;
 
@@ -52,7 +52,7 @@ import net.geoprism.registry.lpg.adapter.RegistryConnectorFactory;
 import net.geoprism.registry.lpg.adapter.RegistryConnectorIF;
 import net.geoprism.registry.model.ServerOrganization;
 import net.geoprism.registry.service.business.AbstractGraphVersionPublisherService.State;
-import net.geoprism.registry.view.Page;
+import net.geoprism.registry.view.JsonSerializablePage;
 
 @Service
 public class LabeledPropertyGraphSynchronizationBusinessService implements LabeledPropertyGraphSynchronizationBusinessServiceIF
@@ -297,7 +297,7 @@ public class LabeledPropertyGraphSynchronizationBusinessService implements Label
   }
 
   @Override
-  public Page<LabeledPropertyGraphSynchronization> page(JsonObject criteria)
+  public JsonSerializablePage<LabeledPropertyGraphSynchronization> page(JsonObject criteria)
   {
     LabeledPropertyGraphSynchronizationQuery query = new LabeledPropertyGraphSynchronizationQuery(new QueryFactory());
     int pageSize = 10;
@@ -381,7 +381,7 @@ public class LabeledPropertyGraphSynchronizationBusinessService implements Label
 
     try (OIterator<? extends LabeledPropertyGraphSynchronization> iterator = query.getIterator())
     {
-      return new Page<LabeledPropertyGraphSynchronization>(count, pageNumber, pageSize, new LinkedList<LabeledPropertyGraphSynchronization>(iterator.getAll()));
+      return new JsonSerializablePage<LabeledPropertyGraphSynchronization>(count, pageNumber, pageSize, new LinkedList<LabeledPropertyGraphSynchronization>(iterator.getAll()));
     }
   }
 
@@ -423,6 +423,5 @@ public class LabeledPropertyGraphSynchronizationBusinessService implements Label
   {
     return LabeledPropertyGraphSynchronization.get(oid);
   }
-
 
 }

@@ -3,18 +3,18 @@
  *
  * This file is part of Geoprism(tm).
  *
- * Geoprism(tm) is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
+ * Geoprism(tm) is free software: you can redistribute it and/or modify it under
+ * the terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation, either version 3 of the License, or (at your option) any
+ * later version.
  *
- * Geoprism(tm) is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
+ * Geoprism(tm) is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with Geoprism(tm).  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with Geoprism(tm). If not, see <http://www.gnu.org/licenses/>.
  */
 package net.geoprism.registry.model;
 
@@ -51,7 +51,7 @@ import net.geoprism.registry.OrganizationUtil;
 import net.geoprism.registry.conversion.LocalizedValueConverter;
 import net.geoprism.registry.graph.GraphOrganization;
 import net.geoprism.registry.view.JsonSerializable;
-import net.geoprism.registry.view.Page;
+import net.geoprism.registry.view.JsonSerializablePage;
 
 public class ServerOrganization implements JsonSerializable
 {
@@ -143,17 +143,17 @@ public class ServerOrganization implements JsonSerializable
   {
     return this.organization.isNew();
   }
-  
+
   public void appLock()
   {
     this.organization.appLock();
   }
-  
+
   public void releaseAppLock()
   {
     this.organization.releaseAppLock();
   }
-  
+
   /**
    * Creates a {@link RoleDAO} for this {@link Organization} and a Registry
    * Administrator {@link RoleDAO} for this {@link Organization}.
@@ -298,12 +298,12 @@ public class ServerOrganization implements JsonSerializable
     return null;
   }
 
-  public Page<ServerOrganization> getChildren()
+  public JsonSerializablePage<ServerOrganization> getChildren()
   {
     return this.getChildren(20, 1);
   }
 
-  public Page<ServerOrganization> getChildren(Integer pageSize, Integer pageNumber)
+  public JsonSerializablePage<ServerOrganization> getChildren(Integer pageSize, Integer pageNumber)
   {
     Integer count = this.graphOrganization.getCount();
 
@@ -313,7 +313,7 @@ public class ServerOrganization implements JsonSerializable
       return new ServerOrganization(vertex.getOrganization(), vertex);
     }).collect(Collectors.toList());
 
-    return new Page<ServerOrganization>(count, pageNumber, pageSize, results);
+    return new JsonSerializablePage<ServerOrganization>(count, pageNumber, pageSize, results);
   }
 
   public List<ServerOrganization> getAncestors(String code)
@@ -357,7 +357,7 @@ public class ServerOrganization implements JsonSerializable
         }
       }
 
-      Page<GraphNode<ServerOrganization>> page = new Page<GraphNode<ServerOrganization>>(count, 1, pageSize, transform);
+      JsonSerializablePage<GraphNode<ServerOrganization>> page = new JsonSerializablePage<GraphNode<ServerOrganization>>(count, 1, pageSize, transform);
 
       GraphNode<ServerOrganization> node = new GraphNode<ServerOrganization>();
       node.setObject(new ServerOrganization(ancestor.getOrganization(), ancestor));

@@ -69,10 +69,10 @@ import net.geoprism.registry.view.AttributeFloatDTO;
 import net.geoprism.registry.view.AttributeIntegerDTO;
 import net.geoprism.registry.view.AttributeLocalDTO;
 import net.geoprism.registry.view.JsonSerializable;
+import net.geoprism.registry.view.JsonSerializablePage;
 import net.geoprism.registry.view.ObjectAtTimeDTO;
 import net.geoprism.registry.view.ObjectClassDTO;
 import net.geoprism.registry.view.ObjectOverTimeDTO;
-import net.geoprism.registry.view.Page;
 import net.geoprism.registry.view.ValueOverTimeEntryDTO;
 
 public abstract class ObjectBusinessService<V extends ServerObjectVertex, T extends ObjectClass, D extends ObjectClassDTO> implements ObjectBusinessServiceIF<V, T, D>
@@ -553,7 +553,7 @@ public abstract class ObjectBusinessService<V extends ServerObjectVertex, T exte
   }
 
   @Override
-  public Page<JsonSerializable> data(T type, JsonObject criteria)
+  public JsonSerializablePage<JsonSerializable> data(T type, JsonObject criteria)
   {
     return new ObjectPageQuery(type, criteria).getPage();
   }
