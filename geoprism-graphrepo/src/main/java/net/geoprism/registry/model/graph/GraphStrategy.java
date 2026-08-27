@@ -21,13 +21,19 @@ package net.geoprism.registry.model.graph;
 import java.util.Date;
 
 import net.geoprism.registry.graph.DataSource;
+import net.geoprism.registry.model.ServerChildGraphNode;
 import net.geoprism.registry.model.ServerGraphNode;
+import net.geoprism.registry.model.ServerParentGraphNode;
 
 public interface GraphStrategy
 {
   public <T extends ServerGraphNode> T getChildren(VertexServerGeoObject geoObject, Boolean recursive, Date date, String boundsWKT, Long skip, Long limit);
 
   public <T extends ServerGraphNode> T getParents(VertexServerGeoObject geoObject, Boolean recursive, Date date, String boundsWKT, Long skip, Long limit);
+  
+  public ServerChildGraphNode getEdgeChildren(VertexServerGeoObject source, Boolean recursive, Date date, String boundsWKT, Long skip, Long limit);
+
+  public ServerParentGraphNode getEdgeParents(VertexServerGeoObject source, Boolean recursive, Date date, String boundsWKT, Long skip, Long limit);
 
   public <T extends ServerGraphNode> T addChild(VertexServerGeoObject geoObject, VertexServerGeoObject child, Date startDate, Date endDate, String uid, DataSource source, boolean validate);
 

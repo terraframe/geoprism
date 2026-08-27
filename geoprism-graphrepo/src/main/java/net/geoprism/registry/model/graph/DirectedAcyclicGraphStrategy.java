@@ -45,6 +45,8 @@ import net.geoprism.registry.model.EdgeValueOverTime;
 import net.geoprism.registry.model.ServerChildGraphNode;
 import net.geoprism.registry.model.ServerGeoObjectType;
 import net.geoprism.registry.model.ServerParentGraphNode;
+import net.geoprism.registry.query.graph.VertexAndEdgeQuery;
+import net.geoprism.registry.query.graph.VertexAndEdgeQuery.EdgeQueryObject;
 
 public class DirectedAcyclicGraphStrategy extends AbstractGraphStrategy implements GraphStrategy
 {
@@ -475,5 +477,59 @@ public class DirectedAcyclicGraphStrategy extends AbstractGraphStrategy implemen
     set.addAll(query.getResults());
 
     return set;
+  }
+  
+  @Override
+  public ServerChildGraphNode getEdgeChildren(
+      VertexServerGeoObject parent,
+      Boolean recursive,
+      Date date,
+      String boundsWKT,
+      Long skip,
+      Long limit)
+  {
+    List<EdgeQueryObject> results = new VertexAndEdgeQuery(
+        parent.getVertex(),
+        this.type.getMdEdgeDAO().getDBClassName(),
+        VertexAndEdgeQuery.Direction.CHILDREN,
+        VertexServerGeoObject::processTraverseResults)
+            .setDate(date)
+            .setBoundsWKT(boundsWKT)
+            .setSkip(skip)
+            .setLimit(limit)
+            .getResults();
+    
+    return this.buildChildGraphNode(
+        parent,
+        this.type,
+        date,
+        results);
+  }
+  
+  @Override
+  public ServerParentGraphNode getEdgeParents(
+      VertexServerGeoObject child,
+      Boolean recursive,
+      Date date,
+      String boundsWKT,
+      Long skip,
+      Long limit)
+  {
+    List<EdgeQueryObject> results = new VertexAndEdgeQuery(
+        child.getVertex(),
+        this.type.getMdEdgeDAO().getDBClassName(),
+        VertexAndEdgeQuery.Direction.PARENTS,
+        VertexServerGeoObject::processTraverseResults)
+            .setDate(date)
+            .setBoundsWKT(boundsWKT)
+            .setSkip(skip)
+            .setLimit(limit)
+            .getResults();
+
+    return this.buildParentGraphNode(
+        child,
+        this.type,
+        date,
+        results);
   }
 }

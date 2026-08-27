@@ -3,18 +3,18 @@
  *
  * This file is part of Geoprism(tm).
  *
- * Geoprism(tm) is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
+ * Geoprism(tm) is free software: you can redistribute it and/or modify it under
+ * the terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation, either version 3 of the License, or (at your option) any
+ * later version.
  *
- * Geoprism(tm) is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
+ * Geoprism(tm) is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with Geoprism(tm).  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with Geoprism(tm). If not, see <http://www.gnu.org/licenses/>.
  */
 package net.geoprism.registry.service.business;
 
@@ -60,6 +60,8 @@ public class VertexAndEdgeResultSetConverter extends PrefixedResultSetConverter 
     final String edgeOid = oresult.getProperty("edgeOid");
     final String edgeUid = oresult.getProperty("edgeUid");
     final String edgeSource = oresult.getProperty("edgeSource");
+    final Date startDate = oresult.getProperty("startDate");
+    final Date endDate = oresult.getProperty("endDate");
 
     if (edgeClass.equals("search_link_default") || ( geoObjectOid == null && attrOid == null ))
       return null;
@@ -67,7 +69,7 @@ public class VertexAndEdgeResultSetConverter extends PrefixedResultSetConverter 
     final VertexObject goVertex = (VertexObject) this.build(VERTEX_PREFIX, oresult);
     final VertexObject attrVertex = (VertexObject) this.build(ATTR_PREFIX, oresult);
 
-    return new VertexAndEdge(goVertex, attrVertex, geoObjectOid, edgeClass, edgeOid, edgeUid, edgeSource);
+    return new VertexAndEdge(goVertex, attrVertex, geoObjectOid, edgeClass, edgeOid, edgeUid, edgeSource, startDate, endDate);
   }
 
   public static class VertexAndEdge
@@ -80,11 +82,15 @@ public class VertexAndEdgeResultSetConverter extends PrefixedResultSetConverter 
 
     public String       edgeSource;
 
+    public Date         startDate;
+
+    public Date         endDate;
+
     public VertexObject goVertex;
 
     public VertexObject attrVertex;
 
-    public VertexAndEdge(VertexObject goVertex, VertexObject attrVertex, String geoObjectOid, String edgeClass, String edgeOid, String edgeUid, String edgeSource)
+    public VertexAndEdge(VertexObject goVertex, VertexObject attrVertex, String geoObjectOid, String edgeClass, String edgeOid, String edgeUid, String edgeSource, Date startDate, Date endDate)
     {
       super();
       this.goVertex = goVertex;
@@ -93,6 +99,8 @@ public class VertexAndEdgeResultSetConverter extends PrefixedResultSetConverter 
       this.edgeClass = edgeClass;
       this.edgeUid = edgeUid;
       this.edgeSource = edgeSource;
+      this.startDate = startDate;
+      this.endDate = endDate;
     }
   }
 

@@ -21,14 +21,12 @@ package net.geoprism.registry.service.business;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import org.commongeoregistry.adapter.constants.DefaultAttribute;
 
 import com.runwaysdk.business.graph.EdgeObject;
 import com.runwaysdk.business.graph.GraphQuery;
 import com.runwaysdk.business.graph.VertexObject;
-import com.runwaysdk.dataaccess.MdClassDAOIF;
 import com.runwaysdk.dataaccess.MdGraphClassDAOIF;
 
 import net.geoprism.configuration.GeoprismProperties;
@@ -38,10 +36,12 @@ import net.geoprism.registry.graph.DataSource;
 import net.geoprism.registry.graph.EdgeClass;
 import net.geoprism.registry.graph.ObjectClass;
 import net.geoprism.registry.model.ConceptObject;
-import net.geoprism.registry.model.EdgeConstant;
 import net.geoprism.registry.model.EdgeType;
 import net.geoprism.registry.model.graph.ServerObjectVertex;
 import net.geoprism.registry.model.graph.VertexComponent;
+import net.geoprism.registry.model.graph.VertexServerGeoObject;
+import net.geoprism.registry.query.graph.VertexAndEdgeQuery;
+import net.geoprism.registry.query.graph.VertexAndEdgeQuery.EdgeQueryObject;
 import net.geoprism.registry.view.ObjectClassDTO;
 
 public abstract class ObjectEdgeBusinessService<V extends ServerObjectVertex, T extends ObjectClass, D extends ObjectClassDTO, E extends EdgeClass, N extends VertexComponent> extends ObjectBusinessService<V, T, D> implements ObjectEdgeBusinessServiceIF<V, T, D, E, N>
@@ -248,42 +248,58 @@ public abstract class ObjectEdgeBusinessService<V extends ServerObjectVertex, T 
 
   @Override
   @SuppressWarnings("unchecked")
-  public List<N> getParents(V object, E type, Date date)
+  public List<EdgeQueryObject> getParents(V source, E type, Date date)
   {
-    StringBuilder statement = new StringBuilder();
-    statement.append("TRAVERSE out('" + EdgeConstant.HAS_VALUE.getDBClassName() + "', '" + EdgeConstant.HAS_GEOMETRY.getDBClassName() + "') FROM (");
-    statement.append("  SELECT EXPAND(inE('" + type.getMdEdge().getDbClassName() + "')[:date BETWEEN startDate AND endDate].out)");
-    statement.append("  FROM :rid " + "\n");
-    statement.append(")");
-
-    GraphQuery<VertexObject> query = new GraphQuery<VertexObject>(statement.toString());
-    query.setParameter("rid", object.getVertex().getRID());
-    query.setParameter("date", date);
-
-    return this.processTraverseResults(query.getResults(), date).stream().sorted((a, b) -> {
-      return a.getCode().compareTo(b.getCode());
-    }).map(v -> (N) v).collect(Collectors.toList());
+//    StringBuilder statement = new StringBuilder();
+//    statement.append("TRAVERSE out('" + EdgeConstant.HAS_VALUE.getDBClassName() + "', '" + EdgeConstant.HAS_GEOMETRY.getDBClassName() + "') FROM (");
+//    statement.append("  SELECT EXPAND(inE('" + type.getMdEdge().getDbClassName() + "')[:date BETWEEN startDate AND endDate].out)");
+//    statement.append("  FROM :rid " + "\n");
+//    statement.append(")");
+//
+//    GraphQuery<VertexObject> query = new GraphQuery<VertexObject>(statement.toString());
+//    query.setParameter("rid", object.getVertex().getRID());
+//    query.setParameter("date", date);
+//
+//    return this.processTraverseResults(query.getResults(), date).stream().sorted((a, b) -> {
+//      return a.getCode().compareTo(b.getCode());
+//    }).map(v -> (N) v).collect(Collectors.toList());
+    
+    return new VertexAndEdgeQuery(
+        source.getVertex(),
+        type.getMdEdgeDAO().getDBClassName(),
+        VertexAndEdgeQuery.Direction.PARENTS,
+        VertexServerGeoObject::processTraverseResults)
+            .setDate(date)
+            .getResults();
   }
 
   @Override
   @SuppressWarnings("unchecked")
-  public List<N> getChildren(V object, E type, Date date)
+  public List<EdgeQueryObject> getChildren(V source, E type, Date date)
   {
-    StringBuilder statement = new StringBuilder();
-    statement.append("TRAVERSE out('" + EdgeConstant.HAS_VALUE.getDBClassName() + "', '" + EdgeConstant.HAS_GEOMETRY.getDBClassName() + "') FROM (");
-    statement.append("  SELECT EXPAND(outE('" + type.getMdEdge().getDbClassName() + "')[:date BETWEEN startDate AND endDate].in)");
-    statement.append("  FROM :rid " + "\n");
-    statement.append(")");
-
-    GraphQuery<VertexObject> query = new GraphQuery<VertexObject>(statement.toString());
-    query.setParameter("rid", object.getVertex().getRID());
-    query.setParameter("date", date);
-
-    return this.processTraverseResults(query.getResults(), date).stream().sorted((a, b) -> {
-      return a.getCode().compareTo(b.getCode());
-    }).map(v -> (N) v).collect(Collectors.toList());
+//    StringBuilder statement = new StringBuilder();
+//    statement.append("TRAVERSE out('" + EdgeConstant.HAS_VALUE.getDBClassName() + "', '" + EdgeConstant.HAS_GEOMETRY.getDBClassName() + "') FROM (");
+//    statement.append("  SELECT EXPAND(outE('" + type.getMdEdge().getDbClassName() + "')[:date BETWEEN startDate AND endDate].in)");
+//    statement.append("  FROM :rid " + "\n");
+//    statement.append(")");
+//
+//    GraphQuery<VertexObject> query = new GraphQuery<VertexObject>(statement.toString());
+//    query.setParameter("rid", object.getVertex().getRID());
+//    query.setParameter("date", date);
+//
+//    return this.processTraverseResults(query.getResults(), date).stream().sorted((a, b) -> {
+//      return a.getCode().compareTo(b.getCode());
+//    }).map(v -> (N) v).collect(Collectors.toList());
+    
+    return new VertexAndEdgeQuery(
+        source.getVertex(),
+        type.getMdEdgeDAO().getDBClassName(),
+        VertexAndEdgeQuery.Direction.CHILDREN,
+        VertexServerGeoObject::processTraverseResults)
+            .setDate(date)
+            .getResults();
   }
-
+  
   protected boolean isCycle(N child, E type, N parent, Date startDate, Date endDate)
   {
     VertexObject vertex = child.getVertex();
@@ -306,6 +322,28 @@ public abstract class ObjectEdgeBusinessService<V extends ServerObjectVertex, T 
     Long count = query.getSingleResult();
 
     return ( count != null && count > 0 );
+  }
+  
+  public List<EdgeQueryObject> getEdgeParents(ConceptObject object, ConceptEdgeType type, Date date)
+  {
+    return new VertexAndEdgeQuery(
+        object.getVertex(),
+        type.getMdEdge().getDbClassName(),
+        VertexAndEdgeQuery.Direction.PARENTS,
+        this::processTraverseResults)
+            .setDate(date)
+            .getResults();
+  }
+
+  public List<EdgeQueryObject> getEdgeChildren(ConceptObject object, ConceptEdgeType type, Date date)
+  {
+    return new VertexAndEdgeQuery(
+        object.getVertex(),
+        type.getMdEdge().getDbClassName(),
+        VertexAndEdgeQuery.Direction.CHILDREN,
+        this::processTraverseResults)
+            .setDate(date)
+            .getResults();
   }
 
   

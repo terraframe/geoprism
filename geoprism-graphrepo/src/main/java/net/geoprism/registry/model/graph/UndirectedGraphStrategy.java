@@ -46,6 +46,8 @@ import net.geoprism.registry.model.ServerChildGraphNode;
 import net.geoprism.registry.model.ServerGeoObjectType;
 import net.geoprism.registry.model.ServerGraphNode;
 import net.geoprism.registry.model.ServerParentGraphNode;
+import net.geoprism.registry.query.graph.VertexAndEdgeQuery;
+import net.geoprism.registry.query.graph.VertexAndEdgeQuery.EdgeQueryObject;
 
 public class UndirectedGraphStrategy extends AbstractGraphStrategy implements GraphStrategy
 {
@@ -162,6 +164,60 @@ public class UndirectedGraphStrategy extends AbstractGraphStrategy implements Gr
     }
 
     return tnRoot;
+  }
+  
+  @Override
+  public ServerChildGraphNode getEdgeChildren(
+      VertexServerGeoObject source,
+      Boolean recursive,
+      Date date,
+      String boundsWKT,
+      Long skip,
+      Long limit)
+  {
+    List<EdgeQueryObject> results =  new VertexAndEdgeQuery(
+        source.getVertex(),
+        this.type.getMdEdgeDAO().getDBClassName(),
+        VertexAndEdgeQuery.Direction.CHILDREN,
+        VertexServerGeoObject::processTraverseResults)
+            .setDate(date)
+            .setBoundsWKT(boundsWKT)
+            .setSkip(skip)
+            .setLimit(limit)
+            .getResults();
+    
+    return this.buildChildGraphNode(
+        source,
+        this.type,
+        date,
+        results);
+  }
+
+  @Override
+  public ServerParentGraphNode getEdgeParents(
+      VertexServerGeoObject source,
+      Boolean recursive,
+      Date date,
+      String boundsWKT,
+      Long skip,
+      Long limit)
+  {
+    List<EdgeQueryObject> results =  new VertexAndEdgeQuery(
+        source.getVertex(),
+        this.type.getMdEdgeDAO().getDBClassName(),
+        VertexAndEdgeQuery.Direction.PARENTS,
+        VertexServerGeoObject::processTraverseResults)
+            .setDate(date)
+            .setBoundsWKT(boundsWKT)
+            .setSkip(skip)
+            .setLimit(limit)
+            .getResults();
+    
+    return this.buildParentGraphNode(
+        source,
+        this.type,
+        date,
+        results);
   }
 
   @Override

@@ -19,6 +19,7 @@
 package net.geoprism.registry.model;
 
 import java.util.Date;
+import java.util.List;
 import java.util.SortedSet;
 
 import org.commongeoregistry.adapter.dataaccess.LocalizedValue;
@@ -31,6 +32,7 @@ import com.runwaysdk.dataaccess.graph.attributes.ValueOverTimeCollection;
 
 import net.geoprism.registry.graph.DataSource;
 import net.geoprism.registry.model.graph.VertexComponent;
+import net.geoprism.registry.query.graph.VertexAndEdgeQuery.EdgeQueryObject;
 
 public interface ServerGeoObjectIF extends VertexComponent
 {
@@ -115,6 +117,10 @@ public interface ServerGeoObjectIF extends VertexComponent
   public <T extends ServerGraphNode> T getGraphChildren(GraphType type, Boolean recursive, Date date);
 
   public <T extends ServerGraphNode> T getGraphParents(GraphType type, Boolean recursive, Date date);
+  
+  public ServerChildGraphNode getGraphEdgeChildren(GraphType type, Boolean recursive, Date date, String boundsWKT, Long skip, Long limit);
+  
+  public ServerParentGraphNode getGraphEdgeParents(GraphType type, Boolean recursive, Date date, String boundsWKT, Long skip, Long limit);
 
   <T extends ServerGraphNode> T getGraphParents(GraphType type, Boolean recursive, Date date, String boundsWKT, Long skip, Long limit);
 

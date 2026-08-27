@@ -31,6 +31,7 @@ import net.geoprism.registry.graph.EdgeClass;
 import net.geoprism.registry.graph.ObjectClass;
 import net.geoprism.registry.model.graph.ServerObjectVertex;
 import net.geoprism.registry.model.graph.VertexComponent;
+import net.geoprism.registry.query.graph.VertexAndEdgeQuery.EdgeQueryObject;
 import net.geoprism.registry.view.ObjectClassDTO;
 
 @Component
@@ -50,7 +51,7 @@ public interface ObjectEdgeBusinessServiceIF<V extends ServerObjectVertex, T ext
 
   public void removeParent(N object, E type, N parent, Date startDate, Date endDate, boolean validateOrigin);
 
-  public List<N> getParents(V object, E type, Date date);
+  public List<EdgeQueryObject> getParents(V object, E type, Date date);
 
   public Optional<EdgeObject> addChild(N object, E type, N child, String uid, Date startDate, Date endDate, DataSource source);
 
@@ -60,5 +61,5 @@ public interface ObjectEdgeBusinessServiceIF<V extends ServerObjectVertex, T ext
 
   public void removeChild(N object, E type, N child, Date startDate, Date endDate, boolean validateOrigin);
 
-  public List<N> getChildren(V object, E type, Date date);
+  public List<EdgeQueryObject> getChildren(V object, E type, Date date);
 }
