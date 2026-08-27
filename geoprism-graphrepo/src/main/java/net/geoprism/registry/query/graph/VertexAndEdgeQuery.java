@@ -295,41 +295,47 @@ public class VertexAndEdgeQuery
     StringBuilder statement = new StringBuilder();
 
     /*
-     * SELECT * is deliberate.
+     * The outer query expands the edge metadata from the originEdge calculated
+     * by the inner traversal query. This avoids repeating the same edge lookup
+     * for every metadata field.
      *
-     * The object/attribute types can contain attributes created dynamically at
-     * runtime, so EdgeQuery cannot know the column list ahead of time.
-     *
-     * EdgeQueryResultSetConverter determines the runtime @class and rebuilds
-     * the appropriate VertexObject from whatever columns exist on the record.
+     * SELECT * is deliberate. The object/attribute types can contain attributes
+     * created dynamically at runtime, so VertexAndEdgeQuery cannot know the
+     * complete column list ahead of time.
+     */
+    statement.append("SELECT ");
+    statement.append("*, ");
+    statement.append("originEdge.@class AS edgeClass, ");
+    statement.append("originEdge.oid AS edgeOid, ");
+    statement.append("originEdge.uid AS edgeUid, ");
+    statement.append("originEdge.dataSource.code AS edgeSource, ");
+    statement.append("originEdge.startDate AS startDate, ");
+    statement.append("originEdge.endDate AS endDate ");
+
+    statement.append("FROM (");
+
+    /*
+     * traversedElement() must be invoked by the SELECT directly wrapping the
+     * TRAVERSE command. Moving this expression into LET or the outer SELECT
+     * causes OrientDB to report that it is not being invoked against a traverse
+     * command.
      */
     statement.append("SELECT ");
     statement.append("*, ");
     statement.append("$depth AS traversalDepth, ");
 
     /*
-     * We only need the RID of the root traversal vertex to associate the
-     * eventual ServerObjectVertex with its edge metadata.
+     * The RID of the traversal root associates every traversal record with the
+     * edge connecting that root object to the original query source.
      */
     statement.append("traversedElement(0).@rid AS originVertexRid, ");
 
+    /*
+     * Resolve the edge once per traversal row. The outer query reads all of the
+     * individual metadata fields from this value.
+     */
     statement.append(edgeExpression);
-    statement.append(".@class AS edgeClass, ");
-
-    statement.append(edgeExpression);
-    statement.append(".oid AS edgeOid, ");
-
-    statement.append(edgeExpression);
-    statement.append(".uid AS edgeUid, ");
-
-    statement.append(edgeExpression);
-    statement.append(".dataSource.code AS edgeSource, ");
-
-    statement.append(edgeExpression);
-    statement.append(".startDate AS startDate, ");
-
-    statement.append(edgeExpression);
-    statement.append(".endDate AS endDate ");
+    statement.append(" AS originEdge ");
 
     statement.append("FROM (");
 
@@ -340,8 +346,8 @@ public class VertexAndEdgeQuery
     statement.append("') ");
 
     statement.append("FROM (");
-
     statement.append(this.buildOriginQuery());
+    statement.append(")");
 
     statement.append(")");
 

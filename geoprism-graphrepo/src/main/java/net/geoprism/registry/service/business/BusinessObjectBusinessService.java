@@ -174,7 +174,7 @@ public class BusinessObjectBusinessService extends ObjectEdgeBusinessService<Bus
         object.getVertex(),
         type.getMdEdge().getDbClassName(),
         VertexAndEdgeQuery.Direction.PARENTS,
-        type.getIsChildGeoObject() ? VertexServerGeoObject::processTraverseResults : this::processTraverseResults)
+        type.getIsParentGeoObject() ? VertexServerGeoObject::processTraverseResults : this::processTraverseResults)
             .setDate(date)
             .getResults();
   }
