@@ -20,8 +20,8 @@ import com.runwaysdk.dataaccess.MdAttributeLocalEmbeddedDAOIF;
 import com.runwaysdk.dataaccess.MdClassDAOIF;
 import com.runwaysdk.dataaccess.MdGraphClassDAOIF;
 import com.runwaysdk.dataaccess.MdVertexDAOIF;
-import com.runwaysdk.dataaccess.graph.GraphRequest;
 import com.runwaysdk.dataaccess.graph.GraphObjectDAO;
+import com.runwaysdk.dataaccess.graph.GraphRequest;
 import com.runwaysdk.dataaccess.graph.ResultSetConverterIF;
 import com.runwaysdk.dataaccess.graph.VertexObjectDAO;
 import com.runwaysdk.dataaccess.graph.attributes.Attribute;
@@ -33,22 +33,19 @@ import com.runwaysdk.dataaccess.metadata.graph.MdGraphClassDAO;
 import com.runwaysdk.gis.dataaccess.MdAttributeGeometryDAOIF;
 import com.runwaysdk.localization.LocalizationFacade;
 
+import net.geoprism.registry.graph.ConceptVertex;
 import net.geoprism.registry.graph.DataSource;
-import net.geoprism.registry.service.business.ClassificationBusinessServiceIF;
-import net.geoprism.registry.service.business.DataSourceBusinessServiceIF;
-import net.geoprism.registry.service.business.ServiceFactory;
 
 public class EdgeQueryResultSetConverter implements ResultSetConverterIF
 {
-  private final DataSourceBusinessServiceIF     sourceService;
+  private final DataSourceBusinessServiceIF    sourceService;
 
-  private final ClassificationBusinessServiceIF classificationService;
+  private final ConceptObjectBusinessServiceIF cObjectService;
 
   public EdgeQueryResultSetConverter()
   {
     this.sourceService = ServiceFactory.getBean(DataSourceBusinessServiceIF.class);
-
-    this.classificationService = ServiceFactory.getBean(ClassificationBusinessServiceIF.class);
+    this.cObjectService = ServiceFactory.getBean(ConceptObjectBusinessServiceIF.class);    
   }
 
   @Override
@@ -156,22 +153,6 @@ public class EdgeQueryResultSetConverter implements ResultSetConverterIF
 
       attribute.setValueInternal(geometry);
     }
-    else if (mdAttribute instanceof MdAttributeClassificationDAOIF)
-    {
-      if (! ( value instanceof ORecordId ))
-      {
-        throw new UnsupportedOperationException();
-      }
-
-      ORecordId ref = (ORecordId) value;
-
-      this.classificationService.getByRid(ref.toString()).ifPresent(classification -> {
-
-        attribute.setValueInternal(classification.getOid());
-
-        ( (AttributeGraphRef) attribute ).setId(new ID(classification.getOid(), classification.getRID()));
-      });
-    }
     else if (mdAttribute instanceof MdAttributeGraphRefDAOIF)
     {
       MdClassDAOIF referencedClass = ( (MdAttributeGraphRefDAOIF) mdAttribute ).getReferenceMdVertexDAOIF();
@@ -187,6 +168,16 @@ public class EdgeQueryResultSetConverter implements ResultSetConverterIF
           ( (AttributeGraphRef) attribute ).setId(new ID(source.getOid(), source.getRID()));
         });
       }
+      else if ( ( value instanceof ORecordId ) && referencedClass.definesType().equals(ConceptVertex.CLASS))
+      {
+        ORecordId ref = (ORecordId) value;
+
+        this.cObjectService.getByRid(ref.toString()).ifPresent(source -> {
+          attribute.setValueInternal(source.getOid());
+
+          ( (AttributeGraphRef) attribute ).setId(new ID(source.getOid(), source.getRID()));
+        });
+      }      
       else
       {
         throw new UnsupportedOperationException();
@@ -207,7 +198,7 @@ public class EdgeQueryResultSetConverter implements ResultSetConverterIF
     private final VertexObject vertex;
 
     private final ORecordId    originVertex;
-    
+
     private final String       edgeClass;
 
     private final String       edgeOid;
@@ -246,7 +237,7 @@ public class EdgeQueryResultSetConverter implements ResultSetConverterIF
     {
       return this.originVertex != null ? this.originVertex.toString() : null;
     }
-    
+
     public String getEdgeClass()
     {
       return this.edgeClass;
