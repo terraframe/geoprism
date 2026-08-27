@@ -85,9 +85,6 @@ public abstract class AbstractGraphVersionPublisherService
   protected LabeledPropertyGraphTypeVersionBusinessServiceIF service;
 
   @Autowired
-  protected ClassificationBusinessServiceIF                  classificationService;
-
-  @Autowired
   protected DataSourceBusinessServiceIF                      sourceService;
 
   public State createState(LabeledPropertyGraphSynchronization synchronization, LabeledPropertyGraphTypeVersion version)
@@ -108,23 +105,7 @@ public abstract class AbstractGraphVersionPublisherService
 
       if (node.hasAttribute(attributeName))
       {
-        if (attribute instanceof AttributeClassificationType)
-        {
-          String value = (String) geoObject.getValue(attributeName);
-
-          if (value != null)
-          {
-            this.classificationService.get((AttributeClassificationType) attribute, value).ifPresent(classification -> {
-              node.setValue(attributeName, classification.getVertex());
-            });
-
-          }
-          else
-          {
-            node.setValue(attributeName, (String) null);
-          }
-        }
-        else if (attribute instanceof AttributeDataSourceType)
+        if (attribute instanceof AttributeDataSourceType)
         {
           String code = (String) geoObject.getValue(attributeName);
 
@@ -233,31 +214,6 @@ public abstract class AbstractGraphVersionPublisherService
         if (!dto.has(attributeName))
         {
           node.setValue(attributeName, (String) null);
-        }
-        else if (attribute instanceof AttributeClassificationType)
-        {
-          String value = dto.getValue(attributeName);
-
-          if (value != null)
-          {
-            this.classificationService.get((AttributeClassificationType) attribute, value).ifPresent(classification -> {
-              node.setValue(attributeName, classification.getVertex());
-            });
-
-          }
-          else
-          {
-            node.setValue(attributeName, (String) null);
-          }
-        }
-        else if (attribute instanceof MdAttributeGraphReferenceDAOIF)
-        {
-          String value = dto.getValue(attributeName);
-
-          this.classificationService.get((AttributeClassificationType) attribute, value).ifPresent(classification -> {
-            node.setValue(attributeName, classification.getVertex());
-          });
-
         }
         else
         {

@@ -18,14 +18,14 @@
  */
 package net.geoprism.registry.graph;
 
-public class Ontology extends OntologyBase
+public class AttributeClassificationValue extends AttributeClassificationValueBase
 {
   @SuppressWarnings("unused")
-  private static final long serialVersionUID = -632958776;
+  private static final long serialVersionUID = 1367756568;
   
-  public Ontology()
+  public AttributeClassificationValue()
   {
     super();
   }
-  
+    
 }

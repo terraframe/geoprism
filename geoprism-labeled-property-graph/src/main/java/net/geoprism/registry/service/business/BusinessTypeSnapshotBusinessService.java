@@ -181,11 +181,7 @@ public class BusinessTypeSnapshotBusinessService extends ObjectTypeSnapshotBusin
 
         if (value != null)
         {
-          if (mdAttribute instanceof MdAttributeTermDAOIF)
-          {
-            // throw new UnsupportedOperationException();
-          }
-          else if (value instanceof Number)
+          if (value instanceof Number)
           {
             data.addProperty(mdAttribute.definesAttribute(), (Number) value);
           }

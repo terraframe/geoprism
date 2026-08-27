@@ -3,18 +3,18 @@
  *
  * This file is part of Geoprism(tm).
  *
- * Geoprism(tm) is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
+ * Geoprism(tm) is free software: you can redistribute it and/or modify it under
+ * the terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation, either version 3 of the License, or (at your option) any
+ * later version.
  *
- * Geoprism(tm) is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
+ * Geoprism(tm) is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with Geoprism(tm).  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with Geoprism(tm). If not, see <http://www.gnu.org/licenses/>.
  */
 package net.geoprism.registry.service.business;
 
@@ -36,12 +36,10 @@ import com.runwaysdk.gis.constants.MdGeoVertexInfo;
 import com.runwaysdk.system.metadata.MdVertex;
 
 import net.geoprism.configuration.GeoprismProperties;
-import net.geoprism.ontology.Classifier;
 import net.geoprism.registry.CodeLengthException;
 import net.geoprism.registry.RegistryConstants;
 import net.geoprism.registry.cache.ClearCacheEvent;
 import net.geoprism.registry.conversion.RegistryLocalizedValueConverter;
-import net.geoprism.registry.conversion.TermConverter;
 import net.geoprism.registry.graph.AttributeBooleanType;
 import net.geoprism.registry.graph.AttributeCharacterType;
 import net.geoprism.registry.graph.AttributeDataSourceType;
@@ -56,10 +54,7 @@ import net.geoprism.registry.view.ConceptClassDTO;
 public class ConceptClassBusinessService extends ObjectClassBusinessService<ConceptClass, ConceptClassDTO> implements ConceptClassBusinessServiceIF
 {
   @Autowired
-  private ClassificationTypeBusinessServiceIF cTypeService;
-
-  @Autowired
-  private ApplicationEventPublisher           publisher;
+  private ApplicationEventPublisher publisher;
 
   public ConceptClassBusinessService()
   {
@@ -76,10 +71,6 @@ public class ConceptClassBusinessService extends ObjectClassBusinessService<Conc
   @Transaction
   public void delete(ConceptClass type)
   {
-    // Delete the term root
-    Classifier classRootTerm = TermConverter.buildIfNotExistGeoObjectTypeClassifier(type);
-    classRootTerm.delete();
-
     MdVertex mdVertex = type.getMdVertex();
 
     type.delete();
@@ -148,7 +139,7 @@ public class ConceptClassBusinessService extends ObjectClassBusinessService<Conc
 
     ServiceFactory.getGeoObjectTypePermissionService().enforceCanCreate(organization.getCode(), false);
 
-    cTypeService.validateName(code);
+    this.validateName(code);
 
     if (code.length() > 64)
     {

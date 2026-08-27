@@ -3,18 +3,18 @@
  *
  * This file is part of Geoprism(tm).
  *
- * Geoprism(tm) is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
+ * Geoprism(tm) is free software: you can redistribute it and/or modify it under
+ * the terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation, either version 3 of the License, or (at your option) any
+ * later version.
  *
- * Geoprism(tm) is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
+ * Geoprism(tm) is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with Geoprism(tm).  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with Geoprism(tm). If not, see <http://www.gnu.org/licenses/>.
  */
 package net.geoprism.registry.service.business;
 
@@ -31,12 +31,10 @@ import com.orientechnologies.spatial.shape.OShapeFactory;
 import com.runwaysdk.business.graph.EdgeObject;
 import com.runwaysdk.business.graph.VertexObject;
 import com.runwaysdk.constants.MdAttributeLocalInfo;
-import com.runwaysdk.dataaccess.MdAttributeClassificationDAOIF;
 import com.runwaysdk.dataaccess.MdAttributeConcreteDAOIF;
 import com.runwaysdk.dataaccess.MdAttributeGraphRefDAOIF;
 import com.runwaysdk.dataaccess.MdAttributeLocalEmbeddedDAOIF;
 import com.runwaysdk.dataaccess.MdClassDAOIF;
-import com.runwaysdk.dataaccess.MdClassificationDAOIF;
 import com.runwaysdk.dataaccess.MdEmbeddedGraphClassDAOIF;
 import com.runwaysdk.dataaccess.MdGraphClassDAOIF;
 import com.runwaysdk.dataaccess.MdVertexDAOIF;
@@ -56,25 +54,23 @@ import com.runwaysdk.dataaccess.metadata.graph.MdGraphClassDAO;
 import com.runwaysdk.gis.dataaccess.MdAttributeGeometryDAOIF;
 import com.runwaysdk.localization.LocalizationFacade;
 
+import net.geoprism.registry.graph.ConceptVertex;
 import net.geoprism.registry.graph.DataSource;
-import net.geoprism.registry.model.ClassificationType;
 
 public abstract class PrefixedResultSetConverter implements ResultSetConverterIF
 {
-  public static final String                  VERTEX_PREFIX = "v";
+  public static final String             VERTEX_PREFIX = "v";
 
-  public static final String                  ATTR_PREFIX   = "attr";
+  public static final String             ATTR_PREFIX   = "attr";
 
-  private DataSourceBusinessServiceIF         sourceService;
+  private DataSourceBusinessServiceIF    sourceService;
 
-  private ClassificationBusinessServiceIF     classificationService;
-
-  private ClassificationTypeBusinessServiceIF classificationTypeService;
+  private ConceptObjectBusinessServiceIF cObjectService;
 
   public PrefixedResultSetConverter()
   {
     this.sourceService = ServiceFactory.getBean(DataSourceBusinessServiceIF.class);
-    this.classificationService = ServiceFactory.getBean(ClassificationBusinessServiceIF.class);
+    this.cObjectService = ServiceFactory.getBean(ConceptObjectBusinessServiceIF.class);
   }
 
   protected Object build(String prefix, OResult element)
@@ -154,24 +150,6 @@ public abstract class PrefixedResultSetConverter implements ResultSetConverterIF
 
             attribute.setValueInternal(geometry);
           }
-          else if (mdAttribute instanceof MdAttributeClassificationDAOIF)
-          {
-            if ( ( value instanceof ORecordId ))
-            {
-              ORecordId ref = (ORecordId) value;
-
-              this.classificationService.getByRid(ref.toString()).ifPresent(source -> {
-                attribute.setValueInternal(source.getOid());
-
-                ( (AttributeGraphRef) attribute ).setId(new ID(source.getOid(), source.getRID()));
-              });
-            }
-            else
-            {
-              throw new UnsupportedOperationException();
-            }
-
-          }
           else if (mdAttribute instanceof MdAttributeGraphRefDAOIF)
           {
             MdClassDAOIF mdVertex = ( (MdAttributeGraphRefDAOIF) mdAttribute ).getReferenceMdVertexDAOIF();
@@ -180,6 +158,16 @@ public abstract class PrefixedResultSetConverter implements ResultSetConverterIF
             {
               ORecordId ref = (ORecordId) value;
               this.sourceService.getByRid(ref.toString()).ifPresent(source -> {
+                attribute.setValueInternal(source.getOid());
+
+                ( (AttributeGraphRef) attribute ).setId(new ID(source.getOid(), source.getRID()));
+              });
+            }
+            else if ( ( value instanceof ORecordId ) && mdVertex.definesType().equals(ConceptVertex.CLASS))
+            {
+              ORecordId ref = (ORecordId) value;
+
+              this.cObjectService.getByRid(ref.toString()).ifPresent(source -> {
                 attribute.setValueInternal(source.getOid());
 
                 ( (AttributeGraphRef) attribute ).setId(new ID(source.getOid(), source.getRID()));

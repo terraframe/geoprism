@@ -34,14 +34,6 @@ public class GraphTypeDTO implements Serializable
 {
   private static final long  serialVersionUID           = -1947163248569170534L;
 
-  public static final String JSON_TYPE_CODE             = "typeCode";
-
-  public static final String JSON_CODE                  = "code";
-
-  public static final String JSON_LOCALIZED_LABEL       = "label";
-
-  public static final String JSON_LOCALIZED_DESCRIPTION = "description";
-
   private String             typeCode;
 
   /**
@@ -205,59 +197,4 @@ public class GraphTypeDTO implements Serializable
       throw new RuntimeException(e);
     }
   }
-
-
-//  public JsonObject toJSON()
-//  {
-//    return toJSON(new DefaultSerializer());
-//  }
-//
-//  public JsonObject toJSON(CustomSerializer serializer)
-//  {
-//    JsonObject jsonObj = new JsonObject();
-//
-//    jsonObj.addProperty(JSON_TYPE_CODE, this.getTypeCode());
-//
-//    jsonObj.addProperty(JSON_CODE, this.getCode());
-//
-//    jsonObj.add(JSON_LOCALIZED_LABEL, this.getLabel().toJSON(serializer));
-//
-//    jsonObj.add(JSON_LOCALIZED_DESCRIPTION, this.getDescription().toJSON(serializer));
-//
-//    return jsonObj;
-//  }
-//
-//  /**
-//   * Constructs a {@link GraphTypeDTO} from the given JSON.
-//   * 
-//   * @param _sJson
-//   * @param _registry
-//   * @return
-//   */
-//  public static GraphTypeDTO fromJSON(String _sJson, RegistryAdapter _registry)
-//  {
-//    JsonObject oJson = JsonParser.parseString(_sJson).getAsJsonObject();
-//
-//    String typeCode = oJson.get(JSON_TYPE_CODE).getAsString();
-//    String code = oJson.get(JSON_CODE).getAsString();
-//    LocalizedValue label = LocalizedValue.fromJSON(oJson.get(JSON_LOCALIZED_LABEL).getAsJsonObject());
-//    LocalizedValue description = LocalizedValue.fromJSON(oJson.get(JSON_LOCALIZED_DESCRIPTION).getAsJsonObject());
-//
-//    GraphTypeDTO dto = new GraphTypeDTO(typeCode, code, label, description);
-//
-//    return dto;
-//  }
-//
-//  public static GraphTypeDTO[] fromJSONArray(String saJson, RegistryAdapter adapter)
-//  {
-//    JsonArray jaHts = JsonParser.parseString(saJson).getAsJsonArray();
-//    GraphTypeDTO[] hts = new GraphTypeDTO[jaHts.size()];
-//    for (int i = 0; i < jaHts.size(); ++i)
-//    {
-//      GraphTypeDTO ht = GraphTypeDTO.fromJSON(jaHts.get(i).toString(), adapter);
-//      hts[i] = ht;
-//    }
-//
-//    return hts;
-//  }
 }

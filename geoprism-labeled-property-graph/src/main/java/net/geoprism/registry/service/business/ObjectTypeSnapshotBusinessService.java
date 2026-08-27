@@ -3,18 +3,18 @@
  *
  * This file is part of Geoprism(tm).
  *
- * Geoprism(tm) is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
+ * Geoprism(tm) is free software: you can redistribute it and/or modify it under
+ * the terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation, either version 3 of the License, or (at your option) any
+ * later version.
  *
- * Geoprism(tm) is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
+ * Geoprism(tm) is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with Geoprism(tm).  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with Geoprism(tm). If not, see <http://www.gnu.org/licenses/>.
  */
 package net.geoprism.registry.service.business;
 
@@ -23,7 +23,6 @@ import java.util.LinkedList;
 import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
-import org.commongeoregistry.adapter.Term;
 import org.commongeoregistry.adapter.constants.DefaultAttribute;
 import org.commongeoregistry.adapter.constants.GeometryType;
 import org.commongeoregistry.adapter.metadata.AttributeBooleanType;
@@ -35,7 +34,6 @@ import org.commongeoregistry.adapter.metadata.AttributeFloatType;
 import org.commongeoregistry.adapter.metadata.AttributeIntegerType;
 import org.commongeoregistry.adapter.metadata.AttributeLocalType;
 import org.commongeoregistry.adapter.metadata.AttributeType;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import com.runwaysdk.constants.MdAttributeBooleanInfo;
 import com.runwaysdk.constants.MdAttributeCharacterInfo;
@@ -66,7 +64,6 @@ import com.runwaysdk.query.OIterator;
 import com.runwaysdk.query.QueryFactory;
 import com.runwaysdk.system.metadata.MdAttributeBoolean;
 import com.runwaysdk.system.metadata.MdAttributeCharacter;
-import com.runwaysdk.system.metadata.MdAttributeClassification;
 import com.runwaysdk.system.metadata.MdAttributeConcrete;
 import com.runwaysdk.system.metadata.MdAttributeDateTime;
 import com.runwaysdk.system.metadata.MdAttributeDouble;
@@ -75,6 +72,7 @@ import com.runwaysdk.system.metadata.MdAttributeIndices;
 import com.runwaysdk.system.metadata.MdAttributeLocalCharacterEmbedded;
 import com.runwaysdk.system.metadata.MdAttributeLocalText;
 import com.runwaysdk.system.metadata.MdAttributeLong;
+import com.runwaysdk.system.metadata.MdAttributeText;
 import com.runwaysdk.system.metadata.MdClass;
 import com.runwaysdk.system.metadata.MdGraphClass;
 import com.runwaysdk.system.metadata.MdGraphClassQuery;
@@ -94,22 +92,14 @@ import net.geoprism.graph.ObjectTypeSnapshot;
 import net.geoprism.graph.SnapshotHasAttributeQuery;
 import net.geoprism.registry.conversion.LocalizedValueConverter;
 import net.geoprism.registry.graph.DataSource;
-import net.geoprism.registry.model.Classification;
-import net.geoprism.registry.model.ClassificationType;
 
 public abstract class ObjectTypeSnapshotBusinessService<T extends ObjectTypeSnapshot> implements ObjectTypeSnapshotBusinessServiceIF<T>
 {
-  public final String                         TABLE_PACKAGE = "net.geoprism.lpg";
+  public final String TABLE_PACKAGE = "net.geoprism.lpg";
 
-  public final String                         PREFIX        = "g_";
+  public final String PREFIX        = "g_";
 
-  public final String                         SPLIT         = "__";
-
-  @Autowired
-  private ClassificationBusinessServiceIF     classificationService;
-
-  @Autowired
-  private ClassificationTypeBusinessServiceIF typeService;
+  public final String SPLIT         = "__";
 
   @Transaction
   public void delete(T snapshot)
@@ -188,11 +178,13 @@ public abstract class ObjectTypeSnapshotBusinessService<T extends ObjectTypeSnap
     else if (attributeType.getType().equals(AttributeClassificationType.TYPE))
     {
       AttributeClassificationType attributeClassificationType = (AttributeClassificationType) attributeType;
-      String classificationTypeCode = attributeClassificationType.getClassificationType();
 
       AttributeClassificationTypeSnapshot attributeSnapshot = new AttributeClassificationTypeSnapshot();
-      attributeSnapshot.setClassificationType(classificationTypeCode);
+      attributeSnapshot.setConceptSet(attributeClassificationType.getConceptSet());
+      attributeSnapshot.setStartDate(attributeClassificationType.getStartDate());
+      attributeSnapshot.setEndDate(attributeClassificationType.getEndDate());
       attributeSnapshot.setRootTerm(attributeClassificationType.getRootTerm().getCode());
+      attributeSnapshot.setRootType(attributeClassificationType.getRootTerm().getType());
 
       attributeTypeSnapshot = attributeSnapshot;
     }
@@ -271,30 +263,7 @@ public abstract class ObjectTypeSnapshotBusinessService<T extends ObjectTypeSnap
     }
     else if (attributeType.getType().equals(AttributeClassificationType.TYPE))
     {
-      AttributeClassificationType attributeClassificationType = (AttributeClassificationType) attributeType;
-      String classificationTypeCode = attributeClassificationType.getClassificationType();
-
-      ClassificationType classificationType = this.typeService.getByCode(classificationTypeCode);
-
-      mdAttribute = new MdAttributeClassification();
-      MdAttributeClassification mdAttributeTerm = (MdAttributeClassification) mdAttribute;
-      mdAttributeTerm.setReferenceMdClassification(classificationType.getMdClassificationObject());
-
-      Term root = attributeClassificationType.getRootTerm();
-
-      if (root != null)
-      {
-        Classification classification = this.classificationService.getByCode(classificationType, root.getCode()).orElseThrow(() -> {
-          net.geoprism.registry.DataNotFoundException ex = new net.geoprism.registry.DataNotFoundException();
-          ex.setTypeLabel(classificationType.getDisplayLabel().getValue());
-          ex.setDataIdentifier(root.getCode());
-          ex.setAttributeLabel("geoObjectType.attr.code");
-
-          return ex;
-        });
-
-        mdAttributeTerm.setValue(MdAttributeClassification.ROOT, classification.getOid());
-      }
+      mdAttribute = new MdAttributeText();
     }
     else if (attributeType.getType().equals(AttributeBooleanType.TYPE))
     {

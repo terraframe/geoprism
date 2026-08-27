@@ -56,21 +56,21 @@ public  class AttributeClassificationTypeSnapshotQuery extends net.geoprism.grap
   {
     return net.geoprism.graph.AttributeClassificationTypeSnapshot.CLASS;
   }
-  public com.runwaysdk.query.SelectableChar getClassificationType()
+  public com.runwaysdk.query.SelectableChar getConceptSet()
   {
-    return getClassificationType(null);
+    return getConceptSet(null);
 
   }
  
-  public com.runwaysdk.query.SelectableChar getClassificationType(String alias)
+  public com.runwaysdk.query.SelectableChar getConceptSet(String alias)
   {
-    return (com.runwaysdk.query.SelectableChar)this.getComponentQuery().get(net.geoprism.graph.AttributeClassificationTypeSnapshot.CLASSIFICATIONTYPE, alias, null);
+    return (com.runwaysdk.query.SelectableChar)this.getComponentQuery().get(net.geoprism.graph.AttributeClassificationTypeSnapshot.CONCEPTSET, alias, null);
 
   }
  
-  public com.runwaysdk.query.SelectableChar getClassificationType(String alias, String displayLabel)
+  public com.runwaysdk.query.SelectableChar getConceptSet(String alias, String displayLabel)
   {
-    return (com.runwaysdk.query.SelectableChar)this.getComponentQuery().get(net.geoprism.graph.AttributeClassificationTypeSnapshot.CLASSIFICATIONTYPE, alias, displayLabel);
+    return (com.runwaysdk.query.SelectableChar)this.getComponentQuery().get(net.geoprism.graph.AttributeClassificationTypeSnapshot.CONCEPTSET, alias, displayLabel);
 
   }
   public com.runwaysdk.query.SelectableChar getRootTerm()
@@ -122,9 +122,9 @@ public  class AttributeClassificationTypeSnapshotQuery extends net.geoprism.grap
   public interface AttributeClassificationTypeSnapshotQueryReferenceIF extends net.geoprism.graph.AttributeTypeSnapshotQuery.AttributeTypeSnapshotQueryReferenceIF
   {
 
-    public com.runwaysdk.query.SelectableChar getClassificationType();
-    public com.runwaysdk.query.SelectableChar getClassificationType(String alias);
-    public com.runwaysdk.query.SelectableChar getClassificationType(String alias, String displayLabel);
+    public com.runwaysdk.query.SelectableChar getConceptSet();
+    public com.runwaysdk.query.SelectableChar getConceptSet(String alias);
+    public com.runwaysdk.query.SelectableChar getConceptSet(String alias, String displayLabel);
     public com.runwaysdk.query.SelectableChar getRootTerm();
     public com.runwaysdk.query.SelectableChar getRootTerm(String alias);
     public com.runwaysdk.query.SelectableChar getRootTerm(String alias, String displayLabel);
@@ -163,21 +163,21 @@ public  class AttributeClassificationTypeSnapshotQuery extends net.geoprism.grap
       return this.NE(attributeClassificationTypeSnapshot.getOid());
     }
 
-  public com.runwaysdk.query.SelectableChar getClassificationType()
+  public com.runwaysdk.query.SelectableChar getConceptSet()
   {
-    return getClassificationType(null);
+    return getConceptSet(null);
 
   }
  
-  public com.runwaysdk.query.SelectableChar getClassificationType(String alias)
+  public com.runwaysdk.query.SelectableChar getConceptSet(String alias)
   {
-    return (com.runwaysdk.query.SelectableChar)this.get(net.geoprism.graph.AttributeClassificationTypeSnapshot.CLASSIFICATIONTYPE, alias, null);
+    return (com.runwaysdk.query.SelectableChar)this.get(net.geoprism.graph.AttributeClassificationTypeSnapshot.CONCEPTSET, alias, null);
 
   }
  
-  public com.runwaysdk.query.SelectableChar getClassificationType(String alias, String displayLabel)
+  public com.runwaysdk.query.SelectableChar getConceptSet(String alias, String displayLabel)
   {
-    return (com.runwaysdk.query.SelectableChar)this.get(net.geoprism.graph.AttributeClassificationTypeSnapshot.CLASSIFICATIONTYPE, alias, displayLabel);
+    return (com.runwaysdk.query.SelectableChar)this.get(net.geoprism.graph.AttributeClassificationTypeSnapshot.CONCEPTSET, alias, displayLabel);
 
   }
   public com.runwaysdk.query.SelectableChar getRootTerm()
@@ -206,9 +206,9 @@ public  class AttributeClassificationTypeSnapshotQuery extends net.geoprism.grap
   public interface AttributeClassificationTypeSnapshotQueryMultiReferenceIF extends net.geoprism.graph.AttributeTypeSnapshotQuery.AttributeTypeSnapshotQueryMultiReferenceIF
   {
 
-    public com.runwaysdk.query.SelectableChar getClassificationType();
-    public com.runwaysdk.query.SelectableChar getClassificationType(String alias);
-    public com.runwaysdk.query.SelectableChar getClassificationType(String alias, String displayLabel);
+    public com.runwaysdk.query.SelectableChar getConceptSet();
+    public com.runwaysdk.query.SelectableChar getConceptSet(String alias);
+    public com.runwaysdk.query.SelectableChar getConceptSet(String alias, String displayLabel);
     public com.runwaysdk.query.SelectableChar getRootTerm();
     public com.runwaysdk.query.SelectableChar getRootTerm(String alias);
     public com.runwaysdk.query.SelectableChar getRootTerm(String alias, String displayLabel);
@@ -296,21 +296,21 @@ public  class AttributeClassificationTypeSnapshotQuery extends net.geoprism.grap
 
       return this.containsExactly(itemIdArray);
   }
-  public com.runwaysdk.query.SelectableChar getClassificationType()
+  public com.runwaysdk.query.SelectableChar getConceptSet()
   {
-    return getClassificationType(null);
+    return getConceptSet(null);
 
   }
  
-  public com.runwaysdk.query.SelectableChar getClassificationType(String alias)
+  public com.runwaysdk.query.SelectableChar getConceptSet(String alias)
   {
-    return (com.runwaysdk.query.SelectableChar)this.get(net.geoprism.graph.AttributeClassificationTypeSnapshot.CLASSIFICATIONTYPE, alias, null);
+    return (com.runwaysdk.query.SelectableChar)this.get(net.geoprism.graph.AttributeClassificationTypeSnapshot.CONCEPTSET, alias, null);
 
   }
  
-  public com.runwaysdk.query.SelectableChar getClassificationType(String alias, String displayLabel)
+  public com.runwaysdk.query.SelectableChar getConceptSet(String alias, String displayLabel)
   {
-    return (com.runwaysdk.query.SelectableChar)this.get(net.geoprism.graph.AttributeClassificationTypeSnapshot.CLASSIFICATIONTYPE, alias, displayLabel);
+    return (com.runwaysdk.query.SelectableChar)this.get(net.geoprism.graph.AttributeClassificationTypeSnapshot.CONCEPTSET, alias, displayLabel);
 
   }
   public com.runwaysdk.query.SelectableChar getRootTerm()

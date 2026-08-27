@@ -223,8 +223,11 @@
       </mdBusiness>    
       <mdBusiness name="net.geoprism.graph.AttributeClassificationTypeSnapshot" extends="net.geoprism.graph.AttributeTypeSnapshot" label="Attribute Classification TypeSnapshot">
         <attributes>
-          <text name="classificationType" label="Classification Type" required="true"/>          
+          <text name="conceptSet" label="Concept Set" required="false"/>  
+          <dateTime name="startDate" label="Start Date" required="true"  />
+          <dateTime name="endDate" label="End Date" required="true"  />                    
           <text name="rootTerm" label="Root Term" required="false"/>  
+          <text name="rootType" label="Root Type" required="false"/>            
         </attributes>
       </mdBusiness>    
       

@@ -1,24 +1,23 @@
 /**
- * Copyright (c) 2023 TerraFrame, Inc. All rights reserved.
+ * CopyrighConceptSet (c) 2023 TerraFrame, Inc. All rights reserved.
  *
- * This file is part of Geoprism(tm).
+ * This file is parConceptSet of Geoprism(tm).
  *
- * Geoprism(tm) is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
+ * Geoprism(tm) is free software: you can redistribute iConceptSet and/or modify
+ * iConceptSet under the terms of the GNU Lesser General Public License as
+ * published by the Free Software Foundation, either version 3 of the License,
+ * or (aConceptSet your option) any later version.
  *
- * Geoprism(tm) is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
+ * Geoprism(tm) is distributed in the hope thaConceptSet iConceptSet will be
+ * useful, but WITHOUConceptSet ANY WARRANTY; withouConceptSet even the implied
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * Lesser General Public License for more details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with Geoprism(tm).  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with Geoprism(tm). If not, see <http://www.gnu.org/licenses/>.
  */
 package net.geoprism.registry.service.business;
 
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -27,6 +26,7 @@ import org.commongeoregistry.adapter.constants.DefaultAttribute;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.apicatalog.jsonld.lang.DirectionType;
 import com.runwaysdk.business.graph.EdgeObject;
 import com.runwaysdk.business.graph.GraphQuery;
 import com.runwaysdk.dataaccess.MdVertexDAOIF;
@@ -41,48 +41,40 @@ import net.geoprism.registry.graph.ConceptEdgeType;
 import net.geoprism.registry.graph.ConceptSet;
 import net.geoprism.registry.model.EdgeConstant;
 import net.geoprism.registry.model.GeoObjectMetadata;
-import net.geoprism.registry.model.ServerOrganization;
 import net.geoprism.registry.service.permission.PermissionServiceIF;
 import net.geoprism.registry.view.ConceptSetDTO;
+import net.geoprism.registry.view.DiscreteType;
 
 @Service
-public abstract class ConceptSetBusinessService<T extends ConceptSet, D extends ConceptSetDTO> implements ConceptSetBusinessServiceIF<T, D>
+public class ConceptSetBusinessService implements ConceptSetBusinessServiceIF
 {
   @Autowired
-  protected PermissionServiceIF                permissions;
+  protected PermissionServiceIF                         permissions;
 
-  private final String                         vertexClass;
+  private final TransactionLRUCache<String, ConceptSet> cache;
 
-  private final TransactionLRUCache<String, T> cache;
-
-  public ConceptSetBusinessService(String vertexClass)
+  public ConceptSetBusinessService()
   {
-    this(vertexClass, UUID.randomUUID().toString());
+    this(UUID.randomUUID().toString());
   }
 
-  public ConceptSetBusinessService(String vertexClass, String cacheName)
+  public ConceptSetBusinessService(String cacheName)
   {
-    this.vertexClass = vertexClass;
-
-    this.cache = new TransactionLRUCache<String, T>(cacheName, (v) -> {
+    this.cache = new TransactionLRUCache<String, ConceptSet>(cacheName, (v) -> {
 
       return new String[] { v.getCode(), v.getOid() };
     }, 20);
 
   }
 
-  protected abstract T createInstance();
-
-  protected abstract D createDTO();
-
-  public TransactionLRUCache<String, T> getCache()
+  private TransactionLRUCache<String, ConceptSet> getCache()
   {
     return cache;
   }
 
   @Override
   @Transaction
-  public void delete(T type)
+  public void delete(ConceptSet type)
   {
     type.delete();
 
@@ -91,10 +83,10 @@ public abstract class ConceptSetBusinessService<T extends ConceptSet, D extends 
 
   @Override
   @Transaction
-  public T apply(D dto)
+  public ConceptSet apply(ConceptSetDTO dto)
   {
-    T type = this.getByCode(dto.getCode()).orElseGet(() -> {
-      T t = this.createInstance();
+    ConceptSet type = this.getByCode(dto.getCode()).orElseGet(() -> {
+      ConceptSet t = new ConceptSet();
       t.setCode(dto.getCode());
 
       return t;
@@ -109,24 +101,26 @@ public abstract class ConceptSetBusinessService<T extends ConceptSet, D extends 
     return type;
   }
 
-  protected void fromDTO(T type, D dto)
+  protected void fromDTO(ConceptSet type, ConceptSetDTO dto)
   {
+    type.setDiscreteType(dto.getDiscreteType().name());
+
     RegistryLocalizedValueConverter.populate(type, ConceptSet.DISPLAYLABEL, dto.getDisplayLabel());
     RegistryLocalizedValueConverter.populate(type, ConceptSet.DESCRIPTION, dto.getDescription());
   }
 
   @Override
-  public Optional<T> get(String oid)
+  public Optional<ConceptSet> get(String oid)
   {
     return this.cache.get(oid, () -> {
 
-      MdVertexDAOIF mdVertex = MdVertexDAO.getMdVertexDAO(this.vertexClass);
+      MdVertexDAOIF mdVertex = MdVertexDAO.getMdVertexDAO(ConceptSet.CLASS);
 
       StringBuilder statement = new StringBuilder();
       statement.append("SELECT FROM " + mdVertex.getDBClassName());
       statement.append(" WHERE oid = :oid");
 
-      GraphQuery<T> query = new GraphQuery<T>(statement.toString());
+      GraphQuery<ConceptSet> query = new GraphQuery<ConceptSet>(statement.toString());
       query.setParameter("oid", oid);
 
       return Optional.ofNullable(query.getSingleResult());
@@ -134,17 +128,17 @@ public abstract class ConceptSetBusinessService<T extends ConceptSet, D extends 
   }
 
   @Override
-  public Optional<T> getByCode(String code)
+  public Optional<ConceptSet> getByCode(String code)
   {
     return this.cache.get(code, () -> {
 
-      MdVertexDAOIF mdVertex = MdVertexDAO.getMdVertexDAO(this.vertexClass);
+      MdVertexDAOIF mdVertex = MdVertexDAO.getMdVertexDAO(ConceptSet.CLASS);
 
       StringBuilder statement = new StringBuilder();
       statement.append("SELECT FROM " + mdVertex.getDBClassName());
       statement.append(" WHERE code = :code");
 
-      GraphQuery<T> query = new GraphQuery<T>(statement.toString());
+      GraphQuery<ConceptSet> query = new GraphQuery<ConceptSet>(statement.toString());
       query.setParameter("code", code);
 
       return Optional.ofNullable(query.getSingleResult());
@@ -152,10 +146,10 @@ public abstract class ConceptSetBusinessService<T extends ConceptSet, D extends 
   }
 
   @Override
-  public T getByCodeOrThrow(String code)
+  public ConceptSet getByCodeOrThrow(String code)
   {
     return this.getByCode(code).orElseThrow(() -> {
-      MdVertexDAOIF mdVertex = MdVertexDAO.getMdVertexDAO(this.vertexClass);
+      MdVertexDAOIF mdVertex = MdVertexDAO.getMdVertexDAO(ConceptSet.CLASS);
 
       net.geoprism.registry.DataNotFoundException ex = new net.geoprism.registry.DataNotFoundException();
       ex.setTypeLabel(mdVertex.getDisplayLabel(Session.getCurrentLocale()));
@@ -167,15 +161,15 @@ public abstract class ConceptSetBusinessService<T extends ConceptSet, D extends 
   }
 
   @Override
-  public List<T> getAll()
+  public List<ConceptSet> getAll()
   {
-    MdVertexDAOIF mdVertex = MdVertexDAO.getMdVertexDAO(this.vertexClass);
+    MdVertexDAOIF mdVertex = MdVertexDAO.getMdVertexDAO(ConceptSet.CLASS);
 
     StringBuilder statement = new StringBuilder();
     statement.append("SELECT FROM " + mdVertex.getDBClassName());
     statement.append(" ORDER BY code DESC");
 
-    GraphQuery<T> query = new GraphQuery<T>(statement.toString());
+    GraphQuery<ConceptSet> query = new GraphQuery<ConceptSet>(statement.toString());
 
     return query.getResults().stream() //
         .sorted((a, b) -> a.getLabel().getValue().compareTo(b.getLabel().getValue())) //
@@ -183,24 +177,41 @@ public abstract class ConceptSetBusinessService<T extends ConceptSet, D extends 
   }
 
   @Override
-  public D toDTO(T type)
+  public ConceptSetDTO toDTO(ConceptSet type)
   {
-    D dto = this.createDTO();
+    ConceptSetDTO dto = new ConceptSetDTO();
 
     this.toDTO(dto, type);
 
     return dto;
   }
 
-  protected void toDTO(D dto, T type)
+  protected void toDTO(ConceptSetDTO dto, ConceptSet type)
   {
     dto.setCode(type.getCode());
     dto.setDisplayLabel(type.getLabel());
+    dto.setDiscreteType(DiscreteType.valueOf(type.getDiscreteType()));
   }
 
   @Override
-  public EdgeObject addConceptClass(T type, ConceptClass conceptClass)
+  public EdgeObject addConceptClass(ConceptSet type, ConceptClass conceptClass)
   {
+    if (type.getDiscreteType().equals(DiscreteType.TAXONOMY.name()) && //
+        this.getConceptClasses(type).size() > 0)
+    {
+      throw new UnsupportedOperationException("An taxonomy can only have a single concept class assignment");
+    }
+    else if (type.getDiscreteType().equals(DiscreteType.ENUMERATION.name()) && //
+        this.getConceptClasses(type).size() > 0)
+    {
+      throw new UnsupportedOperationException("An enumeration can only have a single concept class assignment");
+    }
+    else if (type.getDiscreteType().equals(DiscreteType.ONTOLOGY.name()) && //
+        this.getConceptClasses(type).stream().anyMatch(t -> t.getCode().equals(conceptClass.getCode())))
+    {
+      throw new UnsupportedOperationException("The concept class [" + conceptClass.getCode() + "] is already part of the concept set");
+    }
+
     EdgeObject edge = type.addChild(conceptClass, EdgeConstant.HAS_CONCEPT.getMdEdge());
     edge.apply();
 
@@ -208,8 +219,24 @@ public abstract class ConceptSetBusinessService<T extends ConceptSet, D extends 
   }
 
   @Override
-  public EdgeObject addConceptEdgeType(T type, ConceptEdgeType conceptEdgeType)
+  public EdgeObject addConceptEdgeType(ConceptSet type, ConceptEdgeType conceptEdgeType)
   {
+    if (type.getDiscreteType().equals(DiscreteType.TAXONOMY.name()) && //
+        this.getConceptEdgeTypes(type).size() > 0)
+    {
+      throw new UnsupportedOperationException("A taxonomy can only have a single concept edge type assignment");
+    }
+    else if (type.getDiscreteType().equals(DiscreteType.ENUMERATION.name()) && //
+        this.getConceptEdgeTypes(type).size() > 0)
+    {
+      throw new UnsupportedOperationException("An enumeration can only have a single concept edge type assignment");
+    }
+    else if (type.getDiscreteType().equals(DiscreteType.ONTOLOGY.name()) && //
+        this.getConceptEdgeTypes(type).stream().anyMatch(t -> t.getCode().equals(conceptEdgeType.getCode())))
+    {
+      throw new UnsupportedOperationException("The concept edge type [" + conceptEdgeType.getCode() + "] is already part of the concept set");
+    }
+
     EdgeObject edge = type.addChild(conceptEdgeType, EdgeConstant.HAS_CONCEPT_EDGE.getMdEdge());
     edge.apply();
 
@@ -217,25 +244,25 @@ public abstract class ConceptSetBusinessService<T extends ConceptSet, D extends 
   }
 
   @Override
-  public List<EdgeObject> getConceptClassEdges(T type)
+  public List<EdgeObject> getConceptClassEdges(ConceptSet type)
   {
     return type.getChildEdges(EdgeConstant.HAS_CONCEPT.getMdEdge(), EdgeObject.class);
   }
 
   @Override
-  public List<EdgeObject> getConceptEdgeTypeEdges(T type)
+  public List<EdgeObject> getConceptEdgeTypeEdges(ConceptSet type)
   {
     return type.getChildEdges(EdgeConstant.HAS_CONCEPT_EDGE.getMdEdge(), EdgeObject.class);
   }
 
   @Override
-  public List<ConceptClass> getConceptClasses(T type)
+  public List<ConceptClass> getConceptClasses(ConceptSet type)
   {
     return type.getChildren(EdgeConstant.HAS_CONCEPT.getMdEdge(), ConceptClass.class);
   }
 
   @Override
-  public List<ConceptEdgeType> getConceptEdgeTypes(T type)
+  public List<ConceptEdgeType> getConceptEdgeTypes(ConceptSet type)
   {
     return type.getChildren(EdgeConstant.HAS_CONCEPT_EDGE.getMdEdge(), ConceptEdgeType.class);
   }

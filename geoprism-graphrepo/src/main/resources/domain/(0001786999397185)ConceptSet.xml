@@ -27,7 +27,6 @@
       <mdVertex
         name="net.geoprism.registry.graph.ConceptSet"
         extends="net.geoprism.registry.graph.SchemaElement"
-        isAbstract="true"
         label="Concept Set">
         <attributes>
           <char
@@ -43,25 +42,9 @@
           <localCharEmbedded
             name="description"
             label="Description" />
+          <text name="discreteType" label="Discrete type"  />                                         
+          <graphReference name="rootTerm" type="net.geoprism.registry.graph.ConceptVertex" label="Root Term" required="false"/>                    
         </attributes>
-      </mdVertex>
-      <mdVertex
-        name="net.geoprism.registry.graph.Taxonomy"
-        extends="net.geoprism.registry.graph.ConceptSet"
-        isAbstract="false"
-        label="Taxonomy">
-      </mdVertex>
-      <mdVertex
-        name="net.geoprism.registry.graph.Ontology"
-        extends="net.geoprism.registry.graph.ConceptSet"
-        isAbstract="false"
-        label="Ontology">
-      </mdVertex>
-      <mdVertex
-        name="net.geoprism.registry.graph.Enumeration"
-        extends="net.geoprism.registry.graph.ConceptSet"
-        isAbstract="false"
-        label="Geo Ontology">
       </mdVertex>
       
       <mdEdge name="net.geoprism.registry.graph.HasConcept" label="Has Concept" parent="net.geoprism.registry.graph.ConceptSet" child="net.geoprism.registry.graph.ConceptClass" generateSource="false">
@@ -76,15 +59,6 @@
       <role roleName="geoprism.admin.Administrator">
         <grant>
           <mdBusinessPermission type="net.geoprism.registry.graph.ConceptSet">
-            <operation name="ALL" />
-          </mdBusinessPermission>
-          <mdBusinessPermission type="net.geoprism.registry.graph.Taxonomy">
-            <operation name="ALL" />
-          </mdBusinessPermission>
-          <mdBusinessPermission type="net.geoprism.registry.graph.Ontology">
-            <operation name="ALL" />
-          </mdBusinessPermission>
-          <mdBusinessPermission type="net.geoprism.registry.graph.Enumeration">
             <operation name="ALL" />
           </mdBusinessPermission>
           <mdRelationshipPermission type="net.geoprism.registry.graph.HasConcept">
@@ -107,15 +81,6 @@
       <object
         type="com.runwaysdk.system.metadata.MdEdge"
         key="net.geoprism.registry.graph.HasConcept" />
-      <object
-        type="com.runwaysdk.system.metadata.MdVertex"
-        key="net.geoprism.registry.graph.Enumeration" />
-      <object
-        type="com.runwaysdk.system.metadata.MdVertex"
-        key="net.geoprism.registry.graph.Ontology" />
-      <object
-        type="com.runwaysdk.system.metadata.MdVertex"
-        key="net.geoprism.registry.graph.Taxonomy" />
       <object
         type="com.runwaysdk.system.metadata.MdVertex"
         key="net.geoprism.registry.graph.ConceptSet" />

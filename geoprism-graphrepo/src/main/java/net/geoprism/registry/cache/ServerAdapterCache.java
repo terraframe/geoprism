@@ -22,7 +22,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.commongeoregistry.adapter.Optional;
-import org.commongeoregistry.adapter.Term;
 import org.commongeoregistry.adapter.metadata.GeoObjectType;
 import org.commongeoregistry.adapter.metadata.HierarchyType;
 import org.commongeoregistry.adapter.metadata.MetadataCacheIF;
@@ -37,17 +36,6 @@ public class ServerAdapterCache implements MetadataCacheIF
   @Override
   public void rebuild()
   {
-  }
-
-  @Override
-  public void addTerm(Term term)
-  {
-  }
-
-  @Override
-  public Optional<Term> getTerm(String code)
-  {
-    throw new UnsupportedOperationException();
   }
 
   @Override

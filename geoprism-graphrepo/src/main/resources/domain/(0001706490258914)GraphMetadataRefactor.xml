@@ -124,9 +124,10 @@
       </mdVertex>    
       <mdVertex name="net.geoprism.registry.graph.AttributeClassificationType" extends="net.geoprism.registry.graph.AttributeType" label="Attribute Classification Type">
         <attributes>
-          <reference name="mdClassification" type="com.runwaysdk.system.metadata.MdClassification" label="MdClassification" required="true"/>          
-          <text name="rootTerm" label="Root Term" required="false"/>  
-          <reference name="valueVertex" label="Value Vertex" required="false" type="com.runwaysdk.system.metadata.MdVertex"/>                            
+          <text name="conceptSet" label="Concept Set" required="false"/>  
+          <dateTime name="startDate" label="Start Date" required="true"  />
+          <dateTime name="endDate" label="End Date" required="true"  />                    
+          <graphReference name="rootTerm" type="net.geoprism.registry.graph.ConceptVertex" label="Root Term" required="true"/>          
         </attributes>
       </mdVertex>    
       
@@ -173,15 +174,11 @@
           <text name="defaultLocale" label="Default Locale" required="false"  />          
         </attributes>
       </mdVertex>    
-<!--       
-      <mdVertex name="net.geoprism.registry.graph.AttributeClassificationValue" isAbstract="true" label="AttributeValue">
+      <mdVertex name="net.geoprism.registry.graph.AttributeClassificationValue" extends="net.geoprism.registry.graph.AttributeBasicValue" label="Attribute Classification Value">
         <attributes>
-          <graphReference name="value" type="net.geoprism.registry.graph.ClassificationNode" label="Value" required="true"/>          
+          <graphReference name="value" type="net.geoprism.registry.graph.ConceptVertex" label="Value" required="true"/>          
         </attributes>
       </mdVertex>    
- -->      
-      
-      
       <mdVertex name="net.geoprism.registry.graph.AttributeGeometryValue"  extends="net.geoprism.registry.graph.AttributeValue" isAbstract="true" label="Attribute Geometry Value">
         <attributes>
         </attributes>

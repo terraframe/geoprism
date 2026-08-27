@@ -3,18 +3,18 @@
  *
  * This file is part of Geoprism(tm).
  *
- * Geoprism(tm) is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
+ * Geoprism(tm) is free software: you can redistribute it and/or modify it under
+ * the terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation, either version 3 of the License, or (at your option) any
+ * later version.
  *
- * Geoprism(tm) is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
+ * Geoprism(tm) is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with Geoprism(tm).  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with Geoprism(tm). If not, see <http://www.gnu.org/licenses/>.
  */
 package net.geoprism.registry;
 
@@ -24,14 +24,12 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.TimeZone;
 
-import com.runwaysdk.dataaccess.ProgrammingErrorException;
-
 public class DateFormatter
 {
-  public static final String                          DATE_FORMAT            = "yyyy-MM-dd";
-  
-  public static final TimeZone SYSTEM_TIMEZONE   = TimeZone.getTimeZone("UTC");
-  
+  public static final String   DATE_FORMAT     = "yyyy-MM-dd";
+
+  public static final TimeZone SYSTEM_TIMEZONE = TimeZone.getTimeZone("UTC");
+
   public static String formatDate(Date date, boolean includeTime)
   {
     if (date != null)
@@ -53,13 +51,8 @@ public class DateFormatter
 
     return null;
   }
-  
-  public static Date parseDate(String date)
-  {
-    return parseDate(date, false);
-  }
 
-  public static Date parseDate(String date, boolean throwClientException)
+  public static Date parseDate(String date)
   {
     if (date != null && date.length() > 0)
     {
@@ -73,20 +66,13 @@ public class DateFormatter
       }
       catch (ParseException e)
       {
-        if (throwClientException)
-        {
-          throw new RuntimeException("Unable to parse the date [" + date + "]. The date format must be [" + DATE_FORMAT + "]");
-        }
-        else
-        {
-          throw new ProgrammingErrorException(e);
-        }
+        throw new RuntimeParseException("Unable to parse the date [" + date + "]. The date format must be [" + DATE_FORMAT + "]");
       }
     }
 
     return null;
   }
-  
+
   public static Date getCurrentDate()
   {
     Calendar calendar = Calendar.getInstance(SYSTEM_TIMEZONE);

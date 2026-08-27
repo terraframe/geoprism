@@ -3,18 +3,18 @@
  *
  * This file is part of Geoprism(tm).
  *
- * Geoprism(tm) is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
+ * Geoprism(tm) is free software: you can redistribute it and/or modify it under
+ * the terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation, either version 3 of the License, or (at your option) any
+ * later version.
  *
- * Geoprism(tm) is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
+ * Geoprism(tm) is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with Geoprism(tm).  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with Geoprism(tm). If not, see <http://www.gnu.org/licenses/>.
  */
 package net.geoprism.registry.service.business;
 
@@ -87,8 +87,7 @@ import net.geoprism.registry.graph.HierarchicalRelationshipType;
 import net.geoprism.registry.graph.InheritedHierarchyAnnotation;
 import net.geoprism.registry.io.TermValueException;
 import net.geoprism.registry.model.BusinessObject;
-import net.geoprism.registry.model.Classification;
-import net.geoprism.registry.model.ClassificationType;
+import net.geoprism.registry.model.ConceptObject;
 import net.geoprism.registry.model.EdgeConstant;
 import net.geoprism.registry.model.EdgeDirection;
 import net.geoprism.registry.model.EdgeType;
@@ -121,34 +120,34 @@ import net.geoprism.registry.view.ServerParentTreeNodeOverTime;
 @Service
 public class GeoObjectBusinessService extends RegistryLocalizedValueConverter implements GeoObjectBusinessServiceIF
 {
-  private static final Logger                   logger = LoggerFactory.getLogger(GeoObjectBusinessService.class);
+  private static final Logger                 logger = LoggerFactory.getLogger(GeoObjectBusinessService.class);
 
   @Autowired
-  protected GeoObjectPermissionServiceIF        permissionService;
+  protected GeoObjectPermissionServiceIF      permissionService;
 
   @Autowired
-  protected GeoObjectTypeBusinessServiceIF      gotService;
+  protected GeoObjectTypeBusinessServiceIF    gotService;
 
   @Autowired
-  protected HierarchyTypeBusinessServiceIF      htService;
+  protected HierarchyTypeBusinessServiceIF    htService;
 
   @Autowired
-  protected BusinessTypeBusinessServiceIF       businessTypeService;
+  protected BusinessTypeBusinessServiceIF     businessTypeService;
 
   @Autowired
-  protected BusinessEdgeTypeBusinessServiceIF   businessEdgeTypeService;
+  protected BusinessEdgeTypeBusinessServiceIF businessEdgeTypeService;
 
   @Autowired
-  protected BusinessObjectBusinessServiceIF     businessObjectService;
+  protected BusinessObjectBusinessServiceIF   businessObjectService;
 
   @Autowired
-  protected ClassificationTypeBusinessServiceIF cTypeService;
+  protected ConceptSetBusinessServiceIF       cTypeService;
 
   @Autowired
-  protected ClassificationBusinessServiceIF     cService;
+  protected ConceptObjectBusinessServiceIF    cService;
 
   @Autowired
-  protected DataSourceBusinessServiceIF         sourceService;
+  protected DataSourceBusinessServiceIF       sourceService;
 
   public GeoObjectBusinessService()
   {
@@ -445,7 +444,7 @@ public class GeoObjectBusinessService extends RegistryLocalizedValueConverter im
 
           if (value != null)
           {
-            this.cService.get((AttributeClassificationType) attribute, value).ifPresent(classification -> {
+            this.cService.getByCode((AttributeClassificationType) attribute, value).ifPresent(classification -> {
               sgo.setValue(attributeName, classification.getVertex(), startDate, endDate);
             });
           }
@@ -548,7 +547,7 @@ public class GeoObjectBusinessService extends RegistryLocalizedValueConverter im
 
             if (value != null)
             {
-              this.cService.get((AttributeClassificationType) attribute, value).ifPresent(classification -> {
+              this.cService.getByCode((AttributeClassificationType) attribute, value).ifPresent(classification -> {
                 sgo.setValue(attributeName, classification.getVertex(), votDTO.getStartDate(), votDTO.getEndDate());
 
                 c.add(new ValueOverTime(votDTO.getStartDate(), votDTO.getEndDate(), classification.getVertex()));
@@ -975,14 +974,7 @@ public class GeoObjectBusinessService extends RegistryLocalizedValueConverter im
           }
           else if (attribute instanceof AttributeClassificationType)
           {
-            // ID id = (ID) value;
-            String classificationTypeCode = ( (AttributeClassificationType) attribute ).getClassificationType();
-            ClassificationType classificationType = this.cTypeService.getByCode(classificationTypeCode);
-
-            Classification classification = this.cService.getByOid(classificationType, (String) value).orElseThrow(() -> {
-              // Classification classification =
-              // this.cService.getByRid(id.getRid().toString()).orElseThrow(()
-              // -> {
+            ConceptObject classification = this.cService.getByOid((String) value).orElseThrow(() -> {
               TermValueException ex = new TermValueException();
               ex.setAttributeLabel(attribute.getLabel().getValue());
               ex.setCode(value.toString());
@@ -990,7 +982,7 @@ public class GeoObjectBusinessService extends RegistryLocalizedValueConverter im
               throw ex;
             });
 
-            geoObj.setValue(attributeName, classification.toTerm());
+            geoObj.setValue(attributeName, classification.getCode());
           }
           else
           {
@@ -1164,10 +1156,7 @@ public class GeoObjectBusinessService extends RegistryLocalizedValueConverter im
               }
               else if (attribute instanceof AttributeClassificationType)
               {
-                String classificationTypeCode = ( (AttributeClassificationType) attribute ).getClassificationType();
-                ClassificationType classificationType = this.cTypeService.getByCode(classificationTypeCode);
-
-                Classification classification = this.cService.getByOid(classificationType, (String) value).orElseThrow(() -> {
+                ConceptObject classification = this.cService.getByOid((String) value).orElseThrow(() -> {
                   TermValueException ex = new TermValueException();
                   ex.setAttributeLabel(attribute.getLabel().getValue());
                   ex.setCode(value.toString());
@@ -1176,7 +1165,7 @@ public class GeoObjectBusinessService extends RegistryLocalizedValueConverter im
                 });
 
                 ValueOverTimeDTO votDTO = new ValueOverTimeDTO(vot.getOid(), vot.getStartDate(), vot.getEndDate(), votcDTO);
-                votDTO.setValue(classification.toTerm());
+                votDTO.setValue(classification.getCode());
                 votcDTO.add(votDTO);
               }
               else
@@ -1201,10 +1190,7 @@ public class GeoObjectBusinessService extends RegistryLocalizedValueConverter im
             {
               String oid = value.toString().trim();
 
-              String classificationTypeCode = ( (AttributeClassificationType) attribute ).getClassificationType();
-              ClassificationType classificationType = this.cTypeService.getByCode(classificationTypeCode);
-
-              Classification classification = this.cService.getByOid(classificationType, oid).orElseThrow(() -> {
+              ConceptObject classification = this.cService.getByOid(oid).orElseThrow(() -> {
                 TermValueException ex = new TermValueException();
                 ex.setAttributeLabel(attribute.getLabel().getValue());
                 ex.setCode(oid);

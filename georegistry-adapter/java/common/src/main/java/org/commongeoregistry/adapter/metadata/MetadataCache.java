@@ -3,18 +3,19 @@
  *
  * This file is part of Common Geo Registry Adapter(tm).
  *
- * Common Geo Registry Adapter(tm) is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
+ * Common Geo Registry Adapter(tm) is free software: you can redistribute it
+ * and/or modify it under the terms of the GNU Lesser General Public License as
+ * published by the Free Software Foundation, either version 3 of the License,
+ * or (at your option) any later version.
  *
- * Common Geo Registry Adapter(tm) is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
+ * Common Geo Registry Adapter(tm) is distributed in the hope that it will be
+ * useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser
+ * General Public License for more details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with Common Geo Registry Adapter(tm).  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with Common Geo Registry Adapter(tm). If not, see
+ * <http://www.gnu.org/licenses/>.
  */
 package org.commongeoregistry.adapter.metadata;
 
@@ -25,8 +26,6 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.commongeoregistry.adapter.Optional;
-import org.commongeoregistry.adapter.RegistryAdapter;
-import org.commongeoregistry.adapter.Term;
 import org.commongeoregistry.adapter.dataaccess.GeoObject;
 
 /**
@@ -49,8 +48,6 @@ public class MetadataCache implements Serializable, MetadataCacheIF
 
   private Map<String, HierarchyType>   hierarchyTypeMap;
 
-  private Map<String, Term>            termMap;
-
   /**
    * Clears the metadata cache.
    */
@@ -59,17 +56,6 @@ public class MetadataCache implements Serializable, MetadataCacheIF
     this.organizationMap = new ConcurrentHashMap<String, OrganizationDTO>();
     this.geoGeoObjectTypeMap = new ConcurrentHashMap<String, GeoObjectType>();
     this.hierarchyTypeMap = new ConcurrentHashMap<String, HierarchyType>();
-    this.termMap = new ConcurrentHashMap<String, Term>();
-  }
-
-  public void addTerm(Term term)
-  {
-    this.termMap.put(term.getCode(), term);
-  }
-
-  public Optional<Term> getTerm(String code)
-  {
-    return Optional.of(this.termMap.get(code));
   }
 
   public void addOrganization(OrganizationDTO organization)

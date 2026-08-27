@@ -37,7 +37,6 @@ import com.runwaysdk.system.gis.geo.GeometryType;
 import com.runwaysdk.system.metadata.MdBusiness;
 import com.runwaysdk.system.metadata.MdVertex;
 
-import net.geoprism.ontology.Classifier;
 import net.geoprism.registry.conversion.GeometryTypeFactory;
 import net.geoprism.registry.conversion.LocalizedValueConverter;
 import net.geoprism.registry.conversion.RegistryLocalizedValueConverter;
@@ -90,19 +89,6 @@ public class GeoObjectType extends GeoObjectTypeBase implements ServerElement
     {
       geometryTable.delete();
     }
-  }
-
-  @Override
-  public Classifier getRootTerm()
-  {
-    String oid = this.getObjectValue(GeoObjectType.ROOTTERM);
-
-    if (!StringUtils.isBlank(oid))
-    {
-      return Classifier.get(oid);
-    }
-
-    return null;
   }
 
   @Override

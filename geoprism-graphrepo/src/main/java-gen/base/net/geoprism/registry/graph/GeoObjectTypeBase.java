@@ -40,7 +40,6 @@ public abstract class GeoObjectTypeBase extends net.geoprism.registry.graph.Base
   public final static java.lang.String MDVERTEX = "mdVertex";
   public final static java.lang.String ORGANIZATION = "organization";
   public final static java.lang.String ORIGIN = "origin";
-  public final static java.lang.String ROOTTERM = "rootTerm";
   public final static java.lang.String SEQUENCE = "sequence";
   public final static java.lang.String SUPERTYPE = "superType";
   @SuppressWarnings("unused")
@@ -259,39 +258,6 @@ public abstract class GeoObjectTypeBase extends net.geoprism.registry.graph.Base
   public void setOrigin(String value)
   {
     this.setValue(ORIGIN, value);
-  }
-  
-  public net.geoprism.ontology.Classifier getRootTerm()
-  {
-    if (this.getObjectValue(ROOTTERM) == null)
-    {
-      return null;
-    }
-    else
-    {
-      return net.geoprism.ontology.Classifier.get( (String) this.getObjectValue(ROOTTERM));
-    }
-  }
-  
-  public String getRootTermOid()
-  {
-    return (String) this.getObjectValue(ROOTTERM);
-  }
-  
-  public static com.runwaysdk.dataaccess.MdAttributeReferenceDAOIF getRootTermMd()
-  {
-    com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(net.geoprism.registry.graph.GeoObjectType.CLASS);
-    return (com.runwaysdk.dataaccess.MdAttributeReferenceDAOIF)mdClassIF.definesAttribute(ROOTTERM);
-  }
-  
-  public void setRootTerm(net.geoprism.ontology.Classifier value)
-  {
-    this.setValue(ROOTTERM, value.getOid());
-  }
-  
-  public void setRootTermId(java.lang.String oid)
-  {
-    this.setValue(ROOTTERM, oid);
   }
   
   public Long getSequence()

@@ -3,22 +3,24 @@
  *
  * This file is part of Common Geo Registry Adapter(tm).
  *
- * Common Geo Registry Adapter(tm) is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
+ * Common Geo Registry Adapter(tm) is free software: you can redistribute it
+ * and/or modify it under the terms of the GNU Lesser General Public License as
+ * published by the Free Software Foundation, either version 3 of the License,
+ * or (at your option) any later version.
  *
- * Common Geo Registry Adapter(tm) is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
+ * Common Geo Registry Adapter(tm) is distributed in the hope that it will be
+ * useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser
+ * General Public License for more details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with Common Geo Registry Adapter(tm).  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with Common Geo Registry Adapter(tm). If not, see
+ * <http://www.gnu.org/licenses/>.
  */
 package org.commongeoregistry.adapter.metadata;
 
-import org.commongeoregistry.adapter.Term;
+import java.util.Date;
+
 import org.commongeoregistry.adapter.dataaccess.LocalizedValue;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -26,23 +28,33 @@ import com.fasterxml.jackson.annotation.JsonTypeName;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
+import net.geoprism.registry.DateFormatter;
+
 @JsonTypeName(AttributeClassificationType.TYPE)
 public class AttributeClassificationType extends AttributeType
 {
   /**
    * 
    */
-  private static final long  serialVersionUID         = 6431580798592645011L;
+  private static final long  serialVersionUID = 6431580798592645011L;
 
-  public static final String TYPE                     = "classification";
+  public static final String TYPE             = "classification";
 
-  public static final String JSON_ROOT_TERM           = "rootTerm";
+  public static final String JSON_ROOT_TERM   = "rootTerm";
 
-  public static final String JSON_CLASSIFICATION_TYPE = "classificationType";
+  public static final String JSON_CONCEPT_SET = "conceptSet";
 
-  private Term               rootTerm                 = null;
+  public static final String JSON_START_DATE  = "startDate";
 
-  private String             classificationType       = null;
+  public static final String JSON_END_DATE    = "endDate";
+
+  private CodeReference      rootTerm         = null;
+
+  private String             conceptSet       = null;
+
+  private Date               startDate;
+
+  private Date               endDate;
 
   public AttributeClassificationType()
   {
@@ -65,31 +77,53 @@ public class AttributeClassificationType extends AttributeType
     return TYPE;
   }
 
-  public Term getRootTerm()
+  public CodeReference getRootTerm()
   {
     return rootTerm;
   }
 
-  public void setRootTerm(Term rootTerm)
+  public void setRootTerm(CodeReference rootTerm)
   {
     this.rootTerm = rootTerm;
   }
 
-  public String getClassificationType()
+  public void setConceptSet(String conceptSet)
   {
-    return classificationType;
+    this.conceptSet = conceptSet;
   }
 
-  public void setClassificationType(String classificationType)
+  public String getConceptSet()
   {
-    this.classificationType = classificationType;
+    return conceptSet;
+  }
+
+  public Date getStartDate()
+  {
+    return startDate;
+  }
+
+  public void setStartDate(Date startDate)
+  {
+    this.startDate = startDate;
+  }
+
+  public Date getEndDate()
+  {
+    return endDate;
+  }
+
+  public void setEndDate(Date endDate)
+  {
+    this.endDate = endDate;
   }
 
   @Override
   public JsonObject toJSON(CustomSerializer serializer)
   {
     JsonObject json = super.toJSON(serializer);
-    json.addProperty(JSON_CLASSIFICATION_TYPE, this.getClassificationType());
+    json.addProperty(JSON_CONCEPT_SET, this.getConceptSet());
+    json.addProperty(JSON_START_DATE, DateFormatter.formatDate(this.getStartDate(), false));
+    json.addProperty(JSON_END_DATE, DateFormatter.formatDate(this.getEndDate(), false));
 
     if (this.rootTerm != null)
     {
@@ -111,18 +145,15 @@ public class AttributeClassificationType extends AttributeType
   {
     super.fromJSON(attrObj);
 
-    this.setClassificationType(attrObj.get(AttributeClassificationType.JSON_CLASSIFICATION_TYPE).getAsString());
+    this.setConceptSet(attrObj.get(AttributeClassificationType.JSON_CONCEPT_SET).getAsString());
+    this.setStartDate(DateFormatter.parseDate(attrObj.get(AttributeClassificationType.JSON_START_DATE).getAsString()));
+    this.setEndDate(DateFormatter.parseDate(attrObj.get(AttributeClassificationType.JSON_END_DATE).getAsString()));
 
     JsonElement termElement = attrObj.get(AttributeClassificationType.JSON_ROOT_TERM);
 
     if (termElement != null && !termElement.isJsonNull())
     {
-      Term rootTerm = Term.fromJSON(termElement.getAsJsonObject());
-
-      if (rootTerm != null)
-      {
-        this.setRootTerm(rootTerm);
-      }
+      this.setRootTerm(new CodeReference().fromJSON(termElement.getAsJsonObject()));
     }
   }
 

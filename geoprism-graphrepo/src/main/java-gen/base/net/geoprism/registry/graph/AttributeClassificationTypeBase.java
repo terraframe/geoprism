@@ -29,9 +29,12 @@ package net.geoprism.registry.graph;
 public abstract class AttributeClassificationTypeBase extends net.geoprism.registry.graph.AttributeType
 {
   public final static String CLASS = "net.geoprism.registry.graph.AttributeClassificationType";
-  public final static java.lang.String MDCLASSIFICATION = "mdClassification";
+  public final static java.lang.String CONCEPTSET = "conceptSet";
   public final static java.lang.String ROOTTERM = "rootTerm";
-  public final static java.lang.String VALUEVERTEX = "valueVertex";
+  public final static java.lang.String ENDDATE = "endDate";
+  public final static java.lang.String STARTDATE = "startDate";
+
+  
   @SuppressWarnings("unused")
   private static final long serialVersionUID = -133082066;
   
@@ -40,37 +43,21 @@ public abstract class AttributeClassificationTypeBase extends net.geoprism.regis
     super();
   }
   
-  public com.runwaysdk.system.metadata.MdClassification getMdClassification()
+  
+  public String getConceptSet()
   {
-    if (this.getObjectValue(MDCLASSIFICATION) == null)
-    {
-      return null;
-    }
-    else
-    {
-      return com.runwaysdk.system.metadata.MdClassification.get( (String) this.getObjectValue(MDCLASSIFICATION));
-    }
+    return (String) this.getObjectValue(CONCEPTSET);
   }
   
-  public String getMdClassificationOid()
-  {
-    return (String) this.getObjectValue(MDCLASSIFICATION);
-  }
-  
-  public static com.runwaysdk.dataaccess.MdAttributeReferenceDAOIF getMdClassificationMd()
+  public static com.runwaysdk.dataaccess.MdAttributeTextDAOIF getConceptSetMd()
   {
     com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(net.geoprism.registry.graph.AttributeClassificationType.CLASS);
-    return (com.runwaysdk.dataaccess.MdAttributeReferenceDAOIF)mdClassIF.definesAttribute(MDCLASSIFICATION);
+    return (com.runwaysdk.dataaccess.MdAttributeTextDAOIF)mdClassIF.definesAttribute(CONCEPTSET);
   }
   
-  public void setMdClassification(com.runwaysdk.system.metadata.MdClassification value)
+  public void setConceptSet(String value)
   {
-    this.setValue(MDCLASSIFICATION, value.getOid());
-  }
-  
-  public void setMdClassificationId(java.lang.String oid)
-  {
-    this.setValue(MDCLASSIFICATION, oid);
+    this.setValue(CONCEPTSET, value);
   }
   
   public String getRootTerm()
@@ -78,48 +65,49 @@ public abstract class AttributeClassificationTypeBase extends net.geoprism.regis
     return (String) this.getObjectValue(ROOTTERM);
   }
   
-  public static com.runwaysdk.dataaccess.MdAttributeTextDAOIF getRootTermMd()
+  public static com.runwaysdk.dataaccess.MdAttributeGraphReferenceDAOIF getRootTermMd()
   {
     com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(net.geoprism.registry.graph.AttributeClassificationType.CLASS);
-    return (com.runwaysdk.dataaccess.MdAttributeTextDAOIF)mdClassIF.definesAttribute(ROOTTERM);
+    return (com.runwaysdk.dataaccess.MdAttributeGraphReferenceDAOIF)mdClassIF.definesAttribute(ROOTTERM);
   }
   
-  public void setRootTerm(String value)
+  public void setRootTerm(net.geoprism.registry.graph.ConceptVertex value)
   {
     this.setValue(ROOTTERM, value);
   }
-  
-  public com.runwaysdk.system.metadata.MdVertex getValueVertex()
+    
+  public java.util.Date getEndDate()
   {
-    if (this.getObjectValue(VALUEVERTEX) == null)
-    {
-      return null;
-    }
-    else
-    {
-      return com.runwaysdk.system.metadata.MdVertex.get( (String) this.getObjectValue(VALUEVERTEX));
-    }
+    return (java.util.Date) this.getObjectValue(ENDDATE);
   }
   
-  public String getValueVertexOid()
-  {
-    return (String) this.getObjectValue(VALUEVERTEX);
-  }
-  
-  public static com.runwaysdk.dataaccess.MdAttributeReferenceDAOIF getValueVertexMd()
+  public static com.runwaysdk.dataaccess.MdAttributeDateTimeDAOIF getEndDateMd()
   {
     com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(net.geoprism.registry.graph.AttributeClassificationType.CLASS);
-    return (com.runwaysdk.dataaccess.MdAttributeReferenceDAOIF)mdClassIF.definesAttribute(VALUEVERTEX);
+    return (com.runwaysdk.dataaccess.MdAttributeDateTimeDAOIF)mdClassIF.definesAttribute(ENDDATE);
   }
   
-  public void setValueVertex(com.runwaysdk.system.metadata.MdVertex value)
+  public void setEndDate(java.util.Date value)
   {
-    this.setValue(VALUEVERTEX, value.getOid());
+    this.setValue(ENDDATE, value);
   }
   
-  public void setValueVertexId(java.lang.String oid)
+  
+  
+  public java.util.Date getStartDate()
   {
-    this.setValue(VALUEVERTEX, oid);
+    return (java.util.Date) this.getObjectValue(STARTDATE);
+  }
+  
+  public static com.runwaysdk.dataaccess.MdAttributeDateTimeDAOIF getStartDateMd()
+  {
+    com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(net.geoprism.registry.graph.AttributeClassificationType.CLASS);
+    return (com.runwaysdk.dataaccess.MdAttributeDateTimeDAOIF)mdClassIF.definesAttribute(STARTDATE);
+  }
+  
+  public void setStartDate(java.util.Date value)
+  {
+    this.setValue(STARTDATE, value);
   }
   
   protected String getDeclaredType()

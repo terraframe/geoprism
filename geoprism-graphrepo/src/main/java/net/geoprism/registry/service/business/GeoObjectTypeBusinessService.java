@@ -94,7 +94,6 @@ import net.geoprism.registry.TypeInUseException;
 import net.geoprism.registry.command.CacheEventType;
 import net.geoprism.registry.command.GeoObjectTypeCacheEventCommand;
 import net.geoprism.registry.command.HierarchicalRelationshipTypeCacheEventCommand;
-import net.geoprism.registry.conversion.TermConverter;
 import net.geoprism.registry.graph.GeoVertexType;
 import net.geoprism.registry.graph.HierarchicalRelationshipType;
 import net.geoprism.registry.graph.InheritedHierarchyAnnotation;
@@ -430,7 +429,6 @@ public class GeoObjectTypeBusinessService implements GeoObjectTypeBusinessServic
     ServerOrganization organization = ServerOrganization.getByCode(dto.getOrganizationCode(), true);
 
     net.geoprism.registry.graph.GeoObjectType type = new net.geoprism.registry.graph.GeoObjectType();
-    type.setRootTerm(TermConverter.buildIfNotExistGeoObjectTypeClassifier(type));
     type.setOrganization(organization.getGraphOrganization());
     type.setValue(net.geoprism.registry.graph.GeoObjectType.MDVERTEX, mdVertex.getOid());
     type.setValue(net.geoprism.registry.graph.GeoObjectType.GEOMETRYTABLE, geometryTable.getOid());

@@ -32,6 +32,9 @@ public abstract class ConceptSetBase extends net.geoprism.registry.graph.SchemaE
   public final static java.lang.String CODE = "code";
   public final static java.lang.String DESCRIPTION = "description";
   public final static java.lang.String DISPLAYLABEL = "displayLabel";
+  public final static java.lang.String DISCRETETYPE = "discreteType";
+  public final static java.lang.String ROOTTERM = "rootTerm";
+
   @SuppressWarnings("unused")
   private static final long serialVersionUID = -707731631;
   
@@ -87,6 +90,40 @@ public abstract class ConceptSetBase extends net.geoprism.registry.graph.SchemaE
   {
     this.setValue(DISPLAYLABEL, value);
   }
+  
+  public String getDiscreteType()
+  {
+    return (String) this.getObjectValue(DISCRETETYPE);
+  }
+
+  public static com.runwaysdk.dataaccess.MdAttributeTextDAOIF getDiscreteTypeMd()
+  {
+    com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(net.geoprism.registry.graph.ConceptSet.CLASS);
+    return (com.runwaysdk.dataaccess.MdAttributeTextDAOIF) mdClassIF.definesAttribute(DISCRETETYPE);
+  }
+
+  public void setDiscreteType(String value)
+  {
+    this.setValue(DISCRETETYPE, value);
+  }
+  
+  public String getRootTerm()
+  {
+    return (String) this.getObjectValue(ROOTTERM);
+  }
+  
+  public static com.runwaysdk.dataaccess.MdAttributeGraphReferenceDAOIF getRootTermMd()
+  {
+    com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(net.geoprism.registry.graph.ConceptSet.CLASS);
+    return (com.runwaysdk.dataaccess.MdAttributeGraphReferenceDAOIF)mdClassIF.definesAttribute(ROOTTERM);
+  }
+  
+  public void setRootTerm(net.geoprism.registry.graph.ConceptVertex value)
+  {
+    this.setValue(ROOTTERM, value);
+  }
+    
+
   
   protected String getDeclaredType()
   {

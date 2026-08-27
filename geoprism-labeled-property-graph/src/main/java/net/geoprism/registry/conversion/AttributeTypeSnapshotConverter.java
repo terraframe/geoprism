@@ -3,22 +3,21 @@
  *
  * This file is part of Geoprism(tm).
  *
- * Geoprism(tm) is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
+ * Geoprism(tm) is free software: you can redistribute it and/or modify it under
+ * the terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation, either version 3 of the License, or (at your option) any
+ * later version.
  *
- * Geoprism(tm) is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
+ * Geoprism(tm) is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with Geoprism(tm).  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with Geoprism(tm). If not, see <http://www.gnu.org/licenses/>.
  */
 package net.geoprism.registry.conversion;
 
-import org.apache.commons.lang.StringUtils;
 import org.commongeoregistry.adapter.constants.DefaultAttribute;
 import org.commongeoregistry.adapter.dataaccess.LocalizedValue;
 import org.commongeoregistry.adapter.metadata.AttributeBooleanType;
@@ -30,6 +29,7 @@ import org.commongeoregistry.adapter.metadata.AttributeFloatType;
 import org.commongeoregistry.adapter.metadata.AttributeIntegerType;
 import org.commongeoregistry.adapter.metadata.AttributeLocalType;
 import org.commongeoregistry.adapter.metadata.AttributeType;
+import org.commongeoregistry.adapter.metadata.CodeReference;
 
 import net.geoprism.graph.AttributeBooleanTypeSnapshot;
 import net.geoprism.graph.AttributeCharacterTypeSnapshot;
@@ -40,10 +40,6 @@ import net.geoprism.graph.AttributeDoubleTypeSnapshot;
 import net.geoprism.graph.AttributeLocalTypeSnapshot;
 import net.geoprism.graph.AttributeLongTypeSnapshot;
 import net.geoprism.graph.AttributeTypeSnapshot;
-import net.geoprism.registry.model.ClassificationType;
-import net.geoprism.registry.service.business.ClassificationBusinessServiceIF;
-import net.geoprism.registry.service.business.ClassificationTypeBusinessServiceIF;
-import net.geoprism.spring.core.ApplicationContextHolder;
 
 public class AttributeTypeSnapshotConverter
 {
@@ -98,24 +94,16 @@ public class AttributeTypeSnapshotConverter
     }
     else if (attribute instanceof AttributeClassificationTypeSnapshot)
     {
-      AttributeClassificationTypeSnapshot attributeClassification = (AttributeClassificationTypeSnapshot) attribute;
+      AttributeClassificationTypeSnapshot snapshot = (AttributeClassificationTypeSnapshot) attribute;
 
       AttributeClassificationType attributeType = (AttributeClassificationType) AttributeType.factory(attributeName, displayLabel, description, AttributeClassificationType.TYPE, required, unique, isChangeOverTime);
-      attributeType.setClassificationType(attributeClassification.getClassificationType());
-
-      if (!StringUtils.isBlank(attributeClassification.getRootTerm()))
-      {
-        ClassificationTypeBusinessServiceIF typeService = ApplicationContextHolder.getBean(ClassificationTypeBusinessServiceIF.class);
-        ClassificationBusinessServiceIF service = ApplicationContextHolder.getBean(ClassificationBusinessServiceIF.class);
-
-        ClassificationType type = typeService.getByCode(attributeClassification.getClassificationType());
-
-        service.getByCode(type, attributeClassification.getRootTerm()).ifPresent(classification -> {
-          attributeType.setRootTerm(classification.toTerm());          
-        });
-      }
+      attributeType.setConceptSet(snapshot.getConceptSet());
+      attributeType.setStartDate(snapshot.getStartDate());
+      attributeType.setEndDate(snapshot.getEndDate());
+      attributeType.setRootTerm(CodeReference.build(snapshot.getRootTerm(), snapshot.getRootType()));
 
       return attributeType;
+
     }
 
     throw new UnsupportedOperationException("Unsupported attribute type [" + attribute.getClass().getSimpleName() + "]");

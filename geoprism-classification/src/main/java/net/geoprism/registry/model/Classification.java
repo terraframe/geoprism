@@ -18,7 +18,6 @@
  */
 package net.geoprism.registry.model;
 
-import org.commongeoregistry.adapter.Term;
 import org.commongeoregistry.adapter.dataaccess.LocalizedValue;
 
 import com.google.gson.JsonObject;
@@ -105,11 +104,6 @@ public class Classification implements JsonSerializable
   public String toString()
   {
     return this.getCode();
-  }
-
-  public Term toTerm()
-  {
-    return new Term(this.getCode(), this.getDisplayLabel(), this.getDescription());
   }
 
 }

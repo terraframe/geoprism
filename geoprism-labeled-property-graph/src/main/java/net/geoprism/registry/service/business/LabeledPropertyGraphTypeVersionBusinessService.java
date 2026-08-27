@@ -26,7 +26,6 @@ import java.util.Set;
 import java.util.TreeSet;
 import java.util.stream.Collectors;
 
-import org.commongeoregistry.adapter.Term;
 import org.commongeoregistry.adapter.constants.DefaultAttribute;
 import org.commongeoregistry.adapter.metadata.AttributeClassificationType;
 import org.commongeoregistry.adapter.metadata.GeoObjectType;
@@ -47,7 +46,6 @@ import com.runwaysdk.dataaccess.ProgrammingErrorException;
 import com.runwaysdk.dataaccess.transaction.Transaction;
 import com.runwaysdk.query.OIterator;
 import com.runwaysdk.query.QueryFactory;
-import com.runwaysdk.session.Session;
 
 import net.geoprism.graph.BusinessEdgeTypeSnapshot;
 import net.geoprism.graph.BusinessEdgeTypeSnapshotQuery;
@@ -74,7 +72,6 @@ import net.geoprism.registry.DateUtil;
 import net.geoprism.registry.JsonCollectors;
 import net.geoprism.registry.LPGTileCache;
 import net.geoprism.registry.lpg.LPGPublishProgressMonitorIF;
-import net.geoprism.registry.model.ClassificationType;
 import net.geoprism.registry.view.BusinessTypeDTO;
 import net.geoprism.registry.view.ConceptClassDTO;
 
@@ -98,12 +95,6 @@ public class LabeledPropertyGraphTypeVersionBusinessService implements LabeledPr
 
   @Autowired
   private GraphTypeSnapshotBusinessServiceIF        graphService;
-
-  @Autowired
-  private ClassificationBusinessServiceIF           classificationService;
-
-  @Autowired
-  private ClassificationTypeBusinessServiceIF       typeService;
 
   @Override
   @Transaction
@@ -543,23 +534,22 @@ public class LabeledPropertyGraphTypeVersionBusinessService implements LabeledPr
         GeoObjectType type = t.toGeoObjectType();
 
         type.getAttributeMap().forEach((name, a) -> {
-          if (a instanceof AttributeClassificationType)
-          {
-            AttributeClassificationType attribute = (AttributeClassificationType) a;
-            Term rootTerm = attribute.getRootTerm();
-            String classificationType = attribute.getClassificationType();
-
-            if (!processed.contains(classificationType))
-            {
-              JsonObject typeObject = new JsonObject();
-              typeObject.add("type", this.typeService.getByCode(classificationType).toJSON());
-              typeObject.add("tree", this.classificationService.exportToJson(classificationType, rootTerm.getCode()));
-
-              classifications.add(typeObject);
-
-              processed.add(classificationType);
-            }
-          }
+//          if (a instanceof AttributeClassificationType)
+//          {
+//            AttributeClassificationType attribute = (AttributeClassificationType) a;
+//            String classificationType = attribute.getConceptSet();
+//
+//            if (!processed.contains(classificationType))
+//            {
+//              JsonObject typeObject = new JsonObject();
+//              typeObject.add("type", this.typeService.getByCode(classificationType).toJSON());
+//              typeObject.add("tree", this.classificationService.exportToJson(classificationType, rootTerm.getCode()));
+//
+//              classifications.add(typeObject);
+//
+//              processed.add(classificationType);
+//            }
+//          }
         });
       });
 
@@ -591,36 +581,36 @@ public class LabeledPropertyGraphTypeVersionBusinessService implements LabeledPr
   @Transaction
   public LabeledPropertyGraphTypeVersion create(LabeledPropertyGraphTypeEntry entry, JsonObject json)
   {
-    // Handle classification definitions
-    JsonArray classifications = json.get("classifications").getAsJsonArray();
-
-    for (JsonElement element : classifications)
-    {
-      JsonObject classificationObject = element.getAsJsonObject();
-      JsonObject classificationType = classificationObject.get("type").getAsJsonObject();
-
-      String code = classificationType.get(DefaultAttribute.CODE.getName()).getAsString();
-
-      // If a type doesn't exist create it
-      if (this.typeService.getByCode(code, false) == null)
-      {
-        classificationType.remove(LabeledPropertyGraphTypeVersion.OID);
-
-        ClassificationType type = this.typeService.apply(classificationType);
-
-        // Refresh permissions in case new definitions were defined during the
-        // synchronization process
-        Session session = (Session) Session.getCurrentSession();
-
-        if (session != null)
-        {
-          session.reloadPermissions();
-        }
-
-        this.classificationService.importJsonTree(type, null, classificationObject.get("tree").getAsJsonObject());
-      }
-
-    }
+//    // Handle classification definitions
+//    JsonArray classifications = json.get("classifications").getAsJsonArray();
+//
+//    for (JsonElement element : classifications)
+//    {
+//      JsonObject classificationObject = element.getAsJsonObject();
+//      JsonObject classificationType = classificationObject.get("type").getAsJsonObject();
+//
+//      String code = classificationType.get(DefaultAttribute.CODE.getName()).getAsString();
+//
+//      // If a type doesn't exist create it
+//      if (this.typeService.getByCode(code, false) == null)
+//      {
+//        classificationType.remove(LabeledPropertyGraphTypeVersion.OID);
+//
+//        ClassificationType type = this.typeService.apply(classificationType);
+//
+//        // Refresh permissions in case new definitions were defined during the
+//        // synchronization process
+//        Session session = (Session) Session.getCurrentSession();
+//
+//        if (session != null)
+//        {
+//          session.reloadPermissions();
+//        }
+//
+//        this.classificationService.importJsonTree(type, null, classificationObject.get("tree").getAsJsonObject());
+//      }
+//
+//    }
 
     LabeledPropertyGraphType graphType = entry.getGraphType();
 

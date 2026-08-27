@@ -53,8 +53,6 @@ public class LabeledPropertyGraphTypeBusinessService implements LabeledPropertyG
   @Autowired
   private LabeledPropertyGraphTypeEntryBusinessServiceIF entryService;
 
-  @Autowired
-  private ClassificationTypeBusinessServiceIF            cTypeService;
 
   @Override
   public JsonArray list()
@@ -125,7 +123,7 @@ public class LabeledPropertyGraphTypeBusinessService implements LabeledPropertyG
   @Transaction
   public void apply(LabeledPropertyGraphType type)
   {
-    this.cTypeService.validateName(type.getCode());
+//    this.cTypeService.validateName(type.getCode());
 
     type.apply();
   }

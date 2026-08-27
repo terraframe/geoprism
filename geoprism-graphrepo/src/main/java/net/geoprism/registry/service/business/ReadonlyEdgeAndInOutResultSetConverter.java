@@ -3,18 +3,18 @@
  *
  * This file is part of Geoprism(tm).
  *
- * Geoprism(tm) is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
+ * Geoprism(tm) is free software: you can redistribute it and/or modify it under
+ * the terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation, either version 3 of the License, or (at your option) any
+ * later version.
  *
- * Geoprism(tm) is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
+ * Geoprism(tm) is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with Geoprism(tm).  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with Geoprism(tm). If not, see <http://www.gnu.org/licenses/>.
  */
 package net.geoprism.registry.service.business;
 
@@ -41,7 +41,7 @@ import com.runwaysdk.dataaccess.metadata.graph.MdGraphClassDAO;
 
 import net.geoprism.registry.graph.AttributeValue;
 import net.geoprism.registry.io.TermValueException;
-import net.geoprism.registry.model.Classification;
+import net.geoprism.registry.model.ConceptObject;
 import net.geoprism.registry.model.EdgeType;
 import net.geoprism.registry.model.ServerGeoObjectType;
 
@@ -131,7 +131,7 @@ public class ReadonlyEdgeAndInOutResultSetConverter extends ResultSetConverter
       return ( date.equals(start) || date.after(start) ) && ( date.equals(end) || date.before(end) );
     }
 
-    public GeoObject toGeoObject(List<ReadonlyPrefixedResultObject> attributeValues, Date date, ClassificationBusinessServiceIF cService, ClassificationTypeBusinessServiceIF cTypeService)
+    public GeoObject toGeoObject(List<ReadonlyPrefixedResultObject> attributeValues, Date date, ConceptObjectBusinessServiceIF cService, ConceptSetBusinessServiceIF cTypeService)
     {
       ServerGeoObjectType type = ServerGeoObjectType.get(getMdClass());
       Map<String, ReadonlyPrefixedResultObject> nodeMap = new HashMap<String, ReadonlyPrefixedResultObject>();
@@ -159,7 +159,7 @@ public class ReadonlyEdgeAndInOutResultSetConverter extends ResultSetConverter
             {
               final String rid = value.toString();
 
-              Classification classification = cService.getByRid(rid).orElseThrow(() -> {
+              ConceptObject classification = cService.getByRid(rid).orElseThrow(() -> {
                 TermValueException ex = new TermValueException();
                 ex.setAttributeLabel(attribute.getLabel().getValue());
                 ex.setCode(rid);
@@ -167,7 +167,7 @@ public class ReadonlyEdgeAndInOutResultSetConverter extends ResultSetConverter
                 throw ex;
               });
 
-              geoObj.setValue(attributeName, classification.toTerm());
+              geoObj.setValue(attributeName, classification.getCode());
             }
             else
             {
@@ -242,7 +242,7 @@ public class ReadonlyEdgeAndInOutResultSetConverter extends ResultSetConverter
     }
   }
 
-  public static List<EdgeAndGOInOut> convertResults(List<ReadonlyEdgeAndVerticies> results, Date date, ClassificationBusinessServiceIF cService, ClassificationTypeBusinessServiceIF cTypeService)
+  public static List<EdgeAndGOInOut> convertResults(List<ReadonlyEdgeAndVerticies> results, Date date, ConceptObjectBusinessServiceIF cService, ConceptSetBusinessServiceIF cTypeService)
   {
     ReadonlyEdgeAndVerticies previous = null;
     List<ReadonlyPrefixedResultObject> currentInAttributes = new LinkedList<>();

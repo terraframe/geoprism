@@ -3,18 +3,18 @@
  *
  * This file is part of Geoprism(tm).
  *
- * Geoprism(tm) is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
+ * Geoprism(tm) is free software: you can redistribute it and/or modify it under
+ * the terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation, either version 3 of the License, or (at your option) any
+ * later version.
  *
- * Geoprism(tm) is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
+ * Geoprism(tm) is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with Geoprism(tm).  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with Geoprism(tm). If not, see <http://www.gnu.org/licenses/>.
  */
 package net.geoprism.registry.service.business;
 
@@ -60,13 +60,7 @@ import net.geoprism.registry.model.SnapshotContainer;
 @Service
 public class GeoObjectTypeSnapshotBusinessService extends ObjectTypeSnapshotBusinessService<GeoObjectTypeSnapshot> implements GeoObjectTypeSnapshotBusinessServiceIF
 {
-  public final String                         ROOT = "__ROOT__";
-
-  @Autowired
-  private ClassificationBusinessServiceIF     classificationService;
-
-  @Autowired
-  private ClassificationTypeBusinessServiceIF typeService;
+  public final String ROOT = "__ROOT__";
 
   @Transaction
   @Override
@@ -300,21 +294,7 @@ public class GeoObjectTypeSnapshotBusinessService extends ObjectTypeSnapshotBusi
 
         if (value != null)
         {
-          if (attribute instanceof AttributeClassificationType)
-          {
-            String classificationTypeCode = ( (AttributeClassificationType) attribute ).getClassificationType();
-            ClassificationType classificationType = this.typeService.getByCode(classificationTypeCode);
-            Classification classification = this.classificationService.getByOid(classificationType, (String) value).orElseThrow(() -> {
-              // TODO Change exception type
-              throw new RuntimeException("Unable to find a classification with the code [" + value + "] and attribute [" + attribute.getLabel().getValue() + "]");
-            });
-
-            geoObj.setValue(attributeName, classification.toTerm());
-          }
-          else
-          {
-            geoObj.setValue(attributeName, value);
-          }
+          geoObj.setValue(attributeName, value);
         }
       }
     });

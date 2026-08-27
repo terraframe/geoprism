@@ -22,7 +22,7 @@ import org.commongeoregistry.adapter.dataaccess.LocalizedValue;
 
 import net.geoprism.registry.conversion.LocalizedValueConverter;
 
-public abstract class ConceptSet extends ConceptSetBase
+public class ConceptSet extends ConceptSetBase
 {
   @SuppressWarnings("unused")
   private static final long serialVersionUID = 863915630;

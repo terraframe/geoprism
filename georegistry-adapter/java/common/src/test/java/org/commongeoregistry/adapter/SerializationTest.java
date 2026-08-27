@@ -3,24 +3,24 @@
  *
  * This file is part of Common Geo Registry Adapter(tm).
  *
- * Common Geo Registry Adapter(tm) is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
+ * Common Geo Registry Adapter(tm) is free software: you can redistribute it
+ * and/or modify it under the terms of the GNU Lesser General Public License as
+ * published by the Free Software Foundation, either version 3 of the License,
+ * or (at your option) any later version.
  *
- * Common Geo Registry Adapter(tm) is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
+ * Common Geo Registry Adapter(tm) is distributed in the hope that it will be
+ * useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser
+ * General Public License for more details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with Common Geo Registry Adapter(tm).  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with Common Geo Registry Adapter(tm). If not, see
+ * <http://www.gnu.org/licenses/>.
  */
 package org.commongeoregistry.adapter;
 
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 
@@ -43,6 +43,7 @@ import org.commongeoregistry.adapter.metadata.AttributeDateType;
 import org.commongeoregistry.adapter.metadata.AttributeFloatType;
 import org.commongeoregistry.adapter.metadata.AttributeIntegerType;
 import org.commongeoregistry.adapter.metadata.AttributeType;
+import org.commongeoregistry.adapter.metadata.CodeReference;
 import org.commongeoregistry.adapter.metadata.GeoObjectType;
 import org.commongeoregistry.adapter.metadata.HierarchyType;
 import org.commongeoregistry.adapter.metadata.MetadataFactory;
@@ -82,26 +83,6 @@ public class SerializationTest
     Assert.assertEquals("Colorado Display Label", geoObject2.getDisplayLabel(null).getValue());
     Assert.assertEquals("Colorado Display Label", geoObject2.getDisplayLabel(null).getValue(LocalizedValue.DEFAULT_LOCALE));
     Assert.assertEquals(geoObject.getExists(null), geoObject2.getExists(null));
-  }
-
-  @Test
-  public void testTerm()
-  {
-    Term facilityType = new Term("FACILITY_TYPE", new LocalizedValue("Facility Type"), new LocalizedValue("..."));
-    Term clinic = new Term("CLINIC", new LocalizedValue("Clinic"), new LocalizedValue("..."));
-    Term matWard = new Term("MATERNITY_WARD", new LocalizedValue("Maternity Ward"), new LocalizedValue("..."));
-    facilityType.addChild(clinic);
-    facilityType.addChild(matWard);
-
-    JsonObject jsonObject = facilityType.toJSON();
-
-    Term facilityType2 = Term.fromJSON(jsonObject);
-
-    Assert.assertEquals(facilityType.getCode(), facilityType2.getCode());
-    Assert.assertEquals(facilityType.getLabel().getValue(), facilityType2.getLabel().getValue());
-    Assert.assertEquals(facilityType.getDescription().getValue(), facilityType2.getDescription().getValue());
-
-    Assert.assertEquals(facilityType.getChildren().size(), facilityType2.getChildren().size());
   }
 
   @Test
@@ -297,17 +278,12 @@ public class SerializationTest
     }
   }
 
-  @SuppressWarnings("unchecked")
   @Test
   public void testGeoObjectCustomAttributes()
   {
     RegistryAdapterServer registry = new RegistryAdapterServer(new MockIdService());
 
     GeoObjectType state = MetadataFactory.newGeoObjectType("State", GeometryType.POLYGON, new LocalizedValue("State"), new LocalizedValue("State"), true, null, registry);
-
-    Term testRoot = MetadataFactory.newTerm("testRoot", new LocalizedValue("testRoot"), new LocalizedValue("testRoot"), registry);
-    Term testChild = MetadataFactory.newTerm("testChild", new LocalizedValue("testChild"), new LocalizedValue("testChild"), registry);
-    testRoot.addChild(testChild);
 
     AttributeType testChar = AttributeType.factory("testChar", new LocalizedValue("testCharLocalName"), new LocalizedValue("testCharLocalDescrip"), AttributeCharacterType.TYPE, false, false, false);
     AttributeType testDate = AttributeType.factory("testDate", new LocalizedValue("testDateLocalName"), new LocalizedValue("testDateLocalDescrip"), AttributeDateType.TYPE, false, false, false);
@@ -316,8 +292,10 @@ public class SerializationTest
     AttributeType testSource = AttributeType.factory("testSource", new LocalizedValue("testSourceName"), new LocalizedValue("testSourceDescrip"), AttributeDataSourceType.TYPE, false, false, false);
 
     AttributeClassificationType testClassification = (AttributeClassificationType) AttributeType.factory("testClassification", new LocalizedValue("testClassificationLocalName"), new LocalizedValue("testClassificationLocalDescrip"), AttributeClassificationType.TYPE, false, false, false);
-    testClassification.setClassificationType("test.classification.Test");
-    testClassification.setRootTerm(testRoot);
+    testClassification.setConceptSet("test.classification.Test");
+    testClassification.setRootTerm(CodeReference.build("testRoot", "testType"));
+    testClassification.setStartDate(new Date());
+    testClassification.setEndDate(new Date());
 
     state.addAttribute(testChar);
     state.addAttribute(testDate);
@@ -339,7 +317,7 @@ public class SerializationTest
     geoObject.setValue("testInteger", 3L);
     geoObject.setValue("testBoolean", false);
     geoObject.setValue("testSource", "value");
-    geoObject.setValue("testClassification", testChild);
+    geoObject.setValue("testClassification", "testConcept");
 
     String sJson = geoObject.toJSON().toString();
     GeoObject geoObject2 = GeoObject.fromJSON(registry, sJson);
@@ -364,7 +342,6 @@ public class SerializationTest
     RegistryAdapterServer registry = new RegistryAdapterServer(new MockIdService());
 
     GeoObjectType state = MetadataFactory.newGeoObjectType("State", GeometryType.POLYGON, new LocalizedValue("State"), new LocalizedValue("State"), true, null, registry);
-    Term testRoot = MetadataFactory.newTerm("testRoot", new LocalizedValue("testRoot"), new LocalizedValue("testRoot"), registry);
 
     AttributeType testChar = AttributeType.factory("testChar", new LocalizedValue("testCharLocalName"), new LocalizedValue("testCharLocalDescrip"), AttributeCharacterType.TYPE, true, true, false);
     AttributeType testDate = AttributeType.factory("testDate", new LocalizedValue("testDateLocalName"), new LocalizedValue("testDateLocalDescrip"), AttributeDateType.TYPE, false, false, false);
@@ -374,8 +351,10 @@ public class SerializationTest
     testFloat.setScale(10);
 
     AttributeClassificationType testClassification = (AttributeClassificationType) AttributeType.factory("testClassification", new LocalizedValue("testClassificationLocalName"), new LocalizedValue("testClassificationLocalDescrip"), AttributeClassificationType.TYPE, false, false, false);
-    testClassification.setClassificationType("test.classification.Test");
-    testClassification.setRootTerm(testRoot);
+    testClassification.setConceptSet("test.classification.Test");
+    testClassification.setRootTerm(CodeReference.build("testRoot", "testType"));
+    testClassification.setStartDate(new Date());
+    testClassification.setEndDate(new Date());
 
     state.addAttribute(testChar);
     state.addAttribute(testDate);
@@ -408,8 +387,8 @@ public class SerializationTest
 
     AttributeClassificationType attributeClassification = (AttributeClassificationType) state2.getAttribute(testClassification.getCode()).get();
 
-    Assert.assertEquals(testClassification.getClassificationType(), attributeClassification.getClassificationType());
-    Assert.assertEquals(testClassification.getRootTerm().getCode(), attributeClassification.getRootTerm().getCode());
+    Assert.assertEquals(testClassification.getConceptSet(), attributeClassification.getConceptSet());
+    Assert.assertEquals(testClassification.getRootTerm(), attributeClassification.getRootTerm());
   }
 
   @Test

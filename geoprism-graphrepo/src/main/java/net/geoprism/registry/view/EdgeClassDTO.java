@@ -38,6 +38,7 @@ public abstract class EdgeClassDTO extends GraphTypeDTO
     super();
 
     this.setOrigin(GeoprismProperties.getOrigin());
+    this.setTypeCode(this.getType());
   }
 
   public EdgeClassDTO(String typeCode, String code, LocalizedValue label, LocalizedValue description)
@@ -45,6 +46,7 @@ public abstract class EdgeClassDTO extends GraphTypeDTO
     super(typeCode, code, label, description);
 
     this.setOrigin(GeoprismProperties.getOrigin());
+    this.setTypeCode(this.getType());
   }
 
   public abstract String getType();

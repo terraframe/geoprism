@@ -3,23 +3,23 @@
  *
  * This file is part of Common Geo Registry Adapter(tm).
  *
- * Common Geo Registry Adapter(tm) is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
+ * Common Geo Registry Adapter(tm) is free software: you can redistribute it
+ * and/or modify it under the terms of the GNU Lesser General Public License as
+ * published by the Free Software Foundation, either version 3 of the License,
+ * or (at your option) any later version.
  *
- * Common Geo Registry Adapter(tm) is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
+ * Common Geo Registry Adapter(tm) is distributed in the hope that it will be
+ * useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser
+ * General Public License for more details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with Common Geo Registry Adapter(tm).  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with Common Geo Registry Adapter(tm). If not, see
+ * <http://www.gnu.org/licenses/>.
  */
 package org.commongeoregistry.adapter.dataaccess;
 
 import org.commongeoregistry.adapter.RegistryAdapter;
-import org.commongeoregistry.adapter.Term;
 import org.commongeoregistry.adapter.metadata.AttributeClassificationType;
 import org.commongeoregistry.adapter.metadata.CustomSerializer;
 
@@ -49,24 +49,7 @@ public class AttributeClassification extends Attribute
   @Override
   public void setValue(Object value)
   {
-    if (value instanceof Term)
-    {
-      this.setValue((Term) value);
-    }
-    else
-    {
-      this.setCode((String) value);
-    }
-  }
-
-  /**
-   * Clears any existing term references and sets it to the given reference
-   * 
-   */
-  public void setValue(Term term)
-  {
-    this.setCode(term.getCode());
-    this.setLabel(term.getLabel());
+    this.setCode((String) value);
   }
 
   public void setCode(String code)
