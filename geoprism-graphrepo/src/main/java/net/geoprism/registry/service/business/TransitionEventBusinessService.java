@@ -32,7 +32,6 @@ import java.util.stream.Collectors;
 import org.apache.commons.lang.StringUtils;
 import org.commongeoregistry.adapter.dataaccess.LocalizedValue;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 import com.google.gson.GsonBuilder;
@@ -57,7 +56,7 @@ import net.geoprism.registry.model.ServerGeoObjectIF;
 import net.geoprism.registry.model.ServerGeoObjectType;
 import net.geoprism.registry.model.graph.VertexServerGeoObject;
 import net.geoprism.registry.service.permission.TransitionPermissionServiceIF;
-import net.geoprism.registry.view.Page;
+import net.geoprism.registry.view.JsonSerializablePage;
 
 @Service
 public class TransitionEventBusinessService implements TransitionEventBusinessServiceIF
@@ -230,7 +229,7 @@ public class TransitionEventBusinessService implements TransitionEventBusinessSe
     return query.getSingleResult();
   }
 
-  public Page<TransitionEvent> page(Integer pageSize, Integer pageNumber, String attrConditions)
+  public JsonSerializablePage<TransitionEvent> page(Integer pageSize, Integer pageNumber, String attrConditions)
   {
     Long count = getCount();
 
@@ -249,7 +248,7 @@ public class TransitionEventBusinessService implements TransitionEventBusinessSe
 
     GraphQuery<TransitionEvent> query = new GraphQuery<TransitionEvent>(statement.toString(), parameters);
 
-    return new Page<TransitionEvent>(count, pageNumber, pageSize, query.getResults());
+    return new JsonSerializablePage<TransitionEvent>(count, pageNumber, pageSize, query.getResults());
   }
 
   public void addPageWhereCriteria(StringBuilder statement, Map<String, Object> parameters, String attrConditions)

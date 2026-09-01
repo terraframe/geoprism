@@ -90,7 +90,7 @@ public abstract class AbstractGraphPageQuery<K, T extends JsonSerializable>
     {
       String attributeName = keys.next();
 
-      MdAttributeDAOIF mdAttribute = mdVertex.definesAttribute(attributeName);
+      MdAttributeDAOIF mdAttribute = mdVertex.getAllDefinedMdAttributeMap().get(attributeName.toLowerCase());
 
       if (mdAttribute != null)
       {
@@ -181,7 +181,7 @@ public abstract class AbstractGraphPageQuery<K, T extends JsonSerializable>
     {
       String field = criteria.get("sortField").getAsString();
       SortOrder order = criteria.get("sortOrder").getAsInt() == 1 ? SortOrder.ASC : SortOrder.DESC;
-      MdAttributeDAOIF mdAttribute = mdVertex.definesAttribute(field);
+      MdAttributeDAOIF mdAttribute = mdVertex.getAllDefinedMdAttributeMap().get(field.toLowerCase());
 
       statement.append(" ORDER BY " + this.getColumnName(mdAttribute) + " " + order.name());
     }
@@ -195,7 +195,7 @@ public abstract class AbstractGraphPageQuery<K, T extends JsonSerializable>
 
         String field = sort.get("field").getAsString();
         SortOrder order = sort.get("order").getAsInt() == 1 ? SortOrder.ASC : SortOrder.DESC;
-        MdAttributeDAOIF mdAttribute = mdVertex.definesAttribute(field);
+        MdAttributeDAOIF mdAttribute = mdVertex.getAllDefinedMdAttributeMap().get(field.toLowerCase());
 
         if (i == 0)
         {

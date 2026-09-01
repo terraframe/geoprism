@@ -27,6 +27,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 
+import com.runwaysdk.business.graph.GraphQuery;
 import com.runwaysdk.constants.MdAttributeBooleanInfo;
 import com.runwaysdk.constants.graph.MdVertexInfo;
 import com.runwaysdk.dataaccess.MdVertexDAOIF;
@@ -38,14 +39,17 @@ import com.runwaysdk.system.metadata.MdVertex;
 import net.geoprism.configuration.GeoprismProperties;
 import net.geoprism.registry.CodeLengthException;
 import net.geoprism.registry.RegistryConstants;
-import net.geoprism.registry.cache.ClearCacheEvent;
+import net.geoprism.registry.cache.ClearObjectCacheEvent;
 import net.geoprism.registry.conversion.RegistryLocalizedValueConverter;
 import net.geoprism.registry.graph.AttributeBooleanType;
 import net.geoprism.registry.graph.AttributeCharacterType;
 import net.geoprism.registry.graph.AttributeDataSourceType;
 import net.geoprism.registry.graph.AttributeType;
 import net.geoprism.registry.graph.AttributeUUIDType;
+import net.geoprism.registry.graph.BusinessEdgeType;
+import net.geoprism.registry.graph.BusinessType;
 import net.geoprism.registry.graph.ConceptClass;
+import net.geoprism.registry.graph.ConceptEdgeType;
 import net.geoprism.registry.graph.ConceptVertex;
 import net.geoprism.registry.model.ServerOrganization;
 import net.geoprism.registry.view.ConceptClassDTO;
@@ -79,7 +83,7 @@ public class ConceptClassBusinessService extends ObjectClassBusinessService<Conc
 
     this.getCache().remove(type);
 
-    publisher.publishEvent(new ClearCacheEvent(this));
+    publisher.publishEvent(new ClearObjectCacheEvent(this));
   }
 
   @Override
@@ -200,6 +204,7 @@ public class ConceptClassBusinessService extends ObjectClassBusinessService<Conc
       codeAttr.setUnique(true);
       codeAttr.setIsChangeOverTime(false);
       codeAttr.setIsDefault(true);
+      codeAttr.setIsVirtual(true);
       codeAttr.apply();
 
       AttributeDataSourceType sourceAttr = new AttributeDataSourceType();
@@ -228,6 +233,24 @@ public class ConceptClassBusinessService extends ObjectClassBusinessService<Conc
     this.getCache().put(conceptClass);
 
     return conceptClass;
+  }
+
+  @Override
+  public List<ConceptEdgeType> getEdgeTypes(ConceptClass type)
+  {
+    MdVertexDAOIF mdVertex = MdVertexDAO.getMdVertexDAO(ConceptEdgeType.CLASS);
+
+    StringBuilder statement = new StringBuilder();
+    statement.append("SELECT FROM " + mdVertex.getDBClassName());
+    statement.append(" WHERE childType = :type");
+    statement.append(" OR parentType = :type");
+
+    GraphQuery<ConceptEdgeType> query = new GraphQuery<ConceptEdgeType>(statement.toString());
+    query.setParameter("type", type.getMdVertexOid());
+
+    return query.getResults().stream() //
+        .sorted((a, b) -> a.getLabel().getLocalizedValue().compareTo(b.getLabel().getLocalizedValue())) //
+        .toList();
   }
 
 }

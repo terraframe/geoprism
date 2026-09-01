@@ -35,6 +35,7 @@ import org.commongeoregistry.adapter.metadata.AttributeIntegerType;
 import org.commongeoregistry.adapter.metadata.AttributeLocalType;
 import org.commongeoregistry.adapter.metadata.AttributeType;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Service;
 
 import com.runwaysdk.business.BusinessFacade;
@@ -51,6 +52,7 @@ import com.runwaysdk.system.metadata.MdClass;
 
 import net.geoprism.configuration.GeoprismProperties;
 import net.geoprism.registry.Organization;
+import net.geoprism.registry.cache.ClearTypeCacheEvent;
 import net.geoprism.registry.cache.TransactionLRUCache;
 import net.geoprism.registry.graph.ObjectClass;
 import net.geoprism.registry.model.GeoObjectMetadata;
@@ -410,4 +412,9 @@ public abstract class ObjectClassBusinessService<T extends ObjectClass, D extend
     }).orElse(null);
   }
 
+  @EventListener
+  public void handleClearCacheEvent(ClearTypeCacheEvent event)
+  {
+    this.cache.clear();
+  }
 }

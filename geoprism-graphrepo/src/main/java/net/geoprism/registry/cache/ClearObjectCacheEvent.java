@@ -16,21 +16,24 @@
  * You should have received a copy of the GNU Lesser General Public
  * License along with Geoprism(tm).  If not, see <http://www.gnu.org/licenses/>.
  */
-package net.geoprism.registry.service.business;
+package net.geoprism.registry.cache;
+import java.time.Clock;
 
-import java.util.List;
+import org.springframework.context.ApplicationEvent;
 
-import org.springframework.stereotype.Component;
-
-import net.geoprism.registry.graph.ConceptClass;
-import net.geoprism.registry.graph.ConceptEdgeType;
-import net.geoprism.registry.view.ConceptClassDTO;
-
-@Component
-public interface ConceptClassBusinessServiceIF extends ObjectClassBusinessServiceIF<ConceptClass, ConceptClassDTO>
+public class ClearObjectCacheEvent extends ApplicationEvent
 {
 
-  ConceptClass apply(ConceptClass conceptClass);
+  private static final long serialVersionUID = 1L;
 
-  List<ConceptEdgeType> getEdgeTypes(ConceptClass type);
+  public ClearObjectCacheEvent(Object source, Clock clock)
+  {
+    super(source, clock);
+  }
+
+  public ClearObjectCacheEvent(Object source)
+  {
+    super(source);
+  }
+
 }

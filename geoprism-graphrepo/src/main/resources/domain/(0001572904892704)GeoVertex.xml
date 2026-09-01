@@ -38,6 +38,7 @@
       </mdVertex>
       <mdVertex name="net.geoprism.registry.graph.ConceptVertex" extends="net.geoprism.registry.graph.ObjectVertex" label="Concept Vertex" isAbstract="true" enableChangeOverTime="false">
         <attributes>
+          <char name="code" label="Code" required="true" size="255" indexType="unique index"  />          
         </attributes>
       </mdVertex>           
       <mdVertex name="net.geoprism.registry.graph.GeoVertex" extends="net.geoprism.registry.graph.ObjectVertex" label="Geo Vertex" isAbstract="true" enableChangeOverTime="false">

@@ -48,7 +48,7 @@ public class AttributeBooleanType extends AttributeBooleanTypeBase
   {
     super.apply();
 
-    if (!this.getIsChangeOverTime())
+    if (!this.getIsChangeOverTime() && !this.getIsVirtual())
     {
       // Create the MdAttribute on the MdVertex
       MdAttributeBooleanDAO mdAttribute = MdAttributeBooleanDAO.newInstance();
@@ -69,7 +69,7 @@ public class AttributeBooleanType extends AttributeBooleanTypeBase
   @Transaction
   public void delete()
   {
-    if (!this.getIsChangeOverTime())
+    if (!this.getIsChangeOverTime() && !this.getIsVirtual())
     {
       ObjectClass type = this.getObjectType();
       MdVertexDAOIF mdVertex = MdVertexDAO.get(type.getMdVertexOid());

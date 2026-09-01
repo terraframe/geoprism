@@ -58,7 +58,7 @@ public class AttributeDataSourceType extends AttributeDataSourceTypeBase
   {
     super.apply();
 
-    if (!this.getIsChangeOverTime())
+    if (!this.getIsChangeOverTime() && !this.getIsVirtual())
     {
       // Create the MdAttribute on the MdVertex
       MdAttributeGraphReferenceDAO mdAttribute = MdAttributeGraphReferenceDAO.newInstance();
@@ -74,7 +74,7 @@ public class AttributeDataSourceType extends AttributeDataSourceTypeBase
   @Transaction
   public void delete()
   {
-    if (!this.getIsChangeOverTime())
+    if (!this.getIsChangeOverTime() && !this.getIsVirtual())
     {
       ObjectClass type = this.getObjectType();
       MdVertexDAOIF mdVertex = MdVertexDAO.get(type.getMdVertexOid());

@@ -280,7 +280,7 @@ public class OrganizationBusinessService implements OrganizationBusinessServiceI
 
   @Override
   @SuppressWarnings("unchecked")
-  public Page<OrganizationView> getPage(Integer pageSize, Integer pageNumber)
+  public JsonSerializablePage<OrganizationView> getPage(Integer pageSize, Integer pageNumber)
   {
     pageNumber = pageNumber != null ? pageNumber : Integer.valueOf(1);
     pageSize = pageSize != null ? pageSize : Integer.valueOf(20);
@@ -333,7 +333,7 @@ public class OrganizationBusinessService implements OrganizationBusinessServiceI
     GraphQuery<Long> cQuery = new GraphQuery<Long>("SELECT count(*) FROM graph_organization");
     Long count = cQuery.getSingleResult();
 
-    return new Page<OrganizationView>(count, pageNumber, pageSize, dtos);
+    return new JsonSerializablePage<OrganizationView>(count, pageNumber, pageSize, dtos);
   }
 
 }

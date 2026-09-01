@@ -28,7 +28,6 @@ import net.geoprism.registry.model.GraphNode;
 import net.geoprism.registry.model.OrganizationView;
 import net.geoprism.registry.model.ServerOrganization;
 import net.geoprism.registry.view.JsonSerializablePage;
-import net.geoprism.registry.view.Page;
 
 @Component
 public interface OrganizationBusinessServiceIF
@@ -60,5 +59,5 @@ public interface OrganizationBusinessServiceIF
 
   public void importJsonTree(ServerOrganization parent, JsonObject object);
 
-  public Page<OrganizationView> getPage(Integer pageSize, Integer pageNumber);
+  public JsonSerializablePage<OrganizationView> getPage(Integer pageSize, Integer pageNumber);
 }

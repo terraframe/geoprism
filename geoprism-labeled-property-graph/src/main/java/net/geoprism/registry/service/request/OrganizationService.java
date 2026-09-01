@@ -41,7 +41,7 @@ import net.geoprism.registry.model.ServerOrganization;
 import net.geoprism.registry.service.business.CacheProviderIF;
 import net.geoprism.registry.service.business.OrganizationBusinessServiceIF;
 import net.geoprism.registry.service.permission.OrganizationPermissionServiceIF;
-import net.geoprism.registry.view.Page;
+import net.geoprism.registry.view.JsonSerializablePage;
 
 @Service
 public class OrganizationService implements OrganizationServiceIF
@@ -258,7 +258,7 @@ public class OrganizationService implements OrganizationServiceIF
 
   @Override
   @Request(RequestType.SESSION)
-  public Page<OrganizationView> getPage(String sessionId, Integer pageSize, Integer pageNumber)
+  public JsonSerializablePage<OrganizationView> getPage(String sessionId, Integer pageSize, Integer pageNumber)
   {
     return this.service.getPage(pageSize, pageNumber);
   }

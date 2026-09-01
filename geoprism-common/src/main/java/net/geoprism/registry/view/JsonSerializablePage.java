@@ -45,7 +45,7 @@ public class JsonSerializablePage<T extends JsonSerializable> extends Page<T>
   {
     JsonArray array = new JsonArray();
 
-    for (JsonSerializable result : this.getResults())
+    for (JsonSerializable result : this.getResultSet())
     {
       array.add(result.toJSON());
     }

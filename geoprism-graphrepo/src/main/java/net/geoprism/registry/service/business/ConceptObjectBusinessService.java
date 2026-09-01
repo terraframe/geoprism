@@ -18,11 +18,13 @@
  */
 package net.geoprism.registry.service.business;
 
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.TreeMap;
+import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
 import org.commongeoregistry.adapter.metadata.AttributeClassificationType;
@@ -39,6 +41,9 @@ import net.geoprism.registry.graph.ConceptVertex;
 import net.geoprism.registry.model.ConceptObject;
 import net.geoprism.registry.model.EdgeConstant;
 import net.geoprism.registry.view.ConceptClassDTO;
+import net.geoprism.registry.view.NodeDTO;
+import net.geoprism.registry.view.ObjectOverTimeDTO;
+import net.geoprism.registry.view.Page;
 
 @Service
 public class ConceptObjectBusinessService extends ObjectEdgeBusinessService<ConceptObject, ConceptClass, ConceptClassDTO, ConceptEdgeType, ConceptObject> implements ConceptObjectBusinessServiceIF
@@ -124,12 +129,10 @@ public class ConceptObjectBusinessService extends ObjectEdgeBusinessService<Conc
   @Override
   public Optional<ConceptObject> getByCode(AttributeClassificationType attribute, String code)
   {
-    ConceptSet conceptSet = this.setService.getByCodeOrThrow(attribute.getConceptSet());
     ConceptClass type = this.cClassService.getByCodeOrThrow(attribute.getRootTerm().getType());
     ConceptObject root = this.getByCode(type, attribute.getRootTerm().getCode()).get();
 
-    List<ConceptEdgeType> edges = this.setService.getConceptEdgeTypes(conceptSet);
-    String edgeNames = String.join(", ", edges.stream().map(e -> "'" + e.getMdEdge().getDbClassName() + "'").toList());
+    String edgeNames = getEdgeNames(attribute);
 
     StringBuilder statement = new StringBuilder();
     statement.append("TRAVERSE out('" + EdgeConstant.HAS_VALUE.getDBClassName() + "', '" + EdgeConstant.HAS_GEOMETRY.getDBClassName() + "') FROM (");
@@ -149,117 +152,134 @@ public class ConceptObjectBusinessService extends ObjectEdgeBusinessService<Conc
   @Override
   public List<ConceptObject> search(AttributeClassificationType attribute, String text)
   {
-    ConceptSet conceptSet = this.setService.getByCodeOrThrow(attribute.getConceptSet());
     ConceptClass type = this.cClassService.getByCodeOrThrow(attribute.getRootTerm().getType());
     ConceptObject root = this.getByCode(type, attribute.getRootTerm().getCode()).get();
 
-    List<ConceptEdgeType> edges = this.setService.getConceptEdgeTypes(conceptSet);
-    String edgeNames = String.join(", ", edges.stream().map(e -> "'" + e.getMdEdge().getDbClassName() + "'").toList());
+    String edgeNames = getEdgeNames(attribute);
 
     StringBuilder statement = new StringBuilder();
     statement.append("TRAVERSE out('" + EdgeConstant.HAS_VALUE.getDBClassName() + "', '" + EdgeConstant.HAS_GEOMETRY.getDBClassName() + "') FROM (");
     statement.append("  SELECT FROM (");
     statement.append("    TRAVERSE outE(" + edgeNames + ")[(:startDate BETWEEN startDate AND endDate)].in FROM " + root.getRID());
     statement.append("  )");
-    statement.append("  WHERE (code.toUpperCase() LIKE :text");
+    statement.append("  WHERE code.toUpperCase() LIKE :text");
     statement.append("  ORDER BY code");
     statement.append("  LIMIT 10");
     statement.append(")");
 
     GraphQuery<VertexObject> query = new GraphQuery<VertexObject>(statement.toString());
-    query.setParameter("text", text);
+    query.setParameter("text", "%" + text.toUpperCase() + "%");
     query.setParameter("startDate", attribute.getStartDate());
 
     return this.processTraverseResults(query.getResults(), attribute.getStartDate());
 
   }
 
-  //
-  // @Override
-  // public List<ConceptObject>
-  // getAncestors(net.geoprism.registry.graph.AttributeClassificationType
-  // attributeType, ConceptObject object)
-  // {
-  // GraphQuery<VertexObject> query = null;
-  //
-  // if (rootCode != null && rootCode.length() > 0)
-  // {
-  // StringBuilder statement = new StringBuilder();
-  // statement.append("SELECT expand($res)");
-  // statement.append(" LET $a = (TRAVERSE in(\"" +
-  // classification.getType().getMdEdge().getDBClassName() + "\") FROM :rid
-  // WHILE (code != :code))");
-  // statement.append(", $b = (SELECT FROM " +
-  // classification.getType().getMdVertex().getDBClassName() + " WHERE code =
-  // :code)");
-  // statement.append(", $res = (UNIONALL($a,$b))");
-  //
-  // query = new GraphQuery<VertexObject>(statement.toString());
-  // query.setParameter("rid", object.getRID());
-  // query.setParameter("code", rootCode);
-  // }
-  // else
-  // {
-  // StringBuilder statement = new StringBuilder();
-  // statement.append("TRAVERSE in(\"" +
-  // classification.getType().getMdEdge().getDBClassName() + "\") FROM :rid");
-  //
-  // query = new GraphQuery<VertexObject>(statement.toString());
-  // query.setParameter("rid", object.getRID());
-  // }
-  //
-  //
-  // this.processTraverseResults(query.getResults(), date).stream().sorted((a,
-  // b) -> {
-  // return a.getCode().compareTo(b.getCode());
-  // }).map(v -> (N) v).collect(Collectors.toList());
-  //
-  // List<Classification> results = query.getResults().stream().map(vertex -> {
-  // return new Classification(classification.getType(), vertex);
-  // }).collect(Collectors.toList());
-  //
-  // return results;
-  // }
-  //
-  // @Override
-  // public ClassificationNode getAncestorTree(Classification classification,
-  // String rootCode, Integer pageSize)
-  // {
-  // List<Classification> ancestors = this.getAncestors(classification,
-  // rootCode);
-  //
-  // ClassificationNode prev = null;
-  //
-  // for (Classification ancestor : ancestors)
-  // {
-  // Page<Classification> page = this.getChildren(ancestor, pageSize, 1);
-  //
-  // List<ClassificationNode> transform = page.getResults().stream().map(r -> {
-  // return new ClassificationNode(r);
-  // }).collect(Collectors.toList());
-  //
-  // if (prev != null)
-  // {
-  // int index = transform.indexOf(prev);
-  //
-  // if (index != -1)
-  // {
-  // transform.set(index, prev);
-  // }
-  // else
-  // {
-  // transform.add(prev);
-  // }
-  // }
-  //
-  // ClassificationNode node = new ClassificationNode();
-  // node.setClassification(ancestor);
-  // node.setChildren(new Page<ClassificationNode>(page.getCount(),
-  // page.getPageNumber(), page.getPageSize(), transform));
-  //
-  // prev = node;
-  // }
-  //
-  // return prev;
-  // }
+  @Override
+  public Integer getChildCount(ConceptObject object, AttributeClassificationType attribute)
+  {
+    StringBuilder statement = new StringBuilder();
+    statement.append("SELECT outE(" + this.getEdgeNames(attribute) + ")[(:date BETWEEN startDate AND endDate)].size()" + "\n");
+    statement.append("FROM :rid " + "\n");
+
+    GraphQuery<Integer> query = new GraphQuery<Integer>(statement.toString());
+    query.setParameter("rid", object.getVertex().getRID());
+    query.setParameter("date", attribute.getStartDate());
+
+    return query.getSingleResult();
+  }
+
+  @Override
+  public List<ConceptObject> getChildren(ConceptObject object, AttributeClassificationType attribute, Integer pageSize, Integer pageNumber)
+  {
+    int first = pageSize * ( pageNumber - 1 );
+    int rows = pageSize;
+
+    StringBuilder statement = new StringBuilder();
+    statement.append("TRAVERSE out('" + EdgeConstant.HAS_VALUE.getDBClassName() + "', '" + EdgeConstant.HAS_GEOMETRY.getDBClassName() + "') FROM (" + "\n");
+    statement.append("  SELECT EXPAND(outE(" + this.getEdgeNames(attribute) + ")[(:date BETWEEN startDate AND endDate)].in)" + "\n");
+    statement.append("  FROM :rid " + "\n");
+    statement.append("  ORDER BY code" + "\n");
+    statement.append("  SKIP " + first + " LIMIT " + rows + "\n");
+    statement.append(")");
+
+    GraphQuery<VertexObject> query = new GraphQuery<VertexObject>(statement.toString());
+    query.setParameter("rid", object.getVertex().getRID());
+    query.setParameter("date", attribute.getStartDate());
+
+    return this.processTraverseResults(query.getResults(), attribute.getStartDate()).stream().sorted((a, b) -> {
+      return a.getCode().compareTo(b.getCode());
+    }).collect(Collectors.toList());
+  }
+
+  public String getEdgeNames(AttributeClassificationType attribute)
+  {
+    ConceptSet conceptSet = this.setService.getByCodeOrThrow(attribute.getConceptSet());
+    List<ConceptEdgeType> edges = this.setService.getConceptEdgeTypes(conceptSet);
+
+    return String.join(", ", edges.stream().map(e -> "'" + e.getMdEdge().getDbClassName() + "'").toList());
+  }
+
+  @Override
+  public List<ConceptObject> getAncestors(AttributeClassificationType attribute, ConceptObject object)
+  {
+    ConceptClass type = this.cClassService.getByCodeOrThrow(attribute.getRootTerm().getType());
+    ConceptObject root = this.getByCode(type, attribute.getRootTerm().getCode()).get();
+
+    String edgeNames = getEdgeNames(attribute);
+
+    StringBuilder statement = new StringBuilder();
+    statement.append("TRAVERSE out('" + EdgeConstant.HAS_VALUE.getDBClassName() + "', '" + EdgeConstant.HAS_GEOMETRY.getDBClassName() + "') FROM (");
+    statement.append("  SELECT FROM (");
+    statement.append("    TRAVERSE inE(" + edgeNames + ")[(:startDate BETWEEN startDate AND endDate)].out FROM :rid WHILE $current != :root ");
+    statement.append("  )");
+    statement.append(")");
+
+    GraphQuery<VertexObject> query = new GraphQuery<VertexObject>(statement.toString());
+    query.setParameter("startDate", attribute.getStartDate());
+    query.setParameter("rid", object.getRID());
+    query.setParameter("root", root.getRID());
+
+    return this.processTraverseResults(query.getResults(), attribute.getStartDate());
+  }
+
+  @Override
+  public NodeDTO<ObjectOverTimeDTO> getAncestorTree(AttributeClassificationType attribute, ConceptObject object, Integer pageSize)
+  {
+    List<ConceptObject> ancestors = this.getAncestors(attribute, object);
+
+    NodeDTO<ObjectOverTimeDTO> prev = null;
+
+    for (ConceptObject ancestor : ancestors)
+    {
+      Integer count = this.getChildCount(ancestor, attribute);
+      List<ConceptObject> children = this.getChildren(ancestor, attribute, pageSize, 1);
+
+      List<NodeDTO<ObjectOverTimeDTO>> dtos = children.stream().map(r -> {
+        return new NodeDTO<ObjectOverTimeDTO>(this.toDTO(r));
+      }).collect(Collectors.toList());
+
+      if (prev != null)
+      {
+        int index = dtos.indexOf(prev);
+
+        if (index != -1)
+        {
+          dtos.set(index, prev);
+        }
+        else
+        {
+          dtos.add(prev);
+        }
+      }
+
+      NodeDTO<ObjectOverTimeDTO> node = new NodeDTO<ObjectOverTimeDTO>();
+      node.setObject(this.toDTO(ancestor));
+      node.setChildren(new Page<NodeDTO<ObjectOverTimeDTO>>(count, 1, pageSize, dtos));
+
+      prev = node;
+    }
+
+    return prev;
+  }
 }

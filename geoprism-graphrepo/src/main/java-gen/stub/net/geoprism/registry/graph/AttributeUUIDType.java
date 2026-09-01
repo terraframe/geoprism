@@ -44,7 +44,7 @@ public class AttributeUUIDType extends AttributeUUIDTypeBase
   @Transaction
   public void apply()
   {
-    if (!this.getIsChangeOverTime())
+    if (!this.getIsChangeOverTime() && !this.getIsVirtual())
     {
       MdAttributeUUIDDAO mdAttribute = null;
 
@@ -74,7 +74,7 @@ public class AttributeUUIDType extends AttributeUUIDTypeBase
   @Transaction
   public void delete()
   {
-    if (!this.getIsChangeOverTime())
+    if (!this.getIsChangeOverTime() && !this.getIsVirtual())
     {
       ObjectClass type = this.getObjectType();
       MdVertexDAOIF mdVertex = MdVertexDAO.get(type.getMdVertexOid());

@@ -387,7 +387,9 @@ public abstract class ObjectEdgeBusinessService<V extends ServerObjectVertex, T 
     query.setParameter("rid", object.getVertex().getRID());
 
     if (date != null)
+    {
       query.setParameter("date", date);
+    }
 
     List<N> results = this.processTraverseResults(query.getResults(), date).stream().sorted((a, b) -> {
       return a.getCode().compareTo(b.getCode());

@@ -34,7 +34,7 @@
             label="Code"
             required="true"
             size="255"
-            indexType="unique" />
+            indexType="unique index" />
           <localCharEmbedded
             name="displayLabel"
             label="Label"

@@ -25,7 +25,7 @@
       </mdVertex>
       <mdVertex name="net.geoprism.registry.graph.TableClass" extends="net.geoprism.registry.graph.SchemaElement" isAbstract="true" label="Table Class" >
         <attributes>
-          <char name="code" label="Code" required="true" size="255" indexType="unique"  />          
+          <char name="code" label="Code" required="true" size="255" indexType="unique index"  />          
         </attributes>            
       </mdVertex>
       <mdVertex name="net.geoprism.registry.graph.EdgeClass" extends="net.geoprism.registry.graph.TableClass" isAbstract="true" label="Edge Class" >
@@ -88,6 +88,7 @@
           <boolean name="unique" label="Unique" />
           <boolean name="isDefault" label="Is Default" />
           <boolean name="isChangeOverTime" label="Is Change Over Time" />
+          <boolean name="isVirtual" label="Is Virtual" required="true" defaultValue="false"  />          
           <graphReference name="objectType" label="Geo Object Type" required="true" type="net.geoprism.registry.graph.ObjectClass"/>
         </attributes>
       </mdVertex>    

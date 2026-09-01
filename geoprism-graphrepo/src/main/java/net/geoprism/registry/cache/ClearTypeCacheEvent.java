@@ -21,17 +21,17 @@ import java.time.Clock;
 
 import org.springframework.context.ApplicationEvent;
 
-public class ClearCacheEvent extends ApplicationEvent
+public class ClearTypeCacheEvent extends ApplicationEvent
 {
 
   private static final long serialVersionUID = 1L;
 
-  public ClearCacheEvent(Object source, Clock clock)
+  public ClearTypeCacheEvent(Object source, Clock clock)
   {
     super(source, clock);
   }
 
-  public ClearCacheEvent(Object source)
+  public ClearTypeCacheEvent(Object source)
   {
     super(source);
   }

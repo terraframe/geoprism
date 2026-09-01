@@ -30,24 +30,24 @@ public class Page<T> implements Iterable<T>
 
   protected Integer pageSize;
 
-  protected List<T> results;
+  protected List<T> resultSet;
 
   public Page()
   {
   }
 
-  public Page(Integer count, Integer pageNumber, Integer pageSize, List<T> results)
+  public Page(Integer count, Integer pageNumber, Integer pageSize, List<T> resultSet)
   {
-    this(count.longValue(), pageNumber, pageSize, results);
+    this(count.longValue(), pageNumber, pageSize, resultSet);
   }
 
-  public Page(Long count, Integer pageNumber, Integer pageSize, List<T> results)
+  public Page(Long count, Integer pageNumber, Integer pageSize, List<T> resultSet)
   {
     super();
     this.count = count;
     this.pageNumber = pageNumber;
     this.pageSize = pageSize;
-    this.results = results;
+    this.resultSet = resultSet;
   }
 
   public Long getCount()
@@ -80,19 +80,19 @@ public class Page<T> implements Iterable<T>
     this.pageSize = pageSize;
   }
 
-  public List<T> getResults()
+  public List<T> getResultSet()
   {
-    return results;
+    return resultSet;
   }
 
-  public void setResults(List<T> results)
+  public void setResultSet(List<T> resultSet)
   {
-    this.results = results;
+    this.resultSet = resultSet;
   }
 
   @Override
   public Iterator<T> iterator()
   {
-    return this.results.iterator();
+    return this.resultSet.iterator();
   }
 }

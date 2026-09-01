@@ -3,22 +3,23 @@
  *
  * This file is part of Geoprism(tm).
  *
- * Geoprism(tm) is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
+ * Geoprism(tm) is free software: you can redistribute it and/or modify it under
+ * the terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation, either version 3 of the License, or (at your option) any
+ * later version.
  *
- * Geoprism(tm) is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
+ * Geoprism(tm) is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with Geoprism(tm).  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with Geoprism(tm). If not, see <http://www.gnu.org/licenses/>.
  */
 package net.geoprism.registry.service.business;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 
 import com.runwaysdk.dataaccess.metadata.MdClassDAO;
@@ -28,8 +29,12 @@ import com.runwaysdk.session.Request;
 
 import net.geoprism.registry.Organization;
 import net.geoprism.registry.OrganizationQuery;
+import net.geoprism.registry.cache.ClearObjectCacheEvent;
+import net.geoprism.registry.cache.ClearTypeCacheEvent;
 import net.geoprism.registry.graph.BusinessEdgeType;
 import net.geoprism.registry.graph.BusinessType;
+import net.geoprism.registry.graph.ConceptClass;
+import net.geoprism.registry.graph.ConceptEdgeType;
 import net.geoprism.registry.graph.DirectedAcyclicGraphType;
 import net.geoprism.registry.graph.HierarchicalRelationshipType;
 import net.geoprism.registry.graph.InheritedHierarchyAnnotation;
@@ -43,22 +48,31 @@ import net.geoprism.registry.model.ServerOrganization;
 public class GraphRepoService implements GraphRepoServiceIF
 {
   @Autowired
+  private GeoObjectTypeBusinessServiceIF            gTypeService;
+
+  @Autowired
+  private BusinessTypeBusinessServiceIF             bTypeService;
+
+  @Autowired
+  private ConceptClassBusinessServiceIF             cClassService;
+
+  @Autowired
   private HierarchyTypeBusinessServiceIF            hierarchyService;
-
-  @Autowired
-  private GeoObjectTypeBusinessServiceIF            typeService;
-
-  @Autowired
-  private BusinessEdgeTypeBusinessServiceIF         bizEdgeTypeService;
-
-  @Autowired
-  private BusinessTypeBusinessServiceIF             bizTypeService;
 
   @Autowired
   private DirectedAcyclicGraphTypeBusinessServiceIF dagTypeService;
 
   @Autowired
   private UndirectedGraphTypeBusinessServiceIF      ugtTypeService;
+
+  @Autowired
+  private BusinessEdgeTypeBusinessServiceIF         bEdgeTypeService;
+
+  @Autowired
+  private ConceptEdgeTypeBusinessServiceIF          cEdgeTypeService;
+
+  @Autowired
+  private ApplicationEventPublisher                 publisher;
 
   @Request
   @Override
@@ -70,6 +84,8 @@ public class GraphRepoService implements GraphRepoServiceIF
   @Override
   public void refreshMetadataCache()
   {
+    publisher.publishEvent(new ClearTypeCacheEvent(this));
+
     ServiceFactory.getMetadataCache().rebuild();
 
     ServerGeoObjectType.getAllFromDatabase().stream().forEach(type -> {
@@ -136,15 +152,15 @@ public class GraphRepoService implements GraphRepoServiceIF
   {
     if (obj instanceof ServerGeoObjectType)
     {
-      typeService.deleteGeoObjectType(obj.getCode());
-    }
-    else if (obj instanceof BusinessEdgeType)
-    {
-      bizEdgeTypeService.delete((BusinessEdgeType) obj);
+      gTypeService.deleteGeoObjectType(obj.getCode());
     }
     else if (obj instanceof BusinessType)
     {
-      bizTypeService.delete((BusinessType) obj);
+      bTypeService.delete((BusinessType) obj);
+    }
+    else if (obj instanceof ConceptClass)
+    {
+      cClassService.delete((ConceptClass) obj);
     }
     else if (obj instanceof DirectedAcyclicGraphType)
     {
@@ -157,6 +173,14 @@ public class GraphRepoService implements GraphRepoServiceIF
     else if (obj instanceof UndirectedGraphType)
     {
       ugtTypeService.delete((UndirectedGraphType) obj);
+    }
+    else if (obj instanceof BusinessEdgeType)
+    {
+      bEdgeTypeService.delete((BusinessEdgeType) obj);
+    }
+    else if (obj instanceof ConceptEdgeType)
+    {
+      cEdgeTypeService.delete((ConceptEdgeType) obj);
     }
     else
     {

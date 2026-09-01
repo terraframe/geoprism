@@ -45,7 +45,7 @@ import com.runwaysdk.dataaccess.transaction.Transaction;
 import net.geoprism.configuration.GeoprismProperties;
 import net.geoprism.registry.DateFormatter;
 import net.geoprism.registry.OriginException;
-import net.geoprism.registry.cache.ClearCacheEvent;
+import net.geoprism.registry.cache.ClearObjectCacheEvent;
 import net.geoprism.registry.cache.TransactionLRUCache;
 import net.geoprism.registry.graph.AttributeBooleanType;
 import net.geoprism.registry.graph.AttributeCharacterType;
@@ -464,7 +464,7 @@ public abstract class ObjectBusinessService<V extends ServerObjectVertex, T exte
   public Optional<V> get(T type, String attributeName, Object value)
   {
     MdVertexDAOIF mdVertex = type.getMdVertexDAO();
-    MdAttributeDAOIF mdAttribute = mdVertex.definesAttribute(attributeName);
+    MdAttributeDAOIF mdAttribute = mdVertex.getAllDefinedMdAttributeMap().get(attributeName.toLowerCase());
 
     StringBuilder statement = new StringBuilder();
     statement.append("TRAVERSE out('" + EdgeConstant.HAS_VALUE.getDBClassName() + "', '" + EdgeConstant.HAS_GEOMETRY.getDBClassName() + "') FROM (");
@@ -524,7 +524,7 @@ public abstract class ObjectBusinessService<V extends ServerObjectVertex, T exte
   public List<V> getAll(T type, Long skip, Integer limit)
   {
     MdVertexDAOIF mdVertex = type.getMdVertexDAO();
-    MdAttributeDAOIF mdAttribute = mdVertex.definesAttribute(DefaultAttribute.CODE.getName());
+    MdAttributeDAOIF mdAttribute = mdVertex.getAllDefinedMdAttributeMap().get(DefaultAttribute.CODE.getName().toLowerCase());
 
     StringBuilder statement = new StringBuilder();
     statement.append("TRAVERSE out('" + EdgeConstant.HAS_VALUE.getDBClassName() + "') FROM (");
@@ -627,9 +627,8 @@ public abstract class ObjectBusinessService<V extends ServerObjectVertex, T exte
   }
 
   @EventListener
-  public void handleClearCacheEvent(ClearCacheEvent event)
+  public void handleClearCacheEvent(ClearObjectCacheEvent event)
   {
     this.cache.clear();
   }
-
 }
