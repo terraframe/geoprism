@@ -33,6 +33,7 @@ import org.springframework.stereotype.Service;
 import com.runwaysdk.business.graph.GraphQuery;
 import com.runwaysdk.business.graph.VertexObject;
 import com.runwaysdk.dataaccess.MdVertexDAOIF;
+import com.runwaysdk.dataaccess.ProgrammingErrorException;
 import com.runwaysdk.dataaccess.graph.VertexObjectDAO;
 import com.runwaysdk.dataaccess.metadata.graph.MdVertexDAO;
 import com.runwaysdk.system.metadata.MdVertex;
@@ -198,13 +199,19 @@ public class ConceptObjectBusinessService extends ObjectEdgeBusinessService<Conc
   }
 
   @Override
-  public List<ConceptObject> search(ConceptClass conceptClass, String text)
+  public List<ConceptObject> search(ConceptSet set, Date date, String text)
   {
-      MdVertex mdVertex = conceptClass.getMdVertex();
+    if (StringUtils.isNotBlank(set.getRootTerm()))
+    {
+      ConceptObject rootTerm = this.getByOid(set.getRootTerm()).orElseThrow(() -> new ProgrammingErrorException("Unable to find root term"));
+
+      String edgeNames = getEdgeNames(set);
 
       StringBuilder statement = new StringBuilder();
       statement.append("TRAVERSE out('" + EdgeConstant.HAS_VALUE.getDBClassName() + "', '" + EdgeConstant.HAS_GEOMETRY.getDBClassName() + "') FROM (");
-      statement.append("  SELECT FROM " + mdVertex.getDbClassName());
+      statement.append("  SELECT FROM (");
+      statement.append("    TRAVERSE outE(" + edgeNames + ")[(:date BETWEEN startDate AND endDate)].in FROM :rid");
+      statement.append("  )");
       statement.append("  WHERE code.toUpperCase() LIKE :text");
       statement.append("  ORDER BY code");
       statement.append("  LIMIT 10");
@@ -212,8 +219,39 @@ public class ConceptObjectBusinessService extends ObjectEdgeBusinessService<Conc
 
       GraphQuery<VertexObject> query = new GraphQuery<VertexObject>(statement.toString());
       query.setParameter("text", "%" + text.toUpperCase() + "%");
+      query.setParameter("date", date);
+      query.setParameter("rid", rootTerm.getRID());
 
-      return this.processTraverseResults(query.getResults(), null);
+      return this.processTraverseResults(query.getResults(), date);
+    }
+
+    List<ConceptClass> conceptClasses = this.setService.getConceptClasses(set);
+
+    if (conceptClasses.size() > 0)
+    {
+      return this.search(conceptClasses.get(0), text);
+    }
+
+    return new LinkedList<>();
+  }
+
+  @Override
+  public List<ConceptObject> search(ConceptClass conceptClass, String text)
+  {
+    MdVertex mdVertex = conceptClass.getMdVertex();
+
+    StringBuilder statement = new StringBuilder();
+    statement.append("TRAVERSE out('" + EdgeConstant.HAS_VALUE.getDBClassName() + "', '" + EdgeConstant.HAS_GEOMETRY.getDBClassName() + "') FROM (");
+    statement.append("  SELECT FROM " + mdVertex.getDbClassName());
+    statement.append("  WHERE code.toUpperCase() LIKE :text");
+    statement.append("  ORDER BY code");
+    statement.append("  LIMIT 10");
+    statement.append(")");
+
+    GraphQuery<VertexObject> query = new GraphQuery<VertexObject>(statement.toString());
+    query.setParameter("text", "%" + text.toUpperCase() + "%");
+
+    return this.processTraverseResults(query.getResults(), null);
   }
 
   @Override
@@ -255,7 +293,11 @@ public class ConceptObjectBusinessService extends ObjectEdgeBusinessService<Conc
 
   public String getEdgeNames(AttributeClassificationType attribute)
   {
-    ConceptSet conceptSet = this.setService.getByCodeOrThrow(attribute.getConceptSet());
+    return getEdgeNames(this.setService.getByCodeOrThrow(attribute.getConceptSet()));
+  }
+
+  public String getEdgeNames(ConceptSet conceptSet)
+  {
     List<ConceptEdgeType> edges = this.setService.getConceptEdgeTypes(conceptSet);
 
     return String.join(", ", edges.stream().map(e -> "'" + e.getMdEdge().getDbClassName() + "'").toList());

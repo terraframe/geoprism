@@ -18,6 +18,7 @@
  */
 package net.geoprism.registry.service.request;
 
+import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -42,9 +43,13 @@ import net.geoprism.registry.view.Page;
 @Service
 public class ConceptObjectService extends ObjectService<ConceptObject, ConceptClass, ConceptClassDTO>
 {
+  private final ConceptSetBusinessServiceIF cSetService;
+
   public ConceptObjectService(ConceptObjectBusinessServiceIF objectService, ConceptClassBusinessServiceIF cTypeService, ConceptSetBusinessServiceIF cSetService)
   {
     super(cTypeService, objectService);
+
+    this.cSetService = cSetService;
   }
 
   protected ConceptObjectBusinessServiceIF getObjectService()
@@ -101,6 +106,19 @@ public class ConceptObjectService extends ObjectService<ConceptObject, ConceptCl
     return this.getTypeService().getByCode(conceptClassCode) //
         .map(conceptClass -> {
           List<ConceptObject> children = this.getObjectService().search(conceptClass, text);
+
+          return children.stream() //
+              .map(c -> this.getObjectService().toDTO(c)) //
+              .toList();
+        }).orElse(new LinkedList<ObjectOverTimeDTO>());
+  }
+
+  @Request(RequestType.SESSION)
+  public List<ObjectOverTimeDTO> search(String sessionId, String setCode, Date date, String text)
+  {
+    return this.cSetService.getByCode(setCode) //
+        .map(set -> {
+          List<ConceptObject> children = this.getObjectService().search(set, date, text);
 
           return children.stream() //
               .map(c -> this.getObjectService().toDTO(c)) //

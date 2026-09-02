@@ -18,6 +18,7 @@
  */
 package net.geoprism.registry.service.business;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -43,6 +44,8 @@ public interface ConceptObjectBusinessServiceIF extends ObjectEdgeBusinessServic
 
   List<ConceptObject> search(ConceptClass conceptClass, String text);
 
+  List<ConceptObject> search(ConceptSet set, Date date, String text);
+
   List<ConceptObject> getChildren(ConceptObject object, AttributeClassificationType attribute, Integer pageSize, Integer pageNumber);
 
   Integer getChildCount(ConceptObject object, AttributeClassificationType attribute);
@@ -50,4 +53,5 @@ public interface ConceptObjectBusinessServiceIF extends ObjectEdgeBusinessServic
   List<ConceptObject> getAncestors(AttributeClassificationType attribute, ConceptObject object);
 
   NodeDTO<ObjectOverTimeDTO> getAncestorTree(AttributeClassificationType attribute, ConceptObject object, Integer pageSize);
+
 }

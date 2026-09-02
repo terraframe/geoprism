@@ -463,7 +463,11 @@ public class GeoObjectTypeBusinessService implements GeoObjectTypeBusinessServic
     // there is no super type
     if (superType == null && dto.getClassification() != null)
     {
-      this.createAttributeType(sType, dto.getClassification());
+      net.geoprism.registry.graph.AttributeClassificationType attributeType = new net.geoprism.registry.graph.AttributeClassificationType();
+      attributeType.setObjectType(type);
+      attributeType.fromDTO(dto.getClassification());
+      attributeType.setIsDefault(true);
+      attributeType.apply();
     }
 
     new GeoObjectTypeCacheEventCommand(sType, CacheEventType.CREATE).doIt();

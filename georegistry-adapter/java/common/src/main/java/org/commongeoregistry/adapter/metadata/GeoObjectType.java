@@ -646,7 +646,7 @@ public class GeoObjectType implements Serializable
 
     if (oJson.has(JSON_CLASSIFICATION))
     {
-      JsonObject joAttr = oJson.get(JSON_IS_PRIVATE).getAsJsonObject();
+      JsonObject joAttr = oJson.get(JSON_CLASSIFICATION).getAsJsonObject();
 
       geoObjType.setClassification((AttributeClassificationType) AttributeClassificationType.parse(joAttr));
     }
