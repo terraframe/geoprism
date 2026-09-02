@@ -18,8 +18,8 @@
  */
 package net.geoprism.registry.service.business;
 
-import java.util.Collections;
 import java.util.Date;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -32,7 +32,10 @@ import org.springframework.stereotype.Service;
 
 import com.runwaysdk.business.graph.GraphQuery;
 import com.runwaysdk.business.graph.VertexObject;
+import com.runwaysdk.dataaccess.MdVertexDAOIF;
 import com.runwaysdk.dataaccess.graph.VertexObjectDAO;
+import com.runwaysdk.dataaccess.metadata.graph.MdVertexDAO;
+import com.runwaysdk.system.metadata.MdVertex;
 
 import net.geoprism.registry.graph.ConceptClass;
 import net.geoprism.registry.graph.ConceptEdgeType;
@@ -90,7 +93,7 @@ public class ConceptObjectBusinessService extends ObjectEdgeBusinessService<Conc
   }
 
   @Override
-  public Optional<ConceptObject> getByCode(ConceptSet conceptSet, String typeCode, String code)
+  public Optional<ConceptObject> getByCode(ConceptSet conceptSet, String code)
   {
     String rootOid = conceptSet.getRootTerm();
 
@@ -116,13 +119,33 @@ public class ConceptObjectBusinessService extends ObjectEdgeBusinessService<Conc
     }
     else
     {
-      ConceptClass type = this.setService.getConceptClasses(conceptSet).stream() //
-          .filter(t -> t.getCode().equals(typeCode)) //
-          .findAny().orElseThrow(() -> {
-            return new UnsupportedOperationException("The concept class [" + typeCode + "] is not a member of the concept set");
-          });
+      Optional<ConceptObject> result = this.getCache().get(code, () -> {
+        MdVertexDAOIF mdVertex = MdVertexDAO.getMdVertexDAO(ConceptVertex.CLASS);
 
-      return this.getByCode(type, code);
+        StringBuilder statement = new StringBuilder();
+        statement.append("TRAVERSE out('" + EdgeConstant.HAS_VALUE.getDBClassName() + "', '" + EdgeConstant.HAS_GEOMETRY.getDBClassName() + "') FROM (");
+        statement.append("  SELECT FROM " + mdVertex.getDBClassName());
+        statement.append("  WHERE code = :code");
+        statement.append(")");
+
+        GraphQuery<VertexObject> query = new GraphQuery<VertexObject>(statement.toString());
+        query.setParameter("code", code);
+
+        return Optional.ofNullable(this.processSingleResult(query.getResults(), null));
+      });
+
+      result.ifPresent(object -> {
+
+        List<ConceptClass> classes = this.setService.getConceptClasses(conceptSet);
+
+        if (!classes.contains(object.getType()))
+        {
+          throw new UnsupportedOperationException("The concept class [" + object.getType() + "] is not a member of the concept set");
+        }
+      });
+
+      return result;
+
     }
   }
 
@@ -172,7 +195,25 @@ public class ConceptObjectBusinessService extends ObjectEdgeBusinessService<Conc
     query.setParameter("startDate", attribute.getStartDate());
 
     return this.processTraverseResults(query.getResults(), attribute.getStartDate());
+  }
 
+  @Override
+  public List<ConceptObject> search(ConceptClass conceptClass, String text)
+  {
+      MdVertex mdVertex = conceptClass.getMdVertex();
+
+      StringBuilder statement = new StringBuilder();
+      statement.append("TRAVERSE out('" + EdgeConstant.HAS_VALUE.getDBClassName() + "', '" + EdgeConstant.HAS_GEOMETRY.getDBClassName() + "') FROM (");
+      statement.append("  SELECT FROM " + mdVertex.getDbClassName());
+      statement.append("  WHERE code.toUpperCase() LIKE :text");
+      statement.append("  ORDER BY code");
+      statement.append("  LIMIT 10");
+      statement.append(")");
+
+      GraphQuery<VertexObject> query = new GraphQuery<VertexObject>(statement.toString());
+      query.setParameter("text", "%" + text.toUpperCase() + "%");
+
+      return this.processTraverseResults(query.getResults(), null);
   }
 
   @Override

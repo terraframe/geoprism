@@ -120,7 +120,7 @@ public class AttributeClassificationType extends AttributeClassificationTypeBase
     {
       ConceptObjectBusinessServiceIF cService = ServiceFactory.getBean(ConceptObjectBusinessServiceIF.class);
 
-      ConceptObject classification = cService.getByCode(conceptSet, rootTerm.getType(), rootTerm.getCode()).orElseThrow(() -> {
+      ConceptObject classification = cService.getByCode(conceptSet, rootTerm.getCode()).orElseThrow(() -> {
         net.geoprism.registry.DataNotFoundException ex = new net.geoprism.registry.DataNotFoundException();
         ex.setTypeLabel(conceptSet.getLabel().getValue());
         ex.setDataIdentifier(rootTerm.getCode());

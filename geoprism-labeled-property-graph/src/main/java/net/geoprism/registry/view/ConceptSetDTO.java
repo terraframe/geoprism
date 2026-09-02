@@ -18,6 +18,9 @@
  */
 package net.geoprism.registry.view;
 
+import java.util.LinkedList;
+import java.util.List;
+
 import org.apache.commons.lang.StringUtils;
 import org.commongeoregistry.adapter.dataaccess.LocalizedValue;
 import org.commongeoregistry.adapter.serialization.LocalizedValueDeserializer;
@@ -41,6 +44,12 @@ public class ConceptSetDTO
   private LocalizedValue description;
 
   private DiscreteType   discreteType;
+
+  private List<String>   conceptClasses   = new LinkedList<>();
+
+  private List<String>   conceptEdgeTypes = new LinkedList<>();
+
+  private String         rootTerm;
 
   public String getOid()
   {
@@ -90,6 +99,36 @@ public class ConceptSetDTO
   public void setDiscreteType(DiscreteType discreteType)
   {
     this.discreteType = discreteType;
+  }
+
+  public List<String> getConceptClasses()
+  {
+    return conceptClasses;
+  }
+
+  public void setConceptClasses(List<String> conceptClasses)
+  {
+    this.conceptClasses = conceptClasses;
+  }
+
+  public List<String> getConceptEdgeTypes()
+  {
+    return conceptEdgeTypes;
+  }
+
+  public void setConceptEdgeTypes(List<String> conceptEdgeTypes)
+  {
+    this.conceptEdgeTypes = conceptEdgeTypes;
+  }
+
+  public String getRootTerm()
+  {
+    return rootTerm;
+  }
+
+  public void setRootTerm(String rootTerm)
+  {
+    this.rootTerm = rootTerm;
   }
 
   public boolean hasOid()

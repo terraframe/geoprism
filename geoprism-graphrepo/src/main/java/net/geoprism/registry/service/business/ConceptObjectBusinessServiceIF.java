@@ -35,11 +35,13 @@ import net.geoprism.registry.view.ObjectOverTimeDTO;
 @Component
 public interface ConceptObjectBusinessServiceIF extends ObjectEdgeBusinessServiceIF<ConceptObject, ConceptClass, ConceptClassDTO, ConceptEdgeType, ConceptObject>
 {
-  Optional<ConceptObject> getByCode(ConceptSet conceptSet, String type, String code);
+  Optional<ConceptObject> getByCode(ConceptSet conceptSet, String code);
 
   Optional<ConceptObject> getByCode(AttributeClassificationType attribute, String code);
 
   List<ConceptObject> search(AttributeClassificationType attribute, String text);
+
+  List<ConceptObject> search(ConceptClass conceptClass, String text);
 
   List<ConceptObject> getChildren(ConceptObject object, AttributeClassificationType attribute, Integer pageSize, Integer pageNumber);
 

@@ -33,6 +33,7 @@ import net.geoprism.registry.model.ConceptObject;
 import net.geoprism.registry.model.ServerGeoObjectType;
 import net.geoprism.registry.service.business.ConceptClassBusinessServiceIF;
 import net.geoprism.registry.service.business.ConceptObjectBusinessServiceIF;
+import net.geoprism.registry.service.business.ConceptSetBusinessServiceIF;
 import net.geoprism.registry.view.ConceptClassDTO;
 import net.geoprism.registry.view.NodeDTO;
 import net.geoprism.registry.view.ObjectOverTimeDTO;
@@ -41,7 +42,7 @@ import net.geoprism.registry.view.Page;
 @Service
 public class ConceptObjectService extends ObjectService<ConceptObject, ConceptClass, ConceptClassDTO>
 {
-  public ConceptObjectService(ConceptObjectBusinessServiceIF objectService, ConceptClassBusinessServiceIF cTypeService)
+  public ConceptObjectService(ConceptObjectBusinessServiceIF objectService, ConceptClassBusinessServiceIF cTypeService, ConceptSetBusinessServiceIF cSetService)
   {
     super(cTypeService, objectService);
   }
@@ -87,6 +88,19 @@ public class ConceptObjectService extends ObjectService<ConceptObject, ConceptCl
         .map(a -> (AttributeClassificationType) a.toDTO()) //
         .map(a -> {
           List<ConceptObject> children = this.getObjectService().search(a, text);
+
+          return children.stream() //
+              .map(c -> this.getObjectService().toDTO(c)) //
+              .toList();
+        }).orElse(new LinkedList<ObjectOverTimeDTO>());
+  }
+
+  @Request(RequestType.SESSION)
+  public List<ObjectOverTimeDTO> search(String sessionId, String conceptClassCode, String text)
+  {
+    return this.getTypeService().getByCode(conceptClassCode) //
+        .map(conceptClass -> {
+          List<ConceptObject> children = this.getObjectService().search(conceptClass, text);
 
           return children.stream() //
               .map(c -> this.getObjectService().toDTO(c)) //

@@ -99,10 +99,10 @@ public abstract class ObjectBusinessService<V extends ServerObjectVertex, T exte
     this.cache = new TransactionLRUCache<String, V>(cacheName, (v) -> {
       if (v.getRID() != null)
       {
-        return new String[] { v.getOid(), v.getType().getCode() + "#" + v.getCode(), v.getRID().toString() };
+        return new String[] { v.getOid(), v.getCode(), v.getRID().toString() };
       }
 
-      return new String[] { v.getOid(), v.getType().getCode() + "#" + v.getCode() };
+      return new String[] { v.getOid(), v.getCode() };
     }, 100);
   }
 
@@ -111,6 +111,11 @@ public abstract class ObjectBusinessService<V extends ServerObjectVertex, T exte
   protected ObjectClassBusinessServiceIF<T, D> getTypeService()
   {
     return typeService;
+  }
+
+  protected TransactionLRUCache<String, V> getCache()
+  {
+    return cache;
   }
 
   @Override
@@ -481,7 +486,7 @@ public abstract class ObjectBusinessService<V extends ServerObjectVertex, T exte
   @Override
   public Optional<V> getByCode(T type, String code)
   {
-    return this.cache.get(type.getCode() + "#" + code, () -> {
+    return this.cache.get(code, () -> {
       return this.get(type, DefaultAttribute.CODE.getName(), code);
     });
   }

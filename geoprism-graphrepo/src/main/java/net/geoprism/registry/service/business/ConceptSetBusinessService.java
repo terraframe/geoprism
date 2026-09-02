@@ -22,13 +22,14 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+import org.apache.commons.lang3.StringUtils;
 import org.commongeoregistry.adapter.constants.DefaultAttribute;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.apicatalog.jsonld.lang.DirectionType;
 import com.runwaysdk.business.graph.EdgeObject;
 import com.runwaysdk.business.graph.GraphQuery;
+import com.runwaysdk.business.graph.VertexObject;
 import com.runwaysdk.dataaccess.MdVertexDAOIF;
 import com.runwaysdk.dataaccess.metadata.graph.MdVertexDAO;
 import com.runwaysdk.dataaccess.transaction.Transaction;
@@ -39,6 +40,7 @@ import net.geoprism.registry.conversion.RegistryLocalizedValueConverter;
 import net.geoprism.registry.graph.ConceptClass;
 import net.geoprism.registry.graph.ConceptEdgeType;
 import net.geoprism.registry.graph.ConceptSet;
+import net.geoprism.registry.graph.ConceptVertex;
 import net.geoprism.registry.model.EdgeConstant;
 import net.geoprism.registry.model.GeoObjectMetadata;
 import net.geoprism.registry.service.permission.PermissionServiceIF;
@@ -50,6 +52,15 @@ public class ConceptSetBusinessService implements ConceptSetBusinessServiceIF
 {
   @Autowired
   protected PermissionServiceIF                         permissions;
+
+  @Autowired
+  protected ConceptClassBusinessServiceIF               cClassService;
+
+  @Autowired
+  protected ConceptEdgeTypeBusinessServiceIF            cEdgeTypeService;
+
+  @Autowired
+  protected ConceptObjectBusinessServiceIF              cObjectService;
 
   private final TransactionLRUCache<String, ConceptSet> cache;
 
@@ -94,7 +105,39 @@ public class ConceptSetBusinessService implements ConceptSetBusinessServiceIF
 
     this.fromDTO(type, dto);
 
+    boolean isNew = type.isNew();
+
+    if (isNew && StringUtils.isNotBlank(dto.getRootTerm()))
+    {
+      MdVertexDAOIF mdVertex = MdVertexDAO.getMdVertexDAO(ConceptVertex.CLASS);
+
+      StringBuilder statement = new StringBuilder();
+      statement.append("  SELECT FROM " + mdVertex.getDBClassName());
+      statement.append("  WHERE code = :code");
+
+      GraphQuery<VertexObject> query = new GraphQuery<VertexObject>(statement.toString());
+      query.setParameter("code", dto.getRootTerm());
+
+      Optional.ofNullable(query.getSingleResult()).ifPresent(root -> {
+
+        // TODO: Validate that the root is part of the valid concept classes
+        type.setRootTerm(root);
+      });
+    }
+
     type.apply();
+
+    // Add all of concept classes and concept edge types
+    if (isNew)
+    {
+      dto.getConceptClasses().forEach(code -> {
+        this.addConceptClass(type, this.cClassService.getByCodeOrThrow(code));
+      });
+
+      dto.getConceptEdgeTypes().forEach(code -> {
+        this.addConceptEdgeType(type, this.cEdgeTypeService.getByCodeOrThrow(code));
+      });
+    }
 
     this.getCache().put(type);
 
@@ -191,6 +234,14 @@ public class ConceptSetBusinessService implements ConceptSetBusinessServiceIF
     dto.setCode(type.getCode());
     dto.setDisplayLabel(type.getLabel());
     dto.setDiscreteType(DiscreteType.valueOf(type.getDiscreteType()));
+
+    this.getConceptClasses(type).forEach(cClass -> dto.getConceptClasses().add(cClass.getCode()));
+    this.getConceptEdgeTypes(type).forEach(cEdge -> dto.getConceptEdgeTypes().add(cEdge.getCode()));
+
+    if (StringUtils.isNotBlank(type.getRootTerm()))
+    {
+      this.cObjectService.getByOid(type.getRootTerm()).ifPresent(root -> dto.setRootTerm(root.getCode()));
+    }
   }
 
   @Override

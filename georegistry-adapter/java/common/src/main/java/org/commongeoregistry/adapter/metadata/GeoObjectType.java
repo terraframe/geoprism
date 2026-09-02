@@ -3,18 +3,19 @@
  *
  * This file is part of Common Geo Registry Adapter(tm).
  *
- * Common Geo Registry Adapter(tm) is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
+ * Common Geo Registry Adapter(tm) is free software: you can redistribute it
+ * and/or modify it under the terms of the GNU Lesser General Public License as
+ * published by the Free Software Foundation, either version 3 of the License,
+ * or (at your option) any later version.
  *
- * Common Geo Registry Adapter(tm) is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
+ * Common Geo Registry Adapter(tm) is distributed in the hope that it will be
+ * useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser
+ * General Public License for more details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with Common Geo Registry Adapter(tm).  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with Common Geo Registry Adapter(tm). If not, see
+ * <http://www.gnu.org/licenses/>.
  */
 package org.commongeoregistry.adapter.metadata;
 
@@ -53,87 +54,89 @@ public class GeoObjectType implements Serializable
   /**
    * 
    */
-  private static final long          serialVersionUID           = 2857923921744440744L;
+  private static final long           serialVersionUID           = 2857923921744440744L;
 
-  public static final String         JSON_ATTRIBUTES            = "attributes";
+  public static final String          JSON_ATTRIBUTES            = "attributes";
 
-  public static final String         JSON_CODE                  = "code";
+  public static final String          JSON_CODE                  = "code";
 
-  public static final String         JSON_LOCALIZED_LABEL       = "label";
+  public static final String          JSON_LOCALIZED_LABEL       = "label";
 
-  public static final String         JSON_LOCALIZED_DESCRIPTION = "description";
+  public static final String          JSON_LOCALIZED_DESCRIPTION = "description";
 
-  public static final String         JSON_GEOMETRY_TYPE         = "geometryType";
+  public static final String          JSON_GEOMETRY_TYPE         = "geometryType";
 
-  public static final String         JSON_IS_GEOMETRY_EDITABLE  = "isGeometryEditable";
+  public static final String          JSON_IS_GEOMETRY_EDITABLE  = "isGeometryEditable";
 
-  public static final String         JSON_IS_DEFAULT            = "isDefault";
+  public static final String          JSON_IS_DEFAULT            = "isDefault";
 
-  public static final String         JSON_ORGANIZARION_CODE     = "organizationCode";
+  public static final String          JSON_ORGANIZARION_CODE     = "organizationCode";
 
-  public static final String         JSON_IS_ABSTRACT           = "isAbstract";
+  public static final String          JSON_IS_ABSTRACT           = "isAbstract";
 
-  public static final String         JSON_SUPER_TYPE_CODE       = "superTypeCode";
+  public static final String          JSON_SUPER_TYPE_CODE       = "superTypeCode";
 
-  public static final String         JSON_IS_PRIVATE            = "isPrivate";
+  public static final String          JSON_IS_PRIVATE            = "isPrivate";
 
-  public static final String         JSON_ORIGIN                = "origin";
+  public static final String          JSON_CLASSIFICATION        = "classification";
 
-  public static final String         JSON_SEQUENCE              = "sequence";
+  public static final String          JSON_ORIGIN                = "origin";
+
+  public static final String          JSON_SEQUENCE              = "sequence";
 
   /**
    * Unique but human readable identifier. It could be VILLAGE or HOUSEHOLD.
    */
-  private String                     code;
+  private String                      code;
 
   /**
    * Type of geometry used for instances of this {@link GeoObjectType}, such as
    * point, line, polygon, etc.
    */
-  private GeometryType               geometryType;
+  private GeometryType                geometryType;
 
   /**
    * The localized label of this type, such as Village or Household. Used for
    * display in the presentation tier.
    */
-  private LocalizedValue             label;
+  private LocalizedValue              label;
 
   /**
    * The localized description of this type, used for display in the
    * presentation tier.
    */
-  private LocalizedValue             description;
+  private LocalizedValue              description;
 
   /**
    * Indicates if geometries can be modified through the web interface.
    */
-  private Boolean                    isGeometryEditable;
+  private Boolean                     isGeometryEditable;
 
   /**
    * Indicates if the type is abstract.
    */
-  private Boolean                    isAbstract;
+  private Boolean                     isAbstract;
 
   /**
    * The abstract parent type ofthis {@link GeoObjectType}. This can be null.
    */
-  private String                     superTypeCode;
+  private String                      superTypeCode;
 
   /**
    * The organization responsible for this {@link GeoObjectType}. This can be
    * null.
    */
-  private String                     organizationCode;
+  private String                      organizationCode;
 
-  private String                     origin;
+  private String                      origin;
 
-  private Long                       sequenceNumber;
+  private Long                        sequenceNumber;
 
   /**
    * Whether or not the GeoObjectType is publicly viewable, or restricted to
    * their organization.
    */
-  private Boolean                    isPrivate                  = false;
+  private Boolean                     isPrivate                  = false;
 
   /**
    * Collection of {@link AttributeType} metadata attributes.
@@ -143,7 +146,9 @@ public class GeoObjectType implements Serializable
    * value: {@code AttributeType}
    * 
    */
-  private Map<String, AttributeType> attributeMap;
+  private Map<String, AttributeType>  attributeMap;
+
+  private AttributeClassificationType classification;
 
   /**
    * 
@@ -244,6 +249,23 @@ public class GeoObjectType implements Serializable
     newGeoObjt.isPrivate = gotSource.getIsPrivate();
 
     return newGeoObjt;
+  }
+
+  public AttributeClassificationType getClassification()
+  {
+    return classification;
+  }
+
+  public void setClassification(AttributeClassificationType classification)
+  {
+    this.classification = classification;
+
+    if (this.classification != null)
+    {
+      this.classification.setCode(DefaultAttribute.CLASSIFICATION.getName());
+      this.classification.setDefault(true);
+      this.classification.setRequired(false);
+    }
   }
 
   /**
@@ -426,12 +448,12 @@ public class GeoObjectType implements Serializable
   {
     this.origin = origin;
   }
-  
+
   public Long getSequenceNumber()
   {
     return sequenceNumber;
   }
-  
+
   public void setSequenceNumber(Long sequenceNumber)
   {
     this.sequenceNumber = sequenceNumber;
@@ -622,6 +644,13 @@ public class GeoObjectType implements Serializable
       geoObjType.setIsPrivate(oJson.get(JSON_IS_PRIVATE).getAsBoolean());
     }
 
+    if (oJson.has(JSON_CLASSIFICATION))
+    {
+      JsonObject joAttr = oJson.get(JSON_IS_PRIVATE).getAsJsonObject();
+
+      geoObjType.setClassification((AttributeClassificationType) AttributeClassificationType.parse(joAttr));
+    }
+
     return geoObjType;
   }
 
@@ -681,6 +710,11 @@ public class GeoObjectType implements Serializable
     if (this.isAbstract != null && this.isAbstract)
     {
       json.addProperty(JSON_IS_ABSTRACT, this.isAbstract);
+    }
+
+    if (this.classification != null)
+    {
+      json.add(JSON_CLASSIFICATION, this.classification.toJSON(serializer));
     }
 
     Collection<AttributeType> attributes = serializer.attributes(this);

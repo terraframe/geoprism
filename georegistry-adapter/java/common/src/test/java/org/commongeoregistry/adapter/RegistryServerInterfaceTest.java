@@ -80,7 +80,7 @@ public class RegistryServerInterfaceTest
     
     for (DefaultAttribute defaultAttribute : DefaultAttribute.values())
     {
-      if (defaultAttribute.equals(DefaultAttribute.GEOMETRY)) { continue; }
+      if (defaultAttribute.equals(DefaultAttribute.GEOMETRY) || defaultAttribute.equals(DefaultAttribute.CLASSIFICATION)) { continue; }
       
       AttributeType attributeType = province.getAttribute(defaultAttribute.getName()).get();
       

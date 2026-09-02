@@ -18,6 +18,8 @@
  */
 package net.geoprism.registry.graph;
 
+import com.runwaysdk.business.graph.VertexObject;
+
 @com.runwaysdk.business.ClassSignature(hash = -707731631)
 /**
  * This class is generated automatically.
@@ -118,7 +120,7 @@ public abstract class ConceptSetBase extends net.geoprism.registry.graph.SchemaE
     return (com.runwaysdk.dataaccess.MdAttributeGraphReferenceDAOIF)mdClassIF.definesAttribute(ROOTTERM);
   }
   
-  public void setRootTerm(net.geoprism.registry.graph.ConceptVertex value)
+  public void setRootTerm(VertexObject value)
   {
     this.setValue(ROOTTERM, value);
   }
