@@ -18,6 +18,7 @@
  */
 package net.geoprism.registry.service.business;
 
+import java.util.Arrays;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
@@ -323,7 +324,14 @@ public class ConceptObjectBusinessService extends ObjectEdgeBusinessService<Conc
     query.setParameter("rid", object.getRID());
     query.setParameter("root", root.getRID());
 
-    return this.processTraverseResults(query.getResults(), attribute.getStartDate());
+    List<ConceptObject> ancestors = this.processTraverseResults(query.getResults(), attribute.getStartDate());
+
+    if (ancestors.size() == 0)
+    {
+      return new LinkedList<ConceptObject>(Arrays.asList(object));
+    }
+
+    return ancestors;
   }
 
   @Override

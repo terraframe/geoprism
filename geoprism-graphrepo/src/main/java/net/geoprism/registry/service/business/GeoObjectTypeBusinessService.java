@@ -449,6 +449,17 @@ public class GeoObjectTypeBusinessService implements GeoObjectTypeBusinessServic
       type.apply();
 
       type.createDefaultAttributes();
+
+      // Add the classification attribute if its specified and
+      // there is no super type
+      if (superType == null && dto.getClassification() != null)
+      {
+        net.geoprism.registry.graph.AttributeClassificationType attributeType = new net.geoprism.registry.graph.AttributeClassificationType();
+        attributeType.setObjectType(type);
+        attributeType.fromDTO(dto.getClassification());
+        attributeType.setIsDefault(true);
+        attributeType.apply();
+      }
     }
     catch (DuplicateDataException ex)
     {
@@ -458,17 +469,6 @@ public class GeoObjectTypeBusinessService implements GeoObjectTypeBusinessServic
     }
 
     ServerGeoObjectType sType = new ServerGeoObjectType(type);
-
-    // Add the classification attribute if its specified and
-    // there is no super type
-    if (superType == null && dto.getClassification() != null)
-    {
-      net.geoprism.registry.graph.AttributeClassificationType attributeType = new net.geoprism.registry.graph.AttributeClassificationType();
-      attributeType.setObjectType(type);
-      attributeType.fromDTO(dto.getClassification());
-      attributeType.setIsDefault(true);
-      attributeType.apply();
-    }
 
     new GeoObjectTypeCacheEventCommand(sType, CacheEventType.CREATE).doIt();
 
