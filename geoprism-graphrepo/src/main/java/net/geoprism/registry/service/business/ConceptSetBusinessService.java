@@ -233,6 +233,7 @@ public class ConceptSetBusinessService implements ConceptSetBusinessServiceIF
   {
     dto.setCode(type.getCode());
     dto.setDisplayLabel(type.getLabel());
+    dto.setDescription(type.getDescriptionLV());
     dto.setDiscreteType(DiscreteType.valueOf(type.getDiscreteType()));
 
     this.getConceptClasses(type).forEach(cClass -> dto.getConceptClasses().add(cClass.getCode()));
@@ -247,6 +248,7 @@ public class ConceptSetBusinessService implements ConceptSetBusinessServiceIF
   @Override
   public EdgeObject addConceptClass(ConceptSet type, ConceptClass conceptClass)
   {
+    // Validate the edge for the concept set type
     if (type.getDiscreteType().equals(DiscreteType.TAXONOMY.name()) && //
         this.getConceptClasses(type).size() > 0)
     {
@@ -272,15 +274,18 @@ public class ConceptSetBusinessService implements ConceptSetBusinessServiceIF
   @Override
   public EdgeObject addConceptEdgeType(ConceptSet type, ConceptEdgeType conceptEdgeType)
   {
-    if (type.getDiscreteType().equals(DiscreteType.TAXONOMY.name()) && //
-        this.getConceptEdgeTypes(type).size() > 0)
+    // Validate the edge for the concept set type
+    if (type.getDiscreteType().equals(DiscreteType.TAXONOMY.name()) //
+        && ( !conceptEdgeType.getDiscreteType().equals(DiscreteType.TAXONOMY.name()) //
+            || this.getConceptEdgeTypes(type).size() > 0 ))
     {
-      throw new UnsupportedOperationException("A taxonomy can only have a single concept edge type assignment");
+      throw new UnsupportedOperationException("A taxonomy can only have a single taxonomy edge type assignment");
     }
-    else if (type.getDiscreteType().equals(DiscreteType.ENUMERATION.name()) && //
-        this.getConceptEdgeTypes(type).size() > 0)
+    if (type.getDiscreteType().equals(DiscreteType.ENUMERATION.name()) //
+        && ( !conceptEdgeType.getDiscreteType().equals(DiscreteType.ENUMERATION.name()) //
+            || this.getConceptEdgeTypes(type).size() > 0 ))
     {
-      throw new UnsupportedOperationException("An enumeration can only have a single concept edge type assignment");
+      throw new UnsupportedOperationException("An enumeration can only have a single enumeration assignment");
     }
     else if (type.getDiscreteType().equals(DiscreteType.ONTOLOGY.name()) && //
         this.getConceptEdgeTypes(type).stream().anyMatch(t -> t.getCode().equals(conceptEdgeType.getCode())))
