@@ -3,18 +3,18 @@
  *
  * This file is part of Geoprism(tm).
  *
- * Geoprism(tm) is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
+ * Geoprism(tm) is free software: you can redistribute it and/or modify it under
+ * the terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation, either version 3 of the License, or (at your option) any
+ * later version.
  *
- * Geoprism(tm) is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
+ * Geoprism(tm) is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with Geoprism(tm).  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with Geoprism(tm). If not, see <http://www.gnu.org/licenses/>.
  */
 package net.geoprism.registry.service.business;
 
@@ -69,8 +69,16 @@ public class DataSourceBusinessService implements DataSourceBusinessServiceIF
     dto.setLabel(source.getLabel());
     dto.setDescription(source.getDescriptionLV());
     dto.setUri(source.getUri());
-    dto.setGovernanceLevel(GovernanceLevel.valueOf(source.getGovernanceLevel()));
-    dto.setMetadataProfile(MetadataProfile.valueOf(source.getMetadataProfile()));
+
+    if (StringUtils.isNotBlank(source.getGovernanceLevel()))
+    {
+      dto.setGovernanceLevel(GovernanceLevel.valueOf(source.getGovernanceLevel()));
+    }
+
+    if (StringUtils.isNotBlank(source.getMetadataProfile()))
+    {
+      dto.setMetadataProfile(MetadataProfile.valueOf(source.getMetadataProfile()));
+    }
 
     this.authorityService.get(source.getObjectValue(DataSource.AUTHORITY)).ifPresent(authority -> {
       dto.setAuthority(authority.getCode());
@@ -98,8 +106,17 @@ public class DataSourceBusinessService implements DataSourceBusinessServiceIF
     LocalizedValueConverter.populate(source, DataSource.DISPLAYLABEL, dto.getLabel());
     LocalizedValueConverter.populate(source, DataSource.DESCRIPTION, dto.getDescription());
     source.setUri(dto.getUri());
-    source.setGovernanceLevel(dto.getGovernanceLevel().name());
-    source.setMetadataProfile(dto.getMetadataProfile().name());
+
+    if (dto.getGovernanceLevel() != null)
+    {
+      source.setGovernanceLevel(dto.getGovernanceLevel().name());
+    }
+
+    if (dto.getMetadataProfile() != null)
+    {
+      source.setMetadataProfile(dto.getMetadataProfile().name());
+    }
+
     source.setAuthority(this.authorityService.getByCode(dto.getAuthority()).orElseThrow());
 
     return apply(source);
