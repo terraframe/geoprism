@@ -130,13 +130,17 @@ public class ConceptSetBusinessService implements ConceptSetBusinessServiceIF
     // Add all of concept classes and concept edge types
     if (isNew)
     {
-      dto.getConceptClasses().forEach(code -> {
-        this.addConceptClass(type, this.cClassService.getByCodeOrThrow(code));
-      });
+      dto.getConceptClasses().stream() //
+          .filter(code -> StringUtils.isNotBlank(code)) //
+          .forEach(code -> {
+            this.addConceptClass(type, this.cClassService.getByCodeOrThrow(code));
+          });
 
-      dto.getConceptEdgeTypes().forEach(code -> {
-        this.addConceptEdgeType(type, this.cEdgeTypeService.getByCodeOrThrow(code));
-      });
+      dto.getConceptEdgeTypes().stream() //
+          .filter(code -> StringUtils.isNotBlank(code)) //
+          .forEach(code -> {
+            this.addConceptEdgeType(type, this.cEdgeTypeService.getByCodeOrThrow(code));
+          });
     }
 
     this.getCache().put(type);
@@ -281,11 +285,9 @@ public class ConceptSetBusinessService implements ConceptSetBusinessServiceIF
     {
       throw new UnsupportedOperationException("A taxonomy can only have a single taxonomy edge type assignment");
     }
-    if (type.getDiscreteType().equals(DiscreteType.ENUMERATION.name()) //
-        && ( !conceptEdgeType.getDiscreteType().equals(DiscreteType.ENUMERATION.name()) //
-            || this.getConceptEdgeTypes(type).size() > 0 ))
+    else if (type.getDiscreteType().equals(DiscreteType.ENUMERATION.name()))
     {
-      throw new UnsupportedOperationException("An enumeration can only have a single enumeration assignment");
+      throw new UnsupportedOperationException("An enumeration can not have any edges assigned");
     }
     else if (type.getDiscreteType().equals(DiscreteType.ONTOLOGY.name()) && //
         this.getConceptEdgeTypes(type).stream().anyMatch(t -> t.getCode().equals(conceptEdgeType.getCode())))

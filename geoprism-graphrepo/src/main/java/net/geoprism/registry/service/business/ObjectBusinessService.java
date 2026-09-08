@@ -26,6 +26,7 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+import org.apache.commons.lang3.StringUtils;
 import org.commongeoregistry.adapter.constants.DefaultAttribute;
 import org.commongeoregistry.adapter.dataaccess.LocalizedValue;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -486,43 +487,58 @@ public abstract class ObjectBusinessService<V extends ServerObjectVertex, T exte
   @Override
   public Optional<V> getByCode(T type, String code)
   {
-    return this.cache.get(code, () -> {
-      return this.get(type, DefaultAttribute.CODE.getName(), code);
-    });
+    if (StringUtils.isNotBlank(code))
+    {
+      return this.cache.get(code, () -> {
+        return this.get(type, DefaultAttribute.CODE.getName(), code);
+      });
+    }
+
+    return Optional.empty();
   }
 
   @Override
   public Optional<V> getByRid(String rid)
   {
-    return this.cache.get(rid, () -> {
-      StringBuilder statement = new StringBuilder();
-      statement.append("TRAVERSE out('" + EdgeConstant.HAS_VALUE.getDBClassName() + "', '" + EdgeConstant.HAS_GEOMETRY.getDBClassName() + "') FROM (");
-      statement.append("  SELECT FROM " + rid);
-      statement.append(")");
+    if (StringUtils.isNotBlank(rid))
+    {
+      return this.cache.get(rid, () -> {
+        StringBuilder statement = new StringBuilder();
+        statement.append("TRAVERSE out('" + EdgeConstant.HAS_VALUE.getDBClassName() + "', '" + EdgeConstant.HAS_GEOMETRY.getDBClassName() + "') FROM (");
+        statement.append("  SELECT FROM " + rid);
+        statement.append(")");
 
-      GraphQuery<VertexObject> query = new GraphQuery<VertexObject>(statement.toString());
+        GraphQuery<VertexObject> query = new GraphQuery<VertexObject>(statement.toString());
 
-      return Optional.ofNullable(this.processSingleResult(query.getResults(), null));
-    });
+        return Optional.ofNullable(this.processSingleResult(query.getResults(), null));
+      });
+    }
+
+    return Optional.empty();
   }
 
   @Override
   public Optional<V> getByOid(String oid)
   {
-    MdVertexDAOIF mdVertex = MdVertexDAO.getMdVertexDAO(this.baseVertexClass);
+    if (StringUtils.isNotBlank(oid))
+    {
+      MdVertexDAOIF mdVertex = MdVertexDAO.getMdVertexDAO(this.baseVertexClass);
 
-    return this.cache.get(oid, () -> {
-      StringBuilder statement = new StringBuilder();
-      statement.append("TRAVERSE out('" + EdgeConstant.HAS_VALUE.getDBClassName() + "', '" + EdgeConstant.HAS_GEOMETRY.getDBClassName() + "') FROM (");
-      statement.append("  SELECT FROM " + mdVertex.getDBClassName());
-      statement.append("  WHERE oid = :oid");
-      statement.append(")");
+      return this.cache.get(oid, () -> {
+        StringBuilder statement = new StringBuilder();
+        statement.append("TRAVERSE out('" + EdgeConstant.HAS_VALUE.getDBClassName() + "', '" + EdgeConstant.HAS_GEOMETRY.getDBClassName() + "') FROM (");
+        statement.append("  SELECT FROM " + mdVertex.getDBClassName());
+        statement.append("  WHERE oid = :oid");
+        statement.append(")");
 
-      GraphQuery<VertexObject> query = new GraphQuery<VertexObject>(statement.toString());
-      query.setParameter("oid", oid);
+        GraphQuery<VertexObject> query = new GraphQuery<VertexObject>(statement.toString());
+        query.setParameter("oid", oid);
 
-      return Optional.ofNullable(this.processSingleResult(query.getResults(), null));
-    });
+        return Optional.ofNullable(this.processSingleResult(query.getResults(), null));
+      });
+    }
+
+    return Optional.empty();
   }
 
   @Override

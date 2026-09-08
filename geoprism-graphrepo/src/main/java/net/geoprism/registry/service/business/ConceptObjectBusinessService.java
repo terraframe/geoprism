@@ -29,6 +29,7 @@ import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
 import org.commongeoregistry.adapter.metadata.AttributeClassificationType;
+import org.commongeoregistry.adapter.metadata.CodeReference;
 import org.springframework.stereotype.Service;
 
 import com.runwaysdk.business.graph.GraphQuery;
@@ -46,6 +47,7 @@ import net.geoprism.registry.graph.ConceptVertex;
 import net.geoprism.registry.model.ConceptObject;
 import net.geoprism.registry.model.EdgeConstant;
 import net.geoprism.registry.view.ConceptClassDTO;
+import net.geoprism.registry.view.DiscreteType;
 import net.geoprism.registry.view.NodeDTO;
 import net.geoprism.registry.view.ObjectOverTimeDTO;
 import net.geoprism.registry.view.Page;
@@ -154,49 +156,82 @@ public class ConceptObjectBusinessService extends ObjectEdgeBusinessService<Conc
   @Override
   public Optional<ConceptObject> getByCode(AttributeClassificationType attribute, String code)
   {
-    ConceptClass type = this.cClassService.getByCodeOrThrow(attribute.getRootTerm().getType());
-    ConceptObject root = this.getByCode(type, attribute.getRootTerm().getCode()).get();
+    ConceptSet set = this.setService.getByCodeOrThrow(attribute.getConceptSet());
+    CodeReference rootTerm = attribute.getRootTerm();
 
-    String edgeNames = getEdgeNames(attribute);
+    if (set.getDiscreteType().equals(DiscreteType.ENUMERATION.name()) || rootTerm == null)
+    {
+      List<ConceptClass> classes = this.setService.getConceptClasses(set);
 
-    StringBuilder statement = new StringBuilder();
-    statement.append("TRAVERSE out('" + EdgeConstant.HAS_VALUE.getDBClassName() + "', '" + EdgeConstant.HAS_GEOMETRY.getDBClassName() + "') FROM (");
-    statement.append("  SELECT FROM (");
-    statement.append("    TRAVERSE outE(" + edgeNames + ")[(:startDate BETWEEN startDate AND endDate)].in FROM " + root.getRID());
-    statement.append("  )");
-    statement.append("  WHERE code = :code");
-    statement.append(")");
+      if (classes.size() > 0)
+      {
+        return this.getByCode(classes.get(0), code);
+      }
+    }
+    else
+    {
+      ConceptClass type = this.cClassService.getByCodeOrThrow(rootTerm.getType());
+      ConceptObject root = this.getByCode(type, rootTerm.getCode()).get();
 
-    GraphQuery<VertexObject> query = new GraphQuery<VertexObject>(statement.toString());
-    query.setParameter("code", code);
-    query.setParameter("startDate", attribute.getStartDate());
+      String edgeNames = getEdgeNames(attribute);
 
-    return Optional.of(this.processSingleResult(query.getResults(), null));
+      StringBuilder statement = new StringBuilder();
+      statement.append("TRAVERSE out('" + EdgeConstant.HAS_VALUE.getDBClassName() + "', '" + EdgeConstant.HAS_GEOMETRY.getDBClassName() + "') FROM (");
+      statement.append("  SELECT FROM (");
+      statement.append("    TRAVERSE outE(" + edgeNames + ")[(:startDate BETWEEN startDate AND endDate)].in FROM " + root.getRID());
+      statement.append("  )");
+      statement.append("  WHERE code = :code");
+      statement.append(")");
+
+      GraphQuery<VertexObject> query = new GraphQuery<VertexObject>(statement.toString());
+      query.setParameter("code", code);
+      query.setParameter("startDate", attribute.getStartDate());
+
+      return Optional.of(this.processSingleResult(query.getResults(), null));
+    }
+    return Optional.empty();
   }
 
   @Override
   public List<ConceptObject> search(AttributeClassificationType attribute, String text)
   {
-    ConceptClass type = this.cClassService.getByCodeOrThrow(attribute.getRootTerm().getType());
-    ConceptObject root = this.getByCode(type, attribute.getRootTerm().getCode()).get();
+    ConceptSet set = this.setService.getByCodeOrThrow(attribute.getConceptSet());
+    CodeReference rootTerm = attribute.getRootTerm();
 
-    String edgeNames = getEdgeNames(attribute);
+    if (set.getDiscreteType().equals(DiscreteType.ENUMERATION.name()) || rootTerm == null)
+    {
+      List<ConceptClass> classes = this.setService.getConceptClasses(set);
 
-    StringBuilder statement = new StringBuilder();
-    statement.append("TRAVERSE out('" + EdgeConstant.HAS_VALUE.getDBClassName() + "', '" + EdgeConstant.HAS_GEOMETRY.getDBClassName() + "') FROM (");
-    statement.append("  SELECT FROM (");
-    statement.append("    TRAVERSE outE(" + edgeNames + ")[(:startDate BETWEEN startDate AND endDate)].in FROM " + root.getRID());
-    statement.append("  )");
-    statement.append("  WHERE code.toUpperCase() LIKE :text");
-    statement.append("  ORDER BY code");
-    statement.append("  LIMIT 10");
-    statement.append(")");
+      if (classes.size() > 0)
+      {
+        return this.search(classes.get(0), text);
+      }
+    }
+    else if (rootTerm != null)
+    {
+      ConceptClass type = this.cClassService.getByCodeOrThrow(rootTerm.getType());
+      ConceptObject root = this.getByCode(type, rootTerm.getCode()).get();
 
-    GraphQuery<VertexObject> query = new GraphQuery<VertexObject>(statement.toString());
-    query.setParameter("text", "%" + text.toUpperCase() + "%");
-    query.setParameter("startDate", attribute.getStartDate());
+      String edgeNames = getEdgeNames(attribute);
 
-    return this.processTraverseResults(query.getResults(), attribute.getStartDate());
+      StringBuilder statement = new StringBuilder();
+      statement.append("TRAVERSE out('" + EdgeConstant.HAS_VALUE.getDBClassName() + "', '" + EdgeConstant.HAS_GEOMETRY.getDBClassName() + "') FROM (");
+      statement.append("  SELECT FROM (");
+      statement.append("    TRAVERSE outE(" + edgeNames + ")[(:startDate BETWEEN startDate AND endDate)].in FROM " + root.getRID());
+      statement.append("  )");
+      statement.append("  WHERE code.toUpperCase() LIKE :text");
+      statement.append("  ORDER BY code");
+      statement.append("  LIMIT 10");
+      statement.append(")");
+
+      GraphQuery<VertexObject> query = new GraphQuery<VertexObject>(statement.toString());
+      query.setParameter("text", "%" + text.toUpperCase() + "%");
+      query.setParameter("startDate", attribute.getStartDate());
+
+      return this.processTraverseResults(query.getResults(), attribute.getStartDate());
+    }
+
+    return new LinkedList<>();
   }
 
   @Override
@@ -258,6 +293,13 @@ public class ConceptObjectBusinessService extends ObjectEdgeBusinessService<Conc
   @Override
   public Integer getChildCount(ConceptObject object, AttributeClassificationType attribute)
   {
+    ConceptSet set = this.setService.getByCodeOrThrow(attribute.getConceptSet());
+
+    if (set.getDiscreteType().equals(DiscreteType.ENUMERATION.name()))
+    {
+      return Integer.valueOf(0);
+    }
+
     StringBuilder statement = new StringBuilder();
     statement.append("SELECT outE(" + this.getEdgeNames(attribute) + ")[(:date BETWEEN startDate AND endDate)].size()" + "\n");
     statement.append("FROM :rid " + "\n");
@@ -272,6 +314,13 @@ public class ConceptObjectBusinessService extends ObjectEdgeBusinessService<Conc
   @Override
   public List<ConceptObject> getChildren(ConceptObject object, AttributeClassificationType attribute, Integer pageSize, Integer pageNumber)
   {
+    ConceptSet set = this.setService.getByCodeOrThrow(attribute.getConceptSet());
+
+    if (set.getDiscreteType().equals(DiscreteType.ENUMERATION.name()))
+    {
+      return new LinkedList<>();
+    }
+
     int first = pageSize * ( pageNumber - 1 );
     int rows = pageSize;
 
@@ -307,31 +356,39 @@ public class ConceptObjectBusinessService extends ObjectEdgeBusinessService<Conc
   @Override
   public List<ConceptObject> getAncestors(AttributeClassificationType attribute, ConceptObject object)
   {
-    ConceptClass type = this.cClassService.getByCodeOrThrow(attribute.getRootTerm().getType());
-    ConceptObject root = this.getByCode(type, attribute.getRootTerm().getCode()).get();
+    ConceptSet set = this.setService.getByCodeOrThrow(attribute.getConceptSet());
+    CodeReference rootTerm = attribute.getRootTerm();
 
-    String edgeNames = getEdgeNames(attribute);
-
-    StringBuilder statement = new StringBuilder();
-    statement.append("TRAVERSE out('" + EdgeConstant.HAS_VALUE.getDBClassName() + "', '" + EdgeConstant.HAS_GEOMETRY.getDBClassName() + "') FROM (");
-    statement.append("  SELECT FROM (");
-    statement.append("    TRAVERSE inE(" + edgeNames + ")[(:startDate BETWEEN startDate AND endDate)].out FROM :rid WHILE $current != :root ");
-    statement.append("  )");
-    statement.append(")");
-
-    GraphQuery<VertexObject> query = new GraphQuery<VertexObject>(statement.toString());
-    query.setParameter("startDate", attribute.getStartDate());
-    query.setParameter("rid", object.getRID());
-    query.setParameter("root", root.getRID());
-
-    List<ConceptObject> ancestors = this.processTraverseResults(query.getResults(), attribute.getStartDate());
-
-    if (ancestors.size() == 0)
+    if (!set.getDiscreteType().equals(DiscreteType.ENUMERATION.name()) && rootTerm == null)
     {
-      return new LinkedList<ConceptObject>(Arrays.asList(object));
+      ConceptClass type = this.cClassService.getByCodeOrThrow(attribute.getRootTerm().getType());
+      ConceptObject root = this.getByCode(type, attribute.getRootTerm().getCode()).get();
+
+      String edgeNames = getEdgeNames(attribute);
+
+      StringBuilder statement = new StringBuilder();
+      statement.append("TRAVERSE out('" + EdgeConstant.HAS_VALUE.getDBClassName() + "', '" + EdgeConstant.HAS_GEOMETRY.getDBClassName() + "') FROM (");
+      statement.append("  SELECT FROM (");
+      statement.append("    TRAVERSE inE(" + edgeNames + ")[(:startDate BETWEEN startDate AND endDate)].out FROM :rid WHILE $current != :root ");
+      statement.append("  )");
+      statement.append(")");
+
+      GraphQuery<VertexObject> query = new GraphQuery<VertexObject>(statement.toString());
+      query.setParameter("startDate", attribute.getStartDate());
+      query.setParameter("rid", object.getRID());
+      query.setParameter("root", root.getRID());
+
+      List<ConceptObject> ancestors = this.processTraverseResults(query.getResults(), attribute.getStartDate());
+
+      if (ancestors.size() == 0)
+      {
+        return new LinkedList<ConceptObject>(Arrays.asList(object));
+      }
+
+      return ancestors;
     }
 
-    return ancestors;
+    return Arrays.asList(object);
   }
 
   @Override
