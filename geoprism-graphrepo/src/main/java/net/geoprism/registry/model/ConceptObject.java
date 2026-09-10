@@ -43,6 +43,12 @@ public class ConceptObject extends ServerObjectVertex implements VertexComponent
   {
     super(type, vertex, valueNodeMap, date);
   }
+  
+  @Override
+  public String toString()
+  {
+    return this.getCode();
+  }
 
   @SuppressWarnings("unchecked")
   public ConceptClass getType()

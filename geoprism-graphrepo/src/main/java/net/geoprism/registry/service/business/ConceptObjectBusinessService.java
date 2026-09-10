@@ -48,22 +48,19 @@ import net.geoprism.registry.model.EdgeConstant;
 import net.geoprism.registry.view.ConceptClassDTO;
 import net.geoprism.registry.view.DiscreteType;
 import net.geoprism.registry.view.NodeDTO;
-import net.geoprism.registry.view.ObjectOverTimeDTO;
+import net.geoprism.registry.view.ObjectAtTimeDTO;
 import net.geoprism.registry.view.Page;
 
 @Service
 public class ConceptObjectBusinessService extends ObjectEdgeBusinessService<ConceptObject, ConceptClass, ConceptClassDTO, ConceptEdgeType, ConceptObject> implements ConceptObjectBusinessServiceIF
 {
-  private final ConceptSetBusinessServiceIF   setService;
-
-  private final ConceptClassBusinessServiceIF cClassService;
+  private final ConceptSetBusinessServiceIF setService;
 
   public ConceptObjectBusinessService(ConceptClassBusinessServiceIF typeService, ConceptSetBusinessServiceIF setService, ConceptClassBusinessServiceIF cClassService)
   {
     super(typeService, ConceptVertex.CLASS);
 
     this.setService = setService;
-    this.cClassService = cClassService;
   }
 
   @Override
@@ -225,7 +222,7 @@ public class ConceptObjectBusinessService extends ObjectEdgeBusinessService<Conc
       StringBuilder statement = new StringBuilder();
       statement.append("TRAVERSE out('" + EdgeConstant.HAS_VALUE.getDBClassName() + "', '" + EdgeConstant.HAS_GEOMETRY.getDBClassName() + "') FROM (");
       statement.append("  SELECT FROM (");
-      statement.append("    TRAVERSE outE(" + edgeNames + ")[(:startDate BETWEEN startDate AND endDate)].in FROM " + root.getRID());
+      statement.append("    TRAVERSE outE(" + edgeNames + ")[(:date BETWEEN startDate AND endDate)].in FROM " + root.getRID());
       statement.append("  )");
       statement.append("  WHERE code.toUpperCase() LIKE :text");
       statement.append("  ORDER BY code");
@@ -234,7 +231,7 @@ public class ConceptObjectBusinessService extends ObjectEdgeBusinessService<Conc
 
       GraphQuery<VertexObject> query = new GraphQuery<VertexObject>(statement.toString());
       query.setParameter("text", "%" + text.toUpperCase() + "%");
-      query.setParameter("startDate", attribute.getStartDate());
+      query.setParameter("date", attribute.getStartDate());
 
       return this.processTraverseResults(query.getResults(), attribute.getStartDate());
     }
@@ -399,19 +396,19 @@ public class ConceptObjectBusinessService extends ObjectEdgeBusinessService<Conc
   }
 
   @Override
-  public NodeDTO<ObjectOverTimeDTO> getAncestorTree(AttributeClassificationType attribute, ConceptObject object, Integer pageSize)
+  public NodeDTO<ObjectAtTimeDTO> getAncestorTree(AttributeClassificationType attribute, ConceptObject object, Integer pageSize)
   {
     List<ConceptObject> ancestors = this.getAncestors(attribute, object);
 
-    NodeDTO<ObjectOverTimeDTO> prev = null;
+    NodeDTO<ObjectAtTimeDTO> prev = null;
 
     for (ConceptObject ancestor : ancestors)
     {
       Integer count = this.getChildCount(ancestor, attribute);
       List<ConceptObject> children = this.getChildren(ancestor, attribute, pageSize, 1);
 
-      List<NodeDTO<ObjectOverTimeDTO>> dtos = children.stream().map(r -> {
-        return new NodeDTO<ObjectOverTimeDTO>(this.toDTO(r));
+      List<NodeDTO<ObjectAtTimeDTO>> dtos = children.stream().map(r -> {
+        return new NodeDTO<ObjectAtTimeDTO>(this.toDTO(r).toDate(attribute.getStartDate()));
       }).collect(Collectors.toList());
 
       if (prev != null)
@@ -428,9 +425,9 @@ public class ConceptObjectBusinessService extends ObjectEdgeBusinessService<Conc
         }
       }
 
-      NodeDTO<ObjectOverTimeDTO> node = new NodeDTO<ObjectOverTimeDTO>();
-      node.setObject(this.toDTO(ancestor));
-      node.setChildren(new Page<NodeDTO<ObjectOverTimeDTO>>(count, 1, pageSize, dtos));
+      NodeDTO<ObjectAtTimeDTO> node = new NodeDTO<ObjectAtTimeDTO>();
+      node.setObject(this.toDTO(ancestor).toDate(attribute.getStartDate()));
+      node.setChildren(new Page<NodeDTO<ObjectAtTimeDTO>>(count, 1, pageSize, dtos));
 
       prev = node;
     }

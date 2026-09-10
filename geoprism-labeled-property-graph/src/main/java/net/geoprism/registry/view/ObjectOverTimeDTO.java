@@ -173,6 +173,13 @@ public class ObjectOverTimeDTO
     return dto;
   }
 
+
+  @Override
+  public String toString()
+  {
+    return this.getCode();
+  }
+  
   @Override
   public boolean equals(Object obj)
   {

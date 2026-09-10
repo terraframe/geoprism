@@ -3,18 +3,18 @@
  *
  * This file is part of Geoprism(tm).
  *
- * Geoprism(tm) is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
+ * Geoprism(tm) is free software: you can redistribute it and/or modify it under
+ * the terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation, either version 3 of the License, or (at your option) any
+ * later version.
  *
- * Geoprism(tm) is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
+ * Geoprism(tm) is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with Geoprism(tm).  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with Geoprism(tm). If not, see <http://www.gnu.org/licenses/>.
  */
 package net.geoprism.registry.service.request;
 
@@ -22,6 +22,7 @@ import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.commongeoregistry.adapter.constants.DefaultAttribute;
 import org.commongeoregistry.adapter.metadata.AttributeClassificationType;
 import org.springframework.stereotype.Service;
 
@@ -31,12 +32,14 @@ import com.runwaysdk.session.RequestType;
 
 import net.geoprism.registry.graph.ConceptClass;
 import net.geoprism.registry.model.ConceptObject;
+import net.geoprism.registry.model.GeoObjectMetadata;
 import net.geoprism.registry.model.ServerGeoObjectType;
 import net.geoprism.registry.service.business.ConceptClassBusinessServiceIF;
 import net.geoprism.registry.service.business.ConceptObjectBusinessServiceIF;
 import net.geoprism.registry.service.business.ConceptSetBusinessServiceIF;
 import net.geoprism.registry.view.ConceptClassDTO;
 import net.geoprism.registry.view.NodeDTO;
+import net.geoprism.registry.view.ObjectAtTimeDTO;
 import net.geoprism.registry.view.ObjectOverTimeDTO;
 import net.geoprism.registry.view.Page;
 
@@ -63,7 +66,37 @@ public class ConceptObjectService extends ObjectService<ConceptObject, ConceptCl
   }
 
   @Request(RequestType.SESSION)
-  public Page<ObjectOverTimeDTO> getChildren(String sessionId, String concept, String typeCode, String attributeName, Integer pageSize, Integer pageNumber)
+  public ObjectOverTimeDTO get(String sessionId, String code)
+  {
+    ConceptObject object = this.getObjectService().getByCode(code).orElseThrow(() -> {
+      net.geoprism.registry.DataNotFoundException ex = new net.geoprism.registry.DataNotFoundException();
+      ex.setTypeLabel("Concept");
+      ex.setDataIdentifier(code);
+      ex.setAttributeLabel(GeoObjectMetadata.get().getAttributeDisplayLabel(DefaultAttribute.CODE.getName()));
+
+      return ex;
+    });
+
+    return this.getObjectService().toDTO(object);
+  }
+
+  @Request(RequestType.SESSION)
+  public ObjectAtTimeDTO get(String sessionId, String code, Date date)
+  {
+    ConceptObject object = this.getObjectService().getByCode(code).orElseThrow(() -> {
+      net.geoprism.registry.DataNotFoundException ex = new net.geoprism.registry.DataNotFoundException();
+      ex.setTypeLabel("Concept");
+      ex.setDataIdentifier(code);
+      ex.setAttributeLabel(GeoObjectMetadata.get().getAttributeDisplayLabel(DefaultAttribute.CODE.getName()));
+
+      return ex;
+    });
+
+    return this.getObjectService().toDTO(object).toDate(date);
+  }
+
+  @Request(RequestType.SESSION)
+  public Page<ObjectAtTimeDTO> getChildren(String sessionId, String concept, String typeCode, String attributeName, Integer pageSize, Integer pageNumber)
   {
     ServerGeoObjectType type = ServerGeoObjectType.get(typeCode);
 
@@ -75,17 +108,17 @@ public class ConceptObjectService extends ObjectService<ConceptObject, ConceptCl
           });
 
           Integer count = this.getObjectService().getChildCount(object, a);
-          List<ObjectOverTimeDTO> results = this.getObjectService().getChildren(object, a, pageSize, pageNumber).stream() //
-              .map(c -> this.getObjectService().toDTO(c)) //
+          List<ObjectAtTimeDTO> results = this.getObjectService().getChildren(object, a, pageSize, pageNumber).stream() //
+              .map(c -> this.getObjectService().toDTO(c).toDate(a.getStartDate())) //
               .toList();
 
-          return new Page<ObjectOverTimeDTO>(count, pageNumber, pageSize, results);
-        }).orElse(new Page<ObjectOverTimeDTO>());
+          return new Page<ObjectAtTimeDTO>(count, pageNumber, pageSize, results);
+        }).orElse(new Page<ObjectAtTimeDTO>());
 
   }
 
   @Request(RequestType.SESSION)
-  public List<ObjectOverTimeDTO> search(String sessionId, String typeCode, String attributeName, String text)
+  public List<ObjectAtTimeDTO> search(String sessionId, String typeCode, String attributeName, String text)
   {
     ServerGeoObjectType type = ServerGeoObjectType.get(typeCode);
 
@@ -95,9 +128,9 @@ public class ConceptObjectService extends ObjectService<ConceptObject, ConceptCl
           List<ConceptObject> children = this.getObjectService().search(a, text);
 
           return children.stream() //
-              .map(c -> this.getObjectService().toDTO(c)) //
+              .map(c -> this.getObjectService().toDTO(c).toDate(a.getStartDate())) //
               .toList();
-        }).orElse(new LinkedList<ObjectOverTimeDTO>());
+        }).orElse(new LinkedList<ObjectAtTimeDTO>());
   }
 
   @Request(RequestType.SESSION)
@@ -114,20 +147,20 @@ public class ConceptObjectService extends ObjectService<ConceptObject, ConceptCl
   }
 
   @Request(RequestType.SESSION)
-  public List<ObjectOverTimeDTO> search(String sessionId, String setCode, Date date, String text)
+  public List<ObjectAtTimeDTO> search(String sessionId, String setCode, Date date, String text)
   {
     return this.cSetService.getByCode(setCode) //
         .map(set -> {
           List<ConceptObject> children = this.getObjectService().search(set, date, text);
 
           return children.stream() //
-              .map(c -> this.getObjectService().toDTO(c)) //
+              .map(c -> this.getObjectService().toDTO(c).toDate(date)) //
               .toList();
-        }).orElse(new LinkedList<ObjectOverTimeDTO>());
+        }).orElse(new LinkedList<ObjectAtTimeDTO>());
   }
 
   @Request(RequestType.SESSION)
-  public NodeDTO<ObjectOverTimeDTO> getAncestorTree(String sessionId, String concept, String typeCode, String attributeName, Integer pageSize)
+  public NodeDTO<ObjectAtTimeDTO> getAncestorTree(String sessionId, String concept, String typeCode, String attributeName, Integer pageSize)
   {
     ServerGeoObjectType type = ServerGeoObjectType.get(typeCode);
 
@@ -139,7 +172,7 @@ public class ConceptObjectService extends ObjectService<ConceptObject, ConceptCl
           });
 
           return this.getObjectService().getAncestorTree(a, object, pageSize);
-        }).orElse(new NodeDTO<ObjectOverTimeDTO>());
+        }).orElse(new NodeDTO<ObjectAtTimeDTO>());
 
   }
 

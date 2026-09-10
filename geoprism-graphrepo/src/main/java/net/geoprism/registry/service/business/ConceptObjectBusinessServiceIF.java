@@ -31,7 +31,7 @@ import net.geoprism.registry.graph.ConceptSet;
 import net.geoprism.registry.model.ConceptObject;
 import net.geoprism.registry.view.ConceptClassDTO;
 import net.geoprism.registry.view.NodeDTO;
-import net.geoprism.registry.view.ObjectOverTimeDTO;
+import net.geoprism.registry.view.ObjectAtTimeDTO;
 
 @Component
 public interface ConceptObjectBusinessServiceIF extends ObjectEdgeBusinessServiceIF<ConceptObject, ConceptClass, ConceptClassDTO, ConceptEdgeType, ConceptObject>
@@ -54,6 +54,6 @@ public interface ConceptObjectBusinessServiceIF extends ObjectEdgeBusinessServic
 
   List<ConceptObject> getAncestors(AttributeClassificationType attribute, ConceptObject object);
 
-  NodeDTO<ObjectOverTimeDTO> getAncestorTree(AttributeClassificationType attribute, ConceptObject object, Integer pageSize);
+  NodeDTO<ObjectAtTimeDTO> getAncestorTree(AttributeClassificationType attribute, ConceptObject object, Integer pageSize);
 
 }
