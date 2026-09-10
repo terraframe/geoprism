@@ -20,22 +20,25 @@ package net.geoprism.registry.service.business;
 
 import org.springframework.stereotype.Component;
 
-import net.geoprism.graph.BusinessEdgeTypeSnapshot;
+import net.geoprism.graph.ConceptClassSnapshot;
+import net.geoprism.graph.ConceptEdgeTypeSnapshot;
 import net.geoprism.registry.model.SnapshotContainer;
-import net.geoprism.registry.view.BusinessEdgeTypeDTO;
+import net.geoprism.registry.view.ConceptEdgeTypeDTO;
 
 @Component
-public interface BusinessEdgeTypeSnapshotBusinessServiceIF
+public interface ConceptEdgeTypeSnapshotBusinessServiceIF
 {
 
-  void delete(BusinessEdgeTypeSnapshot snapshot);
+  void delete(ConceptEdgeTypeSnapshot snapshot);
 
   String getTableName(String className);
 
-  BusinessEdgeTypeSnapshot create(SnapshotContainer<?> version, BusinessEdgeTypeDTO type);
+  ConceptEdgeTypeSnapshot create(SnapshotContainer<?> version, ConceptEdgeTypeDTO dto);
 
-  BusinessEdgeTypeSnapshot get(SnapshotContainer<?> version, String code);
+  ConceptEdgeTypeSnapshot create(SnapshotContainer<?> version, ConceptEdgeTypeDTO dto, ConceptClassSnapshot parent, ConceptClassSnapshot child);
 
-  BusinessEdgeTypeDTO toDTO(BusinessEdgeTypeSnapshot snapshot);
+  ConceptEdgeTypeSnapshot get(SnapshotContainer<?> version, String code);
+
+  ConceptEdgeTypeDTO toDTO(ConceptEdgeTypeSnapshot snapshot);
 
 }

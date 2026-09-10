@@ -65,13 +65,13 @@ public abstract class AttributeClassificationTypeBase extends net.geoprism.regis
     return (String) this.getObjectValue(ROOTTERM);
   }
   
-  public static com.runwaysdk.dataaccess.MdAttributeGraphReferenceDAOIF getRootTermMd()
+  public static com.runwaysdk.dataaccess.MdAttributeTextDAOIF getRootTermMd()
   {
     com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(net.geoprism.registry.graph.AttributeClassificationType.CLASS);
-    return (com.runwaysdk.dataaccess.MdAttributeGraphReferenceDAOIF)mdClassIF.definesAttribute(ROOTTERM);
+    return (com.runwaysdk.dataaccess.MdAttributeTextDAOIF)mdClassIF.definesAttribute(ROOTTERM);
   }
   
-  public void setRootTerm(net.geoprism.registry.graph.ConceptVertex value)
+  public void setRootTerm(String value)
   {
     this.setValue(ROOTTERM, value);
   }

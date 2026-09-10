@@ -29,7 +29,6 @@ import org.commongeoregistry.adapter.metadata.AttributeFloatType;
 import org.commongeoregistry.adapter.metadata.AttributeIntegerType;
 import org.commongeoregistry.adapter.metadata.AttributeLocalType;
 import org.commongeoregistry.adapter.metadata.AttributeType;
-import org.commongeoregistry.adapter.metadata.CodeReference;
 
 import net.geoprism.graph.AttributeBooleanTypeSnapshot;
 import net.geoprism.graph.AttributeCharacterTypeSnapshot;
@@ -100,7 +99,7 @@ public class AttributeTypeSnapshotConverter
       attributeType.setConceptSet(snapshot.getConceptSet());
       attributeType.setStartDate(snapshot.getStartDate());
       attributeType.setEndDate(snapshot.getEndDate());
-      attributeType.setRootTerm(CodeReference.build(snapshot.getRootTerm(), snapshot.getRootType()));
+      attributeType.setRootTerm(snapshot.getRootTerm());
 
       return attributeType;
 

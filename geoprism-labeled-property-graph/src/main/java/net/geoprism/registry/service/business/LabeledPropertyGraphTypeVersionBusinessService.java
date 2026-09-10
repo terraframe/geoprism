@@ -3,18 +3,18 @@
  *
  * This file is part of Geoprism(tm).
  *
- * Geoprism(tm) is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
+ * Geoprism(tm) is free software: you can redistribute it and/or modify it under
+ * the terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation, either version 3 of the License, or (at your option) any
+ * later version.
  *
- * Geoprism(tm) is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
+ * Geoprism(tm) is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with Geoprism(tm).  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with Geoprism(tm). If not, see <http://www.gnu.org/licenses/>.
  */
 package net.geoprism.registry.service.business;
 
@@ -22,13 +22,9 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Set;
-import java.util.TreeSet;
 import java.util.stream.Collectors;
 
 import org.commongeoregistry.adapter.constants.DefaultAttribute;
-import org.commongeoregistry.adapter.metadata.AttributeClassificationType;
-import org.commongeoregistry.adapter.metadata.GeoObjectType;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -53,6 +49,10 @@ import net.geoprism.graph.BusinessTypeSnapshot;
 import net.geoprism.graph.BusinessTypeSnapshotQuery;
 import net.geoprism.graph.ConceptClassSnapshot;
 import net.geoprism.graph.ConceptClassSnapshotQuery;
+import net.geoprism.graph.ConceptEdgeTypeSnapshot;
+import net.geoprism.graph.ConceptEdgeTypeSnapshotQuery;
+import net.geoprism.graph.ConceptSetSnapshot;
+import net.geoprism.graph.ConceptSetSnapshotQuery;
 import net.geoprism.graph.DirectedAcyclicGraphTypeSnapshot;
 import net.geoprism.graph.DirectedAcyclicGraphTypeSnapshotQuery;
 import net.geoprism.graph.GeoObjectTypeSnapshot;
@@ -72,8 +72,11 @@ import net.geoprism.registry.DateUtil;
 import net.geoprism.registry.JsonCollectors;
 import net.geoprism.registry.LPGTileCache;
 import net.geoprism.registry.lpg.LPGPublishProgressMonitorIF;
+import net.geoprism.registry.view.BusinessEdgeTypeDTO;
 import net.geoprism.registry.view.BusinessTypeDTO;
 import net.geoprism.registry.view.ConceptClassDTO;
+import net.geoprism.registry.view.ConceptEdgeTypeDTO;
+import net.geoprism.registry.view.ConceptSetDTO;
 
 @Service
 public class LabeledPropertyGraphTypeVersionBusinessService implements LabeledPropertyGraphTypeVersionBusinessServiceIF
@@ -89,6 +92,12 @@ public class LabeledPropertyGraphTypeVersionBusinessService implements LabeledPr
 
   @Autowired
   private BusinessEdgeTypeSnapshotBusinessServiceIF bEdgeTypeService;
+
+  @Autowired
+  private ConceptEdgeTypeSnapshotBusinessServiceIF  cEdgeTypeService;
+
+  @Autowired
+  private ConceptSetSnapshotBusinessServiceIF       cSetService;
 
   @Autowired
   private HierarchyTypeSnapshotBusinessServiceIF    hierarchyService;
@@ -255,11 +264,44 @@ public class LabeledPropertyGraphTypeVersionBusinessService implements LabeledPr
 
     BusinessEdgeTypeSnapshotQuery query = new BusinessEdgeTypeSnapshotQuery(factory);
     query.WHERE(query.EQ(vQuery.getChild()));
-    ;
 
     try (OIterator<? extends BusinessEdgeTypeSnapshot> it = query.getIterator())
     {
       return it.getAll().stream().map(b -> (BusinessEdgeTypeSnapshot) b).collect(Collectors.toList());
+    }
+  }
+
+  @Override
+  public List<ConceptEdgeTypeSnapshot> getConceptEdgeTypes(LabeledPropertyGraphTypeVersion version)
+  {
+    QueryFactory factory = new QueryFactory();
+
+    LabeledPropertyGraphTypeSnapshotQuery vQuery = new LabeledPropertyGraphTypeSnapshotQuery(factory);
+    vQuery.WHERE(vQuery.getParent().EQ(version));
+
+    ConceptEdgeTypeSnapshotQuery query = new ConceptEdgeTypeSnapshotQuery(factory);
+    query.WHERE(query.EQ(vQuery.getChild()));
+
+    try (OIterator<? extends ConceptEdgeTypeSnapshot> it = query.getIterator())
+    {
+      return it.getAll().stream().map(b -> (ConceptEdgeTypeSnapshot) b).collect(Collectors.toList());
+    }
+  }
+
+  @Override
+  public List<ConceptSetSnapshot> getConceptSets(LabeledPropertyGraphTypeVersion version)
+  {
+    QueryFactory factory = new QueryFactory();
+
+    LabeledPropertyGraphTypeSnapshotQuery vQuery = new LabeledPropertyGraphTypeSnapshotQuery(factory);
+    vQuery.WHERE(vQuery.getParent().EQ(version));
+
+    ConceptSetSnapshotQuery query = new ConceptSetSnapshotQuery(factory);
+    query.WHERE(query.EQ(vQuery.getChild()));
+
+    try (OIterator<? extends ConceptSetSnapshot> it = query.getIterator())
+    {
+      return it.getAll().stream().map(b -> (ConceptSetSnapshot) b).collect(Collectors.toList());
     }
   }
 
@@ -474,13 +516,15 @@ public class LabeledPropertyGraphTypeVersionBusinessService implements LabeledPr
 
     if (includeTableDefinitions)
     {
-      List<ConceptClassDTO> conceptClasses = new LinkedList<>();
-
-      this.getConceptClasses(version).forEach(type -> {
-        conceptClasses.add(type.toDTO());
-      });
-
+      // Always start with the concept set data
+      List<ConceptClassDTO> conceptClasses = this.getConceptClasses(version).stream().map(type -> type.toDTO()).toList();
       object.add("conceptClasses", JsonParser.parseString(ConceptClassDTO.toJson(conceptClasses)));
+
+      List<ConceptEdgeTypeDTO> conceptEdges = this.getConceptEdgeTypes(version).stream().map(type -> this.cEdgeTypeService.toDTO(type)).toList();
+      object.add("conceptEdges", JsonParser.parseString(ConceptEdgeTypeDTO.toJson(conceptEdges)));
+
+      List<ConceptSetDTO> conceptSets = this.getConceptSets(version).stream().map(type -> this.cSetService.toDTO(type)).toList();
+      object.add("conceptSets", JsonParser.parseString(ConceptSetDTO.toJson(conceptSets)));
 
       JsonArray types = new JsonArray();
 
@@ -518,43 +562,8 @@ public class LabeledPropertyGraphTypeVersionBusinessService implements LabeledPr
 
       object.add("businessTypes", JsonParser.parseString(BusinessTypeDTO.toJson(businessTypes)));
 
-      JsonArray businessEdges = new JsonArray();
-
-      this.getBusinessEdgeTypes(version).forEach(type -> {
-        businessEdges.add(this.bEdgeTypeService.toJSON(type));
-      });
-
-      object.add("businessEdges", businessEdges);
-
-      // Add classification definitions
-      JsonArray classifications = new JsonArray();
-      Set<String> processed = new TreeSet<String>();
-
-      vertices.stream().sorted((a, b) -> b.getIsAbstract().compareTo(a.getIsAbstract())).filter(type -> !type.isRoot()).forEach(t -> {
-        GeoObjectType type = t.toGeoObjectType();
-
-        type.getAttributeMap().forEach((name, a) -> {
-//          if (a instanceof AttributeClassificationType)
-//          {
-//            AttributeClassificationType attribute = (AttributeClassificationType) a;
-//            String classificationType = attribute.getConceptSet();
-//
-//            if (!processed.contains(classificationType))
-//            {
-//              JsonObject typeObject = new JsonObject();
-//              typeObject.add("type", this.typeService.getByCode(classificationType).toJSON());
-//              typeObject.add("tree", this.classificationService.exportToJson(classificationType, rootTerm.getCode()));
-//
-//              classifications.add(typeObject);
-//
-//              processed.add(classificationType);
-//            }
-//          }
-        });
-      });
-
-      object.add("classifications", classifications);
-
+      List<BusinessEdgeTypeDTO> businessEdges = this.getBusinessEdgeTypes(version).stream().map(type -> this.bEdgeTypeService.toDTO(type)).toList();
+      object.add("businessEdges", JsonParser.parseString(BusinessEdgeTypeDTO.toJson(businessEdges)));
     }
 
     return object;
@@ -581,37 +590,6 @@ public class LabeledPropertyGraphTypeVersionBusinessService implements LabeledPr
   @Transaction
   public LabeledPropertyGraphTypeVersion create(LabeledPropertyGraphTypeEntry entry, JsonObject json)
   {
-//    // Handle classification definitions
-//    JsonArray classifications = json.get("classifications").getAsJsonArray();
-//
-//    for (JsonElement element : classifications)
-//    {
-//      JsonObject classificationObject = element.getAsJsonObject();
-//      JsonObject classificationType = classificationObject.get("type").getAsJsonObject();
-//
-//      String code = classificationType.get(DefaultAttribute.CODE.getName()).getAsString();
-//
-//      // If a type doesn't exist create it
-//      if (this.typeService.getByCode(code, false) == null)
-//      {
-//        classificationType.remove(LabeledPropertyGraphTypeVersion.OID);
-//
-//        ClassificationType type = this.typeService.apply(classificationType);
-//
-//        // Refresh permissions in case new definitions were defined during the
-//        // synchronization process
-//        Session session = (Session) Session.getCurrentSession();
-//
-//        if (session != null)
-//        {
-//          session.reloadPermissions();
-//        }
-//
-//        this.classificationService.importJsonTree(type, null, classificationObject.get("tree").getAsJsonObject());
-//      }
-//
-//    }
-
     LabeledPropertyGraphType graphType = entry.getGraphType();
 
     LabeledPropertyGraphTypeVersion version = new LabeledPropertyGraphTypeVersion();
@@ -628,6 +606,24 @@ public class LabeledPropertyGraphTypeVersionBusinessService implements LabeledPr
     for (ConceptClassDTO conceptClass : conceptClasses)
     {
       this.conceptService.create(version, conceptClass);
+    }
+
+    List<ConceptEdgeTypeDTO> conceptEdges = json.has("conceptEdges") ? //
+        ConceptEdgeTypeDTO.parseList(json.get("conceptEdges").toString()) : //
+        new LinkedList<>();
+
+    for (ConceptEdgeTypeDTO conceptEdge : conceptEdges)
+    {
+      this.cEdgeTypeService.create(version, conceptEdge);
+    }
+
+    List<ConceptSetDTO> conceptSets = json.has("conceptSets") ? //
+        ConceptSetDTO.parseList(json.get("conceptSets").toString()) : //
+        new LinkedList<>();
+
+    for (ConceptSetDTO conceptSet : conceptSets)
+    {
+      this.cSetService.create(version, conceptSet);
     }
 
     GeoObjectTypeSnapshot root = this.objectService.createRoot(version);
@@ -655,11 +651,13 @@ public class LabeledPropertyGraphTypeVersionBusinessService implements LabeledPr
       this.graphService.create(version, element.getAsJsonObject(), root);
     }
 
-    JsonArray businessEdges = json.has("businessEdges") ? json.get("businessEdges").getAsJsonArray() : new JsonArray();
+    List<BusinessEdgeTypeDTO> businessEdges = json.has("businessEdges") ? //
+        BusinessEdgeTypeDTO.parseList(json.get("businessEdges").toString()) : //
+        new LinkedList<>();
 
-    for (JsonElement element : businessEdges)
+    for (BusinessEdgeTypeDTO dto : businessEdges)
     {
-      this.bEdgeTypeService.create(version, element.getAsJsonObject());
+      this.bEdgeTypeService.create(version, dto);
     }
 
     return version;

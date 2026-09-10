@@ -159,7 +159,7 @@ public class GraphTypeDTO implements Serializable
     }
   }
 
-  public static String toJson(List<GraphTypeDTO> dtos)
+  public static <T extends GraphTypeDTO> String toJson(List<T> dtos)
   {
     try
     {
@@ -185,7 +185,7 @@ public class GraphTypeDTO implements Serializable
     }
   }
 
-  public static List<GraphTypeDTO> parseList(String json)
+  public static <T extends GraphTypeDTO> List<T> parseList(String json)
   {
     try
     {

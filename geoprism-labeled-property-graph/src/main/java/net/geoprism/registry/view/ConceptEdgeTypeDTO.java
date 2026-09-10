@@ -18,7 +18,12 @@
  */
 package net.geoprism.registry.view;
 
+import java.util.List;
+
 import org.commongeoregistry.adapter.dataaccess.LocalizedValue;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class ConceptEdgeTypeDTO extends EdgeClassDTO
 {
@@ -80,4 +85,19 @@ public class ConceptEdgeTypeDTO extends EdgeClassDTO
 
     return dto;
   }
+  
+  @SuppressWarnings("unchecked")
+  public static List<ConceptEdgeTypeDTO> parseList(String json)
+  {
+    try
+    {
+      ObjectMapper mapper = new ObjectMapper();
+      return mapper.readerForListOf(ConceptEdgeTypeDTO.class).readValue(json);
+    }
+    catch (JsonProcessingException e)
+    {
+      throw new RuntimeException(e);
+    }
+  }
+
 }

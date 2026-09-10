@@ -3,18 +3,18 @@
  *
  * This file is part of Geoprism(tm).
  *
- * Geoprism(tm) is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
+ * Geoprism(tm) is free software: you can redistribute it and/or modify it under
+ * the terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation, either version 3 of the License, or (at your option) any
+ * later version.
  *
- * Geoprism(tm) is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
+ * Geoprism(tm) is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with Geoprism(tm).  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with Geoprism(tm). If not, see <http://www.gnu.org/licenses/>.
  */
 package net.geoprism.registry.service.business;
 
@@ -29,7 +29,6 @@ import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
 import org.commongeoregistry.adapter.metadata.AttributeClassificationType;
-import org.commongeoregistry.adapter.metadata.CodeReference;
 import org.springframework.stereotype.Service;
 
 import com.runwaysdk.business.graph.GraphQuery;
@@ -99,11 +98,11 @@ public class ConceptObjectBusinessService extends ObjectEdgeBusinessService<Conc
   @Override
   public Optional<ConceptObject> getByCode(ConceptSet conceptSet, String code)
   {
-    String rootOid = conceptSet.getRootTerm();
+    String rootCode = conceptSet.getRootTerm();
 
-    if (StringUtils.isNotBlank(rootOid))
+    if (StringUtils.isNotBlank(rootCode))
     {
-      return this.getByOid(rootOid).map(rootTerm -> {
+      return this.getByCode(rootCode).map(rootTerm -> {
         List<ConceptEdgeType> edges = this.setService.getConceptEdgeTypes(conceptSet);
         String edgeNames = String.join(", ", edges.stream().map(e -> "'" + e.getMdEdge().getDbClassName() + "'").toList());
 
@@ -154,12 +153,36 @@ public class ConceptObjectBusinessService extends ObjectEdgeBusinessService<Conc
   }
 
   @Override
+  public Optional<ConceptObject> getByCode(String code)
+  {
+    if (StringUtils.isNotBlank(code))
+    {
+      return this.getCache().get(code, () -> {
+        MdVertexDAOIF mdVertex = MdVertexDAO.getMdVertexDAO(ConceptVertex.CLASS);
+
+        StringBuilder statement = new StringBuilder();
+        statement.append("TRAVERSE out('" + EdgeConstant.HAS_VALUE.getDBClassName() + "', '" + EdgeConstant.HAS_GEOMETRY.getDBClassName() + "') FROM (");
+        statement.append("  SELECT FROM " + mdVertex.getDBClassName());
+        statement.append("  WHERE code = :code");
+        statement.append(")");
+
+        GraphQuery<VertexObject> query = new GraphQuery<VertexObject>(statement.toString());
+        query.setParameter("code", code);
+
+        return Optional.ofNullable(this.processSingleResult(query.getResults(), null));
+      });
+    }
+
+    return Optional.empty();
+  }
+
+  @Override
   public Optional<ConceptObject> getByCode(AttributeClassificationType attribute, String code)
   {
     ConceptSet set = this.setService.getByCodeOrThrow(attribute.getConceptSet());
-    CodeReference rootTerm = attribute.getRootTerm();
+    String rootTerm = attribute.getRootTerm();
 
-    if (set.getDiscreteType().equals(DiscreteType.ENUMERATION.name()) || rootTerm == null)
+    if (set.getDiscreteType().equals(DiscreteType.ENUMERATION.name()) || StringUtils.isBlank(rootTerm))
     {
       List<ConceptClass> classes = this.setService.getConceptClasses(set);
 
@@ -168,10 +191,9 @@ public class ConceptObjectBusinessService extends ObjectEdgeBusinessService<Conc
         return this.getByCode(classes.get(0), code);
       }
     }
-    else
+    else if (StringUtils.isNotBlank(rootTerm))
     {
-      ConceptClass type = this.cClassService.getByCodeOrThrow(rootTerm.getType());
-      ConceptObject root = this.getByCode(type, rootTerm.getCode()).get();
+      ConceptObject root = this.getByCode(rootTerm).get();
 
       String edgeNames = getEdgeNames(attribute);
 
@@ -196,9 +218,9 @@ public class ConceptObjectBusinessService extends ObjectEdgeBusinessService<Conc
   public List<ConceptObject> search(AttributeClassificationType attribute, String text)
   {
     ConceptSet set = this.setService.getByCodeOrThrow(attribute.getConceptSet());
-    CodeReference rootTerm = attribute.getRootTerm();
+    String rootTerm = attribute.getRootTerm();
 
-    if (set.getDiscreteType().equals(DiscreteType.ENUMERATION.name()) || rootTerm == null)
+    if (set.getDiscreteType().equals(DiscreteType.ENUMERATION.name()) || StringUtils.isBlank(rootTerm))
     {
       List<ConceptClass> classes = this.setService.getConceptClasses(set);
 
@@ -207,10 +229,9 @@ public class ConceptObjectBusinessService extends ObjectEdgeBusinessService<Conc
         return this.search(classes.get(0), text);
       }
     }
-    else if (rootTerm != null)
+    else if (StringUtils.isNotBlank(rootTerm))
     {
-      ConceptClass type = this.cClassService.getByCodeOrThrow(rootTerm.getType());
-      ConceptObject root = this.getByCode(type, rootTerm.getCode()).get();
+      ConceptObject root = this.getByCode(rootTerm).get();
 
       String edgeNames = getEdgeNames(attribute);
 
@@ -239,7 +260,7 @@ public class ConceptObjectBusinessService extends ObjectEdgeBusinessService<Conc
   {
     if (StringUtils.isNotBlank(set.getRootTerm()))
     {
-      ConceptObject rootTerm = this.getByOid(set.getRootTerm()).orElseThrow(() -> new ProgrammingErrorException("Unable to find root term"));
+      ConceptObject rootTerm = this.getByCode(set.getRootTerm()).orElseThrow(() -> new ProgrammingErrorException("Unable to find root term"));
 
       String edgeNames = getEdgeNames(set);
 
@@ -357,12 +378,11 @@ public class ConceptObjectBusinessService extends ObjectEdgeBusinessService<Conc
   public List<ConceptObject> getAncestors(AttributeClassificationType attribute, ConceptObject object)
   {
     ConceptSet set = this.setService.getByCodeOrThrow(attribute.getConceptSet());
-    CodeReference rootTerm = attribute.getRootTerm();
+    String rootTerm = attribute.getRootTerm();
 
-    if (!set.getDiscreteType().equals(DiscreteType.ENUMERATION.name()) && rootTerm == null)
+    if (!set.getDiscreteType().equals(DiscreteType.ENUMERATION.name()) && StringUtils.isNotBlank(rootTerm))
     {
-      ConceptClass type = this.cClassService.getByCodeOrThrow(attribute.getRootTerm().getType());
-      ConceptObject root = this.getByCode(type, attribute.getRootTerm().getCode()).get();
+      ConceptObject root = this.getByCode(rootTerm).get();
 
       String edgeNames = getEdgeNames(attribute);
 

@@ -33,7 +33,6 @@ import com.runwaysdk.business.graph.VertexObject;
 import com.runwaysdk.constants.MdAttributeBooleanInfo;
 import com.runwaysdk.constants.graph.MdVertexInfo;
 import com.runwaysdk.dataaccess.MdAttributeConcreteDAOIF;
-import com.runwaysdk.dataaccess.MdAttributeTermDAOIF;
 import com.runwaysdk.dataaccess.MdVertexDAOIF;
 import com.runwaysdk.dataaccess.metadata.graph.MdVertexDAO;
 import com.runwaysdk.dataaccess.transaction.Transaction;
@@ -149,7 +148,6 @@ public class BusinessTypeSnapshotBusinessService extends ObjectTypeSnapshotBusin
 
     BusinessTypeSnapshotQuery query = new BusinessTypeSnapshotQuery(factory);
     query.WHERE(query.EQ(vQuery.getChild()));
-    ;
     query.AND(query.getGraphMdVertex().EQ(mdVertex.getOid()));
 
     try (OIterator<? extends BusinessTypeSnapshot> it = query.getIterator())

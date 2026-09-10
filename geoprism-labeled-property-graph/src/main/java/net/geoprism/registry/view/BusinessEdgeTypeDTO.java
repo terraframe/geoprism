@@ -3,26 +3,29 @@
  *
  * This file is part of Geoprism(tm).
  *
- * Geoprism(tm) is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
+ * Geoprism(tm) is free software: you can redistribute it and/or modify it under
+ * the terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation, either version 3 of the License, or (at your option) any
+ * later version.
  *
- * Geoprism(tm) is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
+ * Geoprism(tm) is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with Geoprism(tm).  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with Geoprism(tm). If not, see <http://www.gnu.org/licenses/>.
  */
 package net.geoprism.registry.view;
 
+import java.util.List;
+
 import org.commongeoregistry.adapter.dataaccess.LocalizedValue;
+import org.commongeoregistry.adapter.metadata.GraphTypeDTO;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-
-import net.geoprism.registry.model.EdgeDirection;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class BusinessEdgeTypeDTO extends EdgeClassDTO
 {
@@ -40,6 +43,7 @@ public class BusinessEdgeTypeDTO extends EdgeClassDTO
     super(TypeClass.BUSINESS_EDGE.getCode(), code, label, description);
   }
 
+  @JsonIgnore
   public String getType()
   {
     return TypeClass.BUSINESS_EDGE.getCode();
@@ -51,6 +55,7 @@ public class BusinessEdgeTypeDTO extends EdgeClassDTO
     return isChildGeObjectType() || isParentGeoObjectType();
   }
 
+  @JsonIgnore
   public boolean isParentGeoObjectType()
   {
     return this.getParentType().equals(GEO_OBJECT_TYPE);
@@ -97,6 +102,20 @@ public class BusinessEdgeTypeDTO extends EdgeClassDTO
     dto.setSeq(0L);
 
     return dto;
+  }
+
+  @SuppressWarnings("unchecked")
+  public static List<BusinessEdgeTypeDTO> parseList(String json)
+  {
+    try
+    {
+      ObjectMapper mapper = new ObjectMapper();
+      return mapper.readerForListOf(BusinessEdgeTypeDTO.class).readValue(json);
+    }
+    catch (JsonProcessingException e)
+    {
+      throw new RuntimeException(e);
+    }
   }
 
 }

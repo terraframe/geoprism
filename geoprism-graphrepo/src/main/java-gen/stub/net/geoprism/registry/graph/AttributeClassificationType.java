@@ -18,7 +18,6 @@
  */
 package net.geoprism.registry.graph;
 
-import org.commongeoregistry.adapter.constants.DefaultAttribute;
 import org.commongeoregistry.adapter.metadata.AttributeType;
 import org.commongeoregistry.adapter.metadata.CodeReference;
 
@@ -30,8 +29,6 @@ import com.runwaysdk.dataaccess.metadata.MdAttributeGraphReferenceDAO;
 import com.runwaysdk.dataaccess.metadata.graph.MdVertexDAO;
 import com.runwaysdk.dataaccess.transaction.Transaction;
 
-import net.geoprism.registry.model.ConceptObject;
-import net.geoprism.registry.model.GeoObjectMetadata;
 import net.geoprism.registry.model.GraphRefNodeValueStrategy;
 import net.geoprism.registry.model.ValueStrategy;
 import net.geoprism.registry.model.VertexValueStrategy;
@@ -113,29 +110,7 @@ public class AttributeClassificationType extends AttributeClassificationTypeBase
     this.setStartDate(attributeClassificationDTO.getStartDate());
     this.setEndDate(attributeClassificationDTO.getEndDate());
     this.setConceptSet(conceptSet.getCode());
-
-    CodeReference rootTerm = attributeClassificationDTO.getRootTerm();
-
-    if (rootTerm != null)
-    {
-      ConceptObjectBusinessServiceIF cService = ServiceFactory.getBean(ConceptObjectBusinessServiceIF.class);
-
-      ConceptObject classification = cService.getByCode(conceptSet, rootTerm.getCode()).orElseThrow(() -> {
-        net.geoprism.registry.DataNotFoundException ex = new net.geoprism.registry.DataNotFoundException();
-        ex.setTypeLabel(conceptSet.getLabel().getValue());
-        ex.setDataIdentifier(rootTerm.getCode());
-        ex.setAttributeLabel(GeoObjectMetadata.get().getAttributeDisplayLabel(DefaultAttribute.CODE.getName()));
-
-        throw ex;
-      });
-
-      this.setValue(AttributeClassificationType.ROOTTERM, classification.getVertex());
-    }
-    else
-    {
-      this.setValue(AttributeClassificationType.ROOTTERM, null);
-    }
-
+    this.setRootTerm(attributeClassificationDTO.getRootTerm());
   }
 
   @Override
@@ -143,16 +118,11 @@ public class AttributeClassificationType extends AttributeClassificationTypeBase
   {
     super.populate(dto);
 
-    ConceptObjectBusinessServiceIF cService = ServiceFactory.getBean(ConceptObjectBusinessServiceIF.class);
-
     org.commongeoregistry.adapter.metadata.AttributeClassificationType attributeType = (org.commongeoregistry.adapter.metadata.AttributeClassificationType) dto;
     attributeType.setConceptSet(this.getConceptSet());
     attributeType.setStartDate(this.getStartDate());
     attributeType.setEndDate(this.getEndDate());
-
-    cService.getByOid(this.getObjectValue(ROOTTERM)).ifPresent(root -> {
-      attributeType.setRootTerm(CodeReference.build(root.getCode(), root.getType().getCode()));
-    });
+    attributeType.setRootTerm(this.getRootTerm());
   }
 
   @Override

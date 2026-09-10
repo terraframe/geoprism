@@ -42,7 +42,6 @@ import org.commongeoregistry.adapter.metadata.AttributeDateType;
 import org.commongeoregistry.adapter.metadata.AttributeFloatType;
 import org.commongeoregistry.adapter.metadata.AttributeIntegerType;
 import org.commongeoregistry.adapter.metadata.AttributeType;
-import org.commongeoregistry.adapter.metadata.CodeReference;
 import org.commongeoregistry.adapter.metadata.GeoObjectType;
 import org.commongeoregistry.adapter.metadata.HierarchyType;
 import org.commongeoregistry.adapter.metadata.MetadataFactory;
@@ -292,7 +291,7 @@ public class SerializationTest
 
     AttributeClassificationType testClassification = (AttributeClassificationType) AttributeType.factory("testClassification", new LocalizedValue("testClassificationLocalName"), new LocalizedValue("testClassificationLocalDescrip"), AttributeClassificationType.TYPE, false, false, false);
     testClassification.setConceptSet("test.classification.Test");
-    testClassification.setRootTerm(CodeReference.build("testRoot", "testType"));
+    testClassification.setRootTerm("testRoot");
     testClassification.setStartDate(new Date());
     testClassification.setEndDate(new Date());
 
@@ -351,7 +350,7 @@ public class SerializationTest
 
     AttributeClassificationType testClassification = (AttributeClassificationType) AttributeType.factory("testClassification", new LocalizedValue("testClassificationLocalName"), new LocalizedValue("testClassificationLocalDescrip"), AttributeClassificationType.TYPE, false, false, false);
     testClassification.setConceptSet("test.classification.Test");
-    testClassification.setRootTerm(CodeReference.build("testRoot", "testType"));
+    testClassification.setRootTerm("testRoot");
     testClassification.setStartDate(new Date());
     testClassification.setEndDate(new Date());
 

@@ -39,32 +39,31 @@ import com.runwaysdk.system.metadata.MdEdge;
 import com.runwaysdk.system.metadata.MdGraphClassQuery;
 
 import net.geoprism.configuration.GeoprismProperties;
-import net.geoprism.graph.BusinessEdgeTypeSnapshot;
-import net.geoprism.graph.BusinessEdgeTypeSnapshotQuery;
+import net.geoprism.graph.ConceptClassSnapshot;
+import net.geoprism.graph.ConceptEdgeTypeSnapshot;
+import net.geoprism.graph.ConceptEdgeTypeSnapshotQuery;
 import net.geoprism.graph.LabeledPropertyGraphTypeSnapshotQuery;
 import net.geoprism.graph.LabeledPropertyGraphTypeVersion;
 import net.geoprism.graph.ObjectTypeSnapshot;
 import net.geoprism.registry.RegistryConstants;
 import net.geoprism.registry.conversion.LocalizedValueConverter;
 import net.geoprism.registry.model.SnapshotContainer;
-import net.geoprism.registry.view.BusinessEdgeTypeDTO;
+import net.geoprism.registry.view.ConceptEdgeTypeDTO;
+import net.geoprism.registry.view.DiscreteType;
 
 @Service
-public class BusinessEdgeTypeSnapshotBusinessService implements BusinessEdgeTypeSnapshotBusinessServiceIF
+public class ConceptEdgeTypeSnapshotBusinessService implements ConceptEdgeTypeSnapshotBusinessServiceIF
 {
-  public static final String                     PREFIX = "g_";
+  public static final String                    PREFIX = "g_";
 
-  public static final String                     SPLIT  = "__";
-
-  @Autowired
-  private BusinessTypeSnapshotBusinessServiceIF  typeService;
+  public static final String                    SPLIT  = "__";
 
   @Autowired
-  private GeoObjectTypeSnapshotBusinessServiceIF gTypeService;
+  private ConceptClassSnapshotBusinessServiceIF typeService;
 
   @Override
   @Transaction
-  public void delete(BusinessEdgeTypeSnapshot snapshot)
+  public void delete(ConceptEdgeTypeSnapshot snapshot)
   {
     String mdEdgeOid = snapshot.getGraphMdEdgeOid();
 
@@ -112,40 +111,16 @@ public class BusinessEdgeTypeSnapshotBusinessService implements BusinessEdgeType
   }
 
   @Override
-  public BusinessEdgeTypeSnapshot create(SnapshotContainer<?> version, BusinessEdgeTypeDTO dto)
+  public ConceptEdgeTypeSnapshot create(SnapshotContainer<?> version, ConceptEdgeTypeDTO dto)
   {
-    boolean isParentGeoObject = dto.isParentGeoObjectType();
-    boolean isChildGeoObject = dto.isChildGeObjectType();
-
-    ObjectTypeSnapshot parent = null;
-    ObjectTypeSnapshot child = null;
-
-    if (isParentGeoObject)
-    {
-      parent = this.gTypeService.getRoot(version);
-    }
-    else
-    {
-      String code = dto.getParentType();
-
-      parent = this.typeService.get(version, code);
-    }
-
-    if (isChildGeoObject)
-    {
-      child = this.gTypeService.getRoot(version);
-    }
-    else
-    {
-      String code = dto.getChildType();
-
-      child = this.typeService.get(version, code);
-    }
+    ConceptClassSnapshot parent = this.typeService.get(version, dto.getParentType());
+    ConceptClassSnapshot child = this.typeService.get(version, dto.getChildType());
 
     return create(version, dto, parent, child);
   }
 
-  private BusinessEdgeTypeSnapshot create(SnapshotContainer<?> version, BusinessEdgeTypeDTO dto, ObjectTypeSnapshot parent, ObjectTypeSnapshot child)
+  @Override
+  public ConceptEdgeTypeSnapshot create(SnapshotContainer<?> version, ConceptEdgeTypeDTO dto, ConceptClassSnapshot parent, ConceptClassSnapshot child)
   {
     String code = dto.getCode();
     String orgCode = dto.getOrganizationCode();
@@ -157,16 +132,15 @@ public class BusinessEdgeTypeSnapshotBusinessService implements BusinessEdgeType
 
     MdEdge mdEdge = createMdEdge(version, parent, child, viewName, label, description);
 
-    BusinessEdgeTypeSnapshot snapshot = new BusinessEdgeTypeSnapshot();
+    ConceptEdgeTypeSnapshot snapshot = new ConceptEdgeTypeSnapshot();
     snapshot.setGraphMdEdge(mdEdge);
     snapshot.setCode(code);
     snapshot.setOrigin(origin);
     snapshot.setSequence(sequence);
     snapshot.setOrgCode(orgCode);
-    snapshot.setIsChildGeoObject(dto.isChildGeObjectType());
-    snapshot.setIsParentGeoObject(dto.isParentGeoObjectType());
     snapshot.setParentType(parent);
     snapshot.setChildType(child);
+    snapshot.setDiscreteType(dto.getDiscreteType().name());
     LocalizedValueConverter.populate(snapshot.getDisplayLabel(), label);
     LocalizedValueConverter.populate(snapshot.getDescription(), description);
     snapshot.apply();
@@ -210,18 +184,18 @@ public class BusinessEdgeTypeSnapshotBusinessService implements BusinessEdgeType
   }
 
   @Override
-  public BusinessEdgeTypeSnapshot get(SnapshotContainer<?> version, String code)
+  public ConceptEdgeTypeSnapshot get(SnapshotContainer<?> version, String code)
   {
     QueryFactory factory = new QueryFactory();
 
     LabeledPropertyGraphTypeSnapshotQuery vQuery = new LabeledPropertyGraphTypeSnapshotQuery(factory);
     vQuery.WHERE(vQuery.getParent().EQ((LabeledPropertyGraphTypeVersion) version));
 
-    BusinessEdgeTypeSnapshotQuery query = new BusinessEdgeTypeSnapshotQuery(factory);
+    ConceptEdgeTypeSnapshotQuery query = new ConceptEdgeTypeSnapshotQuery(factory);
     query.WHERE(query.EQ(vQuery.getChild()));
     query.AND(query.getCode().EQ(code));
 
-    try (OIterator<? extends BusinessEdgeTypeSnapshot> it = query.getIterator())
+    try (OIterator<? extends ConceptEdgeTypeSnapshot> it = query.getIterator())
     {
       if (it.hasNext())
       {
@@ -237,39 +211,23 @@ public class BusinessEdgeTypeSnapshotBusinessService implements BusinessEdgeType
   }
 
   @Override
-  public BusinessEdgeTypeDTO toDTO(BusinessEdgeTypeSnapshot snapshot)
+  public ConceptEdgeTypeDTO toDTO(ConceptEdgeTypeSnapshot snapshot)
   {
-    BusinessEdgeTypeDTO dto = new BusinessEdgeTypeDTO();
+    ConceptEdgeTypeDTO dto = new ConceptEdgeTypeDTO();
     dto.setCode(snapshot.getCode());
     dto.setOrganizationCode(snapshot.getOrgCode());
     dto.setOrigin(snapshot.getOrigin());
     dto.setSeq(snapshot.getSequence());
     dto.setLabel(LocalizedValueConverter.convertNoAutoCoalesce(snapshot.getDisplayLabel()));
     dto.setDescription(LocalizedValueConverter.convertNoAutoCoalesce(snapshot.getDescription()));
+    dto.setParentType(snapshot.getParentType().getCode());
     dto.setChildType(snapshot.getChildType().getCode());
-
-    if (snapshot.getIsParentGeoObject())
-    {
-      dto.setParentType(BusinessEdgeTypeDTO.GEO_OBJECT_TYPE);
-    }
-    else
-    {
-      dto.setParentType(snapshot.getParentType().getCode());
-    }
-
-    if (snapshot.getIsChildGeoObject())
-    {
-      dto.setChildType(BusinessEdgeTypeDTO.GEO_OBJECT_TYPE);
-    }
-    else
-    {
-      dto.setChildType(snapshot.getChildType().getCode());
-    }
+    dto.setDiscreteType(DiscreteType.valueOf(snapshot.getDiscreteType()));
 
     return dto;
   }
 
-  public LabeledPropertyGraphTypeVersion getVersion(BusinessEdgeTypeSnapshot snapshot)
+  public LabeledPropertyGraphTypeVersion getVersion(ConceptEdgeTypeSnapshot snapshot)
   {
     try (OIterator<? extends LabeledPropertyGraphTypeVersion> iterator = snapshot.getAllVersion())
     {

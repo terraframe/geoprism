@@ -29,6 +29,25 @@
         </attributes>
       </mdBusiness>      
       
+      <mdBusiness
+        name="net.geoprism.graph.ConceptSetSnapshot"
+        extends="net.geoprism.graph.SchemaElementSnapshot"
+        label="Concept Set Snapshot">
+        <attributes>
+          <char
+            name="code"
+            label="Code"
+            required="true"
+            size="255" />
+          <localChar name="displayLabel" label="Label" required="true" />
+          <localText name="description"/>          
+          <text name="discreteType" label="Discrete type"  />                                         
+          <text name="rootTerm" label="Root Term" required="false"/>                    
+          <text name="rootType" label="Root Type" required="false"/>                              
+        </attributes>
+      </mdBusiness>
+      
+     
       <mdBusiness name="net.geoprism.graph.RelationshipTypeSnapshot" extends="net.geoprism.graph.SchemaElementSnapshot" table="relationship_type_snapshot" isAbstract="true" label="Object Type Snapshot" generateController="false">
       </mdBusiness>      
       
@@ -169,7 +188,21 @@
           <boolean name="isParentGeoObject" required="true" label="is Parent a GeoObject" />          
           <boolean name="isChildGeoObject" required="true" label="is Parent a GeoObject" />          
         </attributes>
+      </mdBusiness>    
+
+       <mdBusiness name="net.geoprism.graph.ConceptEdgeTypeSnapshot" extends="net.geoprism.graph.RelationshipTypeSnapshot" table="concept_edge_type_snapshot" label="Concept Edge Type Snapshot" generateController="false">
+        <attributes>
+          <char name="code" size="255" required="true" label="Code" />
+          <text name="orgCode" label="Organization Code" required="false" />                  
+          <localChar name="displayLabel" label="Label" required="true" />
+          <localChar name="description" label="Description" required="false" />            
+          <reference name="parentType" type="net.geoprism.graph.ObjectTypeSnapshot" required="true" label="Parent Vertex" />          
+          <reference name="childType" type="net.geoprism.graph.ObjectTypeSnapshot" required="true" label="Child Vertex" />           
+          <text name="discreteType" label="Discrete type"  />                                                   
+          <reference name="graphMdEdge" type="com.runwaysdk.system.metadata.MdEdge" required="false" label="MdEdge" />
+        </attributes>
       </mdBusiness>      
+        
       
       <mdRelationship name="net.geoprism.graph.LabeledPropertyGraphTypeSnapshot" label="Labeled Property Graph Type Snapshot" table="lpg_type_snapshot" generateController="false" exported="false" publish="true">
         <parent cardinality="*" name="net.geoprism.graph.LabeledPropertyGraphTypeVersion" method="Version" />
@@ -243,6 +276,15 @@
         <child cardinality="*" name="net.geoprism.graph.AttributeTypeSnapshot"  method="Attribute" />
       </mdRelationship>
       
+      <mdRelationship name="net.geoprism.graph.ConceptSetSnapshotHasClass" table="concept_set_snapshot_class" label="Concept Set Has Class" generateController="false" exported="false" publish="true">
+        <parent cardinality="*" name="net.geoprism.graph.ConceptSetSnapshot" method="SetSnapshot" />
+        <child cardinality="*" name="net.geoprism.graph.ConceptClassSnapshot" method="ClassSnapshot" />
+      </mdRelationship>
+      
+      <mdRelationship name="net.geoprism.graph.ConceptSetSnapshotHasEdge" table="concept_set_snapshot_edge" label="Concept Set Has Edge" generateController="false" exported="false" publish="true">
+        <parent cardinality="*" name="net.geoprism.graph.ConceptSetSnapshot" method="SetSnapshot" />
+        <child cardinality="*" name="net.geoprism.graph.ConceptEdgeTypeSnapshot" method="EdgeSnapshot" />
+      </mdRelationship>
       
     </create>
     <permissions>
@@ -278,7 +320,16 @@
           <mdBusinessPermission type="net.geoprism.graph.AttributeTypeSnapshot">
             <operation name="ALL" />
           </mdBusinessPermission>          
+          <mdBusinessPermission type="net.geoprism.graph.ConceptSetSnapshot">
+            <operation name="ALL" />
+          </mdBusinessPermission>          
           <mdRelationshipPermission type="net.geoprism.graph.SnapshotHasAttribute">
+            <operation name="ALL" />
+          </mdRelationshipPermission>     
+          <mdRelationshipPermission type="net.geoprism.graph.ConceptSetSnapshotHasClass">
+            <operation name="ALL" />
+          </mdRelationshipPermission>     
+          <mdRelationshipPermission type="net.geoprism.graph.ConceptSetSnapshotHasEdge">
             <operation name="ALL" />
           </mdRelationshipPermission>     
         </grant>        
@@ -287,6 +338,8 @@
   </doIt>
   <undoIt>
     <delete>
+      <object key="net.geoprism.graph.ConceptSetSnapshotHasClass" type="com.runwaysdk.system.metadata.MdRelationship"></object>
+      <object key="net.geoprism.graph.ConceptSetSnapshotHasEdge" type="com.runwaysdk.system.metadata.MdRelationship"></object>
       <object key="net.geoprism.graph.SnapshotHasAttribute" type="com.runwaysdk.system.metadata.MdRelationship"></object>
       <object key="net.geoprism.graph.LabeledPropertyGraphTypeSnapshot" type="com.runwaysdk.system.metadata.MdRelationship"></object>
       <object key="net.geoprism.graph.SnapshotHierarchy" type="com.runwaysdk.system.metadata.MdRelationship"></object>
@@ -299,6 +352,7 @@
       <object key="net.geoprism.graph.BusinessTypeSnapshot" type="com.runwaysdk.system.metadata.MdBusiness"></object>      
       <object key="net.geoprism.graph.ConceptClassSnapshot" type="com.runwaysdk.system.metadata.MdBusiness"></object>      
       <object key="net.geoprism.graph.ObjectTypeSnapshot" type="com.runwaysdk.system.metadata.MdBusiness"></object>
+      <object key="net.geoprism.graph.ConceptSetSnapshot" type="com.runwaysdk.system.metadata.MdBusiness"></object>
       <object key="net.geoprism.graph.SchemaElementSnapshot" type="com.runwaysdk.system.metadata.MdBusiness"></object>
     </delete>
   </undoIt>

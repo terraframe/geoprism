@@ -3,18 +3,18 @@
  *
  * This file is part of Geoprism(tm).
  *
- * Geoprism(tm) is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
+ * Geoprism(tm) is free software: you can redistribute it and/or modify it under
+ * the terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation, either version 3 of the License, or (at your option) any
+ * later version.
  *
- * Geoprism(tm) is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
+ * Geoprism(tm) is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with Geoprism(tm).  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with Geoprism(tm). If not, see <http://www.gnu.org/licenses/>.
  */
 /**
  * CopyrighConceptSet (c) 2023 TerraFrame, Inc. All rights reserved.
@@ -47,18 +47,17 @@ import org.springframework.stereotype.Service;
 
 import com.runwaysdk.business.graph.EdgeObject;
 import com.runwaysdk.business.graph.GraphQuery;
-import com.runwaysdk.business.graph.VertexObject;
 import com.runwaysdk.dataaccess.MdVertexDAOIF;
 import com.runwaysdk.dataaccess.metadata.graph.MdVertexDAO;
 import com.runwaysdk.dataaccess.transaction.Transaction;
 import com.runwaysdk.session.Session;
 
+import net.geoprism.configuration.GeoprismProperties;
 import net.geoprism.registry.cache.TransactionLRUCache;
 import net.geoprism.registry.conversion.RegistryLocalizedValueConverter;
 import net.geoprism.registry.graph.ConceptClass;
 import net.geoprism.registry.graph.ConceptEdgeType;
 import net.geoprism.registry.graph.ConceptSet;
-import net.geoprism.registry.graph.ConceptVertex;
 import net.geoprism.registry.model.EdgeConstant;
 import net.geoprism.registry.model.GeoObjectMetadata;
 import net.geoprism.registry.service.permission.PermissionServiceIF;
@@ -125,24 +124,6 @@ public class ConceptSetBusinessService implements ConceptSetBusinessServiceIF
 
     boolean isNew = type.isNew();
 
-    if (isNew && StringUtils.isNotBlank(dto.getRootTerm()))
-    {
-      MdVertexDAOIF mdVertex = MdVertexDAO.getMdVertexDAO(ConceptVertex.CLASS);
-
-      StringBuilder statement = new StringBuilder();
-      statement.append("  SELECT FROM " + mdVertex.getDBClassName());
-      statement.append("  WHERE code = :code");
-
-      GraphQuery<VertexObject> query = new GraphQuery<VertexObject>(statement.toString());
-      query.setParameter("code", dto.getRootTerm());
-
-      Optional.ofNullable(query.getSingleResult()).ifPresent(root -> {
-
-        // TODO: Validate that the root is part of the valid concept classes
-        type.setRootTerm(root);
-      });
-    }
-
     type.apply();
 
     // Add all of concept classes and concept edge types
@@ -168,7 +149,13 @@ public class ConceptSetBusinessService implements ConceptSetBusinessServiceIF
 
   protected void fromDTO(ConceptSet type, ConceptSetDTO dto)
   {
+    String origin = StringUtils.isNotBlank(dto.getOrigin()) ? dto.getOrigin() : GeoprismProperties.getOrigin();
+    Long sequence = ( dto.getSequence() != null ) ? dto.getSequence() : 0L;
+
     type.setDiscreteType(dto.getDiscreteType().name());
+    type.setRootTerm(dto.getRootTerm());
+    type.setOrigin(origin);
+    type.setSequence(sequence);
 
     RegistryLocalizedValueConverter.populate(type, ConceptSet.DISPLAYLABEL, dto.getDisplayLabel());
     RegistryLocalizedValueConverter.populate(type, ConceptSet.DESCRIPTION, dto.getDescription());
@@ -257,13 +244,15 @@ public class ConceptSetBusinessService implements ConceptSetBusinessServiceIF
     dto.setDisplayLabel(type.getLabel());
     dto.setDescription(type.getDescriptionLV());
     dto.setDiscreteType(DiscreteType.valueOf(type.getDiscreteType()));
+    dto.setOrigin(type.getOrigin());
+    dto.setSequence(type.getSequence());
 
     this.getConceptClasses(type).forEach(cClass -> dto.getConceptClasses().add(cClass.getCode()));
     this.getConceptEdgeTypes(type).forEach(cEdge -> dto.getConceptEdgeTypes().add(cEdge.getCode()));
 
     if (StringUtils.isNotBlank(type.getRootTerm()))
     {
-      this.cObjectService.getByOid(type.getRootTerm()).ifPresent(root -> dto.setRootTerm(root.getCode()));
+      this.cObjectService.getByCode(type.getRootTerm()).ifPresent(root -> dto.setRootTerm(root.getCode()));
     }
   }
 

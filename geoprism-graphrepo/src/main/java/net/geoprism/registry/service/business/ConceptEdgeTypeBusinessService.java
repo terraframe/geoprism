@@ -3,21 +3,22 @@
  *
  * This file is part of Geoprism(tm).
  *
- * Geoprism(tm) is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
+ * Geoprism(tm) is free software: you can redistribute it and/or modify it under
+ * the terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation, either version 3 of the License, or (at your option) any
+ * later version.
  *
- * Geoprism(tm) is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
+ * Geoprism(tm) is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with Geoprism(tm).  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with Geoprism(tm). If not, see <http://www.gnu.org/licenses/>.
  */
 package net.geoprism.registry.service.business;
 
+import org.apache.commons.lang3.StringUtils;
 import org.commongeoregistry.adapter.constants.DefaultAttribute;
 import org.commongeoregistry.adapter.dataaccess.LocalizedValue;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,6 +40,7 @@ import com.runwaysdk.dataaccess.metadata.graph.MdEdgeDAO;
 import com.runwaysdk.dataaccess.metadata.graph.MdVertexDAO;
 import com.runwaysdk.dataaccess.transaction.Transaction;
 
+import net.geoprism.configuration.GeoprismProperties;
 import net.geoprism.registry.DuplicateHierarchyTypeException;
 import net.geoprism.registry.RegistryConstants;
 import net.geoprism.registry.conversion.RegistryLocalizedValueConverter;
@@ -117,6 +119,9 @@ public class ConceptEdgeTypeBusinessService extends EdgeClassBusinessService<Con
     ConceptClass childType = this.typeService.getByCodeOrThrow(dto.getChildType());
     ServerOrganization organization = ServerOrganization.getByCode(dto.getOrganizationCode());
 
+    String origin = StringUtils.isNotBlank(dto.getOrigin()) ? dto.getOrigin() : GeoprismProperties.getOrigin();
+    Long sequence = ( dto.getSeq() != null ) ? dto.getSeq() : 0L;
+
     try
     {
       MdEdgeDAO mdEdgeDAO = MdEdgeDAO.newInstance();
@@ -168,10 +173,10 @@ public class ConceptEdgeTypeBusinessService extends EdgeClassBusinessService<Con
       edgeType.setMdEdgeId(mdEdgeDAO.getOid());
       edgeType.setParentTypeId(parentType.getMdVertexOid());
       edgeType.setChildTypeId(childType.getMdVertexOid());
-      edgeType.setOrigin(dto.getOrigin());
+      edgeType.setOrigin(origin);
       RegistryLocalizedValueConverter.populate(edgeType, ConceptEdgeType.DISPLAYLABEL, dto.getLabel());
       RegistryLocalizedValueConverter.populate(edgeType, ConceptEdgeType.DESCRIPTION, dto.getDescription());
-      edgeType.setSequence(dto.getSeq());
+      edgeType.setSequence(sequence);
       edgeType.setDiscreteType(dto.getDiscreteType().name());
       edgeType.apply();
 

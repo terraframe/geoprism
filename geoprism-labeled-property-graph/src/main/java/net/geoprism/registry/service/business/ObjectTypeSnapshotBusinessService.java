@@ -183,8 +183,7 @@ public abstract class ObjectTypeSnapshotBusinessService<T extends ObjectTypeSnap
       attributeSnapshot.setConceptSet(attributeClassificationType.getConceptSet());
       attributeSnapshot.setStartDate(attributeClassificationType.getStartDate());
       attributeSnapshot.setEndDate(attributeClassificationType.getEndDate());
-      attributeSnapshot.setRootTerm(attributeClassificationType.getRootTerm().getCode());
-      attributeSnapshot.setRootType(attributeClassificationType.getRootTerm().getType());
+      attributeSnapshot.setRootTerm(attributeClassificationType.getRootTerm());
 
       attributeTypeSnapshot = attributeSnapshot;
     }

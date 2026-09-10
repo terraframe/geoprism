@@ -43,7 +43,9 @@
             name="description"
             label="Description" />
           <text name="discreteType" label="Discrete type"  />                                         
-          <graphReference name="rootTerm" type="net.geoprism.registry.graph.ConceptVertex" label="Root Term" required="false"/>                    
+          <text name="rootTerm" label="Root Term" required="false"/>                    
+          <text name="origin" label="Origin"  />                   
+          <long name="sequence" label="Sequence"  />                                                  
         </attributes>
       </mdVertex>
       

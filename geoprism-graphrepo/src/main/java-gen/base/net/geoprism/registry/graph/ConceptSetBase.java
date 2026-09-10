@@ -18,8 +18,6 @@
  */
 package net.geoprism.registry.graph;
 
-import com.runwaysdk.business.graph.VertexObject;
-
 @com.runwaysdk.business.ClassSignature(hash = -707731631)
 /**
  * This class is generated automatically.
@@ -36,6 +34,8 @@ public abstract class ConceptSetBase extends net.geoprism.registry.graph.SchemaE
   public final static java.lang.String DISPLAYLABEL = "displayLabel";
   public final static java.lang.String DISCRETETYPE = "discreteType";
   public final static java.lang.String ROOTTERM = "rootTerm";
+  public final static java.lang.String ORIGIN = "origin";
+  public final static java.lang.String SEQUENCE = "sequence";
 
   @SuppressWarnings("unused")
   private static final long serialVersionUID = -707731631;
@@ -114,17 +114,49 @@ public abstract class ConceptSetBase extends net.geoprism.registry.graph.SchemaE
     return (String) this.getObjectValue(ROOTTERM);
   }
   
-  public static com.runwaysdk.dataaccess.MdAttributeGraphReferenceDAOIF getRootTermMd()
+  public static com.runwaysdk.dataaccess.MdAttributeTextDAOIF getRootTermMd()
   {
     com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(net.geoprism.registry.graph.ConceptSet.CLASS);
-    return (com.runwaysdk.dataaccess.MdAttributeGraphReferenceDAOIF)mdClassIF.definesAttribute(ROOTTERM);
+    return (com.runwaysdk.dataaccess.MdAttributeTextDAOIF)mdClassIF.definesAttribute(ROOTTERM);
   }
   
-  public void setRootTerm(VertexObject value)
+  public void setRootTerm(String value)
   {
     this.setValue(ROOTTERM, value);
   }
     
+  public String getOrigin()
+  {
+    return (String) this.getObjectValue(ORIGIN);
+  }
+  
+  public static com.runwaysdk.dataaccess.MdAttributeTextDAOIF getOriginMd()
+  {
+    com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(net.geoprism.registry.graph.ConceptSet.CLASS);
+    return (com.runwaysdk.dataaccess.MdAttributeTextDAOIF)mdClassIF.definesAttribute(ORIGIN);
+  }
+  
+  public void setOrigin(String value)
+  {
+    this.setValue(ORIGIN, value);
+  }
+  
+  public Long getSequence()
+  {
+    return (Long) this.getObjectValue(SEQUENCE);
+  }
+  
+  public static com.runwaysdk.dataaccess.MdAttributeLongDAOIF getSequenceMd()
+  {
+    com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(net.geoprism.registry.graph.ConceptSet.CLASS);
+    return (com.runwaysdk.dataaccess.MdAttributeLongDAOIF)mdClassIF.definesAttribute(SEQUENCE);
+  }
+  
+  public void setSequence(Long value)
+  {
+    this.setValue(SEQUENCE, value);
+  }
+  
 
   
   protected String getDeclaredType()

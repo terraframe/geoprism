@@ -80,22 +80,6 @@ public abstract class AttributeClassificationTypeSnapshotBase extends net.geopri
     this.setValue(ROOTTERM, value);
   }
 
-  public String getRootType()
-  {
-    return (String) this.getObjectValue(ROOTTYPE);
-  }
-
-  public static com.runwaysdk.dataaccess.MdAttributeTextDAOIF getRootTypeMd()
-  {
-    com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(net.geoprism.graph.AttributeClassificationTypeSnapshot.CLASS);
-    return (com.runwaysdk.dataaccess.MdAttributeTextDAOIF) mdClassIF.definesAttribute(ROOTTYPE);
-  }
-
-  public void setRootType(String value)
-  {
-    this.setValue(ROOTTYPE, value);
-  }
-
   public java.util.Date getEndDate()
   {
     return (java.util.Date) this.getObjectValue(ENDDATE);

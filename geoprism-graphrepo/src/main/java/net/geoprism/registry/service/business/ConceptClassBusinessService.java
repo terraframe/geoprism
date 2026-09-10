@@ -44,10 +44,9 @@ import net.geoprism.registry.conversion.RegistryLocalizedValueConverter;
 import net.geoprism.registry.graph.AttributeBooleanType;
 import net.geoprism.registry.graph.AttributeCharacterType;
 import net.geoprism.registry.graph.AttributeDataSourceType;
+import net.geoprism.registry.graph.AttributeLocalType;
 import net.geoprism.registry.graph.AttributeType;
 import net.geoprism.registry.graph.AttributeUUIDType;
-import net.geoprism.registry.graph.BusinessEdgeType;
-import net.geoprism.registry.graph.BusinessType;
 import net.geoprism.registry.graph.ConceptClass;
 import net.geoprism.registry.graph.ConceptEdgeType;
 import net.geoprism.registry.graph.ConceptVertex;
@@ -206,6 +205,17 @@ public class ConceptClassBusinessService extends ObjectClassBusinessService<Conc
       codeAttr.setIsDefault(true);
       codeAttr.setIsVirtual(true);
       codeAttr.apply();
+      
+      AttributeLocalType labelAttr = new AttributeLocalType();
+      labelAttr.setCode(DefaultAttribute.DISPLAY_LABEL.getName());
+      labelAttr.setEmbeddedValue(AttributeUUIDType.LABEL, LocalizedValue.DEFAULT_LOCALE, DefaultAttribute.DISPLAY_LABEL.getDefaultLocalizedName());
+      labelAttr.setEmbeddedValue(AttributeUUIDType.DESCRIPTION, LocalizedValue.DEFAULT_LOCALE, DefaultAttribute.DISPLAY_LABEL.getDefaultDescription());
+      labelAttr.setValue(AttributeBooleanType.OBJECTTYPE, conceptClass.getOid());
+      labelAttr.setRequired(false);
+      labelAttr.setUnique(false);
+      labelAttr.setIsChangeOverTime(true);
+      labelAttr.setIsDefault(true);
+      labelAttr.apply();
 
       AttributeDataSourceType sourceAttr = new AttributeDataSourceType();
       sourceAttr.setCode(DefaultAttribute.DATA_SOURCE.getName());

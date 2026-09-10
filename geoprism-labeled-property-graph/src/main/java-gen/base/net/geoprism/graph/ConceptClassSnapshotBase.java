@@ -1,24 +1,6 @@
-/**
- * Copyright (c) 2023 TerraFrame, Inc. All rights reserved.
- *
- * This file is part of Geoprism(tm).
- *
- * Geoprism(tm) is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
- *
- * Geoprism(tm) is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with Geoprism(tm).  If not, see <http://www.gnu.org/licenses/>.
- */
 package net.geoprism.graph;
 
-@com.runwaysdk.business.ClassSignature(hash = -1593558223)
+@com.runwaysdk.business.ClassSignature(hash = 73609983)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -36,7 +18,7 @@ public abstract class ConceptClassSnapshotBase extends net.geoprism.graph.Object
   public final static java.lang.String GRAPHMDVERTEX = "graphMdVertex";
   public final static java.lang.String ORGCODE = "orgCode";
   @SuppressWarnings("unused")
-  private static final long serialVersionUID = -1593558223;
+  private static final long serialVersionUID = 73609983;
   
   public ConceptClassSnapshotBase()
   {
@@ -178,6 +160,34 @@ public abstract class ConceptClassSnapshotBase extends net.geoprism.graph.Object
     ConceptClassSnapshotQuery query = new ConceptClassSnapshotQuery(new com.runwaysdk.query.QueryFactory());
     com.runwaysdk.business.Entity.getAllInstances(query, sortAttribute, ascending, pageSize, pageNumber);
     return query;
+  }
+  
+  public net.geoprism.graph.ConceptSetSnapshotHasClass addSetSnapshot(net.geoprism.graph.ConceptSetSnapshot conceptSetSnapshot)
+  {
+    return (net.geoprism.graph.ConceptSetSnapshotHasClass) addParent(conceptSetSnapshot, net.geoprism.graph.ConceptSetSnapshotHasClass.CLASS);
+  }
+  
+  public void removeSetSnapshot(net.geoprism.graph.ConceptSetSnapshot conceptSetSnapshot)
+  {
+    removeAllParents(conceptSetSnapshot, net.geoprism.graph.ConceptSetSnapshotHasClass.CLASS);
+  }
+  
+  @SuppressWarnings("unchecked")
+  public com.runwaysdk.query.OIterator<? extends net.geoprism.graph.ConceptSetSnapshot> getAllSetSnapshot()
+  {
+    return (com.runwaysdk.query.OIterator<? extends net.geoprism.graph.ConceptSetSnapshot>) getParents(net.geoprism.graph.ConceptSetSnapshotHasClass.CLASS);
+  }
+  
+  @SuppressWarnings("unchecked")
+  public com.runwaysdk.query.OIterator<? extends net.geoprism.graph.ConceptSetSnapshotHasClass> getAllSetSnapshotRel()
+  {
+    return (com.runwaysdk.query.OIterator<? extends net.geoprism.graph.ConceptSetSnapshotHasClass>) getParentRelationships(net.geoprism.graph.ConceptSetSnapshotHasClass.CLASS);
+  }
+  
+  @SuppressWarnings("unchecked")
+  public com.runwaysdk.query.OIterator<? extends net.geoprism.graph.ConceptSetSnapshotHasClass> getSetSnapshotRel(net.geoprism.graph.ConceptSetSnapshot conceptSetSnapshot)
+  {
+    return (com.runwaysdk.query.OIterator<? extends net.geoprism.graph.ConceptSetSnapshotHasClass>) getRelationshipsWithParent(conceptSetSnapshot, net.geoprism.graph.ConceptSetSnapshotHasClass.CLASS);
   }
   
   public static ConceptClassSnapshot get(String oid)

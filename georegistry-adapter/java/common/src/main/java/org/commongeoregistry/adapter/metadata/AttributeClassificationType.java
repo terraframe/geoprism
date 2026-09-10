@@ -3,18 +3,19 @@
  *
  * This file is part of Common Geo Registry Adapter(tm).
  *
- * Common Geo Registry Adapter(tm) is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
+ * Common Geo Registry Adapter(tm) is free software: you can redistribute it
+ * and/or modify it under the terms of the GNU Lesser General Public License as
+ * published by the Free Software Foundation, either version 3 of the License,
+ * or (at your option) any later version.
  *
- * Common Geo Registry Adapter(tm) is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
+ * Common Geo Registry Adapter(tm) is distributed in the hope that it will be
+ * useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser
+ * General Public License for more details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with Common Geo Registry Adapter(tm).  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with Common Geo Registry Adapter(tm). If not, see
+ * <http://www.gnu.org/licenses/>.
  */
 package org.commongeoregistry.adapter.metadata;
 
@@ -47,7 +48,7 @@ public class AttributeClassificationType extends AttributeType
 
   public static final String JSON_END_DATE    = "endDate";
 
-  private CodeReference      rootTerm         = null;
+  private String             rootTerm         = null;
 
   private String             conceptSet       = null;
 
@@ -76,12 +77,12 @@ public class AttributeClassificationType extends AttributeType
     return TYPE;
   }
 
-  public CodeReference getRootTerm()
+  public String getRootTerm()
   {
     return rootTerm;
   }
 
-  public void setRootTerm(CodeReference rootTerm)
+  public void setRootTerm(String rootTerm)
   {
     this.rootTerm = rootTerm;
   }
@@ -126,7 +127,7 @@ public class AttributeClassificationType extends AttributeType
 
     if (this.rootTerm != null)
     {
-      json.add(JSON_ROOT_TERM, this.getRootTerm().toJSON());
+      json.addProperty(JSON_ROOT_TERM, this.getRootTerm());
     }
 
     return json;
@@ -152,7 +153,7 @@ public class AttributeClassificationType extends AttributeType
 
     if (termElement != null && !termElement.isJsonNull())
     {
-      this.setRootTerm(new CodeReference().fromJSON(termElement.getAsJsonObject()));
+      this.setRootTerm(termElement.getAsString());
     }
   }
 
