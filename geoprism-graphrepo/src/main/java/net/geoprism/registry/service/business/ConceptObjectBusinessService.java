@@ -122,20 +122,7 @@ public class ConceptObjectBusinessService extends ObjectEdgeBusinessService<Conc
     }
     else
     {
-      Optional<ConceptObject> result = this.getCache().get(code, () -> {
-        MdVertexDAOIF mdVertex = MdVertexDAO.getMdVertexDAO(ConceptVertex.CLASS);
-
-        StringBuilder statement = new StringBuilder();
-        statement.append("TRAVERSE out('" + EdgeConstant.HAS_VALUE.getDBClassName() + "', '" + EdgeConstant.HAS_GEOMETRY.getDBClassName() + "') FROM (");
-        statement.append("  SELECT FROM " + mdVertex.getDBClassName());
-        statement.append("  WHERE code = :code");
-        statement.append(")");
-
-        GraphQuery<VertexObject> query = new GraphQuery<VertexObject>(statement.toString());
-        query.setParameter("code", code);
-
-        return Optional.ofNullable(this.processSingleResult(query.getResults(), null));
-      });
+      Optional<ConceptObject> result = this.getByCode(code);
 
       result.ifPresent(object -> {
 
