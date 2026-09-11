@@ -3,18 +3,18 @@
  *
  * This file is part of Geoprism(tm).
  *
- * Geoprism(tm) is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
+ * Geoprism(tm) is free software: you can redistribute it and/or modify it under
+ * the terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation, either version 3 of the License, or (at your option) any
+ * later version.
  *
- * Geoprism(tm) is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
+ * Geoprism(tm) is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with Geoprism(tm).  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with Geoprism(tm). If not, see <http://www.gnu.org/licenses/>.
  */
 package net.geoprism.registry.service.business;
 
@@ -60,6 +60,7 @@ import net.geoprism.registry.model.ServerOrganization;
 import net.geoprism.registry.service.permission.PermissionServiceIF;
 import net.geoprism.registry.view.ObjectClassDTO;
 import net.geoprism.registry.view.OrganizationGroup;
+import net.geoprism.registry.view.TypeInfo;
 
 @Service
 public abstract class ObjectClassBusinessService<T extends ObjectClass, D extends ObjectClassDTO> implements ObjectClassBusinessServiceIF<T, D>
@@ -273,6 +274,12 @@ public abstract class ObjectClassBusinessService<T extends ObjectClass, D extend
   }
 
   @Override
+  public Optional<T> getByCode(TypeInfo type)
+  {
+    return this.getByCode(type.getTypeCode());
+  }
+
+  @Override
   public Optional<T> getByCode(String code)
   {
     return this.cache.get(code, () -> {
@@ -288,6 +295,12 @@ public abstract class ObjectClassBusinessService<T extends ObjectClass, D extend
 
       return Optional.ofNullable(query.getSingleResult());
     });
+  }
+
+  @Override
+  public T getByCodeOrThrow(TypeInfo type)
+  {
+    return this.getByCodeOrThrow(type.getTypeCode());
   }
 
   @Override

@@ -56,6 +56,12 @@ public class TypeInfo implements Comparable<TypeInfo>
   {
     this.typeCode = typeCode;
   }
+  
+  @Override
+  public String toString()
+  {
+    return this.getTypeCode();
+  }
 
   @Override
   public boolean equals(Object obj)

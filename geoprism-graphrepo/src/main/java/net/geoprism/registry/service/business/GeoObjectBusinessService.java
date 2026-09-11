@@ -118,6 +118,7 @@ import net.geoprism.registry.service.permission.GeoObjectPermissionServiceIF;
 import net.geoprism.registry.view.GeoObjectSplitView;
 import net.geoprism.registry.view.ObjectAtTimeDTO;
 import net.geoprism.registry.view.ServerParentTreeNodeOverTime;
+import net.geoprism.registry.view.TypeInfo;
 
 @Service
 public class GeoObjectBusinessService extends RegistryLocalizedValueConverter implements GeoObjectBusinessServiceIF
@@ -674,11 +675,23 @@ public class GeoObjectBusinessService extends RegistryLocalizedValueConverter im
   }
 
   @Override
+  public ServerGeoObjectIF getGeoObjectByCode(String code, TypeInfo type)
+  {
+    return this.getGeoObjectByCode(code, ServerGeoObjectType.get(type));
+  }
+  
+  @Override
   public ServerGeoObjectIF getGeoObjectByCode(String code, String typeCode, boolean throwException)
   {
     return this.getGeoObjectByCode(code, ServerGeoObjectType.get(typeCode), throwException);
   }
 
+  @Override
+  public ServerGeoObjectIF getGeoObjectByCode(String code, TypeInfo type, boolean throwException)
+  {
+    return this.getGeoObjectByCode(code, ServerGeoObjectType.get(type), throwException);
+  }
+  
   @Override
   public ServerGeoObjectIF getGeoObjectByCode(String code, ServerGeoObjectType type)
   {

@@ -329,6 +329,11 @@ public class ServerHierarchyType extends CachableObjectWrapper<HierarchicalRelat
     }
   }
 
+  public static ServerHierarchyType get(TypeInfo type)
+  {
+    return get(type.getTypeCode(), true);
+  }
+  
   public static ServerHierarchyType get(String hierarchyTypeCode)
   {
     return get(hierarchyTypeCode, true);

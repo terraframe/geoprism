@@ -303,6 +303,11 @@ public class ServerGeoObjectType extends CachableObjectWrapper<BaseGeoObjectType
     return ServiceFactory.getMetadataCache().getAllGeoObjectTypes();
   }
 
+  public static ServerGeoObjectType get(TypeInfo type)
+  {
+    return ServerGeoObjectType.get(type.getTypeCode(), false);
+  }
+  
   public static ServerGeoObjectType get(String code)
   {
     return ServerGeoObjectType.get(code, false);

@@ -3,18 +3,18 @@
  *
  * This file is part of Geoprism(tm).
  *
- * Geoprism(tm) is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
+ * Geoprism(tm) is free software: you can redistribute it and/or modify it under
+ * the terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation, either version 3 of the License, or (at your option) any
+ * later version.
  *
- * Geoprism(tm) is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
+ * Geoprism(tm) is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with Geoprism(tm).  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with Geoprism(tm). If not, see <http://www.gnu.org/licenses/>.
  */
 package net.geoprism.registry.service.business;
 
@@ -90,6 +90,7 @@ import net.geoprism.registry.service.permission.GeoObjectRelationshipPermissionS
 import net.geoprism.registry.service.permission.GeoObjectTypePermissionServiceIF;
 import net.geoprism.registry.service.permission.HierarchyTypePermissionServiceIF;
 import net.geoprism.registry.view.ServerParentTreeNodeOverTime;
+import net.geoprism.registry.view.TypeInfo;
 
 @Service
 public class HierarchyTypeBusinessService implements HierarchyTypeBusinessServiceIF
@@ -501,7 +502,7 @@ public class HierarchyTypeBusinessService implements HierarchyTypeBusinessServic
     uidAttr.setValue(MdAttributeConcreteInfo.DEFINING_MD_CLASS, mdEdgeDAO.getOid());
     uidAttr.setValue(MdAttributeConcreteInfo.REQUIRED, true);
     uidAttr.apply();
-    
+
     MdAttributeGraphReferenceDAO sourceAttr = MdAttributeGraphReferenceDAO.newInstance();
     sourceAttr.setValue(MdAttributeConcreteInfo.NAME, DefaultAttribute.DATA_SOURCE.getName());
     sourceAttr.setStructValue(MdAttributeBooleanInfo.DISPLAY_LABEL, LocalizedValue.DEFAULT_LOCALE, DefaultAttribute.DATA_SOURCE.getDefaultLocalizedName());
@@ -510,7 +511,7 @@ public class HierarchyTypeBusinessService implements HierarchyTypeBusinessServic
     sourceAttr.setValue(MdAttributeGraphReferenceInfo.REFERENCE_MD_VERTEX, MdVertexDAO.getMdVertexDAO(DataSource.CLASS).getOid());
     sourceAttr.setValue(MdAttributeConcreteInfo.REQUIRED, false);
     sourceAttr.apply();
-    
+
     MdAttributeDateTimeDAO startDate = MdAttributeDateTimeDAO.newInstance();
     startDate.setValue(MdAttributeDateTimeInfo.NAME, EdgeType.START_DATE);
     startDate.setStructValue(MdAttributeDateTimeInfo.DISPLAY_LABEL, MdAttributeLocalInfo.DEFAULT_LOCALE, "Start Date");
@@ -590,6 +591,12 @@ public class HierarchyTypeBusinessService implements HierarchyTypeBusinessServic
   public ServerHierarchyType get(String code)
   {
     return ServerHierarchyType.get(code);
+  }
+
+  @Override
+  public ServerHierarchyType get(TypeInfo type)
+  {
+    return ServerHierarchyType.get(type);
   }
 
   public ServerHierarchyType get(HierarchicalRelationshipType hierarchicalRelationship)

@@ -3,18 +3,18 @@
  *
  * This file is part of Geoprism(tm).
  *
- * Geoprism(tm) is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
+ * Geoprism(tm) is free software: you can redistribute it and/or modify it under
+ * the terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation, either version 3 of the License, or (at your option) any
+ * later version.
  *
- * Geoprism(tm) is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
+ * Geoprism(tm) is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with Geoprism(tm).  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with Geoprism(tm). If not, see <http://www.gnu.org/licenses/>.
  */
 package net.geoprism.registry.service.business;
 
@@ -55,6 +55,7 @@ import net.geoprism.registry.query.graph.VertexAndEdgeQuery.EdgeQueryObject;
 import net.geoprism.registry.view.GeoObjectSplitView;
 import net.geoprism.registry.view.ObjectAtTimeDTO;
 import net.geoprism.registry.view.ServerParentTreeNodeOverTime;
+import net.geoprism.registry.view.TypeInfo;
 
 @Component
 public interface GeoObjectBusinessServiceIF
@@ -94,6 +95,10 @@ public interface GeoObjectBusinessServiceIF
   public ServerGeoObjectIF getGeoObjectByCode(String code, String typeCode);
 
   public ServerGeoObjectIF getGeoObjectByCode(String code, String typeCode, boolean throwException);
+
+  public ServerGeoObjectIF getGeoObjectByCode(String code, TypeInfo type);
+
+  public ServerGeoObjectIF getGeoObjectByCode(String code, TypeInfo type, boolean throwException);
 
   public ServerGeoObjectIF getGeoObjectByCode(String code, ServerGeoObjectType type);
 
@@ -180,9 +185,9 @@ public interface GeoObjectBusinessServiceIF
   public JsonObject hasDuplicateLabel(Date date, String typeCode, String code, String label);
 
   public List<BusinessObject> getBusinessObjects(VertexServerGeoObject object, BusinessEdgeType edgeType, EdgeDirection direction, Date date);
-  
+
   public List<ObjectAtTimeDTO> getBusinessDTOObjects(String typeCode, String code, String edgeTypeCode, String direction, Date date);
-  
+
   public List<EdgeQueryObject> getBusinessEdgeObjects(String typeCode, String code, String edgeTypeCode, String direction, Date date);
 
   public List<EdgeQueryObject> getBusinessEdgeObjects(VertexServerGeoObject object, BusinessEdgeType edgeType, EdgeDirection direction, Date date);
