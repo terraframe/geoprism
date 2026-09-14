@@ -130,12 +130,12 @@ public class UndirectedGraphStrategy extends AbstractGraphStrategy implements Gr
     HashMap<String, Object> values = new HashMap<String, Object>();
     values.put(EdgeType.START_DATE, startDate);
     values.put(EdgeType.END_DATE, endDate);
-    values.put(DefaultAttribute.DATA_SOURCE.getName(), source.getRID());
     values.put(DefaultAttribute.UID.getName(), uid);
     values.put("inRid", geoObject.getRID());
     values.put("inOid", geoObject.getOid());
     values.put("outRid", parent.getRID());
     values.put("outOid", parent.getOid());
+    values.put(DefaultAttribute.DATA_SOURCE.getName(), source != null ? source.getRID() : null);
 
     EdgeEntry value = new EdgeEntry(values);
 
