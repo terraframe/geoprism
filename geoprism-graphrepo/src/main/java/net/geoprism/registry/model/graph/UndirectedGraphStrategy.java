@@ -3,47 +3,41 @@
  *
  * This file is part of Geoprism(tm).
  *
- * Geoprism(tm) is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
+ * Geoprism(tm) is free software: you can redistribute it and/or modify it under
+ * the terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation, either version 3 of the License, or (at your option) any
+ * later version.
  *
- * Geoprism(tm) is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
+ * Geoprism(tm) is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with Geoprism(tm).  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with Geoprism(tm). If not, see <http://www.gnu.org/licenses/>.
  */
 package net.geoprism.registry.model.graph;
 
+import java.util.Calendar;
 import java.util.Comparator;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.Optional;
 import java.util.SortedSet;
-import java.util.TreeMap;
 import java.util.TreeSet;
-import java.util.UUID;
 
-import org.apache.commons.collections4.map.HashedMap;
 import org.commongeoregistry.adapter.constants.DefaultAttribute;
 
 import com.runwaysdk.business.graph.EdgeObject;
 import com.runwaysdk.business.graph.GraphQuery;
 import com.runwaysdk.business.graph.VertexObject;
-import com.runwaysdk.dataaccess.MdVertexDAOIF;
-import com.runwaysdk.dataaccess.graph.attributes.ValueOverTime;
 
+import net.geoprism.registry.DateFormatter;
 import net.geoprism.registry.graph.DataSource;
 import net.geoprism.registry.graph.UndirectedGraphType;
-import net.geoprism.registry.model.EdgeConstant;
 import net.geoprism.registry.model.EdgeType;
-import net.geoprism.registry.model.EdgeValueOverTime;
 import net.geoprism.registry.model.ServerChildGraphNode;
-import net.geoprism.registry.model.ServerGeoObjectType;
 import net.geoprism.registry.model.ServerGraphNode;
 import net.geoprism.registry.model.ServerParentGraphNode;
 import net.geoprism.registry.query.graph.VertexAndEdgeQuery;
@@ -51,6 +45,18 @@ import net.geoprism.registry.query.graph.VertexAndEdgeQuery.EdgeQueryObject;
 
 public class UndirectedGraphStrategy extends AbstractGraphStrategy implements GraphStrategy
 {
+  protected static class EdgeComparator implements Comparator<EdgeObject>
+  {
+    @Override
+    public int compare(EdgeObject o1, EdgeObject o2)
+    {
+      Date d1 = o1.getObjectValue(EdgeType.START_DATE);
+      Date d2 = o2.getObjectValue(EdgeType.START_DATE);
+
+      return d1.compareTo(d2);
+    }
+  }
+
   private UndirectedGraphType type;
 
   public UndirectedGraphStrategy(UndirectedGraphType type)
@@ -68,49 +74,7 @@ public class UndirectedGraphStrategy extends AbstractGraphStrategy implements Gr
 
   private ServerChildGraphNode getChildren(VertexServerGeoObject source, Boolean recursive, Date date, TreeSet<String> visited, String boundsWKT, Long skip, Long limit)
   {
-    ServerChildGraphNode tnRoot = new ServerChildGraphNode(source, this.type, date, null, null, null, null);
-
-    if (limit != null && limit <= 0)
-    {
-      return tnRoot;
-    }
-
-    if (skip != null && recursive)
-    {
-      throw new UnsupportedOperationException();
-    }
-
-    List<VertexServerGeoObject> nodes = this.getObjects(source, date, boundsWKT, "in", skip, limit);
-
-    long resultsCount = nodes.size();
-
-    for (VertexServerGeoObject target : nodes)
-    {
-
-      if (!source.getUid().equals(target.getUid()))
-      {
-        ServerChildGraphNode tnParent;
-
-        if (recursive && !visited.contains(target.getUid()) && ( limit == null || limit - resultsCount > 0 ))
-        {
-          visited.add(target.getUid());
-
-          tnParent = this.getChildren(target, recursive, date, visited, boundsWKT, null, ( limit == null ? null : limit - resultsCount ));
-          tnParent.setOid(UUID.randomUUID().toString());
-
-          resultsCount += tnParent.getChildren().size();
-        }
-        else
-        {
-          // TODO: Figure out how to get edge uid and source attributes
-          tnParent = new ServerChildGraphNode(target, this.type, date, null, UUID.randomUUID().toString(), null, null);
-        }
-
-        tnRoot.addChild(tnParent);
-      }
-    }
-
-    return tnRoot;
+    return this.getEdgeChildren(source, recursive, date, boundsWKT, skip, limit);
   }
 
   @SuppressWarnings("unchecked")
@@ -122,113 +86,33 @@ public class UndirectedGraphStrategy extends AbstractGraphStrategy implements Gr
 
   private ServerParentGraphNode getParents(VertexServerGeoObject source, Boolean recursive, Date date, TreeSet<String> visited, String boundsWKT, Long skip, Long limit)
   {
-    ServerParentGraphNode tnRoot = new ServerParentGraphNode(source, this.type, date, null, null, null, null);
-
-    if (limit != null && limit <= 0)
-    {
-      return tnRoot;
-    }
-
-    if (skip != null && recursive)
-    {
-      throw new UnsupportedOperationException();
-    }
-
-    List<VertexServerGeoObject> nodes = this.getObjects(source, date, boundsWKT, "in", skip, limit);
-
-    long resultsCount = nodes.size();
-
-    for (VertexServerGeoObject target : nodes)
-    {
-      if (!target.getUid().equals(source.getUid()))
-      {
-        ServerParentGraphNode tnParent;
-
-        if (recursive & !visited.contains(target.getUid()) && ( limit == null || limit - resultsCount > 0 ))
-        {
-          visited.add(target.getUid());
-
-          tnParent = this.getParents(target, recursive, date, visited, boundsWKT, null, ( limit == null ? null : limit - resultsCount ));
-          tnParent.setOid(UUID.randomUUID().toString());
-
-          resultsCount += tnParent.getParents().size();
-        }
-        else
-        {
-          // TODO: Figure out how to get edge uid and source attributes
-          tnParent = new ServerParentGraphNode(target, this.type, date, null, UUID.randomUUID().toString(), null, null);
-        }
-
-        tnRoot.addParent(tnParent);
-      }
-    }
-
-    return tnRoot;
+    return this.getEdgeParents(source, recursive, date, boundsWKT, skip, limit);
   }
-  
+
   @Override
-  public ServerChildGraphNode getEdgeChildren(
-      VertexServerGeoObject source,
-      Boolean recursive,
-      Date date,
-      String boundsWKT,
-      Long skip,
-      Long limit)
+  public ServerChildGraphNode getEdgeChildren(VertexServerGeoObject source, Boolean recursive, Date date, String boundsWKT, Long skip, Long limit)
   {
-    List<EdgeQueryObject> results =  new VertexAndEdgeQuery(
-        source.getVertex(),
-        this.type.getMdEdgeDAO().getDBClassName(),
-        VertexAndEdgeQuery.Direction.CHILDREN,
-        VertexServerGeoObject::processTraverseResults)
-            .setDate(date)
-            .setBoundsWKT(boundsWKT)
-            .setSkip(skip)
-            .setLimit(limit)
-            .getResults();
-    
-    return this.buildChildGraphNode(
-        source,
-        this.type,
-        date,
-        results);
+    List<EdgeQueryObject> results = new VertexAndEdgeQuery(source.getVertex(), this.type.getMdEdgeDAO().getDBClassName(), VertexAndEdgeQuery.Direction.CHILDREN, VertexServerGeoObject::processTraverseResults).setDate(date).setBoundsWKT(boundsWKT).setSkip(skip).setLimit(limit).getResults();
+
+    return this.buildChildGraphNode(source, this.type, date, results);
   }
 
   @Override
-  public ServerParentGraphNode getEdgeParents(
-      VertexServerGeoObject source,
-      Boolean recursive,
-      Date date,
-      String boundsWKT,
-      Long skip,
-      Long limit)
+  public ServerParentGraphNode getEdgeParents(VertexServerGeoObject source, Boolean recursive, Date date, String boundsWKT, Long skip, Long limit)
   {
-    List<EdgeQueryObject> results =  new VertexAndEdgeQuery(
-        source.getVertex(),
-        this.type.getMdEdgeDAO().getDBClassName(),
-        VertexAndEdgeQuery.Direction.PARENTS,
-        VertexServerGeoObject::processTraverseResults)
-            .setDate(date)
-            .setBoundsWKT(boundsWKT)
-            .setSkip(skip)
-            .setLimit(limit)
-            .getResults();
-    
-    return this.buildParentGraphNode(
-        source,
-        this.type,
-        date,
-        results);
+    List<EdgeQueryObject> results = new VertexAndEdgeQuery(source.getVertex(), this.type.getMdEdgeDAO().getDBClassName(), VertexAndEdgeQuery.Direction.PARENTS, VertexServerGeoObject::processTraverseResults).setDate(date).setBoundsWKT(boundsWKT).setSkip(skip).setLimit(limit).getResults();
+
+    return this.buildParentGraphNode(source, this.type, date, results);
   }
 
   @Override
-  public <T extends ServerGraphNode> T addChild(VertexServerGeoObject geoObject, VertexServerGeoObject child, Date startDate, Date endDate, String uid, DataSource source, boolean validate)
+  public void addChild(VertexServerGeoObject geoObject, VertexServerGeoObject child, Date startDate, Date endDate, String uid, DataSource source, boolean validate)
   {
-    return this.addParent(child, geoObject, startDate, endDate, uid, source, validate);
+    this.addParent(child, geoObject, startDate, endDate, uid, source, validate);
   }
 
-  @SuppressWarnings("unchecked")
   @Override
-  public <T extends ServerGraphNode> T addParent(VertexServerGeoObject geoObject, VertexServerGeoObject parent, Date startDate, Date endDate, String uid, DataSource source, boolean validate)
+  public void addParent(VertexServerGeoObject geoObject, VertexServerGeoObject parent, Date startDate, Date endDate, String uid, DataSource source, boolean validate)
   {
     if (validate)
     {
@@ -243,16 +127,79 @@ public class UndirectedGraphStrategy extends AbstractGraphStrategy implements Gr
       }
     }
 
-    Set<ValueOverTime> votc = this.getParentCollection(geoObject);
-    votc.add(new EdgeValueOverTime(startDate, endDate, parent, uid));
+    HashMap<String, Object> values = new HashMap<String, Object>();
+    values.put(EdgeType.START_DATE, startDate);
+    values.put(EdgeType.END_DATE, endDate);
+    values.put(DefaultAttribute.DATA_SOURCE.getName(), source.getRID());
+    values.put(DefaultAttribute.UID.getName(), uid);
+    values.put("inRid", geoObject.getRID());
+    values.put("inOid", geoObject.getOid());
+    values.put("outRid", parent.getRID());
+    values.put("outOid", parent.getOid());
 
-    SortedSet<EdgeObject> newEdges = this.setParentCollection(geoObject, votc, source);
-    EdgeObject edge = newEdges.first();
+    EdgeEntry value = new EdgeEntry(values);
 
-    ServerParentGraphNode node = new ServerParentGraphNode(geoObject, this.type, startDate, endDate, null, null, null);
-    node.addParent(new ServerParentGraphNode(parent, this.type, startDate, endDate, edge.getOid(), edge.getObjectValue(DefaultAttribute.UID.getName()), source));
+    SortedSet<EdgeEntry> existingEdges = this.getParentEdges(geoObject);
 
-    return (T) node;
+    // Determine if there are overlaps between the object and the existing data
+
+    for (EdgeEntry edge : existingEdges)
+    {
+      if (this.contains(edge, value))
+      {
+        // The edge is contained by the value delete the edge
+        this.delete(edge);
+      }
+      else if (this.contains(value, edge))
+      {
+        // The existing edge contains the entire range of a new edge
+
+        // TODO: Determine the appropriate solution, for now delete the existing
+        // edge
+        this.delete(edge);
+      }
+      else if (this.overlapsStart(value, edge))
+      {
+        // Update the start date of the existing edge to after the end date of
+        // the incoming edge
+        Calendar calendar = Calendar.getInstance(DateFormatter.SYSTEM_TIMEZONE);
+        calendar.clear();
+        calendar.setTime(value.getEndDate());
+        calendar.add(Calendar.DAY_OF_YEAR, 1);
+
+        edge.put(EdgeType.START_DATE, calendar.getTime());
+
+        this.update(edge);
+      }
+      else if (this.overlapsEnd(value, edge))
+      {
+        // Update the end date of the existing edge to before the start date of
+        // the incoming edge
+        Calendar calendar = Calendar.getInstance(DateFormatter.SYSTEM_TIMEZONE);
+        calendar.clear();
+        calendar.setTime(value.getStartDate());
+        calendar.add(Calendar.DAY_OF_YEAR, -11);
+
+        edge.put(EdgeType.END_DATE, calendar.getTime());
+
+        this.update(edge);
+      }
+    }
+
+    // Create or update the edge
+    Optional<EdgeEntry> entry = existingEdges.stream().filter(e -> e.getUid().equals(value.getUid())).findFirst();
+
+    if (entry.isPresent())
+    {
+      // Update the existing edge
+      value.put("rid", entry.get().getRid());
+
+      this.update(value);
+    }
+    else
+    {
+      this.create(value);
+    }
   }
 
   @Override
@@ -261,210 +208,6 @@ public class UndirectedGraphStrategy extends AbstractGraphStrategy implements Gr
     this.getEdges(geoObject, parent, startDate, endDate).forEach(edge -> {
       edge.delete();
     });
-  }
-
-  private Set<ValueOverTime> getParentCollection(VertexServerGeoObject geoObject)
-  {
-    Set<ValueOverTime> set = new TreeSet<ValueOverTime>(new Comparator<ValueOverTime>()
-    {
-      @Override
-      public int compare(ValueOverTime o1, ValueOverTime o2)
-      {
-        return o1.getOid().compareTo(o2.getOid());
-      }
-    });
-
-    SortedSet<EdgeObject> edges = this.getParentEdges(geoObject);
-
-    for (EdgeObject edge : edges)
-    {
-      final Date startDate = edge.getObjectValue(EdgeType.START_DATE);
-      final Date endDate = edge.getObjectValue(EdgeType.END_DATE);
-
-      VertexObject parentVertex = edge.getParent();
-      MdVertexDAOIF mdVertex = (MdVertexDAOIF) parentVertex.getMdClass();
-      ServerGeoObjectType parentType = ServerGeoObjectType.get(mdVertex);
-      VertexServerGeoObject parent = new VertexServerGeoObject(parentType, parentVertex, new TreeMap<>(), startDate);
-
-      set.add(new ValueOverTime(edge.getOid(), startDate, endDate, parent));
-    }
-
-    return set;
-  }
-
-  private SortedSet<EdgeObject> setParentCollection(VertexServerGeoObject geoObject, Set<ValueOverTime> votc, DataSource source)
-  {
-    SortedSet<EdgeObject> resultEdges = new TreeSet<EdgeObject>(new EdgeComparator());
-    SortedSet<EdgeObject> existingEdges = this.getParentEdges(geoObject);
-
-    for (EdgeObject edge : existingEdges)
-    {
-      final Date startDate = edge.getObjectValue(EdgeType.START_DATE);
-      final Date endDate = edge.getObjectValue(EdgeType.END_DATE);
-
-      VertexObject parentVertex = edge.getParent();
-      MdVertexDAOIF mdVertex = (MdVertexDAOIF) parentVertex.getMdClass();
-      ServerGeoObjectType parentType = ServerGeoObjectType.get(mdVertex);
-      final VertexServerGeoObject edgeGo = new VertexServerGeoObject(parentType, parentVertex, new TreeMap<>(), startDate);
-
-      ValueOverTime inVot = null;
-
-      for (ValueOverTime vot : votc)
-      {
-        if (vot.getOid().equals(edge.getOid()))
-        {
-          inVot = vot;
-          break;
-        }
-      }
-
-      if (inVot == null)
-      {
-        edge.delete();
-      }
-      else
-      {
-        VertexServerGeoObject inGo = (VertexServerGeoObject) inVot.getValue();
-
-        String uid = inVot instanceof EdgeValueOverTime ? //
-            ( (EdgeValueOverTime) inVot ).getUid() : //
-            UUID.randomUUID().toString();
-
-        boolean hasValueChange = false;
-
-        if ( ( inGo == null && edgeGo != null ) || ( inGo != null && edgeGo == null ))
-        {
-          hasValueChange = true;
-        }
-        else if ( ( inGo != null && edgeGo != null ) && !inGo.equals(edgeGo))
-        {
-          hasValueChange = true;
-        }
-
-        if (hasValueChange)
-        {
-          edge.delete();
-
-          EdgeObject newEdge = geoObject.getVertex().addParent(inGo.getVertex(), this.type.getMdEdgeDAO());
-          newEdge.setValue(EdgeType.START_DATE, startDate);
-          newEdge.setValue(EdgeType.END_DATE, endDate);
-          newEdge.setValue(DefaultAttribute.UID.getName(), uid);
-          newEdge.setValue(DefaultAttribute.DATA_SOURCE.getName(), source);
-          newEdge.apply();
-
-          resultEdges.add(newEdge);
-        }
-        else
-        {
-          boolean hasChanges = false;
-          Date votStartDate = inVot.getStartDate();
-          Date votEndDate = inVot.getEndDate();
-
-          if (!startDate.equals(votStartDate))
-          {
-            hasChanges = true;
-            edge.setValue(EdgeType.START_DATE, votStartDate);
-          }
-
-          if (endDate != votEndDate)
-          {
-            hasChanges = true;
-            edge.setValue(EdgeType.END_DATE, endDate);
-          }
-
-          if (hasChanges)
-          {
-            edge.setValue(DefaultAttribute.DATA_SOURCE.getName(), source);
-            edge.apply();
-          }
-        }
-      }
-    }
-
-    for (ValueOverTime vot : votc)
-    {
-      boolean isNew = true;
-
-      for (EdgeObject edge : existingEdges)
-      {
-        if (vot.getOid().equals(edge.getOid()))
-        {
-          isNew = false;
-
-          resultEdges.add(edge);
-        }
-      }
-
-      String uid = vot instanceof EdgeValueOverTime ? //
-          ( (EdgeValueOverTime) vot ).getUid() : //
-          UUID.randomUUID().toString();
-
-      if (isNew)
-      {
-        EdgeObject newEdge = geoObject.getVertex().addParent( ( (VertexServerGeoObject) vot.getValue() ).getVertex(), this.type.getMdEdgeDAO());
-        newEdge.setValue(EdgeType.START_DATE, vot.getStartDate());
-        newEdge.setValue(EdgeType.END_DATE, vot.getEndDate());
-        newEdge.setValue(DefaultAttribute.UID.getName(), uid);
-        newEdge.setValue(DefaultAttribute.DATA_SOURCE.getName(), source);        
-        newEdge.apply();
-
-        resultEdges.add(newEdge);
-      }
-    }
-
-    return resultEdges;
-  }
-
-  private List<VertexServerGeoObject> getObjects(VertexServerGeoObject geoObject, Date date, String boundsWKT, String inOrOut, Long skip, Long limit)
-  {
-    Map<String, Object> parameters = new HashedMap<String, Object>();
-    parameters.put("rid", geoObject.getVertex().getRID());
-
-    StringBuilder statement = new StringBuilder();
-    statement.append("TRAVERSE out('" + EdgeConstant.HAS_VALUE.getDBClassName() + "', '" + EdgeConstant.HAS_GEOMETRY.getDBClassName() + "') FROM (");
-    statement.append(" SELECT FROM (");
-
-    statement.append(" SELECT EXPAND(bothE(");
-    statement.append("'" + this.type.getMdEdgeDAO().getDBClassName() + "'");
-    statement.append(")");
-
-    if (date != null)
-    {
-      statement.append("[:date BETWEEN startDate AND endDate]");
-      parameters.put("date", date);
-    }
-
-    statement.append(".bothV()) FROM :rid");
-    statement.append(") WHERE @rid != :rid");
-
-    if (boundsWKT != null)
-    {
-      if (date != null)
-      {
-        statement.append(" AND out('has_geometry')[:date BETWEEN startDate AND endDate AND ST_INTERSECTS(value, :bounds) = true].size() > 0");
-      }
-      else
-      {
-        statement.append(" AND out('has_geometry')[ST_INTERSECTS(value, :bounds) = true].size() > 0");
-      }
-
-      parameters.put("bounds", boundsWKT);
-    }
-
-    if (skip != null)
-    {
-      statement.append(" SKIP " + skip);
-    }
-
-    if (limit != null)
-    {
-      statement.append(" LIMIT " + limit);
-    }
-    statement.append(" )");
-
-    GraphQuery<VertexObject> query = new GraphQuery<VertexObject>(statement.toString(), parameters);
-
-    return VertexServerGeoObject.processTraverseResults(query.getResults(), date);
   }
 
   private SortedSet<EdgeObject> getEdges(VertexServerGeoObject geoObject, VertexServerGeoObject parent, Date startDate, Date endDate)

@@ -3,18 +3,18 @@
  *
  * This file is part of Geoprism(tm).
  *
- * Geoprism(tm) is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
+ * Geoprism(tm) is free software: you can redistribute it and/or modify it under
+ * the terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation, either version 3 of the License, or (at your option) any
+ * later version.
  *
- * Geoprism(tm) is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
+ * Geoprism(tm) is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with Geoprism(tm).  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with Geoprism(tm). If not, see <http://www.gnu.org/licenses/>.
  */
 package net.geoprism.registry.model.graph;
 
@@ -775,26 +775,26 @@ public class VertexServerGeoObject extends ServerObjectVertex implements ServerG
 
   @Override
   @Transaction
-  public <T extends ServerGraphNode> T addGraphChild(ServerGeoObjectIF child, GraphType type, Date startDate, Date endDate, String uid, DataSource source, boolean validate)
+  public void addGraphChild(ServerGeoObjectIF child, GraphType type, Date startDate, Date endDate, String uid, DataSource source, boolean validate)
   {
     if (!type.getOrigin().equals(GeoprismProperties.getOrigin()))
     {
       throw new OriginException();
     }
 
-    return type.getStrategy().addChild(this, (VertexServerGeoObject) child, startDate, endDate, uid, source, validate);
+    type.getStrategy().addChild(this, (VertexServerGeoObject) child, startDate, endDate, uid, source, validate);
   }
 
   @Override
   @Transaction
-  public <T extends ServerGraphNode> T addGraphParent(ServerGeoObjectIF parent, GraphType type, Date startDate, Date endDate, String uid, DataSource source, boolean validate)
+  public void addGraphParent(ServerGeoObjectIF parent, GraphType type, Date startDate, Date endDate, String uid, DataSource source, boolean validate)
   {
     if (!type.getOrigin().equals(GeoprismProperties.getOrigin()))
     {
       throw new OriginException();
     }
 
-    return type.getStrategy().addParent(this, (VertexServerGeoObject) parent, startDate, endDate, uid, source, validate);
+    type.getStrategy().addParent(this, (VertexServerGeoObject) parent, startDate, endDate, uid, source, validate);
   }
 
   @Override

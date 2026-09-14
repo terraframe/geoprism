@@ -126,9 +126,9 @@ public interface ServerGeoObjectIF extends VertexComponent
 
   <T extends ServerGraphNode> T getGraphChildren(GraphType type, Boolean recursive, Date date, String boundsWKT, Long skip, Long limit);
 
-  <T extends ServerGraphNode> T addGraphParent(ServerGeoObjectIF parent, GraphType type, Date startDate, Date endDate, String uid, DataSource source, boolean validate);
+  <T extends ServerGraphNode> void addGraphParent(ServerGeoObjectIF parent, GraphType type, Date startDate, Date endDate, String uid, DataSource source, boolean validate);
 
-  <T extends ServerGraphNode> T addGraphChild(ServerGeoObjectIF child, GraphType type, Date startDate, Date endDate, String uid, DataSource source, boolean validate);
+  <T extends ServerGraphNode> void addGraphChild(ServerGeoObjectIF child, GraphType type, Date startDate, Date endDate, String uid, DataSource source, boolean validate);
 
   void removeGraphChild(ServerGeoObjectIF child, GraphType type, Date startDate, Date endDate);
 
