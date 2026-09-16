@@ -308,6 +308,9 @@
           <mdBusinessPermission type="net.geoprism.graph.ConceptClassSnapshot">
             <operation name="ALL" />
           </mdBusinessPermission>          
+          <mdBusinessPermission type="net.geoprism.graph.ConceptEdgeTypeSnapshot">
+            <operation name="ALL" />
+          </mdBusinessPermission>          
           <mdRelationshipPermission type="net.geoprism.graph.LabeledPropertyGraphTypeSnapshot">
             <operation name="ALL" />
           </mdRelationshipPermission>     
