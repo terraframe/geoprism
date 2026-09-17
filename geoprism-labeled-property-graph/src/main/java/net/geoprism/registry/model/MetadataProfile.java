@@ -35,7 +35,7 @@ public enum MetadataProfile {
 
   CUSTOM("Custom", "Organization-specific structured metadata"),
 
-  AD_HOC("AdHoc", "Manual metadata without formal schema"),
+  AD_HOC("Ad Hoc", "Manual metadata without formal schema"),
 
   NONE("None", "No metadata available");
 
