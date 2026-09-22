@@ -33,6 +33,7 @@ import com.runwaysdk.business.graph.EdgeObject;
 import com.runwaysdk.business.graph.GraphQuery;
 import com.runwaysdk.business.graph.VertexObject;
 
+import net.geoprism.GenericException;
 import net.geoprism.registry.DateFormatter;
 import net.geoprism.registry.graph.DataSource;
 import net.geoprism.registry.graph.UndirectedGraphType;
@@ -42,6 +43,7 @@ import net.geoprism.registry.model.ServerGraphNode;
 import net.geoprism.registry.model.ServerParentGraphNode;
 import net.geoprism.registry.query.graph.VertexAndEdgeQuery;
 import net.geoprism.registry.query.graph.VertexAndEdgeQuery.EdgeQueryObject;
+import net.geoprism.registry.view.TypeClass;
 
 public class UndirectedGraphStrategy extends AbstractGraphStrategy implements GraphStrategy
 {
@@ -118,12 +120,12 @@ public class UndirectedGraphStrategy extends AbstractGraphStrategy implements Gr
     {
       if (this.isCycle(geoObject, parent, startDate, endDate))
       {
-        throw new UnsupportedOperationException("Cyclic graph is not supported");
+        throw new GenericException("Cyclic graph is not supported");
       }
 
       if (this.getEdges(geoObject, parent, startDate, endDate).size() > 0)
       {
-        throw new UnsupportedOperationException("Duplicate edge between child [" + geoObject.getCode() + "] and parent [" + parent.getCode() + "] with relationship type [" + UndirectedGraphType.CLASS + "].");
+        throw new GenericException("Duplicate edge between child [" + geoObject.getCode() + "] and parent [" + parent.getCode() + "] with relationship type [" + TypeClass.UNDIRECTED_GRAPH.getCode() + "].");
       }
     }
 

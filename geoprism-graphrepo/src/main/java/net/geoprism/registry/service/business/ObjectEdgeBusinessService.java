@@ -30,6 +30,7 @@ import com.runwaysdk.business.graph.GraphQuery;
 import com.runwaysdk.business.graph.VertexObject;
 import com.runwaysdk.dataaccess.MdGraphClassDAOIF;
 
+import net.geoprism.GenericException;
 import net.geoprism.configuration.GeoprismProperties;
 import net.geoprism.registry.OriginException;
 import net.geoprism.registry.graph.DataSource;
@@ -130,7 +131,7 @@ public abstract class ObjectEdgeBusinessService<V extends ServerObjectVertex, T 
 
     if (!this.isValidEdge(object, type, parent, startDate, endDate))
     {
-      throw new UnsupportedOperationException();
+      throw new GenericException("The edge of [" + type.getCode()+"] between [" + object.getCode() +"] and [" + parent.getCode() + "] is not valid");
     }
 
     if (parent != null && !this.exists(object, type, parent))
@@ -195,7 +196,7 @@ public abstract class ObjectEdgeBusinessService<V extends ServerObjectVertex, T 
 
     if (!this.isValidEdge(child, type, object, startDate, endDate))
     {
-      throw new UnsupportedOperationException();
+      throw new GenericException("The edge of [" + type.getCode()+"] between [" + object.getCode() +"] and [" + child.getCode() + "] is not valid");
     }
 
     if (child != null && !this.exists(child, type, object))

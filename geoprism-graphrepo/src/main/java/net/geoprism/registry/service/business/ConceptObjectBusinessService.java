@@ -3,18 +3,18 @@
  *
  * This file is part of Geoprism(tm).
  *
- * Geoprism(tm) is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
+ * Geoprism(tm) is free software: you can redistribute it and/or modify it under
+ * the terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation, either version 3 of the License, or (at your option) any
+ * later version.
  *
- * Geoprism(tm) is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
+ * Geoprism(tm) is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with Geoprism(tm).  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with Geoprism(tm). If not, see <http://www.gnu.org/licenses/>.
  */
 package net.geoprism.registry.service.business;
 
@@ -29,6 +29,7 @@ import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
 import org.commongeoregistry.adapter.metadata.AttributeClassificationType;
+import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Service;
 
 import com.runwaysdk.business.graph.GraphQuery;
@@ -39,6 +40,9 @@ import com.runwaysdk.dataaccess.graph.VertexObjectDAO;
 import com.runwaysdk.dataaccess.metadata.graph.MdVertexDAO;
 import com.runwaysdk.system.metadata.MdVertex;
 
+import net.geoprism.GenericException;
+import net.geoprism.registry.cache.ClearObjectCacheEvent;
+import net.geoprism.registry.cache.TransactionLRUCache;
 import net.geoprism.registry.graph.ConceptClass;
 import net.geoprism.registry.graph.ConceptEdgeType;
 import net.geoprism.registry.graph.ConceptSet;
@@ -54,13 +58,59 @@ import net.geoprism.registry.view.Page;
 @Service
 public class ConceptObjectBusinessService extends ObjectEdgeBusinessService<ConceptObject, ConceptClass, ConceptClassDTO, ConceptEdgeType, ConceptObject> implements ConceptObjectBusinessServiceIF
 {
-  private final ConceptSetBusinessServiceIF setService;
+  private static class CachedAttributeValue
+  {
+    private AttributeClassificationType attribute;
+
+    private ConceptObject               value;
+
+    public CachedAttributeValue(AttributeClassificationType attribute, ConceptObject value)
+    {
+      super();
+      this.attribute = attribute;
+      this.value = value;
+    }
+
+    public String getCode()
+    {
+      return this.value.getCode();
+    }
+
+    public String getKey()
+    {
+      return getKey(this.attribute, this.value);
+    }
+
+    public static String getKey(AttributeClassificationType attribute, ConceptObject value)
+    {
+      return getKey(attribute, value.getCode());
+    }
+
+    public static String getKey(AttributeClassificationType attribute, String code)
+    {
+      if (attribute != null)
+      {
+        return attribute.getTypeInfo().getTypeCode() + "~" + code;
+      }
+
+      return code;
+    }
+  }
+
+  private final ConceptSetBusinessServiceIF                       setService;
+
+  private final TransactionLRUCache<String, CachedAttributeValue> attributeCache;
 
   public ConceptObjectBusinessService(ConceptClassBusinessServiceIF typeService, ConceptSetBusinessServiceIF setService, ConceptClassBusinessServiceIF cClassService)
   {
     super(typeService, ConceptVertex.CLASS);
 
     this.setService = setService;
+
+    this.attributeCache = new TransactionLRUCache<String, CachedAttributeValue>("attribute-cache", (v) -> {
+      return new String[] { v.getCode(), v.getKey() };
+    }, 100);
+
   }
 
   @Override
@@ -75,6 +125,16 @@ public class ConceptObjectBusinessService extends ObjectEdgeBusinessService<Conc
   protected ConceptObject build(ConceptClass type, VertexObject current, Map<String, List<VertexObject>> nodeMap, Date date)
   {
     return new ConceptObject(type, current, nodeMap, date);
+  }
+
+  @Override
+  public void delete(ConceptObject object, boolean validateOrigin)
+  {
+    super.delete(object, validateOrigin);
+
+    this.attributeCache.get(object.getCode(), () -> Optional.empty()).ifPresent(value -> {
+      this.attributeCache.remove(value);
+    });
   }
 
   @Override
@@ -127,7 +187,7 @@ public class ConceptObjectBusinessService extends ObjectEdgeBusinessService<Conc
 
         if (!classes.contains(object.getType()))
         {
-          throw new UnsupportedOperationException("The concept class [" + object.getType() + "] is not a member of the concept set");
+          throw new GenericException("The concept class [" + object.getType() + "] is not a member of the concept set");
         }
       });
 
@@ -163,39 +223,43 @@ public class ConceptObjectBusinessService extends ObjectEdgeBusinessService<Conc
   @Override
   public Optional<ConceptObject> getByCode(AttributeClassificationType attribute, String code)
   {
-    ConceptSet set = this.setService.getByCodeOrThrow(attribute.getConceptSet());
-    String rootTerm = attribute.getRootTerm();
+    return this.attributeCache.get(CachedAttributeValue.getKey(attribute, code), () -> {
+      ConceptSet set = this.setService.getByCodeOrThrow(attribute.getConceptSet());
+      String rootTerm = attribute.getRootTerm();
 
-    if (set.getDiscreteType().equals(DiscreteType.ENUMERATION.name()) || StringUtils.isBlank(rootTerm))
-    {
-      List<ConceptClass> classes = this.setService.getConceptClasses(set);
-
-      if (classes.size() > 0)
+      if (set.getDiscreteType().equals(DiscreteType.ENUMERATION.name()) || StringUtils.isBlank(rootTerm))
       {
-        return this.getByCode(classes.get(0), code);
+        List<ConceptClass> classes = this.setService.getConceptClasses(set);
+
+        if (classes.size() > 0)
+        {
+          return this.getByCode(classes.get(0), code).map(v -> new CachedAttributeValue(attribute, v));
+        }
       }
-    }
-    else if (StringUtils.isNotBlank(rootTerm))
-    {
-      ConceptObject root = this.getByCode(rootTerm).get();
+      else if (StringUtils.isNotBlank(rootTerm))
+      {
+        ConceptObject root = this.getByCode(rootTerm).get();
 
-      String edgeNames = getEdgeNames(attribute);
+        String edgeNames = getEdgeNames(attribute);
 
-      StringBuilder statement = new StringBuilder();
-      statement.append("TRAVERSE out('" + EdgeConstant.HAS_VALUE.getDBClassName() + "', '" + EdgeConstant.HAS_GEOMETRY.getDBClassName() + "') FROM (");
-      statement.append("  SELECT FROM (");
-      statement.append("    TRAVERSE outE(" + edgeNames + ")[(:startDate BETWEEN startDate AND endDate)].in FROM " + root.getRID());
-      statement.append("  )");
-      statement.append("  WHERE code = :code");
-      statement.append(")");
+        StringBuilder statement = new StringBuilder();
+        statement.append("TRAVERSE out('" + EdgeConstant.HAS_VALUE.getDBClassName() + "', '" + EdgeConstant.HAS_GEOMETRY.getDBClassName() + "') FROM (");
+        statement.append("  SELECT FROM (");
+        statement.append("    TRAVERSE outE(" + edgeNames + ")[(:startDate BETWEEN startDate AND endDate)].in FROM " + root.getRID());
+        statement.append("  )");
+        statement.append("  WHERE code = :code");
+        statement.append(")");
 
-      GraphQuery<VertexObject> query = new GraphQuery<VertexObject>(statement.toString());
-      query.setParameter("code", code);
-      query.setParameter("startDate", attribute.getStartDate());
+        GraphQuery<VertexObject> query = new GraphQuery<VertexObject>(statement.toString());
+        query.setParameter("code", code);
+        query.setParameter("startDate", attribute.getStartDate());
 
-      return Optional.of(this.processSingleResult(query.getResults(), null));
-    }
-    return Optional.empty();
+        return Optional.ofNullable(this.processSingleResult(query.getResults(), null)).map(v -> new CachedAttributeValue(attribute, v));
+      }
+      return Optional.empty();
+
+    }).map(c -> c.value);
+
   }
 
   @Override
@@ -434,4 +498,13 @@ public class ConceptObjectBusinessService extends ObjectEdgeBusinessService<Conc
 
     return prev;
   }
+
+  @EventListener
+  @Override
+  public void handleClearCacheEvent(ClearObjectCacheEvent event)
+  {
+    this.getCache().clear();
+    this.attributeCache.clear();
+  }
+
 }

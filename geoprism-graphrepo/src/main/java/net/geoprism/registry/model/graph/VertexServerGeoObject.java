@@ -178,11 +178,11 @@ public class VertexServerGeoObject extends ServerObjectVertex implements ServerG
   @Override
   public void setCode(String code)
   {
-    if (code != null)
-    {
-      code = code.trim();
-      code = code.replaceAll("\\s+", "");
-    }
+//    if (code != null)
+//    {
+//      code = code.trim();
+//      code = code.replaceAll("\\s+", "");
+//    }
 
     final String value = code;
 

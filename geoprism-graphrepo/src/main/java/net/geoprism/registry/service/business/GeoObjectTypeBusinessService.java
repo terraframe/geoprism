@@ -3,18 +3,18 @@
  *
  * This file is part of Geoprism(tm).
  *
- * Geoprism(tm) is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
+ * Geoprism(tm) is free software: you can redistribute it and/or modify it under
+ * the terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation, either version 3 of the License, or (at your option) any
+ * later version.
  *
- * Geoprism(tm) is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
+ * Geoprism(tm) is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with Geoprism(tm).  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with Geoprism(tm). If not, see <http://www.gnu.org/licenses/>.
  */
 package net.geoprism.registry.service.business;
 
@@ -83,6 +83,7 @@ import com.runwaysdk.system.gis.metadata.graph.MdGeoVertex;
 import com.runwaysdk.system.metadata.MdAttributeConcrete;
 import com.runwaysdk.system.metadata.MdBusiness;
 
+import net.geoprism.GenericException;
 import net.geoprism.configuration.GeoprismProperties;
 import net.geoprism.registry.ChainInheritanceException;
 import net.geoprism.registry.CodeLengthException;
@@ -185,12 +186,12 @@ public class GeoObjectTypeBusinessService implements GeoObjectTypeBusinessServic
 
     if (InheritedHierarchyAnnotation.getByForHierarchical(fhrt) != null)
     {
-      throw new UnsupportedOperationException("A hierarchy cannot inherit from more than one other hierarchy");
+      throw new GenericException("A hierarchy cannot inherit from more than one other hierarchy");
     }
 
     if (isRoot(sgot, inheritedHierarchy))
     {
-      throw new UnsupportedOperationException("A root node in a hierarchy cannot be inherited");
+      throw new GenericException("A root node in a hierarchy cannot be inherited");
     }
 
     InheritedHierarchyAnnotation annotation = new InheritedHierarchyAnnotation();
@@ -951,7 +952,7 @@ public class GeoObjectTypeBusinessService implements GeoObjectTypeBusinessServic
     if (type.getAttributeMap().containsKey(dto.getCode()))
     {
       // TODO: Change exception type
-      throw new UnsupportedOperationException("Duplicate attribute");
+      throw new GenericException("Duplicate attribute [" + dto.getCode() + "]");
     }
 
     net.geoprism.registry.graph.AttributeType attributeType = null;

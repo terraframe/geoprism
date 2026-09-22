@@ -39,7 +39,7 @@
  -->    
       <mdVertex name="net.geoprism.registry.graph.SourceAuthority" label="Source Authority">
         <attributes>
-          <char name="code" label="code" required="true" size="255" indexType="unique"  />          
+          <char name="code" label="code" required="true" immutable="true" size="255" indexType="unique"  />          
           <localCharEmbedded name="displayLabel" label="Display Label" />                  
           <localCharEmbedded name="description" label="Description" />                  
           <text name="authorityType" label="Authority Type"  />                    
@@ -47,7 +47,7 @@
       </mdVertex>          
       <mdVertex name="net.geoprism.registry.graph.DataSource" label="Source">
         <attributes>
-          <char name="code" label="Code" required="true" size="255" indexType="unique"  />          
+          <char name="code" label="Code" required="true" immutable="true" size="255" indexType="unique"  />          
           <localCharEmbedded name="displayLabel" label="Display Label" />                  
           <localCharEmbedded name="description" label="Description" />                            
           <text name="uri" label="URI"  />                    

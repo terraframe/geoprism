@@ -3,18 +3,18 @@
  *
  * This file is part of Geoprism(tm).
  *
- * Geoprism(tm) is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
+ * Geoprism(tm) is free software: you can redistribute it and/or modify it under
+ * the terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation, either version 3 of the License, or (at your option) any
+ * later version.
  *
- * Geoprism(tm) is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
+ * Geoprism(tm) is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with Geoprism(tm).  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with Geoprism(tm). If not, see <http://www.gnu.org/licenses/>.
  */
 package net.geoprism.registry.model.graph;
 
@@ -33,6 +33,7 @@ import com.runwaysdk.business.graph.EdgeObject;
 import com.runwaysdk.business.graph.GraphQuery;
 import com.runwaysdk.business.graph.VertexObject;
 
+import net.geoprism.GenericException;
 import net.geoprism.registry.DateFormatter;
 import net.geoprism.registry.graph.DataSource;
 import net.geoprism.registry.graph.DirectedAcyclicGraphType;
@@ -43,6 +44,7 @@ import net.geoprism.registry.model.ServerParentGraphNode;
 import net.geoprism.registry.model.graph.VertexServerGeoObject.EdgeComparator;
 import net.geoprism.registry.query.graph.VertexAndEdgeQuery;
 import net.geoprism.registry.query.graph.VertexAndEdgeQuery.EdgeQueryObject;
+import net.geoprism.registry.view.TypeClass;
 
 public class DirectedAcyclicGraphStrategy extends AbstractGraphStrategy implements GraphStrategy
 {
@@ -158,12 +160,12 @@ public class DirectedAcyclicGraphStrategy extends AbstractGraphStrategy implemen
 
       if (this.isCycle(geoObject, parent, startDate, endDate))
       {
-        throw new UnsupportedOperationException("Cannot add a cycle");
+        throw new GenericException("Cannot add a cycle");
       }
 
       if (this.getParentEdges(geoObject, parent, startDate, endDate).size() > 0)
       {
-        throw new UnsupportedOperationException("Duplicate edge between child [" + geoObject.getCode() + "] and parent [" + parent.getCode() + "] with relationship type [" + DirectedAcyclicGraphType.CLASS + "].");
+        throw new GenericException("Duplicate edge between child [" + geoObject.getCode() + "] and parent [" + parent.getCode() + "] with relationship type [" + TypeClass.DAG.getCode() + "].");
       }
     }
 
@@ -195,7 +197,7 @@ public class DirectedAcyclicGraphStrategy extends AbstractGraphStrategy implemen
         // The existing edge contains the entire range of a new edge
 
         // TODO: Determine the appropriate solution
-        throw new UnsupportedOperationException("Existing overlapping edge must be fixed");
+        throw new GenericException("Existing overlapping edge must be fixed");
       }
       else if (this.overlapsStart(value, edge))
       {

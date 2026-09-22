@@ -74,13 +74,7 @@ public class ConceptClassBusinessService extends ObjectClassBusinessService<Conc
   @Transaction
   public void delete(ConceptClass type)
   {
-    MdVertex mdVertex = type.getMdVertex();
-
-    type.delete();
-
-    mdVertex.delete();
-
-    this.getCache().remove(type);
+    super.delete(type);
 
     publisher.publishEvent(new ClearObjectCacheEvent(this));
   }

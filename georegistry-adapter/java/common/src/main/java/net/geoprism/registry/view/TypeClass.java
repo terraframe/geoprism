@@ -3,22 +3,24 @@
  *
  * This file is part of Geoprism(tm).
  *
- * Geoprism(tm) is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
+ * Geoprism(tm) is free software: you can redistribute it and/or modify it under
+ * the terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation, either version 3 of the License, or (at your option) any
+ * later version.
  *
- * Geoprism(tm) is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
+ * Geoprism(tm) is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with Geoprism(tm).  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with Geoprism(tm). If not, see <http://www.gnu.org/licenses/>.
  */
 package net.geoprism.registry.view;
 
-import org.apache.commons.lang3.stream.Streams;
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public enum TypeClass implements Comparable<TypeClass> {
 
@@ -61,24 +63,25 @@ public enum TypeClass implements Comparable<TypeClass> {
 
   public static TypeClass getByCode(String code)
   {
-    return Streams.of(TypeClass.values()) //
+    return Arrays.stream(TypeClass.values()) //
         .filter(t -> t.getCode().equals(code)) //
-        .findFirst().orElseThrow();
+        .findFirst().orElseThrow(() -> {
+          return new UnsupportedOperationException("Unknown code [" + code + "]");
+        });
   }
 
-  public static TypeClass getByCategory(TypeCategory category)
+  public static List<TypeClass> getByCategory(TypeCategory category)
   {
-    return Streams.of(TypeClass.values()) //
-        .filter(t -> t.getTypeCategory().equals(category)) //
-        .findFirst().orElseThrow();
+    return Arrays.stream(TypeClass.values()) 
+        .filter(t -> t.getTypeCategory().equals(category)).collect(Collectors.toList());
   }
 
-  public static TypeClass getObjectTypes()
+  public static List<TypeClass> getObjectTypes()
   {
     return getByCategory(TypeCategory.OBJECT_CLASS);
   }
 
-  public static TypeClass getEdgeTypes()
+  public static List<TypeClass> getEdgeTypes()
   {
     return getByCategory(TypeCategory.EDGE_CLASS);
   }

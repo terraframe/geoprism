@@ -28,6 +28,7 @@ import org.apache.commons.collections4.map.HashedMap;
 import com.runwaysdk.business.graph.GraphQuery;
 import com.runwaysdk.business.graph.VertexObject;
 
+import net.geoprism.GenericException;
 import net.geoprism.registry.graph.DataSource;
 import net.geoprism.registry.model.EdgeConstant;
 import net.geoprism.registry.model.ServerChildGraphNode;
@@ -90,7 +91,7 @@ public class ServerHierarchyStrategy extends AbstractGraphStrategy implements Gr
     {
       if (recursive)
       {
-        throw new UnsupportedOperationException();
+        throw new GenericException("Recursive paginated pages are not supported");
       }
       
       statement.append(" SKIP " + skip);
@@ -177,7 +178,7 @@ public class ServerHierarchyStrategy extends AbstractGraphStrategy implements Gr
     {
       if (recursive)
       {
-        throw new UnsupportedOperationException();
+        throw new GenericException("Recursive paginated pages are not supported");
       }
       
       statement.append(" SKIP " + skip);

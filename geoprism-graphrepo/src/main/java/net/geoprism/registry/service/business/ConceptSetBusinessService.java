@@ -3,18 +3,18 @@
  *
  * This file is part of Geoprism(tm).
  *
- * Geoprism(tm) is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
+ * Geoprism(tm) is free software: you can redistribute it and/or modify it under
+ * the terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation, either version 3 of the License, or (at your option) any
+ * later version.
  *
- * Geoprism(tm) is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
+ * Geoprism(tm) is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with Geoprism(tm).  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with Geoprism(tm). If not, see <http://www.gnu.org/licenses/>.
  */
 /**
  * CopyrighConceptSet (c) 2023 TerraFrame, Inc. All rights reserved.
@@ -47,14 +47,17 @@ import org.springframework.stereotype.Service;
 
 import com.runwaysdk.business.graph.EdgeObject;
 import com.runwaysdk.business.graph.GraphQuery;
+import com.runwaysdk.dataaccess.MdAttributeDAOIF;
 import com.runwaysdk.dataaccess.MdVertexDAOIF;
 import com.runwaysdk.dataaccess.metadata.graph.MdVertexDAO;
 import com.runwaysdk.dataaccess.transaction.Transaction;
 import com.runwaysdk.session.Session;
 
+import net.geoprism.GenericException;
 import net.geoprism.configuration.GeoprismProperties;
 import net.geoprism.registry.cache.TransactionLRUCache;
 import net.geoprism.registry.conversion.RegistryLocalizedValueConverter;
+import net.geoprism.registry.graph.AttributeClassificationType;
 import net.geoprism.registry.graph.ConceptClass;
 import net.geoprism.registry.graph.ConceptEdgeType;
 import net.geoprism.registry.graph.ConceptSet;
@@ -104,6 +107,14 @@ public class ConceptSetBusinessService implements ConceptSetBusinessServiceIF
   @Transaction
   public void delete(ConceptSet type)
   {
+    // Ensure this is not referenced by a classification attribute
+    List<AttributeClassificationType> attributes = this.getAttributeClassifications(type);
+
+    if (attributes.size() > 0)
+    {
+      throw new GenericException("The Concept Set be delete because it is used as a type's classification");
+    }
+
     type.delete();
 
     this.getCache().remove(type);
@@ -213,6 +224,22 @@ public class ConceptSetBusinessService implements ConceptSetBusinessServiceIF
   }
 
   @Override
+  public List<net.geoprism.registry.graph.AttributeClassificationType> getAttributeClassifications(ConceptSet set)
+  {
+    MdVertexDAOIF mdVertex = MdVertexDAO.getMdVertexDAO(net.geoprism.registry.graph.AttributeClassificationType.CLASS);
+    MdAttributeDAOIF mdAttribute = mdVertex.definesAttribute(net.geoprism.registry.graph.AttributeClassificationType.CONCEPTSET);
+
+    StringBuilder statement = new StringBuilder();
+    statement.append("SELECT FROM " + mdVertex.getDBClassName());
+    statement.append(" WHERE " + mdAttribute.getColumnName() + " = :conceptSet");
+
+    GraphQuery<net.geoprism.registry.graph.AttributeClassificationType> query = new GraphQuery<net.geoprism.registry.graph.AttributeClassificationType>(statement.toString());
+    query.setParameter("conceptSet", set.getCode());
+
+    return query.getResults();
+  }
+
+  @Override
   public List<ConceptSet> getAll()
   {
     MdVertexDAOIF mdVertex = MdVertexDAO.getMdVertexDAO(ConceptSet.CLASS);
@@ -263,17 +290,17 @@ public class ConceptSetBusinessService implements ConceptSetBusinessServiceIF
     if (type.getDiscreteType().equals(DiscreteType.TAXONOMY.name()) && //
         this.getConceptClasses(type).size() > 0)
     {
-      throw new UnsupportedOperationException("An taxonomy can only have a single concept class assignment");
+      throw new GenericException("An taxonomy can only have a single concept class assignment");
     }
     else if (type.getDiscreteType().equals(DiscreteType.ENUMERATION.name()) && //
         this.getConceptClasses(type).size() > 0)
     {
-      throw new UnsupportedOperationException("An enumeration can only have a single concept class assignment");
+      throw new GenericException("An enumeration can only have a single concept class assignment");
     }
     else if (type.getDiscreteType().equals(DiscreteType.ONTOLOGY.name()) && //
         this.getConceptClasses(type).stream().anyMatch(t -> t.getCode().equals(conceptClass.getCode())))
     {
-      throw new UnsupportedOperationException("The concept class [" + conceptClass.getCode() + "] is already part of the concept set");
+      throw new GenericException("The concept class [" + conceptClass.getCode() + "] is already part of the concept set");
     }
 
     EdgeObject edge = type.addChild(conceptClass, EdgeConstant.HAS_CONCEPT.getMdEdge());
@@ -290,16 +317,16 @@ public class ConceptSetBusinessService implements ConceptSetBusinessServiceIF
         && ( !conceptEdgeType.getDiscreteType().equals(DiscreteType.TAXONOMY.name()) //
             || this.getConceptEdgeTypes(type).size() > 0 ))
     {
-      throw new UnsupportedOperationException("A taxonomy can only have a single taxonomy edge type assignment");
+      throw new GenericException("A taxonomy can only have a single taxonomy edge type assignment");
     }
     else if (type.getDiscreteType().equals(DiscreteType.ENUMERATION.name()))
     {
-      throw new UnsupportedOperationException("An enumeration can not have any edges assigned");
+      throw new GenericException("An enumeration can not have any edges assigned");
     }
     else if (type.getDiscreteType().equals(DiscreteType.ONTOLOGY.name()) && //
         this.getConceptEdgeTypes(type).stream().anyMatch(t -> t.getCode().equals(conceptEdgeType.getCode())))
     {
-      throw new UnsupportedOperationException("The concept edge type [" + conceptEdgeType.getCode() + "] is already part of the concept set");
+      throw new GenericException("The concept edge type [" + conceptEdgeType.getCode() + "] is already part of the concept set");
     }
 
     EdgeObject edge = type.addChild(conceptEdgeType, EdgeConstant.HAS_CONCEPT_EDGE.getMdEdge());
