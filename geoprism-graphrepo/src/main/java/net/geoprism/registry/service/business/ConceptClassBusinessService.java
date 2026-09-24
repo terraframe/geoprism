@@ -34,7 +34,6 @@ import com.runwaysdk.dataaccess.MdVertexDAOIF;
 import com.runwaysdk.dataaccess.metadata.graph.MdVertexDAO;
 import com.runwaysdk.dataaccess.transaction.Transaction;
 import com.runwaysdk.gis.constants.MdGeoVertexInfo;
-import com.runwaysdk.system.metadata.MdVertex;
 
 import net.geoprism.configuration.GeoprismProperties;
 import net.geoprism.registry.CodeLengthException;
@@ -104,6 +103,7 @@ public class ConceptClassBusinessService extends ObjectClassBusinessService<Conc
     dto.setOrigin(type.getOrigin());
     dto.setSequence(type.getSequence());
     dto.setDisplayLabel(type.getLabel());
+    dto.setDescription(type.getDescriptionLV());
 
     if (type.isAppliedToDb())
     {
@@ -146,12 +146,12 @@ public class ConceptClassBusinessService extends ObjectClassBusinessService<Conc
       throw ex;
     }
 
-    LocalizedValue localizedValue = object.getDisplayLabel();
-
     ConceptClass conceptClass = object.hasOid() ? ConceptClass.get(object.getOid()) : new ConceptClass();
     conceptClass.setCode(code);
     conceptClass.setOrganization(organization.getGraphOrganization());
-    RegistryLocalizedValueConverter.populate(conceptClass, ConceptClass.DISPLAYLABEL, localizedValue);
+    
+    RegistryLocalizedValueConverter.populate(conceptClass, ConceptClass.DISPLAYLABEL, object.getDisplayLabel());
+    RegistryLocalizedValueConverter.populate(conceptClass, ConceptClass.DESCRIPTION, object.getDescription());
 
     boolean isNew = conceptClass.isNew();
 
@@ -165,7 +165,8 @@ public class ConceptClassBusinessService extends ObjectClassBusinessService<Conc
       mdVertex.setValue(MdGeoVertexInfo.ENABLE_CHANGE_OVER_TIME, MdAttributeBooleanInfo.FALSE);
       mdVertex.setValue(MdGeoVertexInfo.GENERATE_SOURCE, MdAttributeBooleanInfo.FALSE);
       mdVertex.setValue(MdGeoVertexInfo.SUPER_MD_VERTEX, superMdVertex.getOid());
-      RegistryLocalizedValueConverter.populate(mdVertex, MdVertexInfo.DISPLAY_LABEL, localizedValue);
+      RegistryLocalizedValueConverter.populate(mdVertex, MdVertexInfo.DISPLAY_LABEL, object.getDisplayLabel());
+      RegistryLocalizedValueConverter.populate(mdVertex, MdVertexInfo.DESCRIPTION, object.getDescription());
       mdVertex.apply();
 
       conceptClass.setMdVertexId(mdVertex.getOid());

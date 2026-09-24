@@ -56,6 +56,10 @@ public abstract class ObjectClassDTO
   @JsonDeserialize(using = LocalizedValueDeserializer.class)
   private LocalizedValue      displayLabel;
 
+  @JsonSerialize(using = LocalizedValueSerializer.class)
+  @JsonDeserialize(using = LocalizedValueDeserializer.class)
+  private LocalizedValue      description;
+  
   private List<AttributeType> attributes;
 
   public String getOid()
@@ -126,6 +130,16 @@ public abstract class ObjectClassDTO
   public void setDisplayLabel(LocalizedValue displayLabel)
   {
     this.displayLabel = displayLabel;
+  }
+  
+  public LocalizedValue getDescription()
+  {
+    return description;
+  }
+  
+  public void setDescription(LocalizedValue description)
+  {
+    this.description = description;
   }
 
   public List<AttributeType> getAttributes()

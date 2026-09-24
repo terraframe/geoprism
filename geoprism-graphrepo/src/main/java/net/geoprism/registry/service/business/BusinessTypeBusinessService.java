@@ -33,7 +33,6 @@ import com.runwaysdk.dataaccess.MdVertexDAOIF;
 import com.runwaysdk.dataaccess.metadata.graph.MdVertexDAO;
 import com.runwaysdk.dataaccess.transaction.Transaction;
 import com.runwaysdk.gis.constants.MdGeoVertexInfo;
-import com.runwaysdk.system.metadata.MdVertex;
 
 import net.geoprism.configuration.GeoprismProperties;
 import net.geoprism.registry.CodeLengthException;
@@ -47,6 +46,7 @@ import net.geoprism.registry.graph.AttributeUUIDType;
 import net.geoprism.registry.graph.BusinessEdgeType;
 import net.geoprism.registry.graph.BusinessType;
 import net.geoprism.registry.graph.BusinessVertex;
+import net.geoprism.registry.graph.ConceptClass;
 import net.geoprism.registry.model.ServerOrganization;
 import net.geoprism.registry.view.BusinessTypeDTO;
 
@@ -98,6 +98,7 @@ public class BusinessTypeBusinessService extends ObjectClassBusinessService<Busi
     dto.setOrigin(type.getOrigin());
     dto.setSequence(type.getSequence());
     dto.setDisplayLabel(type.getLabel());
+    dto.setDescription(type.getDescriptionLV());
 
     if (type.getLabelAttributeOid() != null && type.getLabelAttributeOid().length() > 0)
     {
@@ -149,12 +150,12 @@ public class BusinessTypeBusinessService extends ObjectClassBusinessService<Busi
       throw ex;
     }
 
-    LocalizedValue localizedValue = object.getDisplayLabel();
-
     BusinessType businessType = object.hasOid() ? BusinessType.get(object.getOid()) : new BusinessType();
     businessType.setCode(code);
     businessType.setOrganization(organization.getGraphOrganization());
-    RegistryLocalizedValueConverter.populate(businessType, BusinessType.DISPLAYLABEL, localizedValue);
+    
+    RegistryLocalizedValueConverter.populate(businessType, BusinessType.DISPLAYLABEL, object.getDisplayLabel());
+    RegistryLocalizedValueConverter.populate(businessType, ConceptClass.DESCRIPTION, object.getDescription());
 
     boolean isNew = businessType.isNew();
 
@@ -168,7 +169,8 @@ public class BusinessTypeBusinessService extends ObjectClassBusinessService<Busi
       mdVertex.setValue(MdGeoVertexInfo.ENABLE_CHANGE_OVER_TIME, MdAttributeBooleanInfo.FALSE);
       mdVertex.setValue(MdGeoVertexInfo.GENERATE_SOURCE, MdAttributeBooleanInfo.FALSE);
       mdVertex.setValue(MdGeoVertexInfo.SUPER_MD_VERTEX, superMdVertex.getOid());
-      RegistryLocalizedValueConverter.populate(mdVertex, MdVertexInfo.DISPLAY_LABEL, localizedValue);
+      RegistryLocalizedValueConverter.populate(mdVertex, MdVertexInfo.DISPLAY_LABEL, object.getDisplayLabel());
+      RegistryLocalizedValueConverter.populate(mdVertex, MdVertexInfo.DESCRIPTION, object.getDescription());
       mdVertex.apply();
 
       businessType.setMdVertexId(mdVertex.getOid());

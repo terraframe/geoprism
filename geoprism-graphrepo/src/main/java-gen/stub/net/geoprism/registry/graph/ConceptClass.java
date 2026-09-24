@@ -59,7 +59,7 @@ public class ConceptClass extends ConceptClassBase
   @Override
   public GraphOrganization getOrganization()
   {
-    return GraphOrganization.get((String) this.getObjectValue(BusinessEdgeType.ORGANIZATION));
+    return GraphOrganization.get((String) this.getObjectValue(ORGANIZATION));
   }
 
   public MdVertexDAOIF getMdVertexDAO()
@@ -69,7 +69,12 @@ public class ConceptClass extends ConceptClassBase
 
   public LocalizedValue getLabel()
   {
-    return LocalizedValueConverter.convert(this.getEmbeddedComponent(BusinessType.DISPLAYLABEL));
+    return LocalizedValueConverter.convert(this.getEmbeddedComponent(DISPLAYLABEL));
+  }
+  
+  public LocalizedValue getDescriptionLV()
+  {
+    return LocalizedValueConverter.convert(this.getEmbeddedComponent(DESCRIPTION));
   }
 
   public String getOrganizationGraphId()

@@ -64,7 +64,7 @@ public class BusinessType extends BusinessTypeBase implements ServerElement
   @Override
   public GraphOrganization getOrganization()
   {
-    return GraphOrganization.get((String) this.getObjectValue(BusinessEdgeType.ORGANIZATION));
+    return GraphOrganization.get((String) this.getObjectValue(ORGANIZATION));
   }
 
   public MdVertexDAOIF getMdVertexDAO()
@@ -74,8 +74,14 @@ public class BusinessType extends BusinessTypeBase implements ServerElement
 
   public LocalizedValue getLabel()
   {
-    return LocalizedValueConverter.convert(this.getEmbeddedComponent(BusinessType.DISPLAYLABEL));
+    return LocalizedValueConverter.convert(this.getEmbeddedComponent(DISPLAYLABEL));
   }
+  
+  public LocalizedValue getDescriptionLV()
+  {
+    return LocalizedValueConverter.convert(this.getEmbeddedComponent(DESCRIPTION));
+  }
+
 
   public void setLabelAttribute(String name)
   {

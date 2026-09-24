@@ -3,18 +3,18 @@
  *
  * This file is part of Geoprism(tm).
  *
- * Geoprism(tm) is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
+ * Geoprism(tm) is free software: you can redistribute it and/or modify it under
+ * the terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation, either version 3 of the License, or (at your option) any
+ * later version.
  *
- * Geoprism(tm) is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
+ * Geoprism(tm) is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with Geoprism(tm).  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with Geoprism(tm). If not, see <http://www.gnu.org/licenses/>.
  */
 package net.geoprism.registry.conversion;
 
@@ -196,49 +196,58 @@ public class LocalizedValueConverter
 
   public static void populate(LocalStruct struct, LocalizedValue label)
   {
-    struct.setValue(label.getValue());
-    struct.setValue(MdAttributeLocalInfo.DEFAULT_LOCALE, label.getValue(MdAttributeLocalInfo.DEFAULT_LOCALE));
-
-    Set<Locale> locales = LocalizationFacade.getInstalledLocales();
-
-    for (Locale locale : locales)
+    if (label != null)
     {
-      if (label.contains(locale))
+      struct.setValue(label.getValue());
+      struct.setValue(MdAttributeLocalInfo.DEFAULT_LOCALE, label.getValue(MdAttributeLocalInfo.DEFAULT_LOCALE));
+
+      Set<Locale> locales = LocalizationFacade.getInstalledLocales();
+
+      for (Locale locale : locales)
       {
-        struct.setValue(locale, label.getValue(locale));
+        if (label.contains(locale))
+        {
+          struct.setValue(locale, label.getValue(locale));
+        }
       }
     }
   }
 
   public static void populate(LocalStruct struct, LocalizedValueIF label)
   {
-    struct.setValue(label.getValue());
-    struct.setValue(MdAttributeLocalInfo.DEFAULT_LOCALE, label.getDefaultValue());
-
-    Set<Locale> locales = LocalizationFacade.getInstalledLocales();
-    Map<String, String> map = label.getLocaleMap();
-
-    for (Locale locale : locales)
+    if (label != null)
     {
-      if (map.containsKey(locale.toString()))
+      struct.setValue(label.getValue());
+      struct.setValue(MdAttributeLocalInfo.DEFAULT_LOCALE, label.getDefaultValue());
+
+      Set<Locale> locales = LocalizationFacade.getInstalledLocales();
+      Map<String, String> map = label.getLocaleMap();
+
+      for (Locale locale : locales)
       {
-        struct.setValue(locale, label.getValue(locale));
+        if (map.containsKey(locale.toString()))
+        {
+          struct.setValue(locale, label.getValue(locale));
+        }
       }
     }
   }
 
   public static void populate(LocalStruct struct, LocalizedValue label, String suffix)
   {
-    struct.setValue(label.getValue());
-    struct.setValue(MdAttributeLocalInfo.DEFAULT_LOCALE, label.getValue(MdAttributeLocalInfo.DEFAULT_LOCALE) + suffix);
-
-    Set<Locale> locales = LocalizationFacade.getInstalledLocales();
-
-    for (Locale locale : locales)
+    if (label != null)
     {
-      if (label.contains(locale))
+      struct.setValue(label.getValue());
+      struct.setValue(MdAttributeLocalInfo.DEFAULT_LOCALE, label.getValue(MdAttributeLocalInfo.DEFAULT_LOCALE) + suffix);
+
+      Set<Locale> locales = LocalizationFacade.getInstalledLocales();
+
+      for (Locale locale : locales)
       {
-        struct.setValue(locale, label.getValue(locale) + suffix);
+        if (label.contains(locale))
+        {
+          struct.setValue(locale, label.getValue(locale) + suffix);
+        }
       }
     }
   }
@@ -283,30 +292,36 @@ public class LocalizedValueConverter
 
   public static void populate(GraphObject graphObject, String attributeName, LocalizedValue value)
   {
-    graphObject.setEmbeddedValue(attributeName, MdAttributeLocalInfo.DEFAULT_LOCALE, value.getValue(MdAttributeLocalInfo.DEFAULT_LOCALE));
-
-    Set<Locale> locales = LocalizationFacade.getInstalledLocales();
-
-    for (Locale locale : locales)
+    if (value != null)
     {
-      if (value.contains(locale))
+      graphObject.setEmbeddedValue(attributeName, MdAttributeLocalInfo.DEFAULT_LOCALE, value.getValue(MdAttributeLocalInfo.DEFAULT_LOCALE));
+
+      Set<Locale> locales = LocalizationFacade.getInstalledLocales();
+
+      for (Locale locale : locales)
       {
-        graphObject.setEmbeddedValue(attributeName, locale.toString(), value.getValue(locale));
+        if (value.contains(locale))
+        {
+          graphObject.setEmbeddedValue(attributeName, locale.toString(), value.getValue(locale));
+        }
       }
     }
   }
 
   public static void populate(GraphObject graphObject, String attributeName, LocalizedValue value, Date startDate, Date endDate)
   {
-    graphObject.setEmbeddedValue(attributeName, MdAttributeLocalInfo.DEFAULT_LOCALE, value.getValue(MdAttributeLocalInfo.DEFAULT_LOCALE), startDate, endDate);
-
-    Set<Locale> locales = LocalizationFacade.getInstalledLocales();
-
-    for (Locale locale : locales)
+    if (value != null)
     {
-      if (value.contains(locale))
+      graphObject.setEmbeddedValue(attributeName, MdAttributeLocalInfo.DEFAULT_LOCALE, value.getValue(MdAttributeLocalInfo.DEFAULT_LOCALE), startDate, endDate);
+
+      Set<Locale> locales = LocalizationFacade.getInstalledLocales();
+
+      for (Locale locale : locales)
       {
-        graphObject.setEmbeddedValue(attributeName, locale.toString(), value.getValue(locale), startDate, endDate);
+        if (value.contains(locale))
+        {
+          graphObject.setEmbeddedValue(attributeName, locale.toString(), value.getValue(locale), startDate, endDate);
+        }
       }
     }
   }

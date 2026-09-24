@@ -30,6 +30,7 @@ public abstract class BusinessTypeBase extends net.geoprism.registry.graph.Objec
 {
   public final static String CLASS = "net.geoprism.registry.graph.BusinessType";
   public final static java.lang.String DISPLAYLABEL = "displayLabel";
+  public final static java.lang.String DESCRIPTION = "description";
   public final static java.lang.String LABELATTRIBUTE = "labelAttribute";
   public final static java.lang.String MDVERTEX = "mdVertex";
   public final static java.lang.String ORGANIZATION = "organization";
@@ -57,6 +58,22 @@ public abstract class BusinessTypeBase extends net.geoprism.registry.graph.Objec
   public void setDisplayLabel(com.runwaysdk.ComponentIF value)
   {
     this.setValue(DISPLAYLABEL, value);
+  }
+  
+  public com.runwaysdk.ComponentIF getDescription()
+  {
+    return (com.runwaysdk.ComponentIF) this.getObjectValue(DESCRIPTION);
+  }
+  
+  public static com.runwaysdk.dataaccess.MdAttributeDAOIF getDescriptionMd()
+  {
+    com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(net.geoprism.registry.graph.BusinessType.CLASS);
+    return (com.runwaysdk.dataaccess.MdAttributeDAOIF)mdClassIF.definesAttribute(DESCRIPTION);
+  }
+  
+  public void setDescription(com.runwaysdk.ComponentIF value)
+  {
+    this.setValue(DESCRIPTION, value);
   }
   
   public com.runwaysdk.system.metadata.MdAttribute getLabelAttribute()
