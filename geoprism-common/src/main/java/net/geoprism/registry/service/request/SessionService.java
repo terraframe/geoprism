@@ -109,8 +109,11 @@ public class SessionService implements SessionServiceIF
   public boolean isPublic(HttpServletRequest req)
   {
     String uri = req.getRequestURI();
+    String contextPath = req.getContextPath() == null ? "" : req.getContextPath();
 
-    if (uri.equals("/") || uri.equals(""))
+    // The application root (index page) is public, whether it is deployed at "/"
+    // or under a context path such as "/gpr"
+    if (uri.equals("") || uri.equals("/") || uri.equals(contextPath) || uri.equals(contextPath + "/"))
     {
       return true;
     }
