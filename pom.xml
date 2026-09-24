@@ -48,7 +48,7 @@
   <properties>
     <runway.version>4.0.4</runway.version>
     <geotools.version>26.7</geotools.version>
-    <fasterxml.version>2.21.2</fasterxml.version>
+    <fasterxml.version>2.21.7</fasterxml.version>
     <fasterxml.annotations.version>2.21</fasterxml.annotations.version>
 
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -299,7 +299,7 @@
                     </goals>
                   </pluginExecutionFilter>
                   <action>
-                    <ignore />
+                    <ignore/>
                   </action>
                 </pluginExecution>
                 <pluginExecution>
@@ -312,7 +312,7 @@
                     </goals>
                   </pluginExecutionFilter>
                   <action>
-                    <execute />
+                    <execute/>
                   </action>
                 </pluginExecution>
               </pluginExecutions>
