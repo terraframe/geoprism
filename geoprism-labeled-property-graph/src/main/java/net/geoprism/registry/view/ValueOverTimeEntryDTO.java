@@ -22,11 +22,11 @@ import java.util.Calendar;
 import java.util.Date;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 import net.geoprism.registry.view.serialization.DateDeserializer;
 import net.geoprism.registry.view.serialization.DateSerializer;
+import tools.jackson.databind.annotation.JsonDeserialize;
+import tools.jackson.databind.annotation.JsonSerialize;
 
 public class ValueOverTimeEntryDTO<T>
 {

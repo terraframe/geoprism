@@ -3,18 +3,18 @@
  *
  * This file is part of Geoprism(tm).
  *
- * Geoprism(tm) is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
+ * Geoprism(tm) is free software: you can redistribute it and/or modify it under
+ * the terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation, either version 3 of the License, or (at your option) any
+ * later version.
  *
- * Geoprism(tm) is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
+ * Geoprism(tm) is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with Geoprism(tm).  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with Geoprism(tm). If not, see <http://www.gnu.org/licenses/>.
  */
 package net.geoprism.registry.view;
 
@@ -24,14 +24,12 @@ import java.util.List;
 import java.util.Map;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.runwaysdk.dataaccess.ProgrammingErrorException;
 
 import net.geoprism.registry.view.serialization.DateDeserializer;
 import net.geoprism.registry.view.serialization.DateSerializer;
+import tools.jackson.databind.annotation.JsonDeserialize;
+import tools.jackson.databind.annotation.JsonSerialize;
+import tools.jackson.databind.json.JsonMapper;
 
 public class ObjectAtTimeDTO
 {
@@ -138,54 +136,26 @@ public class ObjectAtTimeDTO
 
   public static String toJson(ObjectAtTimeDTO dto)
   {
-    try
-    {
-      ObjectMapper mapper = new ObjectMapper();
-      return mapper.writeValueAsString(dto);
-    }
-    catch (JsonProcessingException e)
-    {
-      throw new ProgrammingErrorException(e);
-    }
+    JsonMapper mapper = JsonMapper.shared();
+    return mapper.writeValueAsString(dto);
   }
 
   public static String toJson(List<ObjectAtTimeDTO> dtos)
   {
-    try
-    {
-      ObjectMapper mapper = new ObjectMapper();
-      return mapper.writeValueAsString(dtos);
-    }
-    catch (JsonProcessingException e)
-    {
-      throw new ProgrammingErrorException(e);
-    }
+    JsonMapper mapper = JsonMapper.shared();
+    return mapper.writeValueAsString(dtos);
   }
 
   public static ObjectAtTimeDTO parseJson(String json)
   {
-    try
-    {
-      ObjectMapper mapper = new ObjectMapper();
-      return mapper.readValue(json, ObjectAtTimeDTO.class);
-    }
-    catch (JsonProcessingException e)
-    {
-      throw new ProgrammingErrorException(e);
-    }
+    JsonMapper mapper = JsonMapper.shared();
+    return mapper.readValue(json, ObjectAtTimeDTO.class);
   }
 
   public static List<ObjectAtTimeDTO> parseList(String json)
   {
-    try
-    {
-      ObjectMapper mapper = new ObjectMapper();
-      return mapper.readerForListOf(ObjectAtTimeDTO.class).readValue(json);
-    }
-    catch (JsonProcessingException e)
-    {
-      throw new ProgrammingErrorException(e);
-    }
+    JsonMapper mapper = JsonMapper.shared();
+    return mapper.readerForListOf(ObjectAtTimeDTO.class).readValue(json);
   }
 
 }

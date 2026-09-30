@@ -3,18 +3,19 @@
  *
  * This file is part of Common Geo Registry Adapter(tm).
  *
- * Common Geo Registry Adapter(tm) is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
+ * Common Geo Registry Adapter(tm) is free software: you can redistribute it
+ * and/or modify it under the terms of the GNU Lesser General Public License as
+ * published by the Free Software Foundation, either version 3 of the License,
+ * or (at your option) any later version.
  *
- * Common Geo Registry Adapter(tm) is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
+ * Common Geo Registry Adapter(tm) is distributed in the hope that it will be
+ * useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser
+ * General Public License for more details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with Common Geo Registry Adapter(tm).  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with Common Geo Registry Adapter(tm). If not, see
+ * <http://www.gnu.org/licenses/>.
  */
 package org.commongeoregistry.adapter.metadata;
 
@@ -25,41 +26,40 @@ import org.commongeoregistry.adapter.dataaccess.LocalizedValue;
 import org.commongeoregistry.adapter.serialization.LocalizedValueDeserializer;
 import org.commongeoregistry.adapter.serialization.LocalizedValueSerializer;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import tools.jackson.databind.annotation.JsonDeserialize;
+import tools.jackson.databind.annotation.JsonSerialize;
+import tools.jackson.databind.json.JsonMapper;
 
 public class GraphTypeDTO implements Serializable
 {
-  private static final long  serialVersionUID           = -1947163248569170534L;
+  private static final long serialVersionUID = -1947163248569170534L;
 
-  private String             typeCode;
+  private String            typeCode;
 
   /**
    * Unique identifier but also human readable.
    */
-  private String             code;
+  private String            code;
 
   /**
    * The localized label of the hierarchy type for the presentation tier.
    */
   @JsonSerialize(using = LocalizedValueSerializer.class)
   @JsonDeserialize(using = LocalizedValueDeserializer.class)
-  private LocalizedValue     label;
+  private LocalizedValue    label;
 
   /**
    * The localized description of the hierarchy type for the presentation tier.
    */
   @JsonSerialize(using = LocalizedValueSerializer.class)
   @JsonDeserialize(using = LocalizedValueDeserializer.class)
-  private LocalizedValue     description;
+  private LocalizedValue    description;
 
-  private Long               seq;
+  private Long              seq;
 
-  private String             oid;
+  private String            oid;
 
-  private String             origin;
+  private String            origin;
 
   public GraphTypeDTO()
   {
@@ -145,56 +145,28 @@ public class GraphTypeDTO implements Serializable
   {
     this.origin = origin;
   }
-  
+
   public static String toJson(GraphTypeDTO dto)
   {
-    try
-    {
-      ObjectMapper mapper = new ObjectMapper();
-      return mapper.writeValueAsString(dto);
-    }
-    catch (JsonProcessingException e)
-    {
-      throw new RuntimeException(e);
-    }
+    JsonMapper mapper = JsonMapper.shared();
+    return mapper.writeValueAsString(dto);
   }
 
   public static <T extends GraphTypeDTO> String toJson(List<T> dtos)
   {
-    try
-    {
-      ObjectMapper mapper = new ObjectMapper();
-      return mapper.writeValueAsString(dtos);
-    }
-    catch (JsonProcessingException e)
-    {
-      throw new RuntimeException(e);
-    }
+    JsonMapper mapper = JsonMapper.shared();
+    return mapper.writeValueAsString(dtos);
   }
 
   public static GraphTypeDTO parseJson(String json)
   {
-    try
-    {
-      ObjectMapper mapper = new ObjectMapper();
-      return mapper.readValue(json, GraphTypeDTO.class);
-    }
-    catch (JsonProcessingException e)
-    {
-      throw new RuntimeException(e);
-    }
+    JsonMapper mapper = JsonMapper.shared();
+    return mapper.readValue(json, GraphTypeDTO.class);
   }
 
   public static <T extends GraphTypeDTO> List<T> parseList(String json)
   {
-    try
-    {
-      ObjectMapper mapper = new ObjectMapper();
-      return mapper.readerForListOf(GraphTypeDTO.class).readValue(json);
-    }
-    catch (JsonProcessingException e)
-    {
-      throw new RuntimeException(e);
-    }
+    JsonMapper mapper = JsonMapper.shared();
+    return mapper.readerForListOf(GraphTypeDTO.class).readValue(json);
   }
 }

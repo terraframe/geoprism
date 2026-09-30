@@ -18,7 +18,6 @@
  */
 package net.geoprism.registry.view.serialization;
 
-import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -27,17 +26,24 @@ import java.util.TimeZone;
 import org.apache.commons.lang3.StringUtils;
 
 import com.fasterxml.jackson.core.JsonParseException;
-import com.fasterxml.jackson.core.JsonParser;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.DeserializationContext;
-import com.fasterxml.jackson.databind.JsonDeserializer;
 
-public class DateTimeDeserializer extends JsonDeserializer<Date>
+import tools.jackson.core.JacksonException;
+import tools.jackson.core.JsonParser;
+import tools.jackson.databind.DeserializationContext;
+import tools.jackson.databind.deser.std.StdDeserializer;
+import tools.jackson.databind.ext.javatime.DateTimeParseException;
+
+public class DateTimeDeserializer extends StdDeserializer<Date>
 {
-  @Override
-  public Date deserialize(JsonParser jsonParser, DeserializationContext context) throws IOException, JsonProcessingException
+  public DateTimeDeserializer()
   {
-    String date = jsonParser.getText();
+    super(Date.class);
+  }
+
+  @Override
+  public Date deserialize(JsonParser p, DeserializationContext ctxt) throws JacksonException
+  {
+    String date = p.getString();
     if (!StringUtils.isBlank(date))
     {
       SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mmZ");
@@ -49,7 +55,7 @@ public class DateTimeDeserializer extends JsonDeserializer<Date>
       }
       catch (ParseException e)
       {
-        throw new JsonParseException(jsonParser, "Failed to parse date value [" + date + "]", e);
+        throw new DateTimeParseException(p, "Failed to parse date time value [" + date + "]", date, Date.class, e);
       }
 
     }

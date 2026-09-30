@@ -29,11 +29,12 @@ import org.commongeoregistry.adapter.metadata.DefaultSerializer;
 import org.commongeoregistry.adapter.serialization.LocalizedValueDeserializer;
 import org.commongeoregistry.adapter.serialization.LocalizedValueSerializer;
 
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+
+import tools.jackson.databind.annotation.JsonDeserialize;
+import tools.jackson.databind.annotation.JsonSerialize;
 
 @JsonSerialize(using = LocalizedValueSerializer.class)
 @JsonDeserialize(using = LocalizedValueDeserializer.class)

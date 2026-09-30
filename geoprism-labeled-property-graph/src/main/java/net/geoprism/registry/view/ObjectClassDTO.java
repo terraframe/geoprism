@@ -28,8 +28,9 @@ import org.commongeoregistry.adapter.serialization.LocalizedValueSerializer;
 
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+
+import tools.jackson.databind.annotation.JsonDeserialize;
+import tools.jackson.databind.annotation.JsonSerialize;
 
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, // use logical type name
     include = JsonTypeInfo.As.PROPERTY, property = "type")

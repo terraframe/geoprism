@@ -3,39 +3,43 @@
  *
  * This file is part of Common Geo Registry Adapter(tm).
  *
- * Common Geo Registry Adapter(tm) is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
+ * Common Geo Registry Adapter(tm) is free software: you can redistribute it
+ * and/or modify it under the terms of the GNU Lesser General Public License as
+ * published by the Free Software Foundation, either version 3 of the License,
+ * or (at your option) any later version.
  *
- * Common Geo Registry Adapter(tm) is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
+ * Common Geo Registry Adapter(tm) is distributed in the hope that it will be
+ * useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser
+ * General Public License for more details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with Common Geo Registry Adapter(tm).  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with Common Geo Registry Adapter(tm). If not, see
+ * <http://www.gnu.org/licenses/>.
  */
 package org.commongeoregistry.adapter.serialization;
 
-import java.io.IOException;
-
 import org.commongeoregistry.adapter.dataaccess.LocalizedValue;
 
-import com.fasterxml.jackson.core.JsonParser;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.DeserializationContext;
-import com.fasterxml.jackson.databind.JsonDeserializer;
-import com.fasterxml.jackson.databind.JsonNode;
+import tools.jackson.core.JacksonException;
+import tools.jackson.core.JsonParser;
+import tools.jackson.databind.DeserializationContext;
+import tools.jackson.databind.JsonNode;
+import tools.jackson.databind.deser.std.StdDeserializer;
 
-public class LocalizedValueDeserializer extends JsonDeserializer<LocalizedValue>
+public class LocalizedValueDeserializer extends StdDeserializer<LocalizedValue>
 {
-  @Override
-  public LocalizedValue deserialize(JsonParser jsonParser, DeserializationContext context) throws IOException, JsonProcessingException
+  public LocalizedValueDeserializer()
   {
-    JsonNode node = jsonParser.readValueAsTree();
+    super(LocalizedValue.class);
+  }
+
+  @Override
+  public LocalizedValue deserialize(JsonParser p, DeserializationContext ctxt) throws JacksonException
+  {
+    JsonNode node = p.readValueAsTree();
     String text = node.toPrettyString();
-    
+
     if (text != null && !text.isEmpty())
     {
       return LocalizedValue.fromJSON(com.google.gson.JsonParser.parseString(text).getAsJsonObject());

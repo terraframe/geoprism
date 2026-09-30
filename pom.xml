@@ -48,8 +48,8 @@
   <properties>
     <runway.version>4.0.4</runway.version>
     <geotools.version>26.7</geotools.version>
-    <fasterxml.version>2.21.7</fasterxml.version>
-    <fasterxml.annotations.version>2.21</fasterxml.annotations.version>
+    <jackson.version>3.1.5</jackson.version>
+    <jackson.annotations.version>2.21</jackson.annotations.version>
 
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <maven.compiler.source>17</maven.compiler.source>
