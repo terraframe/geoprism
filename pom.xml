@@ -48,7 +48,7 @@
   <properties>
     <runway.version>4.0.4</runway.version>
     <geotools.version>26.7</geotools.version>
-    <jackson.version>3.1.5</jackson.version>
+    <jackson.version>3.1.7</jackson.version>
     <jackson.annotations.version>2.21</jackson.annotations.version>
     <spring.version>7.0.9</spring.version>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
