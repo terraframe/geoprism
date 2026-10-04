@@ -3,18 +3,18 @@
  *
  * This file is part of Geoprism(tm).
  *
- * Geoprism(tm) is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
+ * Geoprism(tm) is free software: you can redistribute it and/or modify it under
+ * the terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation, either version 3 of the License, or (at your option) any
+ * later version.
  *
- * Geoprism(tm) is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
+ * Geoprism(tm) is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with Geoprism(tm).  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with Geoprism(tm). If not, see <http://www.gnu.org/licenses/>.
  */
 package net.geoprism.registry.service.business;
 
@@ -65,6 +65,7 @@ import com.runwaysdk.dataaccess.MdBusinessDAOIF;
 import com.runwaysdk.dataaccess.MdVertexDAOIF;
 import com.runwaysdk.dataaccess.ProgrammingErrorException;
 import com.runwaysdk.dataaccess.attributes.AttributeValueException;
+import com.runwaysdk.dataaccess.database.DDLCommand;
 import com.runwaysdk.dataaccess.metadata.MdAttributeCharacterDAO;
 import com.runwaysdk.dataaccess.metadata.MdAttributeDateTimeDAO;
 import com.runwaysdk.dataaccess.metadata.MdAttributeTextDAO;
@@ -565,6 +566,8 @@ public class GeoObjectTypeBusinessService implements GeoObjectTypeBusinessServic
         geometryMdAttr.setValue(MdAttributeMultiLineStringInfo.DIMENSION, "2");
         geometryMdAttr.setValue(MdAttributeMultiLineStringInfo.SRID, "4326");
         geometryMdAttr.apply();
+
+        this.addGeometryIndex(mdBusiness.getTableName(), DefaultAttribute.GEOMETRY.getName());
       }
       else if (geometryType.equals(GeometryType.POINT) || geometryType.equals(GeometryType.MULTIPOINT))
       {
@@ -577,6 +580,8 @@ public class GeoObjectTypeBusinessService implements GeoObjectTypeBusinessServic
         geometryMdAttr.setValue(MdAttributeMultiLineStringInfo.DIMENSION, "2");
         geometryMdAttr.setValue(MdAttributeMultiLineStringInfo.SRID, "4326");
         geometryMdAttr.apply();
+
+        this.addGeometryIndex(mdBusiness.getTableName(), DefaultAttribute.GEOMETRY.getName());
       }
       else if (geometryType.equals(GeometryType.POLYGON) || geometryType.equals(GeometryType.MULTIPOLYGON))
       {
@@ -589,6 +594,8 @@ public class GeoObjectTypeBusinessService implements GeoObjectTypeBusinessServic
         geometryMdAttr.setValue(MdAttributeMultiLineStringInfo.DIMENSION, "2");
         geometryMdAttr.setValue(MdAttributeMultiLineStringInfo.SRID, "4326");
         geometryMdAttr.apply();
+
+        this.addGeometryIndex(mdBusiness.getTableName(), DefaultAttribute.GEOMETRY.getName());
       }
       else if (geometryType.equals(GeometryType.MIXED))
       {
@@ -601,6 +608,8 @@ public class GeoObjectTypeBusinessService implements GeoObjectTypeBusinessServic
         geometryMdAttr.setValue(MdAttributeMultiLineStringInfo.DIMENSION, "2");
         geometryMdAttr.setValue(MdAttributeMultiLineStringInfo.SRID, "4326");
         geometryMdAttr.apply();
+
+        this.addGeometryIndex(mdBusiness.getTableName(), DefaultAttribute.GEOMETRY.getName());
       }
       else
       {
@@ -1186,4 +1195,14 @@ public class GeoObjectTypeBusinessService implements GeoObjectTypeBusinessServic
     return true;
   }
 
+  public void addGeometryIndex(String table, String columnName)
+  {
+    String indexName = table.toLowerCase() + "_gist";
+
+    String statement = "CREATE INDEX " + indexName + " ON " + table + " USING gist (" + columnName + ")";
+
+    String undo = "DROP INDEX " + indexName;
+
+    new DDLCommand(statement, undo, false).doIt();
+  }
 }
