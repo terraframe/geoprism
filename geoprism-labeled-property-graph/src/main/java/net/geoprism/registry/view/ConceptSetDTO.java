@@ -21,7 +21,7 @@ package net.geoprism.registry.view;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.commongeoregistry.adapter.dataaccess.LocalizedValue;
 import org.commongeoregistry.adapter.serialization.LocalizedValueDeserializer;
 import org.commongeoregistry.adapter.serialization.LocalizedValueSerializer;

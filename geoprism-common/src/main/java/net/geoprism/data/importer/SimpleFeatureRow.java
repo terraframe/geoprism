@@ -18,7 +18,7 @@
  */
 package net.geoprism.data.importer;
 
-import org.opengis.feature.simple.SimpleFeature;
+import org.geotools.api.feature.simple.SimpleFeature;
 
 public class SimpleFeatureRow implements FeatureRow
 {
