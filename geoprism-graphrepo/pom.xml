@@ -52,7 +52,7 @@
     <dependency>
       <groupId>org.springframework</groupId>
       <artifactId>spring-test</artifactId>
-      <version>6.1.14</version>
+      <version>${spring.version}</version>
       <scope>test</scope>
     </dependency>    
   </dependencies>
