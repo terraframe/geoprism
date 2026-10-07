@@ -53,12 +53,19 @@
       <groupId>org.apache.jena</groupId>
       <artifactId>apache-jena-libs</artifactId>
       <type>pom</type>
-      <version>5.6.0</version>
+      <version>6.2.0</version>
     </dependency>
     <dependency>
       <groupId>com.wdtinc</groupId>
       <artifactId>mapbox-vector-tile</artifactId>
       <version>3.1.2-TF</version>
+      <exclusions>
+        <!-- Ships protobuf-java 3.5.1 (vulnerable); use the patched 4.x that Jena brings instead. -->
+        <exclusion>
+          <groupId>com.google.protobuf</groupId>
+          <artifactId>protobuf-java</artifactId>
+        </exclusion>
+      </exclusions>
     </dependency>
   </dependencies>
   

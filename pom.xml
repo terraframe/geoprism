@@ -46,17 +46,17 @@
   </modules>
 
   <properties>
-    <runway.version>4.0.5</runway.version>
+    <runway.version>4.0.6-SNAPSHOT</runway.version>
     <geotools.version>35.1</geotools.version>
     <jts.version>1.20.0</jts.version>
     <jackson.version>3.1.7</jackson.version>
     <jackson.annotations.version>2.21</jackson.annotations.version>
     <spring.version>7.0.9</spring.version>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <maven.compiler.source>17</maven.compiler.source>
-    <maven.compiler.target>17</maven.compiler.target>
-    <aspectj.version>1.9.22.1</aspectj.version>    
-    <aspectj.plugin.version>1.15.0</aspectj.plugin.version>
+    <maven.compiler.source>25</maven.compiler.source>
+    <maven.compiler.target>25</maven.compiler.target>
+    <aspectj.version>1.9.25.1</aspectj.version>    
+    <aspectj.plugin.version>1.16.0</aspectj.plugin.version>
   </properties>
 
   <dependencies>
