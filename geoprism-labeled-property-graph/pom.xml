@@ -33,6 +33,22 @@
   <description>Provides basic features for Geoprism apps.</description>
   <url>http://www.terraframe.com/products/runwaysdk</url>
   
+  <!-- Override vulnerable transitive versions (libthrift via Jena, commons-codec via httpclient) to fix security issues. -->
+  <dependencyManagement>
+    <dependencies>
+      <dependency>
+        <groupId>org.apache.thrift</groupId>
+        <artifactId>libthrift</artifactId>
+        <version>0.25.0</version>
+      </dependency>
+      <dependency>
+        <groupId>commons-codec</groupId>
+        <artifactId>commons-codec</artifactId>
+        <version>1.22.0</version>
+      </dependency>
+    </dependencies>
+  </dependencyManagement>
+
   <dependencies>
     <dependency>
       <groupId>net.geoprism</groupId>
