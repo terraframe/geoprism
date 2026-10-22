@@ -3,18 +3,18 @@
  *
  * This file is part of Geoprism(tm).
  *
- * Geoprism(tm) is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
+ * Geoprism(tm) is free software: you can redistribute it and/or modify it under
+ * the terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation, either version 3 of the License, or (at your option) any
+ * later version.
  *
- * Geoprism(tm) is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
+ * Geoprism(tm) is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with Geoprism(tm).  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with Geoprism(tm). If not, see <http://www.gnu.org/licenses/>.
  */
 package net.geoprism.registry.model.graph;
 
@@ -30,9 +30,13 @@ import java.util.UUID;
 import org.apache.commons.lang3.StringUtils;
 import org.commongeoregistry.adapter.constants.DefaultAttribute;
 
+import com.orientechnologies.orient.core.db.ODatabaseSession;
+import com.orientechnologies.orient.core.id.ORID;
+import com.orientechnologies.orient.core.record.OElement;
 import com.runwaysdk.business.graph.GraphQuery;
 import com.runwaysdk.dataaccess.graph.GraphDBService;
 import com.runwaysdk.dataaccess.graph.GraphRequest;
+import com.runwaysdk.dataaccess.graph.orientdb.OrientDBRequest;
 
 import net.geoprism.registry.model.EdgeType;
 import net.geoprism.registry.model.GraphType;
@@ -295,9 +299,14 @@ public class AbstractGraphStrategy
     statement.append(" WHERE uid = :uid");
 
     GraphDBService service = GraphDBService.getInstance();
-    GraphRequest request = service.getGraphDBRequest();
+    OrientDBRequest request = (OrientDBRequest) service.getGraphDBRequest();
 
     service.command(request, statement.toString(), Map.of("uid", edge.getUid()));
+
+    // Deleting through a direct SQL command bypasses the java abstraction and
+    // can leave stale entities in the L1 cache. So we need to clear the cache
+    ODatabaseSession session = request.getODatabaseSession();
+    session.getLocalCache().clear();
   }
 
   protected void update(EdgeEntry edge)

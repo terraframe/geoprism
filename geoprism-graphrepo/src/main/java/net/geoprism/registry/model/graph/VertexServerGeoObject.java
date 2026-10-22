@@ -3,18 +3,18 @@
  *
  * This file is part of Geoprism(tm).
  *
- * Geoprism(tm) is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
+ * Geoprism(tm) is free software: you can redistribute it and/or modify it under
+ * the terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation, either version 3 of the License, or (at your option) any
+ * later version.
  *
- * Geoprism(tm) is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
+ * Geoprism(tm) is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with Geoprism(tm).  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with Geoprism(tm). If not, see <http://www.gnu.org/licenses/>.
  */
 package net.geoprism.registry.model.graph;
 
@@ -54,6 +54,7 @@ import org.slf4j.LoggerFactory;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import com.orientechnologies.orient.core.db.ODatabaseSession;
 import com.runwaysdk.Pair;
 import com.runwaysdk.business.graph.EdgeObject;
 import com.runwaysdk.business.graph.GraphQuery;
@@ -67,6 +68,7 @@ import com.runwaysdk.dataaccess.graph.GraphDBService;
 import com.runwaysdk.dataaccess.graph.VertexObjectDAO;
 import com.runwaysdk.dataaccess.graph.attributes.ValueOverTime;
 import com.runwaysdk.dataaccess.graph.attributes.ValueOverTimeCollection;
+import com.runwaysdk.dataaccess.graph.orientdb.OrientDBRequest;
 import com.runwaysdk.dataaccess.metadata.graph.MdGraphClassDAO;
 import com.runwaysdk.dataaccess.metadata.graph.MdVertexDAO;
 import com.runwaysdk.dataaccess.transaction.Transaction;
@@ -178,11 +180,11 @@ public class VertexServerGeoObject extends ServerObjectVertex implements ServerG
   @Override
   public void setCode(String code)
   {
-//    if (code != null)
-//    {
-//      code = code.trim();
-//      code = code.replaceAll("\\s+", "");
-//    }
+    // if (code != null)
+    // {
+    // code = code.trim();
+    // code = code.replaceAll("\\s+", "");
+    // }
 
     final String value = code;
 
@@ -697,7 +699,13 @@ public class VertexServerGeoObject extends ServerObjectVertex implements ServerG
     parameters.put("class", childType.getMdVertexDAO().getDBClassName());
 
     GraphDBService service = GraphDBService.getInstance();
-    service.command(service.getGraphDBRequest(), statement.toString(), parameters);
+    OrientDBRequest request = (OrientDBRequest) service.getGraphDBRequest();
+    service.command(request, statement.toString(), parameters);
+
+    // Deleting through a direct SQL command bypasses the java abstraction and
+    // can leave stale entities in the L1 cache. So we need to clear the cache
+    ODatabaseSession session = request.getODatabaseSession();
+    session.getLocalCache().clear();
   }
 
   public static boolean isCodeAttribute(MdAttributeDAOIF attr)
