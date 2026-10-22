@@ -38,6 +38,7 @@ import com.runwaysdk.dataaccess.MdVertexDAOIF;
 import com.runwaysdk.dataaccess.ProgrammingErrorException;
 import com.runwaysdk.dataaccess.graph.VertexObjectDAO;
 import com.runwaysdk.dataaccess.metadata.graph.MdVertexDAO;
+import com.runwaysdk.dataaccess.transaction.Transaction;
 import com.runwaysdk.system.metadata.MdVertex;
 
 import net.geoprism.GenericException;
@@ -128,6 +129,7 @@ public class ConceptObjectBusinessService extends ObjectEdgeBusinessService<Conc
   }
 
   @Override
+  @Transaction
   public void delete(ConceptObject object, boolean validateOrigin)
   {
     super.delete(object, validateOrigin);

@@ -444,13 +444,13 @@ public abstract class ObjectBusinessService<V extends ServerObjectVertex, T exte
   }
 
   @Override
-  @Transaction
   public void delete(V object)
   {
     this.delete(object, true);
   }
 
   @Override
+  @Transaction
   public void delete(V object, boolean validateOrigin)
   {
     if (validateOrigin)
