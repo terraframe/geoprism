@@ -754,7 +754,9 @@ public class GeoObjectTypeBusinessService implements GeoObjectTypeBusinessServic
      * the same parent at the same time the system will throw a
      * OConcurrentModificationException. Retry the commit again.
      */
-    for (int i = 0; i < 100; i++)
+    final int maxAttempts = 100;
+
+    for (int i = 0; i < maxAttempts; i++)
     {
       try
       {
@@ -764,7 +766,9 @@ public class GeoObjectTypeBusinessService implements GeoObjectTypeBusinessServic
       }
       catch (ProgrammingErrorException e)
       {
-        if (! ( e.getCause() instanceof OConcurrentModificationException ))
+        // Don't silently give up when every attempt fails, otherwise the type
+        // is left in place while the caller thinks it was deleted
+        if (! ( e.getCause() instanceof OConcurrentModificationException ) || i == maxAttempts - 1)
         {
           throw e;
         }
