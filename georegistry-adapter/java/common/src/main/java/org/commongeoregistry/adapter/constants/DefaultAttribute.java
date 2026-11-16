@@ -32,31 +32,31 @@ import org.commongeoregistry.adapter.metadata.AttributeDataSourceType;
 import org.commongeoregistry.adapter.metadata.AttributeType;
 
 public enum DefaultAttribute {
-  UID("uid", "UID", "The internal globally unique identifier ID", AttributeCharacterType.TYPE, true, true, false, false), 
+  UID("uid", "UID", "Internal, globally unique identifier", AttributeCharacterType.TYPE, true, true, false, false), 
   
-  CODE("code", "Code", "Human readable unique identified", AttributeCharacterType.TYPE, true, true, false, false),
+  CODE("code", "Code", "Human-readable unique identifier", AttributeCharacterType.TYPE, true, true, false, false),
 
-  INVALID("invalid", "Invalid", "This Geo-Object is no longer valid.", AttributeBooleanType.TYPE, true, true, false, false),
+  INVALID("invalid", "Invalid", "Whether this Geo-Object is no longer valid", AttributeBooleanType.TYPE, true, true, false, false),
 
-  DISPLAY_LABEL("displayLabel", "Display Label", "Label of the location", AttributeLocalType.TYPE, true, false, false, true),
+  DISPLAY_LABEL("displayLabel", "Display Label", "Display name of the Geo-Object", AttributeLocalType.TYPE, true, false, false, true),
 
-  ALT_IDS("altIds", "Alternate Ids", "A list of alternate ids for this object.", AttributeListType.TYPE, true, false, false, false),
+  ALT_IDS("altIds", "Alternate IDs", "A list of alternate IDs for this Geo-Object", AttributeListType.TYPE, true, false, false, false),
 
-  TYPE("type", "Type", "The type of the GeoObject", AttributeCharacterType.TYPE, true, false, false, false),
+  TYPE("type", "Type", "The type of the Geo-Object", AttributeCharacterType.TYPE, true, false, false, false),
 
-  EXISTS("exists", "Exists", "Does this GeoObject exist", AttributeBooleanType.TYPE, true, false, false, true),
+  EXISTS("exists", "Exists", "Whether this Geo-Object exists during a given time period. For example, a district created by splitting another district would not exist before the date of the split", AttributeBooleanType.TYPE, true, false, false, true),
 
-  SEQUENCE("sequence", "Sequence", "The sequence number of the GeoObject that is incremented when the object is updated", AttributeIntegerType.TYPE, true, false, false, false),
+  SEQUENCE("sequence", "Sequence", "Sequence number, incremented each time the Geo-Object is updated", AttributeIntegerType.TYPE, true, false, false, false),
 
-  CREATE_DATE("createDate", "Date Created", "The date the object was created", AttributeDateType.TYPE, true, false, false, false),
+  CREATE_DATE("createDate", "Date Created", "The date the Geo-Object was created", AttributeDateType.TYPE, true, false, false, false),
 
-  LAST_UPDATE_DATE("lastUpdateDate", "Date Last Updated", "The date the object was updated", AttributeDateType.TYPE, true, false, false, false),
+  LAST_UPDATE_DATE("lastUpdateDate", "Date Last Updated", "The date the Geo-Object was last updated", AttributeDateType.TYPE, true, false, false, false),
 
-  DATA_SOURCE("dataSource", "Data Source", "Source of the data", AttributeDataSourceType.TYPE, true, false, false, true),
+  DATA_SOURCE("dataSource", "Data Source", "The source of the Geo-Object's data", AttributeDataSourceType.TYPE, true, false, false, true),
 
-  GEOMETRY("geometry", "Geometry", "The geometries for the GeoObject.", AttributeGeometryType.TYPE, true, false, false, true),
+  GEOMETRY("geometry", "Geometry", "The geometry of the Geo-Object", AttributeGeometryType.TYPE, true, false, false, true),
 
-  CLASSIFICATION("classification", "Classification", "The GeoObject subtype classification", AttributeClassificationType.TYPE, false, false, false, true);
+  CLASSIFICATION("classification", "Classification", "The subtype classification of the Geo-Object", AttributeClassificationType.TYPE, false, false, false, true);
 
 
   public static final String ALTERNATE_ID_ELEMENT_TYPE = AlternateId.class.getName();
