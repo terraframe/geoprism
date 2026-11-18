@@ -91,7 +91,7 @@ public class ConceptObjectBusinessService extends ObjectEdgeBusinessService<Conc
     {
       if (attribute != null)
       {
-        return attribute.getTypeInfo().getTypeCode() + "~" + code;
+        return attribute.getTypeInfo().getTypeCode() + "~" + attribute.getCode() + "~" + code;
       }
 
       return code;
@@ -274,6 +274,7 @@ public class ConceptObjectBusinessService extends ObjectEdgeBusinessService<Conc
     {
       List<ConceptClass> classes = this.setService.getConceptClasses(set);
 
+      // Currently enumeration and taxonomy concept sets can only have a single concept class
       if (classes.size() > 0)
       {
         return this.search(classes.get(0), text);

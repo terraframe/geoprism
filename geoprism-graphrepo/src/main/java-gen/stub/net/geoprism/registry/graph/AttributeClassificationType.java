@@ -3,18 +3,18 @@
  *
  * This file is part of Geoprism(tm).
  *
- * Geoprism(tm) is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
+ * Geoprism(tm) is free software: you can redistribute it and/or modify it under
+ * the terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation, either version 3 of the License, or (at your option) any
+ * later version.
  *
- * Geoprism(tm) is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
+ * Geoprism(tm) is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with Geoprism(tm).  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with Geoprism(tm). If not, see <http://www.gnu.org/licenses/>.
  */
 package net.geoprism.registry.graph;
 
@@ -64,13 +64,23 @@ public class AttributeClassificationType extends AttributeClassificationTypeBase
   {
     if (!this.getIsChangeOverTime() && !this.getIsVirtual())
     {
-      // Create the MdAttribute on the MdVertex
-      MdAttributeGraphReferenceDAO mdAttribute = MdAttributeGraphReferenceDAO.newInstance();
+      MdAttributeGraphReferenceDAO mdAttribute = null;
+
+      if (this.isNew() && !this.isAppliedToDb())
+      {
+        // Create the MdAttribute on the MdVertex
+        mdAttribute = MdAttributeGraphReferenceDAO.newInstance();
+      }
+      else
+      {
+        MdVertexDAOIF mdVertex = MdVertexDAO.get(this.getObjectType().getMdVertexOid());
+
+        mdAttribute = (MdAttributeGraphReferenceDAO) mdVertex.definesAttribute(this.getCode()).getBusinessDAO();
+      }
 
       populate(mdAttribute);
 
       mdAttribute.apply();
-
     }
 
     super.apply();
@@ -102,13 +112,17 @@ public class AttributeClassificationType extends AttributeClassificationTypeBase
 
     org.commongeoregistry.adapter.metadata.AttributeClassificationType attributeClassificationDTO = (org.commongeoregistry.adapter.metadata.AttributeClassificationType) dto;
 
-    ConceptSetBusinessServiceIF tService = ServiceFactory.getBean(ConceptSetBusinessServiceIF.class);
-    ConceptSet conceptSet = tService.getByCodeOrThrow(attributeClassificationDTO.getConceptSet());
+    // Concept values can only be set on creation
+    if (this.isNew())
+    {
+      ConceptSetBusinessServiceIF tService = ServiceFactory.getBean(ConceptSetBusinessServiceIF.class);
+      ConceptSet conceptSet = tService.getByCodeOrThrow(attributeClassificationDTO.getConceptSet());
 
-    this.setStartDate(attributeClassificationDTO.getStartDate());
-    this.setEndDate(attributeClassificationDTO.getEndDate());
-    this.setConceptSet(conceptSet.getCode());
-    this.setRootTerm(attributeClassificationDTO.getRootTerm());
+      this.setStartDate(attributeClassificationDTO.getStartDate());
+      this.setEndDate(attributeClassificationDTO.getEndDate());
+      this.setConceptSet(conceptSet.getCode());
+      this.setRootTerm(attributeClassificationDTO.getRootTerm());
+    }
   }
 
   @Override

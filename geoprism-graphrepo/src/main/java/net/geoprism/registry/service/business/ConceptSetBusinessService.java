@@ -3,18 +3,18 @@
  *
  * This file is part of Geoprism(tm).
  *
- * Geoprism(tm) is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
+ * Geoprism(tm) is free software: you can redistribute it and/or modify it under
+ * the terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation, either version 3 of the License, or (at your option) any
+ * later version.
  *
- * Geoprism(tm) is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
+ * Geoprism(tm) is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with Geoprism(tm).  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with Geoprism(tm). If not, see <http://www.gnu.org/licenses/>.
  */
 /**
  * CopyrighConceptSet (c) 2023 TerraFrame, Inc. All rights reserved.
@@ -79,9 +79,6 @@ public class ConceptSetBusinessService implements ConceptSetBusinessServiceIF
   @Autowired
   protected ConceptEdgeTypeBusinessServiceIF            cEdgeTypeService;
 
-  @Autowired
-  protected ConceptObjectBusinessServiceIF              cObjectService;
-
   private final TransactionLRUCache<String, ConceptSet> cache;
 
   public ConceptSetBusinessService()
@@ -112,7 +109,11 @@ public class ConceptSetBusinessService implements ConceptSetBusinessServiceIF
 
     if (attributes.size() > 0)
     {
-      throw new GenericException("The Concept Set be delete because it is used as a type's classification");
+      List<String> labels = attributes.stream() //
+          .map(a -> a.getObjectType().getLabel().getValue()) //
+          .distinct().toList();
+
+      throw new GenericException("The Concept Set cannot be delete because it is used by the following Geo-Object Types: " + String.join(", ", labels));
     }
 
     type.delete();
@@ -273,14 +274,10 @@ public class ConceptSetBusinessService implements ConceptSetBusinessServiceIF
     dto.setDiscreteType(DiscreteType.valueOf(type.getDiscreteType()));
     dto.setOrigin(type.getOrigin());
     dto.setSequence(type.getSequence());
+    dto.setRootTerm(type.getRootTerm());
 
     this.getConceptClasses(type).forEach(cClass -> dto.getConceptClasses().add(cClass.getCode()));
     this.getConceptEdgeTypes(type).forEach(cEdge -> dto.getConceptEdgeTypes().add(cEdge.getCode()));
-
-    if (StringUtils.isNotBlank(type.getRootTerm()))
-    {
-      this.cObjectService.getByCode(type.getRootTerm()).ifPresent(root -> dto.setRootTerm(root.getCode()));
-    }
   }
 
   @Override

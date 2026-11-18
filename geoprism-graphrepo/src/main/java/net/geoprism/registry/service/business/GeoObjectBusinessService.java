@@ -3,18 +3,18 @@
  *
  * This file is part of Geoprism(tm).
  *
- * Geoprism(tm) is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
+ * Geoprism(tm) is free software: you can redistribute it and/or modify it under
+ * the terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation, either version 3 of the License, or (at your option) any
+ * later version.
  *
- * Geoprism(tm) is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
+ * Geoprism(tm) is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with Geoprism(tm).  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with Geoprism(tm). If not, see <http://www.gnu.org/licenses/>.
  */
 package net.geoprism.registry.service.business;
 
@@ -39,6 +39,7 @@ import org.commongeoregistry.adapter.dataaccess.GeoObject;
 import org.commongeoregistry.adapter.dataaccess.GeoObjectOverTime;
 import org.commongeoregistry.adapter.dataaccess.LocalizedValue;
 import org.commongeoregistry.adapter.dataaccess.ParentTreeNode;
+import org.commongeoregistry.adapter.dataaccess.UnknownTermException;
 import org.commongeoregistry.adapter.dataaccess.ValueOverTimeCollectionDTO;
 import org.commongeoregistry.adapter.dataaccess.ValueOverTimeDTO;
 import org.commongeoregistry.adapter.metadata.AttributeClassificationType;
@@ -412,7 +413,6 @@ public class GeoObjectBusinessService extends RegistryLocalizedValueConverter im
     }
   }
 
-  @SuppressWarnings("unchecked")
   @Override
   public void populate(ServerGeoObjectIF sgo, GeoObject dto, Date startDate, Date endDate)
   {
@@ -447,9 +447,9 @@ public class GeoObjectBusinessService extends RegistryLocalizedValueConverter im
 
           if (value != null)
           {
-            this.cService.getByCode((AttributeClassificationType) attribute, value).ifPresent(classification -> {
-              sgo.setValue(attributeName, classification.getVertex(), startDate, endDate);
-            });
+            ConceptObject classification = this.cService.getByCode((AttributeClassificationType) attribute, value).orElseThrow(() -> new UnknownTermException(value.toString().trim(), attribute));
+
+            sgo.setValue(attributeName, classification.getVertex(), startDate, endDate);
           }
           else
           {
@@ -483,7 +483,6 @@ public class GeoObjectBusinessService extends RegistryLocalizedValueConverter im
     sgo.setGeometry(dto.getGeometry(), startDate, endDate);
   }
 
-  @SuppressWarnings("unchecked")
   @Override
   public void populate(ServerGeoObjectIF sgo, GeoObjectOverTime goTime)
   {
@@ -550,12 +549,11 @@ public class GeoObjectBusinessService extends RegistryLocalizedValueConverter im
 
             if (value != null)
             {
-              this.cService.getByCode((AttributeClassificationType) attribute, value).ifPresent(classification -> {
-                sgo.setValue(attributeName, classification.getVertex(), votDTO.getStartDate(), votDTO.getEndDate());
+              ConceptObject classification = this.cService.getByCode((AttributeClassificationType) attribute, value).orElseThrow(() -> new UnknownTermException(value.toString().trim(), attribute));
 
-                c.add(new ValueOverTime(votDTO.getStartDate(), votDTO.getEndDate(), classification.getVertex()));
-              });
+              sgo.setValue(attributeName, classification.getVertex(), votDTO.getStartDate(), votDTO.getEndDate());
 
+              c.add(new ValueOverTime(votDTO.getStartDate(), votDTO.getEndDate(), classification.getVertex()));
             }
             else
             {
@@ -679,7 +677,7 @@ public class GeoObjectBusinessService extends RegistryLocalizedValueConverter im
   {
     return this.getGeoObjectByCode(code, ServerGeoObjectType.get(type));
   }
-  
+
   @Override
   public ServerGeoObjectIF getGeoObjectByCode(String code, String typeCode, boolean throwException)
   {
@@ -691,7 +689,7 @@ public class GeoObjectBusinessService extends RegistryLocalizedValueConverter im
   {
     return this.getGeoObjectByCode(code, ServerGeoObjectType.get(type), throwException);
   }
-  
+
   @Override
   public ServerGeoObjectIF getGeoObjectByCode(String code, ServerGeoObjectType type)
   {
@@ -1978,17 +1976,17 @@ public class GeoObjectBusinessService extends RegistryLocalizedValueConverter im
     List<BusinessObject> objects = this.getBusinessObjects(vsgo, edgeType, EdgeDirection.valueOf(direction), date);
 
     return objects.stream().map(object -> {
-      return this.businessObjectService.toDTO((BusinessObject)object, date);
+      return this.businessObjectService.toDTO((BusinessObject) object, date);
     }).toList();
   }
-  
+
   @Override
   public List<EdgeQueryObject> getBusinessEdgeObjects(String typeCode, String code, String edgeTypeCode, String direction, Date date)
   {
     VertexServerGeoObject vsgo = (VertexServerGeoObject) this.getGeoObjectByCode(code, typeCode);
 
     BusinessEdgeType edgeType = this.businessEdgeTypeService.getByCodeOrThrow(edgeTypeCode);
-    
+
     return getBusinessEdgeObjects(vsgo, edgeType, EdgeDirection.valueOf(direction), date);
   }
 
@@ -2007,21 +2005,16 @@ public class GeoObjectBusinessService extends RegistryLocalizedValueConverter im
 
     GraphQuery<VertexObject> query = new GraphQuery<VertexObject>(statement.toString());
     query.setParameter("rid", source.getVertex().getRID());
-    
+
     return this.businessObjectService.processTraverseResults(query.getResults(), source.getDate());
   }
-  
+
   @Override
   public List<EdgeQueryObject> getBusinessEdgeObjects(VertexServerGeoObject source, BusinessEdgeType edgeType, EdgeDirection direction, Date date)
   {
-    return new VertexAndEdgeQuery(
-        source.getVertex(),
-        edgeType.getMdEdgeDAO().getDBClassName(),
-        direction,
-        businessObjectService::processTraverseResults)
-            .setDate(date)
-//            .setSkip(skip)
-//            .setLimit(limit)
-            .getResults();
+    return new VertexAndEdgeQuery(source.getVertex(), edgeType.getMdEdgeDAO().getDBClassName(), direction, businessObjectService::processTraverseResults).setDate(date)
+        // .setSkip(skip)
+        // .setLimit(limit)
+        .getResults();
   }
 }

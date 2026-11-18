@@ -23,6 +23,7 @@ import java.util.function.Predicate;
 
 import org.commongeoregistry.adapter.constants.DefaultAttribute;
 import org.commongeoregistry.adapter.dataaccess.LocalizedValue;
+import org.commongeoregistry.adapter.metadata.AttributeClassificationType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
@@ -35,6 +36,7 @@ import com.runwaysdk.dataaccess.metadata.graph.MdVertexDAO;
 import com.runwaysdk.dataaccess.transaction.Transaction;
 import com.runwaysdk.gis.constants.MdGeoVertexInfo;
 
+import net.geoprism.GenericException;
 import net.geoprism.configuration.GeoprismProperties;
 import net.geoprism.registry.CodeLengthException;
 import net.geoprism.registry.RegistryConstants;
@@ -238,6 +240,17 @@ public class ConceptClassBusinessService extends ObjectClassBusinessService<Conc
     this.getCache().put(conceptClass);
 
     return conceptClass;
+  }
+
+  @Override
+  public <K extends org.commongeoregistry.adapter.metadata.AttributeType> K createAttributeType(ConceptClass type, org.commongeoregistry.adapter.metadata.AttributeType dto)
+  {
+    if (dto.getType().equals(AttributeClassificationType.TYPE))
+    {
+      throw new GenericException("Classification attributes cannot be added to a Concept Class");
+    }
+
+    return super.createAttributeType(type, dto);
   }
 
   @Override
