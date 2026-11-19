@@ -19,18 +19,26 @@
 package net.geoprism.registry.graph;
 
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import org.commongeoregistry.adapter.dataaccess.LocalizedValue;
 
+import com.orientechnologies.orient.core.db.ODatabaseSession;
 import com.runwaysdk.constants.IndexTypes;
 import com.runwaysdk.constants.MdAttributeBooleanInfo;
 import com.runwaysdk.constants.MdAttributeConcreteInfo;
 import com.runwaysdk.dataaccess.MdAttributeDAOIF;
+import com.runwaysdk.dataaccess.MdVertexDAOIF;
+import com.runwaysdk.dataaccess.graph.GraphDBService;
+import com.runwaysdk.dataaccess.graph.orientdb.OrientDBRequest;
 import com.runwaysdk.dataaccess.metadata.MdAttributeConcreteDAO;
+import com.runwaysdk.dataaccess.metadata.graph.MdVertexDAO;
+import com.runwaysdk.dataaccess.transaction.Transaction;
 import com.runwaysdk.system.metadata.MdVertex;
 
 import net.geoprism.registry.conversion.LocalizedValueConverter;
+import net.geoprism.registry.model.EdgeConstant;
 import net.geoprism.registry.model.ServerGeoObjectType;
 import net.geoprism.registry.model.ValueStrategy;
 
@@ -112,6 +120,55 @@ public abstract class AttributeType extends AttributeTypeBase
   public List<String> getColumnNames(ServerGeoObjectType type)
   {
     return this.getValueAttributes(type).stream().map(mdAttribute -> mdAttribute.getColumnName()).collect(Collectors.toList());
+  }
+
+  /**
+   * @return The edge which links an object vertex to the value nodes of this
+   *         attribute when the attribute changes over time
+   */
+  protected EdgeConstant getValueEdge()
+  {
+    return EdgeConstant.HAS_VALUE;
+  }
+
+  @Override
+  @Transaction
+  public void delete()
+  {
+    if (this.getIsChangeOverTime() && !this.getIsVirtual())
+    {
+      this.deleteValueNodes();
+    }
+
+    super.delete();
+  }
+
+  /**
+   * Deletes all of the value nodes of this attribute, along with their incoming
+   * edges, using a single server side command. The delete is scoped by
+   * traversing from the vertex class of the owning type (polymorphic, so
+   * objects of sub types are included) because attribute codes are not unique
+   * across types.
+   */
+  protected void deleteValueNodes()
+  {
+    MdVertexDAOIF ownerVertex = MdVertexDAO.get(this.getObjectType().getMdVertexOid());
+
+    StringBuilder statement = new StringBuilder();
+    statement.append("DELETE VERTEX FROM (");
+    statement.append(" SELECT expand(out('" + this.getValueEdge().getDBClassName() + "')[attributeName = :code])");
+    statement.append(" FROM " + ownerVertex.getDBClassName());
+    statement.append(")");
+
+    GraphDBService service = GraphDBService.getInstance();
+    OrientDBRequest request = (OrientDBRequest) service.getGraphDBRequest();
+
+    service.command(request, statement.toString(), Map.of("code", this.getCode()));
+
+    // Deleting through a direct SQL command bypasses the java abstraction and
+    // can leave stale entities in the L1 cache. So we need to clear the cache
+    ODatabaseSession session = request.getODatabaseSession();
+    session.getLocalCache().clear();
   }
 
 }

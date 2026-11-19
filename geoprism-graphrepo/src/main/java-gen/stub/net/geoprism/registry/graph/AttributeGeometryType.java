@@ -24,6 +24,7 @@ import com.runwaysdk.dataaccess.MdVertexDAOIF;
 import com.runwaysdk.dataaccess.metadata.graph.MdVertexDAO;
 import com.runwaysdk.dataaccess.transaction.Transaction;
 
+import net.geoprism.registry.model.EdgeConstant;
 import net.geoprism.registry.model.GeometryValueNodeStrategy;
 import net.geoprism.registry.model.ValueStrategy;
 import net.geoprism.registry.model.VertexValueStrategy;
@@ -36,6 +37,12 @@ public class AttributeGeometryType extends AttributeGeometryTypeBase
   public AttributeGeometryType()
   {
     super();
+  }
+
+  @Override
+  protected EdgeConstant getValueEdge()
+  {
+    return EdgeConstant.HAS_GEOMETRY;
   }
 
   @Override
