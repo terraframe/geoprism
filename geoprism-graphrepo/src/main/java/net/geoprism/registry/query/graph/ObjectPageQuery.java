@@ -54,7 +54,7 @@ public class ObjectPageQuery extends AbstractGraphPageQuery<HashMap<String, Obje
 
   private Collection<AttributeType> attributes;
 
-  public ObjectPageQuery(ObjectClassIF objectClass, JsonObject criteria)
+  public ObjectPageQuery(ObjectClassIF objectClass, PageCriteria criteria)
   {
     super(objectClass.getMdVertexDAO().definesType(), criteria);
 

@@ -3,28 +3,26 @@
  *
  * This file is part of Geoprism(tm).
  *
- * Geoprism(tm) is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
+ * Geoprism(tm) is free software: you can redistribute it and/or modify it under
+ * the terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation, either version 3 of the License, or (at your option) any
+ * later version.
  *
- * Geoprism(tm) is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
+ * Geoprism(tm) is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with Geoprism(tm).  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with Geoprism(tm). If not, see <http://www.gnu.org/licenses/>.
  */
 package net.geoprism.registry.query.graph;
 
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
-import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
 import com.runwaysdk.business.graph.GraphQuery;
 import com.runwaysdk.dataaccess.MdAttributeDAOIF;
 import com.runwaysdk.dataaccess.MdVertexDAOIF;
@@ -39,18 +37,18 @@ public abstract class AbstractGraphPageQuery<K, T extends JsonSerializable>
 {
   private String     type;
 
-  private JsonObject criteria;
+  private PageCriteria criteria;
 
   public AbstractGraphPageQuery(String type)
   {
-    this(type, new JsonObject());
+    this(type, new PageCriteria());
   }
 
-  public AbstractGraphPageQuery(String type, JsonObject criteria)
+  public AbstractGraphPageQuery(String type, PageCriteria criteria)
   {
     super();
     this.type = type;
-    this.criteria = criteria;
+    this.criteria = criteria != null ? criteria : new PageCriteria();
   }
 
   protected abstract List<T> getResults(final GraphQuery<K> query);
@@ -68,11 +66,9 @@ public abstract class AbstractGraphPageQuery<K, T extends JsonSerializable>
 
     Map<String, Object> parameters = new HashMap<String, Object>();
 
-    if (criteria.has("filters"))
+    if (criteria.hasFilters())
     {
-      JsonObject filters = criteria.get("filters").getAsJsonObject();
-
-      this.addCriteria(mdVertex, filters, statement, parameters);
+      this.addCriteria(mdVertex, criteria.getFilters(), statement, parameters);
     }
 
     final GraphQuery<Long> query = new GraphQuery<Long>(statement.toString(), parameters);
@@ -80,15 +76,13 @@ public abstract class AbstractGraphPageQuery<K, T extends JsonSerializable>
     return query.getSingleResult();
   }
 
-  private void addCriteria(final MdVertexDAOIF mdVertex, JsonObject filters, StringBuilder statement, Map<String, Object> parameters)
+  private void addCriteria(final MdVertexDAOIF mdVertex, Map<String, PageCriteria.Filter> filters, StringBuilder statement, Map<String, Object> parameters)
   {
-    Iterator<String> keys = filters.keySet().iterator();
-
     int i = 0;
 
-    while (keys.hasNext())
+    for (Entry<String, PageCriteria.Filter> entry : filters.entrySet())
     {
-      String attributeName = keys.next();
+      String attributeName = entry.getKey();
 
       MdAttributeDAOIF mdAttribute = mdVertex.getAllDefinedMdAttributeMap().get(attributeName.toLowerCase());
 
@@ -96,54 +90,46 @@ public abstract class AbstractGraphPageQuery<K, T extends JsonSerializable>
       {
         String columnName = this.getColumnName(mdAttribute);
 
-        JsonObject filter = filters.get(attributeName).getAsJsonObject();
+        PageCriteria.Filter filter = entry.getValue();
 
-        String mode = filter.get("matchMode").getAsString();
+        String mode = filter.getMatchMode();
 
-        if (mode.equals("between"))
+        if ("between".equals(mode))
         {
-          JsonObject value = filter.get("value").getAsJsonObject();
+          String startDate = filter.getStartDate();
 
-          if (value.has("startDate") && !value.get("startDate").isJsonNull())
+          if (startDate != null && startDate.length() > 0)
           {
-            String date = value.get("startDate").getAsString();
+            parameters.put(attributeName + "StartDate", DateFormatter.parseDate(startDate));
 
-            if (date.length() > 0)
-            {
-              parameters.put(attributeName + "StartDate", DateFormatter.parseDate(date));
+            statement.append( ( ( i == 0 ) ? " WHERE " : " AND " ) + columnName + " >= :" + attributeName + "StartDate");
 
-              statement.append( ( ( i == 0 ) ? " WHERE " : " AND " ) + columnName + " >= :" + attributeName + "StartDate");
-
-              i++;
-            }
+            i++;
           }
 
-          if (value.has("endDate") && !value.get("endDate").isJsonNull())
+          String endDate = filter.getEndDate();
+
+          if (endDate != null && endDate.length() > 0)
           {
-            String date = value.get("endDate").getAsString();
+            parameters.put(attributeName + "EndDate", DateFormatter.parseDate(endDate));
 
-            if (date.length() > 0)
-            {
-              parameters.put(attributeName + "EndDate", DateFormatter.parseDate(date));
+            statement.append( ( ( i == 0 ) ? " WHERE " : " AND " ) + columnName + " <= :" + attributeName + "EndDate");
 
-              statement.append( ( ( i == 0 ) ? " WHERE " : " AND " ) + columnName + " <= :" + attributeName + "EndDate");
-
-              i++;
-            }
+            i++;
           }
 
         }
-        else if (mode.equals("contains"))
+        else if ("contains".equals(mode))
         {
-          parameters.put(attributeName, "%" + filter.get("value").getAsString().toUpperCase() + "%");
+          parameters.put(attributeName, "%" + filter.getValueAsString().toUpperCase() + "%");
 
           statement.append( ( ( i == 0 ) ? " WHERE " : " AND " ) + columnName + ".toUpperCase() LIKE :" + attributeName);
 
           i++;
         }
-        else if (mode.equals("equals"))
+        else if ("equals".equals(mode))
         {
-          parameters.put(attributeName, filter.get("value").getAsString());
+          parameters.put(attributeName, filter.getValueAsString());
 
           statement.append( ( ( i == 0 ) ? " WHERE " : " AND " ) + columnName + " = :" + attributeName);
 
@@ -156,7 +142,7 @@ public abstract class AbstractGraphPageQuery<K, T extends JsonSerializable>
 
   public JsonSerializablePage<T> getPage()
   {
-    int pageSize = 10;
+    int pageSize = criteria.getRows();
     int pageNumber = 1;
 
     Long count = this.getCount();
@@ -170,31 +156,29 @@ public abstract class AbstractGraphPageQuery<K, T extends JsonSerializable>
 
     Map<String, Object> parameters = new HashMap<String, Object>();
 
-    if (criteria.has("filters"))
+    if (criteria.hasFilters())
     {
-      JsonObject filters = criteria.get("filters").getAsJsonObject();
-
-      this.addCriteria(mdVertex, filters, statement, parameters);
+      this.addCriteria(mdVertex, criteria.getFilters(), statement, parameters);
     }
 
-    if (criteria.has("sortField") && criteria.has("sortOrder"))
+    if (criteria.getSortField() != null && criteria.getSortOrder() != null)
     {
-      String field = criteria.get("sortField").getAsString();
-      SortOrder order = criteria.get("sortOrder").getAsInt() == 1 ? SortOrder.ASC : SortOrder.DESC;
+      String field = criteria.getSortField();
+      SortOrder order = criteria.getSortOrder() == 1 ? SortOrder.ASC : SortOrder.DESC;
       MdAttributeDAOIF mdAttribute = mdVertex.getAllDefinedMdAttributeMap().get(field.toLowerCase());
 
       statement.append(" ORDER BY " + this.getColumnName(mdAttribute) + " " + order.name());
     }
-    else if (criteria.has("multiSortMeta"))
+    else if (criteria.hasMultiSortMeta())
     {
-      JsonArray sorts = criteria.get("multiSortMeta").getAsJsonArray();
+      List<PageCriteria.SortMeta> sorts = criteria.getMultiSortMeta();
 
       for (int i = 0; i < sorts.size(); i++)
       {
-        JsonObject sort = sorts.get(i).getAsJsonObject();
+        PageCriteria.SortMeta sort = sorts.get(i);
 
-        String field = sort.get("field").getAsString();
-        SortOrder order = sort.get("order").getAsInt() == 1 ? SortOrder.ASC : SortOrder.DESC;
+        String field = sort.getField();
+        SortOrder order = sort.getOrder() != null && sort.getOrder() == 1 ? SortOrder.ASC : SortOrder.DESC;
         MdAttributeDAOIF mdAttribute = mdVertex.getAllDefinedMdAttributeMap().get(field.toLowerCase());
 
         if (i == 0)
@@ -208,14 +192,13 @@ public abstract class AbstractGraphPageQuery<K, T extends JsonSerializable>
       }
     }
 
-    if (criteria.has("first") && criteria.has("rows"))
+    if (criteria.getFirst() != null && criteria.getRows() != null)
     {
-      int first = criteria.get("first").getAsInt();
-      int rows = criteria.get("rows").getAsInt();
+      int first = criteria.getFirst();
 
-      statement.append(" SKIP " + first + " LIMIT " + rows);
+      statement.append(" SKIP " + first + " LIMIT " + pageSize);
 
-      pageNumber = ( first / rows ) + 1;
+      pageNumber = ( first / pageSize ) + 1;
     }
 
     final GraphQuery<K> query = new GraphQuery<K>(statement.toString(), parameters);

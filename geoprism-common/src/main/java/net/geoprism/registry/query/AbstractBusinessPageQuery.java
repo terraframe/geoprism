@@ -18,11 +18,9 @@
  */
 package net.geoprism.registry.query;
 
-import java.util.Iterator;
 import java.util.List;
+import java.util.Map.Entry;
 
-import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
 import com.runwaysdk.business.Business;
 import com.runwaysdk.business.BusinessQuery;
 import com.runwaysdk.dataaccess.AttributeDoesNotExistException;
@@ -38,25 +36,26 @@ import com.runwaysdk.query.SelectableMoment;
 import com.runwaysdk.query.ValueQuery;
 
 import net.geoprism.registry.DateUtil;
+import net.geoprism.registry.query.graph.PageCriteria;
 import net.geoprism.registry.view.JsonSerializable;
 import net.geoprism.registry.view.JsonSerializablePage;
 
 public abstract class AbstractBusinessPageQuery<T extends JsonSerializable>
 {
-  private JsonObject      criteria;
+  private PageCriteria    criteria;
 
   private MdBusinessDAOIF mdBusiness;
 
   public AbstractBusinessPageQuery(MdBusinessDAOIF mdBusiness)
   {
-    this(mdBusiness, new JsonObject());
+    this(mdBusiness, new PageCriteria());
   }
 
-  public AbstractBusinessPageQuery(MdBusinessDAOIF mdBusiness, JsonObject criteria)
+  public AbstractBusinessPageQuery(MdBusinessDAOIF mdBusiness, PageCriteria criteria)
   {
     super();
     this.mdBusiness = mdBusiness;
-    this.criteria = criteria;
+    this.criteria = criteria != null ? criteria : new PageCriteria();
   }
 
   public MdBusinessDAOIF getMdBusiness()
@@ -64,7 +63,7 @@ public abstract class AbstractBusinessPageQuery<T extends JsonSerializable>
     return mdBusiness;
   }
 
-  public JsonObject getCriteria()
+  public PageCriteria getCriteria()
   {
     return criteria;
   }
@@ -78,10 +77,10 @@ public abstract class AbstractBusinessPageQuery<T extends JsonSerializable>
     int pageSize = 10;
     int pageNumber = 1;
 
-    if (criteria.has("first") && criteria.has("rows"))
+    if (criteria.getFirst() != null && criteria.getRows() != null)
     {
-      int first = criteria.get("first").getAsInt();
-      pageSize = criteria.get("rows").getAsInt();
+      int first = criteria.getFirst();
+      pageSize = criteria.getRows();
       pageNumber = ( first / pageSize ) + 1;
     }
 
@@ -107,85 +106,70 @@ public abstract class AbstractBusinessPageQuery<T extends JsonSerializable>
 
   protected BusinessQuery getQuery(ComponentQuery qQuery, BusinessQuery query)
   {
-    if (criteria.has("sortField") && criteria.has("sortOrder"))
+    if (criteria.getSortField() != null && criteria.getSortOrder() != null)
     {
-      String field = criteria.get("sortField").getAsString();
-      SortOrder order = criteria.get("sortOrder").getAsInt() == 1 ? SortOrder.ASC : SortOrder.DESC;
+      String field = criteria.getSortField();
+      SortOrder order = criteria.getSortOrder() == 1 ? SortOrder.ASC : SortOrder.DESC;
 
       qQuery.ORDER_BY(query.getS(field), order);
     }
-    else if (criteria.has("multiSortMeta"))
+    else if (criteria.hasMultiSortMeta())
     {
-      JsonArray sorts = criteria.get("multiSortMeta").getAsJsonArray();
-
-      for (int i = 0; i < sorts.size(); i++)
+      for (PageCriteria.SortMeta sort : criteria.getMultiSortMeta())
       {
-        JsonObject sort = sorts.get(i).getAsJsonObject();
-
-        String field = sort.get("field").getAsString();
-        SortOrder order = sort.get("order").getAsInt() == 1 ? SortOrder.ASC : SortOrder.DESC;
+        String field = sort.getField();
+        SortOrder order = sort.getOrder() != null && sort.getOrder() == 1 ? SortOrder.ASC : SortOrder.DESC;
 
         qQuery.ORDER_BY(query.getS(field), order);
       }
     }
 
-    if (criteria.has("filters"))
+    if (criteria.hasFilters())
     {
-      JsonObject filters = criteria.get("filters").getAsJsonObject();
-      Iterator<String> keys = filters.keySet().iterator();
-
-      while (keys.hasNext())
+      for (Entry<String, PageCriteria.Filter> entry : criteria.getFilters().entrySet())
       {
-        String attributeName = keys.next();
+        String attributeName = entry.getKey();
 
         Selectable attribute = this.getSelectable(query, attributeName);
 
         if (attribute != null)
         {
-          JsonObject filter = filters.get(attributeName).getAsJsonObject();
-          String mode = filter.get("matchMode").getAsString();
+          PageCriteria.Filter filter = entry.getValue();
+          String mode = filter.getMatchMode();
 
           if (attribute instanceof SelectableMoment)
           {
-            JsonObject value = filter.get("value").getAsJsonObject();
+            String startDate = filter.getStartDate();
 
-            if (value.has("startDate") && !value.get("startDate").isJsonNull())
+            if (startDate != null && startDate.length() > 0)
             {
-              String date = value.get("startDate").getAsString();
-
-              if (date.length() > 0)
-              {
-                qQuery.WHERE( ( (SelectableMoment) attribute ).GE(DateUtil.parseDate(date)));
-              }
+              qQuery.WHERE( ( (SelectableMoment) attribute ).GE(DateUtil.parseDate(startDate)));
             }
 
-            if (value.has("endDate") && !value.get("endDate").isJsonNull())
-            {
-              String date = value.get("endDate").getAsString();
+            String endDate = filter.getEndDate();
 
-              if (date.length() > 0)
-              {
-                qQuery.WHERE( ( (SelectableMoment) attribute ).LE(DateUtil.parseDate(date)));
-              }
+            if (endDate != null && endDate.length() > 0)
+            {
+              qQuery.WHERE( ( (SelectableMoment) attribute ).LE(DateUtil.parseDate(endDate)));
             }
           }
           else if (attribute instanceof SelectableBoolean)
           {
-            String value = filter.get("value").getAsString();
+            String value = filter.getValueAsString();
 
             filterBoolean(qQuery, attribute, Boolean.valueOf(value));
           }
-          else if (mode.equals("contains"))
+          else if ("contains".equals(mode))
           {
-            String value = filter.get("value").getAsString();
+            String value = filter.getValueAsString();
 
             SelectableChar selectable = (SelectableChar) attribute;
 
             qQuery.WHERE(selectable.LIKEi("%" + value + "%"));
           }
-          else if (mode.equals("equals"))
+          else if ("equals".equals(mode))
           {
-            String value = filter.get("value").getAsString();
+            String value = filter.getValueAsString();
 
             qQuery.WHERE(attribute.EQ(value));
           }

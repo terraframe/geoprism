@@ -22,7 +22,6 @@ import org.commongeoregistry.adapter.constants.DefaultAttribute;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
 import com.runwaysdk.session.Request;
 import com.runwaysdk.session.RequestType;
 
@@ -34,6 +33,7 @@ import net.geoprism.registry.service.business.ObjectClassBusinessServiceIF;
 import net.geoprism.registry.view.ObjectAndTypeDTO;
 import net.geoprism.registry.view.ObjectClassDTO;
 import net.geoprism.registry.view.ObjectOverTimeDTO;
+import net.geoprism.registry.query.graph.PageCriteria;
 
 public abstract class ObjectService<V extends ServerObjectVertex, T extends ObjectClass, D extends ObjectClassDTO>
 {
@@ -99,11 +99,11 @@ public abstract class ObjectService<V extends ServerObjectVertex, T extends Obje
   }
 
   @Request(RequestType.SESSION)
-  public JsonObject data(String sessionId, String typeCode, String json)
+  public JsonObject data(String sessionId, String typeCode, PageCriteria criteria)
   {
     T type = this.typeService.getByCodeOrThrow(typeCode);
 
-    return this.objectService.data(type, JsonParser.parseString(json).getAsJsonObject()).toJSON();
+    return this.objectService.data(type, criteria != null ? criteria : new PageCriteria()).toJSON();
   }
 
 }

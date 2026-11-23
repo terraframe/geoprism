@@ -32,7 +32,6 @@ import org.commongeoregistry.adapter.dataaccess.LocalizedValue;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.event.EventListener;
 
-import com.google.gson.JsonObject;
 import com.orientechnologies.orient.core.db.ODatabaseSession;
 import com.runwaysdk.business.graph.GraphQuery;
 import com.runwaysdk.business.graph.VertexObject;
@@ -65,6 +64,7 @@ import net.geoprism.registry.graph.ObjectClass;
 import net.geoprism.registry.model.EdgeConstant;
 import net.geoprism.registry.model.graph.ServerObjectVertex;
 import net.geoprism.registry.query.graph.ObjectPageQuery;
+import net.geoprism.registry.query.graph.PageCriteria;
 import net.geoprism.registry.view.AttributeBooleanDTO;
 import net.geoprism.registry.view.AttributeCharacterDTO;
 import net.geoprism.registry.view.AttributeDataSourceDTO;
@@ -592,7 +592,7 @@ public abstract class ObjectBusinessService<V extends ServerObjectVertex, T exte
   }
 
   @Override
-  public JsonSerializablePage<JsonSerializable> data(T type, JsonObject criteria)
+  public JsonSerializablePage<JsonSerializable> data(T type, PageCriteria criteria)
   {
     return new ObjectPageQuery(type, criteria).getPage();
   }

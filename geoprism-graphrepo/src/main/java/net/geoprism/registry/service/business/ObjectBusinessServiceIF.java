@@ -24,7 +24,6 @@ import java.util.Optional;
 
 import org.springframework.stereotype.Component;
 
-import com.google.gson.JsonObject;
 import com.runwaysdk.business.graph.VertexObject;
 
 import net.geoprism.registry.graph.ObjectClass;
@@ -34,6 +33,7 @@ import net.geoprism.registry.view.JsonSerializablePage;
 import net.geoprism.registry.view.ObjectAtTimeDTO;
 import net.geoprism.registry.view.ObjectClassDTO;
 import net.geoprism.registry.view.ObjectOverTimeDTO;
+import net.geoprism.registry.query.graph.PageCriteria;
 
 @Component
 public interface ObjectBusinessServiceIF<V extends ServerObjectVertex, T extends ObjectClass, D extends ObjectClassDTO>
@@ -75,6 +75,6 @@ public interface ObjectBusinessServiceIF<V extends ServerObjectVertex, T extends
 
   public void populate(V object, ObjectAtTimeDTO dto, Date startDate, Date endDate);
 
-  public JsonSerializablePage<JsonSerializable> data(T type, JsonObject criteria);
+  public JsonSerializablePage<JsonSerializable> data(T type, PageCriteria criteria);
 
 }
