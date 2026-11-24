@@ -88,13 +88,7 @@ public class ObjectPageQuery extends AbstractGraphPageQuery<HashMap<String, Obje
 
             if (value != null)
             {
-              if (attribute instanceof AttributeLocalType)
-              {
-                LocalizedValue localizedValue = RegistryLocalizedValueConverter.convert((HashMap<String, ?>) value);
-
-                object.addProperty(attributeName, localizedValue.getValue());
-              }
-              else if (value instanceof Double)
+              if (value instanceof Double)
               {
                 object.addProperty(attributeName, numberFormat.format((Double) value));
               }
@@ -118,6 +112,13 @@ public class ObjectPageQuery extends AbstractGraphPageQuery<HashMap<String, Obje
               {
                 object.addProperty(attributeName, format.format((Date) value));
               }
+              else if (attribute instanceof AttributeLocalType)
+              {
+                LocalizedValue localizedValue = RegistryLocalizedValueConverter.convert((HashMap<String, ?>) value);
+
+                object.addProperty(attributeName, localizedValue.getValue());
+              }
+
             }
 
           });
