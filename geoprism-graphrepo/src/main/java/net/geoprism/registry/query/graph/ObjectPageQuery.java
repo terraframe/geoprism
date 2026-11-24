@@ -3,18 +3,18 @@
  *
  * This file is part of Geoprism(tm).
  *
- * Geoprism(tm) is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
+ * Geoprism(tm) is free software: you can redistribute it and/or modify it under
+ * the terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation, either version 3 of the License, or (at your option) any
+ * later version.
  *
- * Geoprism(tm) is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
+ * Geoprism(tm) is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with Geoprism(tm).  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with Geoprism(tm). If not, see <http://www.gnu.org/licenses/>.
  */
 package net.geoprism.registry.query.graph;
 
@@ -88,7 +88,7 @@ public class ObjectPageQuery extends AbstractGraphPageQuery<HashMap<String, Obje
 
             if (value != null)
             {
-              if (attribute instanceof AttributeLocalType || attribute instanceof AttributeClassificationType)
+              if (attribute instanceof AttributeLocalType)
               {
                 LocalizedValue localizedValue = RegistryLocalizedValueConverter.convert((HashMap<String, ?>) value);
 
@@ -143,11 +143,11 @@ public class ObjectPageQuery extends AbstractGraphPageQuery<HashMap<String, Obje
     List<String> columnNames = this.attributes.stream() //
         .filter(a -> !a.getIsChangeOverTime()) //
         .map(attribute -> {
-          if (attribute instanceof AttributeClassificationType || attribute instanceof AttributeLocalType)
+          if (attribute instanceof AttributeLocalType)
           {
             return this.getColumnName(mdVertex, attribute) + ".displayLabel AS " + attribute.getCode();
           }
-          else if (attribute instanceof AttributeDataSourceType)
+          else if (attribute instanceof AttributeClassificationType || attribute instanceof AttributeDataSourceType)
           {
             return this.getColumnName(mdVertex, attribute) + ".code AS " + attribute.getCode();
           }

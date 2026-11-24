@@ -135,7 +135,7 @@ public abstract class AbstractBusinessPageQuery<T extends JsonSerializable>
         if (attribute != null)
         {
           PageCriteria.Filter filter = entry.getValue();
-          String mode = filter.getMatchMode();
+          PageCriteria.MatchMode mode = filter.getMatchMode();
 
           if (attribute instanceof SelectableMoment)
           {
@@ -159,7 +159,7 @@ public abstract class AbstractBusinessPageQuery<T extends JsonSerializable>
 
             filterBoolean(qQuery, attribute, Boolean.valueOf(value));
           }
-          else if ("contains".equals(mode))
+          else if (mode == PageCriteria.MatchMode.CONTAINS)
           {
             String value = filter.getValueAsString();
 
@@ -167,7 +167,15 @@ public abstract class AbstractBusinessPageQuery<T extends JsonSerializable>
 
             qQuery.WHERE(selectable.LIKEi("%" + value + "%"));
           }
-          else if ("equals".equals(mode))
+          else if (mode == PageCriteria.MatchMode.STARTS_WITH)
+          {
+            String value = filter.getValueAsString();
+
+            SelectableChar selectable = (SelectableChar) attribute;
+
+            qQuery.WHERE(selectable.LIKEi(value + "%"));
+          }
+          else if (mode == PageCriteria.MatchMode.EQUALS)
           {
             String value = filter.getValueAsString();
 

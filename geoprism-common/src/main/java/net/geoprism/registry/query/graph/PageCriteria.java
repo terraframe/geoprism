@@ -23,8 +23,12 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonValue;
+
+import jakarta.validation.constraints.NotNull;
 
 import tools.jackson.databind.JsonNode;
 import tools.jackson.databind.json.JsonMapper;
@@ -36,34 +40,69 @@ import tools.jackson.databind.json.JsonMapper;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class PageCriteria
 {
+  public static enum MatchMode {
+    CONTAINS("contains"), STARTS_WITH("startsWith"), BETWEEN("between"), EQUALS("equals");
+
+    private final String value;
+
+    private MatchMode(String value)
+    {
+      this.value = value;
+    }
+
+    @JsonValue
+    public String getValue()
+    {
+      return value;
+    }
+
+    /**
+     * Returns null for unsupported match modes so that the filter is ignored
+     * instead of failing the entire request.
+     */
+    @JsonCreator
+    public static MatchMode fromValue(String value)
+    {
+      for (MatchMode mode : values())
+      {
+        if (mode.value.equals(value))
+        {
+          return mode;
+        }
+      }
+
+      return null;
+    }
+  }
+
   @JsonIgnoreProperties(ignoreUnknown = true)
   public static class Filter
   {
-    private String   matchMode;
+    private MatchMode matchMode;
 
     /**
      * Either a primitive value (for the 'contains' and 'equals' match modes) or
      * an object with 'startDate' and 'endDate' properties (for the 'between'
      * match mode).
      */
-    private JsonNode value;
+    private JsonNode  value;
 
     public Filter()
     {
     }
 
-    public Filter(String matchMode, JsonNode value)
+    public Filter(MatchMode matchMode, JsonNode value)
     {
       this.matchMode = matchMode;
       this.value = value;
     }
 
-    public String getMatchMode()
+    public MatchMode getMatchMode()
     {
       return matchMode;
     }
 
-    public void setMatchMode(String matchMode)
+    public void setMatchMode(MatchMode matchMode)
     {
       this.matchMode = matchMode;
     }
@@ -147,8 +186,10 @@ public class PageCriteria
     }
   }
 
+  @NotNull
   private Integer             first;
 
+  @NotNull
   private Integer             rows;
 
   private String              sortField;
@@ -161,6 +202,8 @@ public class PageCriteria
 
   public PageCriteria()
   {
+    this.first = 0;
+    this.rows = 10;
     this.multiSortMeta = new LinkedList<>();
     this.filters = new LinkedHashMap<>();
   }

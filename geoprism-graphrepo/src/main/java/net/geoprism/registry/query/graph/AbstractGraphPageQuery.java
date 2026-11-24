@@ -92,9 +92,9 @@ public abstract class AbstractGraphPageQuery<K, T extends JsonSerializable>
 
         PageCriteria.Filter filter = entry.getValue();
 
-        String mode = filter.getMatchMode();
+        PageCriteria.MatchMode mode = filter.getMatchMode();
 
-        if ("between".equals(mode))
+        if (mode == PageCriteria.MatchMode.BETWEEN)
         {
           String startDate = filter.getStartDate();
 
@@ -119,7 +119,7 @@ public abstract class AbstractGraphPageQuery<K, T extends JsonSerializable>
           }
 
         }
-        else if ("contains".equals(mode))
+        else if (mode == PageCriteria.MatchMode.CONTAINS)
         {
           parameters.put(attributeName, "%" + filter.getValueAsString().toUpperCase() + "%");
 
@@ -127,7 +127,15 @@ public abstract class AbstractGraphPageQuery<K, T extends JsonSerializable>
 
           i++;
         }
-        else if ("equals".equals(mode))
+        else if (mode == PageCriteria.MatchMode.STARTS_WITH)
+        {
+          parameters.put(attributeName, filter.getValueAsString().toUpperCase() + "%");
+
+          statement.append( ( ( i == 0 ) ? " WHERE " : " AND " ) + columnName + ".toUpperCase() LIKE :" + attributeName);
+
+          i++;
+        }
+        else if (mode == PageCriteria.MatchMode.EQUALS)
         {
           parameters.put(attributeName, filter.getValueAsString());
 
