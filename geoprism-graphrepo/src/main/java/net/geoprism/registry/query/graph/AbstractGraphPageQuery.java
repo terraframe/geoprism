@@ -35,7 +35,7 @@ import net.geoprism.registry.view.JsonSerializablePage;
 
 public abstract class AbstractGraphPageQuery<K, T extends JsonSerializable>
 {
-  private String     type;
+  private String       type;
 
   private PageCriteria criteria;
 
@@ -53,7 +53,9 @@ public abstract class AbstractGraphPageQuery<K, T extends JsonSerializable>
 
   protected abstract List<T> getResults(final GraphQuery<K> query);
 
-  protected abstract String getColumnName(MdAttributeDAOIF mdAttribute);
+  protected abstract String getColumnName(MdVertexDAOIF mdVertex, String attributeName);
+
+  protected abstract String getAlias(MdVertexDAOIF mdVertex, String attributeName);
 
   protected abstract void addSelectAttributes(final MdVertexDAOIF mdVertex, StringBuilder statement);
 
@@ -88,7 +90,7 @@ public abstract class AbstractGraphPageQuery<K, T extends JsonSerializable>
 
       if (mdAttribute != null)
       {
-        String columnName = this.getColumnName(mdAttribute);
+        String columnName = this.getColumnName(mdVertex, attributeName);
 
         PageCriteria.Filter filter = entry.getValue();
 
@@ -173,9 +175,8 @@ public abstract class AbstractGraphPageQuery<K, T extends JsonSerializable>
     {
       String field = criteria.getSortField();
       SortOrder order = criteria.getSortOrder() == 1 ? SortOrder.ASC : SortOrder.DESC;
-      MdAttributeDAOIF mdAttribute = mdVertex.getAllDefinedMdAttributeMap().get(field.toLowerCase());
 
-      statement.append(" ORDER BY " + this.getColumnName(mdAttribute) + " " + order.name());
+      statement.append(" ORDER BY " + this.getAlias(mdVertex, field) + " " + order.name());
     }
     else if (criteria.hasMultiSortMeta())
     {
@@ -187,15 +188,14 @@ public abstract class AbstractGraphPageQuery<K, T extends JsonSerializable>
 
         String field = sort.getField();
         SortOrder order = sort.getOrder() != null && sort.getOrder() == 1 ? SortOrder.ASC : SortOrder.DESC;
-        MdAttributeDAOIF mdAttribute = mdVertex.getAllDefinedMdAttributeMap().get(field.toLowerCase());
 
         if (i == 0)
         {
-          statement.append(" ORDER BY " + this.getColumnName(mdAttribute) + " " + order.name());
+          statement.append(" ORDER BY " + this.getAlias(mdVertex, field) + " " + order.name());
         }
         else
         {
-          statement.append(", " + this.getColumnName(mdAttribute) + " " + order.name());
+          statement.append(", " + this.getAlias(mdVertex, field) + " " + order.name());
         }
       }
     }

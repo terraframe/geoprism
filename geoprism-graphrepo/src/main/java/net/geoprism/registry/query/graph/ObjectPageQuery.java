@@ -20,7 +20,6 @@ package net.geoprism.registry.query.graph;
 
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
-import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -36,6 +35,7 @@ import com.runwaysdk.dataaccess.MdAttributeDAOIF;
 import com.runwaysdk.dataaccess.MdVertexDAOIF;
 import com.runwaysdk.session.Session;
 
+import net.geoprism.GenericException;
 import net.geoprism.registry.DateFormatter;
 import net.geoprism.registry.conversion.RegistryLocalizedValueConverter;
 import net.geoprism.registry.graph.AttributeClassificationType;
@@ -48,11 +48,11 @@ import net.geoprism.registry.view.JsonWrapper;
 
 public class ObjectPageQuery extends AbstractGraphPageQuery<HashMap<String, Object>, JsonSerializable>
 {
-  private SimpleDateFormat          format;
+  private SimpleDateFormat           format;
 
-  private NumberFormat              numberFormat;
+  private NumberFormat               numberFormat;
 
-  private Collection<AttributeType> attributes;
+  private Map<String, AttributeType> attributes;
 
   public ObjectPageQuery(ObjectClassIF objectClass, PageCriteria criteria)
   {
@@ -63,7 +63,7 @@ public class ObjectPageQuery extends AbstractGraphPageQuery<HashMap<String, Obje
 
     this.numberFormat = NumberFormat.getInstance(Session.getCurrentLocale());
 
-    this.attributes = objectClass.getAttributeMap().values();
+    this.attributes = objectClass.getAttributeMap();
   }
 
   @SuppressWarnings("unchecked")
@@ -78,7 +78,7 @@ public class ObjectPageQuery extends AbstractGraphPageQuery<HashMap<String, Obje
 
       object.addProperty(DefaultAttribute.CODE.getName(), (String) row.get(DefaultAttribute.CODE.getName()));
 
-      this.attributes.stream() //
+      this.attributes.values().stream() //
           .filter(a -> !a.getIsChangeOverTime()) //
           .filter(a -> !a.getCode().equals(DefaultAttribute.CODE.name())) //
           .forEach(attribute -> {
@@ -129,30 +129,61 @@ public class ObjectPageQuery extends AbstractGraphPageQuery<HashMap<String, Obje
 
   protected String getColumnName(final MdVertexDAOIF mdVertex, AttributeType type)
   {
-    return this.getColumnName(mdVertex.getAllDefinedMdAttributeMap().get(type.getCode().toLowerCase()));
+    MdAttributeDAOIF mdAttribute = mdVertex.getAllDefinedMdAttributeMap().get(type.getCode().toLowerCase());
+
+    String base = mdAttribute.definesAttribute();
+
+    if (type instanceof AttributeLocalType)
+    {
+      return base + ".defaultLocale";
+    }
+    else if (type instanceof AttributeClassificationType || type instanceof AttributeDataSourceType)
+    {
+      return base + ".code";
+    }
+
+    return base;
+  }
+
+  protected String getAlias(final MdVertexDAOIF mdVertex, AttributeType type)
+  {
+    MdAttributeDAOIF mdAttribute = mdVertex.getAllDefinedMdAttributeMap().get(type.getCode().toLowerCase());
+
+    return mdAttribute.definesAttribute();
   }
 
   @Override
-  protected String getColumnName(MdAttributeDAOIF mdAttribute)
+  protected String getColumnName(MdVertexDAOIF mdVertex, String attributeName)
   {
-    return mdAttribute.getColumnName();
+    AttributeType type = this.attributes.get(attributeName);
+
+    if (type != null)
+    {
+      return this.getColumnName(mdVertex, type);
+    }
+
+    throw new GenericException("Unable to find attribute with name [" + attributeName + "]");
+  }
+
+  @Override
+  protected String getAlias(MdVertexDAOIF mdVertex, String attributeName)
+  {
+    AttributeType type = this.attributes.get(attributeName);
+
+    if (type != null)
+    {
+      return this.getAlias(mdVertex, type);
+    }
+
+    throw new GenericException("Unable to find attribute with name [" + attributeName + "]");
   }
 
   public void addSelectAttributes(final MdVertexDAOIF mdVertex, StringBuilder statement)
   {
-    List<String> columnNames = this.attributes.stream() //
+    List<String> columnNames = this.attributes.values().stream() //
         .filter(a -> !a.getIsChangeOverTime()) //
         .map(attribute -> {
-          if (attribute instanceof AttributeLocalType)
-          {
-            return this.getColumnName(mdVertex, attribute) + ".displayLabel AS " + attribute.getCode();
-          }
-          else if (attribute instanceof AttributeClassificationType || attribute instanceof AttributeDataSourceType)
-          {
-            return this.getColumnName(mdVertex, attribute) + ".code AS " + attribute.getCode();
-          }
-
-          return this.getColumnName(mdVertex, attribute) + " AS " + attribute.getCode();
+          return this.getColumnName(mdVertex, attribute) + " AS " + this.getAlias(mdVertex, attribute);
         }).collect(Collectors.toList());
 
     statement.append(String.join(", ", columnNames));
