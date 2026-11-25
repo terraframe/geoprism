@@ -130,7 +130,7 @@ public class TransactionLRUCache<K, V>
   {
     this.mapper = mapper;
     this.transactionCache = new TransactionCache<>(cacheKey, mapper);
-    this.cache = Collections.synchronizedMap(new LRUMap<K, CacheResult<V>>(20));
+    this.cache = Collections.synchronizedMap(new LRUMap<K, CacheResult<V>>(maxSize));
   }
 
   public void put(V value)
